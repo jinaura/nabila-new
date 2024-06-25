@@ -1,0 +1,141 @@
+<section class="discover-exp">
+  <div class="container section__item">
+    <div class="discover-exp-wrapper">
+      <div class="media">
+        <h2 class="section__title hidden-sm hidden-md hidden-lg">{{ product.metafields.discovery.experinece_title }}</h2>
+        <hr class="section__divider hidden-sm hidden-md hidden-lg">
+        <p class="hidden-sm hidden-md hidden-lg">{{product.metafields.discovery.experinece_subtitle}}</p>
+        <hr class="divider--start hidden-sm hidden-md hidden-lg">
+        {% for experience_media in product.metafields.discovery.experience_media %}
+          {% if experience_media.media_type == 'image' %}
+            	<img src="{{ experience_media.src }}" alt="{{ experience_media.alt }}" class="product__detail animate" fetchpriority="low" loading="lazy" />
+            {% elsif experience_media.media_type == 'video' %}
+              <video
+                     id="details_video"
+                     class="video__bottom animate"
+                     autoplay
+                     loop
+                     muted
+                     playsinline="true" webkit-playsinline="true"
+                     preload="auto"
+                     width="100%"
+                     height="100%"
+                     title="{{ experience_media.alt }}">
+                <source src="{{ experience_media.src }}" type='video/mp4'/>
+              </video>
+              <input type="checkbox" id="media-text-pause-play-switcher">
+              <label id="media-text-pause-play-switcher-container" for="media-text-pause-play-switcher"></label>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="content">
+        <h2 class="section__title hidden-xs">{{ product.metafields.discovery.experinece_title }}</h2>
+        <hr class="section__divider hidden-xs">
+        <p class="hidden-xs subTitle">{{product.metafields.discovery.experinece_subtitle}}</p>
+        <hr class="divider--start hidden-xs">
+        <div class="block-count">
+          <h3>{{product.metafields.discovery.experience_block_no_1}}</h3>
+          <p>{{product.metafields.discovery.experience_block_description_1}}</p>
+        </div>
+        <div class="block-count">
+          <h3>{{product.metafields.discovery.experience_block_no_2}}</h3>
+          <p>{{product.metafields.discovery.experience_block_description_2}}</p>
+        </div>
+        <div class="block-count">
+          <h3 class="three">{{product.metafields.discovery.experience_block_no_3}}</h3>
+          <p>{{product.metafields.discovery.experience_block_description_3}}</p>
+        </div>
+        
+        <hr class="divider--start">
+        <p><small>{{product.metafields.discovery.experinece_description}}</small></p>
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .discover-exp{
+    padding-top:80px;
+  }
+  .discover-exp-wrapper{
+    display:flex;
+    justify-content: space-between;
+  }
+  .discover-exp-wrapper > div{
+    width:47.5%;
+  }
+  .product__container .discover-exp-wrapper .section__title{
+    padding-top:0;
+  }
+  
+  .discover-exp .section__item p{
+    font-family: var(--font-regular);
+  }
+
+  .discover-exp .section__item .subTitle{
+    font-family: var(--font-medium);
+  }
+  
+  .block-count {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    margin-bottom:40px;
+  }
+  
+  .block-count h3{
+    font-size:100px;
+    font-family: var(--font-heading);
+    min-width:110px;
+    color: var(--secondary-color);
+	height: 100px;
+    line-height: 88%;
+    font-variant-numeric: oldstyle-nums;
+  }
+  .block-count h3.three{
+    line-height: 74%;
+  }
+  @media not all and (min-resolution:.001dpcm) { 
+     @supports (-webkit-appearance:none) {
+        .block-count h3.three{
+          line-height: 1.1;
+        }
+     }
+  }
+  .block-count p{
+    margin-bottom:0;
+    font-size: 18px;
+    line-height: normal;
+    font-family: var(--font-regular) !important;
+    max-width: 325px;
+  }
+  
+  .discover-exp-wrapper > div p small{
+    line-height:20px;
+    font-size:12px;
+  }
+  
+  
+  @media (max-width:1023px){
+    .discover-exp{padding-top:30px;}
+    .discover-exp-wrapper{flex-flow:column; padding:0 20px;}
+    .discover-exp-wrapper > div{width:100%;}
+    .discover-exp-wrapper .section__title{margin:0 !important;}
+    .discover-exp-wrapper .section__divider{margin:0 !important;}
+    .discover-exp-wrapper .content{padding-top:50px;}
+    .discover-exp-wrapper .content hr.divider--start{margin-top:60px;}
+    
+    .block-count{padding-right:50px;}
+    .block-count h3{min-width: 60px; height:60px; font-size: 60px;}
+    .block-count h3.three {line-height: 1.1;}
+
+  }
+
+  @media (max-width:767px){
+    .block-count h3.three {line-height: 65%;}
+    html.iphone .block-count h3.three { line-height: 1.1; }
+  }
+
+
+</style>

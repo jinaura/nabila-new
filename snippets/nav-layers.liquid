@@ -1,0 +1,201 @@
+<!-- main menu layered panel DESKTOP -->
+<div data-navigation-panel>
+    <div class="overlayBg"></div>
+
+    <!-- layer 1 -->
+    <div class="navPanel" data-panel-1>
+        <div class="closeMenu">{%- include 'svg-icons' with 'close' -%}</div>
+        <div class="scroll-bar">
+
+            <!-- Shop Menu -->
+            <ul class="innerMenu itemAnim" id="shop" style="display:none">
+                {% assign autoIncr = 0 %}
+                {% for block in section.blocks %}
+                    {% if block.type == 'linklist' %}
+                        {% assign getType = block.settings.nav_type %}
+                        {% if getType == 'shop' %}
+
+                                {% assign autoIncr = autoIncr | plus : 1 %}
+                                {% assign desktopNavTitle = block.settings.title_collection %}
+                                {% assign desktopUpdatedNav = block.settings.collection-menu %}
+                             <!-- <div class="nav-group"> -->
+                                <h3 class="group-heading {% if autoIncr == 1 %} exmpt-margin {% endif %}">{{ desktopNavTitle }}</h3>
+                                {% for link in linklists[desktopUpdatedNav].links %}
+
+                                    {% assign subNavParLink =  "#" %}
+                                    {% assign linkHandle =  link.url %}
+                                    {% assign collection_handle = linkHandle | slice: 13, linkHandle.size %}
+                                    {% assign gnav_collection = collections[collection_handle]  %}
+
+                                    {% assign subMenuClass =  "" %}
+                                    {% if link.links.size > 0 %}
+                                        {% capture menuData %}
+
+                                            {% for child_link in link.links %}
+
+                                                {% assign subMenuClass =  "subMenuClass" %}
+                                                {% assign subLinkHandle =  child_link.url %}
+                                                {% assign sub_collection_handle = subLinkHandle | slice: 13, subLinkHandle.size %}
+                                                {% assign sub_gnav_collection = collections[sub_collection_handle]  %}
+
+                                                {% if sub_gnav_collection.metafields.gnav.image[0].src %}
+                                                    data-type="sublink-img"
+                                                    {% assign childlinkimg = sub_gnav_collection.metafields.gnav.image[0].src %}
+
+                                                    {% if child_link.url %} data-sublink-url-{{ forloop.index }}="{{- child_link.url -}}" {% endif %}
+                                                    {% if child_link.title %} data-sublink-title-{{ forloop.index }}="{{- child_link.title -}}" {% endif %}
+                                                    {% if childlinkimg %} data-subimage-{{ forloop.index }}="{{- sub_gnav_collection.metafields.gnav.image[0].src -}}" {% endif %}
+
+                                                {% else %}
+                                                    data-main-type="{{ link.title }}"
+                                                    data-type="sublink"
+                                                    {% if child_link.url %} data-sublink-url-{{ forloop.index }}="{{- child_link.url -}}" {% endif %}
+                                                    {% if child_link.title %} data-sublink-title-{{ forloop.index }}="{{- child_link.title -}}" {% endif %}
+
+                                                {% endif %}
+
+                                                {% assign forLoopInc = forloop.index  %}
+                                            {% endfor %}
+                                            data-loop-count="{{ forLoopInc }}"
+                                        {% endcapture %}
+
+                                    {% else %}
+                                        {% assign subNavParLink =  link.url %}
+                                        {% assign image = gnav_collection.metafields.gnav.image[0].src %}
+                                        {% assign imageAlt = gnav_collection.metafields.gnav.image[0].alt %}
+                                        {% assign description = gnav_collection.metafields.gnav.description %}
+                                        {% assign ctaText = gnav_collection.metafields.gnav.cta_text %}
+                                        {% assign ctaLink = gnav_collection.metafields.gnav.cta_link %}
+
+                                        {% capture menuData %}
+                                            data-type="image-desc"
+                                            {% if image.size > 0 %} data-img="{{- gnav_collection.metafields.gnav.image[0].src -}}"{% endif %}
+                                            {% if imageAlt %} data-alt="{{- imageAlt -}}" {% endif %}
+                                            {% if ctaLink %} data-img-link="{{- ctaLink -}}" {% endif %}
+                                            {% if description %} data-content="{{ description }}" {% endif %}
+                                            {% if ctaText %} data-text="{{ ctaText }}" {% endif %}
+                                            {% if ctaLink %} data-link="{{ ctaLink }}" {% endif %}
+                                        {% endcapture %}
+
+                                    {% endif %}
+
+                                    {% unless localization.country.iso_code == 'GB' and link.url contains 'body' %}
+                                    {% unless localization.country.iso_code == 'GB' and link.url contains 'trial' %}
+                                    {% unless localization.country.iso_code == 'GB' and link.url contains 'discovery' %}
+                                        <div {{ block.shopify_attributes }}>
+                                            <li class="{{ subMenuClass }}"><a href="{{ subNavParLink }}" {{ menuData }} data-enable-panel="{{ gnav_collection.metafields.gnav.mark_as_default_panel }}">{{ link.title }}</a><span class="subMenuIcon"></span></li>
+                                        </div>
+                                    {% endunless %}
+                                    {% endunless %}
+                                    {% endunless %}
+                                {% endfor %}
+                            <!--</div>-->
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+            <!-- Editorial Menu -->
+            <ul class="innerMenu itemAnim" id="editorial" style="display:none">
+                {% for block in section.blocks %}
+
+                    {% assign getType = block.settings.nav_type %}
+                    {% if getType == 'editorial' %}
+                        <div {{ block.shopify_attributes }}>
+                            {% assign menuText = block.settings.title %}
+                            {% assign menuLink = block.settings.menu_link %}
+                            {% assign image = block.settings.image %}
+                            {% assign imageAlt = block.settings.image.alt %}
+                            {% assign imageLink = block.settings.img_url %}
+                            {% assign desc = block.settings.desc %}
+                            {% assign ctaText = block.settings.link_txt %}
+                            {% assign ctaLink = block.settings.link_url %}
+
+                            {% capture menuData %}
+                                data-type="image-desc"
+                                {% if image.size > 0 %}data-img="{{- image | img_url: '440x' -}}" {% endif %}
+                                {% if imageAlt != blank %}data-alt="{{- imageAlt -}}" {% endif %}
+                                {% if imageLink != blank %}data-img-link="{{- imageLink -}}" {% endif %}
+                                {% if desc != blank %}data-content="{{- desc -}}" {% endif %}
+                                {% if ctaLink != blank %}data-link="{{- ctaLink -}}" {% endif %}
+                                {% if ctaText != blank %} data-text="{{- ctaText -}}" {% endif %}
+                            {% endcapture %}
+
+                            {% if menuLink != blank %}
+                                <li><a href="{{ menuLink }}" {{ menuData }} data-enable-panel="{{ block.settings.is_default_panel }}">{{ menuText }}</a></li>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+
+            <!-- Gossip Menu -->
+            <ul class="innerMenu itemAnim" id="gossip" style="display:none">
+                {% for block in section.blocks %}
+
+                    {% assign getType = block.settings.nav_type %}
+                    {% if getType == 'gossip' %}
+                        <div {{ block.shopify_attributes }}>
+                            {% assign menuText = block.settings.title %}
+                            {% assign menuLink = block.settings.menu_link %}
+                            {% assign image = block.settings.image %}
+                            {% assign imageAlt = block.settings.image.alt %}
+                          	{% assign imageLink = block.settings.img_url %}
+                            {% assign desc = block.settings.desc %}
+                            {% assign ctaText = block.settings.link_txt %}
+                            {% assign ctaLink = block.settings.link_url %}
+
+                            {% capture menuData %}
+                                data-type="image-desc"
+                                {% if image.size > 0 %}data-img="{{- image | img_url: '440x' -}}" {% endif %}
+                                {% if imageAlt != blank %}data-alt="{{- imageAlt -}}" {% endif %}
+                          		{% if imageLink != blank %}data-img-link="{{- imageLink -}}" {% endif %}
+                                {% if desc != blank %}data-content="{{- desc -}}" {% endif %}
+                                {% if ctaLink != blank %}data-link="{{- ctaLink -}}" {% endif %}
+                                {% if ctaText  != blank %} data-text="{{- ctaText -}}" {% endif %}
+                            {% endcapture %}
+
+                            {% if menuLink != blank %}
+                                <li><a href="{{ menuLink }}" {{ menuData }} data-enable-panel="{{ block.settings.is_default_panel }}">{{ menuText }}</a></li>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            
+          
+          
+        </div>
+
+        <!-- Bottom Links -->
+        {% assign bottom_links = section.settings.bottom_links %}
+        <ul class="bottomLinks itemAnim" style="display:none">
+            {% for link in linklists[bottom_links].links %}
+                {% liquid
+                    if link.url == '#ACCOUNT_DYNAMIC'
+                        if customer
+                            assign link_url = '/account'
+                        else
+                            assign link_url ='/account/login?return_url=%2Faccount'
+                        endif
+                    else
+                        assign link_url = link.url
+                    endif
+                %}
+                {% unless localization.country.iso_code == 'GB' and link_url contains 'makeup-artist' %}
+                    <li>
+                        <a href="{{ link_url }}" {% if link.current %}aria-current="page"{% endif %}>{{ link.title }}</a>
+                    </li>
+                {% endunless %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- layer 2 -->
+    <div class="navPanel" data-panel-2>
+        <div class="scroll-bar">
+            <!-- CONTENT GENERATE THROUGH JAVASCRIPT HERE -->
+        </div>
+    </div>
+</div>
+<!-- end main menu panel DESKTOP //  -->

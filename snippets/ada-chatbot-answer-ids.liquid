@@ -1,0 +1,57 @@
+{% liquid
+  assign start_time = settings.available_hours_start
+  assign start_end = settings.available_hours_end
+  assign current_day = 'now' | date: "%A" | downcase
+
+  assign current_day_from = current_day | append: '_from'
+  assign current_day_to = current_day | append: '_to'
+  
+  assign start_time = settings[current_day_from]
+  assign end_time = settings[current_day_to]
+
+  assign current_time = 'now' | date: "%s"
+  assign selected_start_time = 'now' | date: "%Y-%m-%d " | append: start_time
+  assign selected_end_time = 'now' | date: "%Y-%m-%d " | append: end_time
+  assign selected_start_time = selected_start_time | date: "%s"
+  assign selected_end_time = selected_end_time | date: "%s"
+
+  assign is_available_hours = false
+
+  if settings[current_day] and current_time > selected_start_time and current_time < selected_end_time
+      assign is_available_hours = true
+  endif
+  
+  if is_available_hours
+    assign answer_id_desktop = settings.ada_default_answer_id_desktop_on
+    assign answer_id_mobile = settings.ada_default_answer_id_mobile_on
+  else
+    assign answer_id_desktop = settings.ada_default_answer_id_desktop_off
+    assign answer_id_mobile = settings.ada_default_answer_id_mobile_off
+  endif
+
+  if entry_point == 'cc_chat'
+    assign answer_id_desktop = settings.ada_default_answer_id_desktop_off
+    assign answer_id_mobile = settings.ada_default_answer_id_mobile_off
+  endif
+
+  if entry_point == 'bubble' and block
+    if is_available_hours
+      if block.settings.id_desktop_on != blank
+        assign answer_id_desktop = block.settings.id_desktop_on
+      endif
+
+      if block.settings.id_mobile_on != blank
+        assign answer_id_mobile = block.settings.id_mobile_on
+      endif
+    else
+      if block.settings.id_desktop_off != blank
+        assign answer_id_desktop = block.settings.id_desktop_off
+      endif
+
+      if block.settings.id_mobile_off != blank
+        assign answer_id_mobile = block.settings.id_mobile_off
+      endif
+    endif
+  endif
+
+%}

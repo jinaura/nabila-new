@@ -1,0 +1,37 @@
+{% if section.settings.show_chat_block %}
+  <div class="bl-sf-results-block bl-sf-results-block--chat">
+    <div class="section-title section-title--chat bl-sf-mobile-only">
+      <h2 class="section-title__title">{{- "shade_finder_results.chat.title" | t -}}</h2>
+    </div>
+    <div class="bl-sf-results-block__col bl-sf-results-block__col--chat bl-sf-results-block__col--decor">
+    </div>
+    <div class="bl-sf-results-block__col bl-sf-results-block__col--chat">
+      <div class="section-title section-title--chat bl-sf-desktop-only">
+        <h2 class="section-title__title">{{- "shade_finder_results.chat.title" | t -}}</h2>
+      </div>
+      <div>
+        <p>{{- "shade_finder_results.chat.subtitle" | t -}}</p>
+        <button
+                class="bl-sf-results__button bl-sf-results__button--chat chat-now"
+                type="button"
+        >
+          {{- "shade_finder_results.chat.cta" | t -}}
+        </button>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Shade Finder Results Chat",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_chat_block",
+      "label": "Show Chat Block",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

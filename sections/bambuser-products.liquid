@@ -1,0 +1,134 @@
+{% assign _section = section.settings %}
+
+<section class="bambuserProducts">
+  <div class="container" id="section-{{- section.id -}}">
+    <h2 class="heading-with-link">{{ _section.title }}</h2>
+    <hr class="section__divider">
+    <div class="product-nav container">
+      <ul>
+        {%- for _product in collections[_section.featured_products].products -%}
+          {% unless _product == blank %}
+            <li>
+              <a href="{{-_product.url -}}"><img class="animate" src="{{ _product.featured_media | img_url: '100x100' ,scale:1}}" alt="{{ _product.featured_media.alt }}" fetchpriority="low" loading="lazy"></a>
+              <div>
+                <h3><a href="{{-_product.url -}}">{{ _product.title }}</a></h3>
+                <a href="{{-_product.url -}}">Shop Now</a>
+              </div>
+            </li>
+          {% endunless %}
+        {%- endfor-%}
+      </ul>
+  </div>
+  </div>
+</section>
+
+<style>
+  .bambuserProducts {
+    padding-top: 90px;
+  }
+  .bambuserProducts .product-nav.container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .bambuserProducts hr.section__divider {
+    margin-top: 14px;
+  }
+  .bambuserProducts .product-nav ul {
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-between;
+    margin: 0;
+    padding-bottom: 12px;
+    scroll-behavior: smooth;
+    row-gap: 30px;
+  }
+  .bambuserProducts .product-nav ul li {
+    display: flex;
+    width: 30%;
+  }
+  .bambuserProducts .product-nav ul li a {
+    text-transform: uppercase;
+    margin-right: 40px;
+    display: block;
+  }
+  .bambuserProducts .product-nav ul li img {
+    max-width: 100%;
+  }
+  .bambuserProducts .product-nav ul li h3 {
+    max-width: 240px;
+    padding: 7px 0 12px 0;
+  }
+  .bambuserProducts .product-nav ul li h3 a {
+    text-decoration: none;
+    margin-right: unset;
+    line-height: 18px;
+    letter-spacing: 1px;
+  }
+  @media (min-width: 768px) and (max-width: 1400px) {
+    .bambuserProducts .container {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+  }
+  @media (max-width: 1000px) {
+    .bambuserProducts {
+      padding-top: 50px;
+    }
+    .bambuserProducts .product-nav ul {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      overflow-x: auto;
+      margin-right: -20px;
+    }
+    .bambuserProducts .product-nav ul li {
+      min-width: 420px;
+    }
+  }
+  @media (max-width: 500px) {
+    .bambuserProducts .product-nav ul li {
+      min-width: 316px;
+    }
+    .bambuserProducts .product-nav ul li img {
+      width: 80px;
+      height: 80px;
+    }
+    .bambuserProducts .product-nav ul li a {
+      margin-right: 20px;
+    }
+    .bambuserProducts .product-nav ul li h3 {
+      max-width: 198px;
+      padding-top: 0;
+    }
+  }
+  @media (max-width: 380px) {
+    h2.heading-with-link {
+      font-size: 31px;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name":"Bambuser Products",
+    "settings":[
+      {
+        "type":"text",
+        "id":"title",
+        "label":"Title",
+        "default": "Featured Products"
+      },
+      {
+        "type": "collection",
+        "id": "featured_products",
+        "label": "Products Collection"
+      }
+    ],
+    "blocks":[],
+    "presets":[
+      {
+       "name":"Bambuser Products"
+      }
+    ]
+
+  }
+{% endschema %}

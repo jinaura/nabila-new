@@ -1,0 +1,1483 @@
+{% capture sliderSettings %}
+data-slick='{
+  "slidesToShow": 1,
+  "slidesToScroll": 1,
+  "infinite": true,
+  "arrows": true,
+  "autoplay": false,
+  "adaptiveHeight": false,
+  "swipe": true,
+  "centerMode": false,
+  "centerPadding": "1px",
+  "responsive": [
+    {
+      "breakpoint": 768,
+      "settings": {
+        "slidesToShow": 1,
+        "slidesToScroll": 1,
+        "speed": 800,
+        "touchMove" : false
+      }
+    },
+    {
+      "breakpoint": 1024,
+      "settings": {
+        "slidesToShow": 2,
+        "slidesToScroll": 2
+      }
+    }
+  ]
+}'
+{% endcapture %}
+{% for block in section.blocks %}
+<div {{ block.shopify_attributes }}>
+  {% if block.type == "2col-text-image" %}
+    {% if article.handle == articles[block.settings.article].handle %}
+      <section class="textImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+          <div class="content-info">
+            <ul>
+              {% if block.settings.left_dropcap_1 != '' or  block.settings.left_dropcap_description_1 != ''%}
+              <li><b>{{ block.settings.left_dropcap_1  }}</b>{{ block.settings.left_dropcap_description_1  }}</li>
+              {% endif %}
+              {% if block.settings.left_dropcap_2 != '' or  block.settings.left_dropcap_description_2 != ''%}
+              <li><b>{{ block.settings.left_dropcap_2  }}</b>{{ block.settings.left_dropcap_description_2  }}</li>
+              {% endif %}
+              {% if block.settings.left_dropcap_3 != '' or  block.settings.left_dropcap_description_3 != ''%}
+              <li><b>{{ block.settings.left_dropcap_3  }}</b>{{ block.settings.left_dropcap_description_3  }}</li>
+              {% endif %}
+              {% if block.settings.left_dropcap_4 != '' or  block.settings.left_dropcap_description_4 != ''%}
+              <li><b>{{ block.settings.left_dropcap_4  }}</b>{{ block.settings.left_dropcap_description_4  }}</li>
+              {% endif %}
+              {% if block.settings.left_dropcap_5 != '' or  block.settings.left_dropcap_description_5 != ''%}
+              <li><b>{{ block.settings.left_dropcap_5  }}</b>{{ block.settings.left_dropcap_description_5  }}</li>
+              {% endif %}
+            </ul>
+          </div>
+          {% if block.settings.link == blank %}
+            <div class="image">
+              {{block.settings.right_image | image_url: width: 1800 | image_tag: width: 660, height: 800, class: 'animate', alt: block.settings.right_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+          {% else %}
+            <a href="{{ block.settings.link }}" target="_blank" class="image">
+              {{block.settings.right_image | image_url: width: 1800 | image_tag: width: 660, height: 800, class: 'animate', alt: block.settings.right_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </a>
+          {% endif %}
+      </section>
+    {% endif %}
+  {% elsif block.type == '1-col-text-center' %}
+    {% if article.handle == articles[block.settings.text-center-article].handle %}
+      <section class="centerTextModule" id="block-{{block.id}}" data-type="{{block.type}}">
+        <div>
+            {{ block.settings.text_center  }}
+        </div>
+      </section>
+    {% endif %}
+  {% elsif block.type == '2-col-large-image' %}
+    {% if article.handle == articles[block.settings.limage-limage-article].handle %}
+      <section class="parallelImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+        {% if block.settings.link_left == blank %}
+          <div class="ratio_wrapper res-1320x800">
+            {{block.settings.left_image | image_url: width: 1200 | image_tag: width: 600, height: 800, class: 'animate', alt: block.settings.left_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+        {% else %}
+          <a href="{{ block.settings.link_left }}" target="_blank" class="ratio_wrapper res-1320x800">
+            {{block.settings.left_image | image_url: width: 1200 | image_tag: width: 600, height: 800, class: 'animate', alt: block.settings.left_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </a>
+        {% endif %}
+
+        {% if block.settings.link_left == blank %}
+          <div class="ratio_wrapper res-1320x800">
+            {{block.settings.right_image | image_url: width: 1200 | image_tag: width: 600, height: 800, class: 'animate', alt: block.settings.right_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+        {% else %}
+          <a href="{{ block.settings.link_left }}" target="_blank" class="ratio_wrapper res-1320x800">
+            {{block.settings.right_image | image_url: width: 1200 | image_tag: width: 600, height: 800, class: 'animate', alt: block.settings.right_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </a>
+        {% endif %}
+
+      </section>
+    {% endif %}
+  {% elsif block.type == '1-col-text-dropcap' %}
+    {% if article.handle == articles[block.settings.text-center-dropcap-article].handle %}
+      <section class="dropcapTextModule" id="block-{{block.id}}" data-type="{{block.type}}">
+        <div class="content-info">
+          <ul>
+            {% if block.settings.dropcap_1 != '' or block.settings.dropcap_description_1 != '' %}
+            <li><b>{{ block.settings.dropcap_1 }}</b>{{ block.settings.dropcap_description_1  }}</li>
+            {% endif %}
+
+            {% if block.settings.dropcap_2 != '' or block.settings.dropcap_description_2 != '' %}
+            <li><b>{{ block.settings.dropcap_2  }}</b>{{ block.settings.dropcap_description_2  }}</li>
+            {% endif %}
+
+            {% if block.settings.dropcap_3 != '' or block.settings.dropcap_description_3 != '' %}
+            <li><b>{{ block.settings.dropcap_3  }}</b>{{ block.settings.dropcap_description_3  }}</li>
+            {% endif %}
+
+            {% if block.settings.dropcap_4 != '' or block.settings.dropcap_description_4 != '' %}
+            <li><b>{{ block.settings.dropcap_4  }}</b>{{ block.settings.dropcap_description_4  }}</li>
+            {% endif %}
+
+            {% if block.settings.dropcap_5 != '' or block.settings.dropcap_description_5 != '' %}
+            <li><b>{{ block.settings.dropcap_5  }}</b>{{ block.settings.dropcap_description_5  }}</li>
+            {% endif %}
+
+            {% if block.settings.dropcap_6 != '' or block.settings.dropcap_description_6 != '' %}
+            <li><b>{{ block.settings.dropcap_6  }}</b>{{ block.settings.dropcap_description_6  }}</li>
+            {% endif %}
+
+            {% if block.settings.dropcap_7 != '' or block.settings.dropcap_description_7 != '' %}
+            <li><b>{{ block.settings.dropcap_7  }}</b>{{ block.settings.dropcap_description_7  }}</li>
+            {% endif %}
+
+            {% if block.settings.dropcap_8 != '' or block.settings.dropcap_description_8 != '' %}
+            <li><b>{{ block.settings.dropcap_8  }}</b>{{ block.settings.dropcap_description_8  }}</li>
+            {% endif %}
+
+            {% if block.settings.dropcap_9 != '' or block.settings.dropcap_description_9 != '' %}
+            <li><b>{{ block.settings.dropcap_9  }}</b>{{ block.settings.dropcap_description_9  }}</li>
+            {% endif %}
+
+            {% if block.settings.dropcap_10 != '' or block.settings.dropcap_description_10 != '' %}
+            <li><b>{{ block.settings.dropcap_10  }}</b>{{ block.settings.dropcap_description_10  }}</li>
+            {% endif %}
+          </ul>
+        </div>
+
+      </section>
+    {% endif %}
+  {% elsif block.type == '1-col-quote-center' %}
+    {% if article.handle == articles[block.settings.quote-center-article].handle %}
+      <section class="quoteModule" id="block-{{block.id}}" data-type="{{block.type}}">
+        <div>
+          <h2>{{ block.settings.quotes }}</h2>
+          <h2 class="auther">{{ block.settings.author_quotes }}</h2>
+        </div>
+      </section>
+    {% endif %}
+  {% elsif block.type == '2-col-simage-limage' %}
+    {% if article.handle == articles[block.settings.sImage-lImage-article].handle %}
+      <section class="smallLargeImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+
+        <div class="smallSection">
+          {% if block.settings.link_small == blank %}
+            <div class="ratio_wrapper res-400x500">
+              {{block.settings.simage | image_url: width: 1800 | image_tag: height: 500, class: 'animate', alt: block.settings.simage.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+          {% else %}
+            <a href="{{ block.settings.link_small }}" target="_blank" class="ratio_wrapper res-400x500">
+              {{block.settings.simage | image_url: width: 1800 | image_tag: height: 500, class: 'animate', alt: block.settings.simage.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </a>
+          {% endif %}
+        </div>
+
+        <div>
+          {% if block.settings.link_large == blank %}
+            <div class="ratio_wrapper res-660x800">
+              {{block.settings.limage | image_url: width: 2000 | image_tag: height: 800, class: 'animate', alt: block.settings.limage.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+          {% else %}
+            <a href="{{ block.settings.link_large  }}" target="_blank" class="ratio_wrapper res-660x800">
+              {{block.settings.limage | image_url: width: 2000 | image_tag: height: 800, class: 'animate', alt: block.settings.limage.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </a>
+          {% endif %}
+        </div>
+
+      </section>
+    {% endif %}
+  {% elsif block.type == '2-col-limage-simage' %}
+    {% if article.handle == articles[block.settings.lImage-sImage-article].handle %}
+      <section class="smallLargeImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+        <div>
+          {% if block.settings.link_large == blank %}
+            <div class="ratio_wrapper res-660x800">
+              {{block.settings.limage | image_url: width: 2000 | image_tag: height: 800, class: 'animate', alt: block.settings.limage.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+          {% else %}
+            <a href="{{ block.settings.link_large }}" class="ratio_wrapper res-660x800" target="_blank">
+              {{block.settings.limage | image_url: width: 2000 | image_tag: height: 800, class: 'animate', alt: block.settings.limage.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </a>
+          {% endif %}
+        </div>
+
+        <div class="smallSection">
+          {% if block.settings.link_small == blank %}
+            <div class="ratio_wrapper res-400x500">
+              {{block.settings.simage | image_url: width: 1800 | image_tag: height: 500, class: 'animate', alt: block.settings.simage.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+          {% else %}
+            <a href="{{ block.settings.link_small }}" class="ratio_wrapper res-400x500" target="_blank">
+              {{block.settings.simage | image_url: width: 1800 | image_tag: height: 500, class: 'animate', alt: block.settings.simage.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </a>
+          {% endif %}
+        </div>
+
+      </section>
+    {% endif %}
+  {% elsif block.type == '2-col-image-text' %}
+    {% if article.handle == articles[block.settings.image-text-article].handle %}
+      <section class="textImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+
+
+        {% if block.settings.link == blank %}
+          <div class="image">
+            {{block.settings.image | image_url: width: 2000 | image_tag: width: 660, height: 800, class: 'animate', alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+        {% else %}
+          <a href="{{ block.settings.link }}" target="_blank" class="image">
+            {{block.settings.image | image_url: width: 2000 | image_tag: width: 660, height: 800, class: 'animate', alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </a>
+        {% endif %}
+
+        <div class="content-info">
+          <ul>
+            {% if block.settings.dropcap_1 != '' or block.settings.dropcap_description_1 != '' %}
+            <li><b>{{ block.settings.dropcap_1  }}</b>{{ block.settings.dropcap_description_1  }}</li>
+            {% endif %}
+            {% if block.settings.dropcap_2 != '' or block.settings.dropcap_description_2 != '' %}
+            <li><b>{{ block.settings.dropcap_2  }}</b>{{ block.settings.dropcap_description_2  }}</li>
+            {% endif %}
+            {% if block.settings.dropcap_3 != '' or block.settings.dropcap_description_3 != '' %}
+            <li><b>{{ block.settings.dropcap_3  }}</b>{{ block.settings.dropcap_description_3  }}</li>
+            {% endif %}
+            {% if block.settings.dropcap_4 != '' or block.settings.dropcap_description_4 != '' %}
+            <li><b>{{ block.settings.dropcap_4  }}</b>{{ block.settings.dropcap_description_4  }}</li>
+            {% endif %}
+            {% if block.settings.dropcap_5 != '' or block.settings.dropcap_description_5 != '' %}
+            <li><b>{{ block.settings.dropcap_5  }}</b>{{ block.settings.dropcap_description_5  }}</li>
+            {% endif %}
+          </ul>
+        </div>
+      </section>
+    {% endif %}
+  {% elsif block.type == '2-col-text-wh-image' %}
+    {% if article.handle == articles[block.settings.text-wh-image-article].handle %}
+      <section class="textImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+        <div class="content-info">
+          <h2 class="heading">{{ block.settings.heading }}</h2>
+          <p>{{ block.settings.description }}</p>
+        </div>
+
+        {% if block.settings.link == blank %}
+        <div class="image">
+          {{block.settings.image | image_url: width: 2000 | image_tag: width: 660, height: 800, class: 'animate', alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          {% if block.settings.image_title != '' %}
+          <span>{{ block.settings.image_title }}</span>
+          {% endif %}
+        </div>
+        {% else %}
+        <a href="{{ block.settings.link }}" class="image" target="_blank">
+          {{block.settings.image | image_url: width: 2000 | image_tag: width: 660, height: 800, class: 'animate', alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          {% if block.settings.image_title != '' %}
+          <span>{{ block.settings.image_title }}</span>
+          {% endif %}
+        </a>
+        {% endif %}
+
+      </section>
+    {% endif %}
+  {% elsif block.type == '1-col-text-wh-center' %}
+    {% if article.handle == articles[block.settings.text-wh-center-article].handle %}
+      <section class="centerTextModule" id="block-{{block.id}}" data-type="{{block.type}}">
+        <div>
+          <h2 class="heading">{{ block.settings.heading  }}</h2>
+          <p>{{ block.settings.description  }}</p>
+        </div>
+      </section>
+    {% endif %}
+  {% elsif block.type == '2-col-image-text-wh' %}
+    {% if article.handle == articles[block.settings.image-text-wh-article].handle %}
+        <section class="textImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+          {% if block.settings.link == blank %}
+          <div class="image">
+            {{block.settings.image | image_url: width: 2000 | image_tag: width: 660, height: 800, class: 'animate', alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+            {% if block.settings.image_title != '' %}
+            <span>{{ block.settings.image_title }}</span>
+            {% endif %}
+          </div>
+          {% else %}
+          <a href="{{ block.settings.link }}" class="image" target="_blank">
+            {{block.settings.image | image_url: width: 2000 | image_tag: width: 660, height: 800, class: 'animate', alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+            {% if block.settings.image_title != '' %}
+            <span>{{ block.settings.image_title }}</span>
+            {% endif %}
+          </a>
+          {% endif%}
+
+          <div class="content-info">
+            <h2 class="heading">{{ block.settings.heading }}</h2>
+            <p>{{ block.settings.description }}</p>
+          </div>
+        </section>
+    {% endif %}
+  {% elsif block.type == '2-col-text-wh-product' %}
+    {% if article.handle == articles[block.settings.text-wh-product-article].handle %}
+      <section class="textImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+        <div class="content-info">
+          <h2 class="heading">{{ block.settings.heading }}</h2>
+          <p>{{ block.settings.description }}</p>
+        </div>
+
+        <div class="image text-left">
+          <div  class="collection__items">
+            {%- assign _product = all_products[block.settings.product] -%}
+            {%- include 'product-item' with _product -%}
+          </div>
+        </div>
+
+      </section>
+    {% endif %}
+  {% elsif block.type == '2-col-collection-text-wh' %}
+    {% if article.handle == articles[block.settings.collection-text-wh-article].handle %}
+      <section class="textImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+
+        <div class="image text-left">
+          <div class="commonSlider collection__items" {{ sliderSettings }}>
+            {% for _product in collections[block.settings.collection].products %}
+              {%- include 'product-item' with _product -%}
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="content-info">
+          <h2 class="heading">{{ block.settings.heading }}</h2>
+          <p>{{ block.settings.description }}</p>
+        </div>
+
+      </section>
+    
+    {% endif %}
+  {% elsif block.type == '2-col-limage-svideo' %}
+    {% if article.handle == articles[block.settings.limage-svideo-article].handle %}
+        <section class="smallLargeImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+          <div>
+            {% if block.settings.link_left == blank %}
+              <div class="ratio_wrapper res-660x800">
+                {{block.settings.left_image | image_url: width: 1800 | image_tag: width: 660, height: 800, class: 'animate', alt: block.settings.left_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+              </div>
+            {% else %}
+              <a href="{{ block.settings.link_left }}" target="_blank" class="ratio_wrapper res-660x800">
+                {{block.settings.left_image | image_url: width: 1800 | image_tag: width: 660, height: 800, class: 'animate', alt: block.settings.left_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+              </a>
+            {% endif %}
+
+            {% if block.settings.left_image_author != '' %}
+            <span>By {{ block.settings.left_image_author }}</span>
+            {% endif %}
+          </div>
+
+          <div class="smallSection animate"> 
+            {% if block.settings.right_image %}
+              {% if block.settings.link_right == blank %}
+              <div class="ratio_wrapper res-400x500">
+                {{block.settings.right_image | image_url: width: 1200 | image_tag: width: 400, alt: block.settings.right_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+              </div>
+              {% else %}
+                <a href="{{ block.settings.link_right }}" target="_blank" class="ratio_wrapper res-400x500">
+                  {{block.settings.right_image | image_url: width: 1200 | image_tag: width: 400, alt: block.settings.right_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                </a>
+              {% endif %}
+            {% elsif block.settings.video_url.type == 'youtube' %}
+              <div class="ratio_wrapper res-400x500">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/{{block.settings.video_url.id}}?playlist={{block.settings.video_url.id}}&loop=1&autoplay=1&mute=1" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+
+            {% elsif block.settings.video_url.type == 'vimeo' %}
+              <div class="ratio_wrapper res-400x500">
+                <iframe width="560" height="315" src="https://player.vimeo.com/video/{{block.settings.video_url.id}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+            {% elsif block.settings.custom_video_url %}
+              <div class="video-sect1">
+                <video
+                        loop
+                        muted
+                        preload="auto"
+                        width="100%"
+                        height="100%"
+                        playsinline="true" webkit-playsinline="true"
+                        data-setup='{"width": 300, "height": 250}' class="responsive-video">
+                  <source src="{{ block.settings.custom_video_url }}" type='video/mp4' /></video>
+              </div>
+            {% endif %}
+            {% if block.settings.right_image_author != ''  %}
+            <span>By {{ block.settings.right_image_author }}</span>
+            {% endif %}
+          </div>
+
+        </section>
+      {% endif %}
+  {% elsif block.type == '1-col-center-image' %}
+    {% if article.handle == articles[block.settings.image-center-article].handle %}
+      <section class="singleImageModule" id="block-{{block.id}}" data-type="{{block.type}}">
+        {% if block.settings.link == blank %}
+          <div class="ratio_wrapper res-1320x800">
+            {{block.settings.image | image_url: width: 2600 | image_tag: width: 1320, height: 800, class: 'animate', alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+        {% else %}
+          <a href="{{ block.settings.link }}" target="_blank" class="ratio_wrapper res-1320x800">
+            {{block.settings.image | image_url: width: 2600 | image_tag: width: 1320, height: 800, class: 'animate', alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </a>
+        {% endif %}
+        {%  if block.settings.author != '' %}
+        <span>By {{ block.settings.author }}</span>
+        {% endif %}
+      </section>
+    {% endif %}
+  {% elsif block.type == '1-col-center-video' %}
+  {% if article.handle == articles[block.settings.center-video-article].handle %}
+    <section class="largeVideoModule" id="block-{{block.id}}" data-type="{{block.type}}">
+      <div class="largeSection animate">
+        {% if block.settings.video_url.type == 'youtube' %}
+          <div class="ratio_wrapper res-1320x745">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/{{block.settings.video_url.id}}?playlist={{block.settings.video_url.id}}&loop=1&autoplay=1&mute=1&playsinline=1" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+
+          {% elsif block.settings.video_url.type == 'vimeo' %}
+          <div class="ratio_wrapper res-1320x745">
+            <iframe width="560" height="315" src="https://player.vimeo.com/video/{{block.settings.video_url.id}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          {% elsif block.settings.custom_video_url %}
+          <div class="video-sect1 ratio_wrapper res-1320x745">
+            <video
+                    loop
+                    muted
+                    autoplay
+                    preload="auto"
+                    width="100%"
+                    height="100%"
+                    playsinline="true" webkit-playsinline="true"
+                    data-setup='{"width": 300, "height": 250}' class="responsive-video">
+              <source src="{{ block.settings.custom_video_url }}" type='video/mp4' /></video>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  {% endif %}
+  {% elsif block.type == 'carousel' %}
+    {% if article.handle == articles[block.settings.carousel-article].handle %}
+      <section class="textImageModule {{block.type}} {{ block.settings.carousel_type }}" id="block-{{block.id}}" data-type="{{block.type}}">
+        {% assign blockId = block.id %}
+        {% assign imageRatio = 'res-400x500' %}
+        {% assign slidesToShow = 1 %}
+        
+        {% unless block.settings.carousel_type == 'fullwidth_carousel' or block.settings.carousel_type == 'grid_carousel' %}
+        <div class="content-info">
+          <h2 class="heading">{{ block.settings.c_title }}</h2>
+          <p>{{ block.settings.c_desc }}</p>
+        </div>
+        {% endunless %}
+        
+        {% if block.settings.carousel_type == 'fullwidth_carousel'%}
+        	{% assign imageRatio = 'res-1320x720' %}
+        	{% assign slidesToShow = 1 %}
+        {% endif %}
+        
+        {% if block.settings.carousel_type == 'grid_carousel'%}
+        	{% assign slidesToShow = 3 %}
+        {% endif %}
+
+        {% capture sliderSettings_blockId %}
+        data-slick='{
+          "slidesToShow": {{ slidesToShow }}, 
+          "slidesToScroll": {{ slidesToShow }},
+          "dots": {{ block.settings.dots }},
+          "infinite": true,
+          "arrows": {{ block.settings.arrows }},
+          "autoplay": false,
+          "adaptiveHeight": false,
+          "speed": 500,
+          "centerMode": false,
+          "centerPadding": "1px",
+          "responsive": [
+            {
+            "breakpoint": 768,
+              "settings":{
+              "slidesToShow": 1,
+              "slidesToScroll": 1
+              }
+            },
+            {
+            "breakpoint": 1024,
+              "settings":{
+              "slidesToShow": 2,
+              "slidesToScroll": 2
+              }
+            }
+          ]
+        }'
+        {% endcapture %}        
+        
+        <div class="image text-left">
+          <div class="commonSlider" {{ sliderSettings_blockId }}>
+            {%- for i in (1..5) -%}
+              {%- capture c_image %}c_image_{{i}}{% endcapture -%}
+            	{%- capture c_image_caption %}c_image_caption_{{i}}{% endcapture -%}
+              {%- capture c_link %}link_c_{{i}}{% endcapture -%}
+          		{% if block.settings[c_image] != blank %}
+            	  <div>
+                    {% if block.settings[c_link] == blank %}
+                      <div class="ratio_wrapper {{imageRatio}}">
+                        {{ block.settings[c_image] | img_tag: block.settings[c_image].alt, 'resp-img', '400x500@2x' }}
+                      </div>
+                    {% else %}
+                      <a href="{{ block.settings[c_link] }}" target="_blank" class="ratio_wrapper {{imageRatio}}">
+                        {{ block.settings[c_image] | img_tag: block.settings[c_image].alt, 'resp-img', '400x500@2x' }}
+                      </a>
+                    {% endif %}
+                    <span class="caption">{{ block.settings[c_image_caption] }}</span>
+                  </div>
+          		{% endif %}
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <script>
+          $(document).ready(function(){
+            setTimeout(function(){
+              var sl = $('#block-{{block.id}}.textImageModule.carousel_right .slick-slide');
+              sl.length < 2 ? sl.children().addClass('first-slide') : '';
+            },1000)
+          })
+        </script>
+
+      </section>       
+    {% endif %}  
+    {% elsif block.type == 'carousel-product' %}
+    {% if article.handle == articles[block.settings.carousel-article-product].handle %}
+      <section class="textImageModule {{block.type}} {{ block.settings.carousel_type }}" id="block-{{block.id}}" data-type="{{block.type}}">
+        {% assign blockId = block.id %}
+        {% assign imageRatio = 'res-400x500' %}
+        {% assign slidesToShow = 1 %}
+        
+        {% unless block.settings.carousel_type == 'grid_carousel' %}
+        <div class="content-info">
+          <h2 class="heading">{{ block.settings.c_title }}</h2>
+          <p>{{ block.settings.c_desc }}</p>
+        </div>
+        {% endunless %}
+        
+        {% if block.settings.carousel_type == 'grid_carousel'%}
+        	{% assign slidesToShow = 3 %}
+        {% endif %}
+
+        {% capture sliderSettings_blockId %}
+        data-slick='{
+          "slidesToShow": {{ slidesToShow }}, 
+          "slidesToScroll": {{ slidesToShow }},
+          "dots": {{ block.settings.dots }},
+          "infinite": true,
+          "arrows": {{ block.settings.arrows }},
+          "autoplay": false,
+          "adaptiveHeight": false,
+          "speed": 500,
+          "centerMode": false,
+          "centerPadding": "1px",
+          "responsive": [
+            {
+            "breakpoint": 768,
+              "settings":{
+              "slidesToShow": 1,
+              "slidesToScroll": 1
+              }
+            },
+            {
+            "breakpoint": 1024,
+              "settings":{
+              "slidesToShow": 2,
+              "slidesToScroll": 2
+              }
+            }
+          ]
+        }'
+        {% endcapture %}        
+        
+        <div class="image text-left">
+          <div class="commonSlider" {{ sliderSettings_blockId }}> 
+            {%- for i in (1..5) -%}
+              {%- capture pro %}product_{{i}}{% endcapture -%}
+          		{% if block.settings[pro] != blank %}
+                <div  class="collection__items">
+                  {% if all_products[block.settings[pro]].type == 'Sets Product'%}
+                    {%- include 'product-item' with all_products[block.settings[pro]] -%}
+                  {% else %}
+                    {%- include 'product-item' with all_products[block.settings[pro]] -%}
+                  {% endif %}
+                </div>
+          		{% endif %}
+            {%- endfor -%}
+          </div>
+        </div>
+
+      </section>       
+    {% endif %}  
+  {% endif %}
+
+</div> 
+{% endfor %}
+
+{% schema %}
+{
+  "name": "All Article Modules",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "2col-text-image",
+      "name": "2 Col Text & Image",
+      "settings": [
+        {
+          "type": "article",
+          "id": "article",
+          "label": "Article"
+        },
+        {
+          "type": "text",
+          "id": "left_dropcap_1",
+          "label": "Left Dropcap 1"
+        },
+        {
+          "type": "html",
+          "id": "left_dropcap_description_1",
+          "label": "Left Dropcap Description 1"
+         },
+        {
+          "type": "text",
+          "id": "left_dropcap_2",
+          "label": "Left Dropcap 2"
+        },
+        {
+          "type": "html",
+          "id": "left_dropcap_description_2",
+          "label": "Left Dropcap Description 2"
+        },
+        {
+          "type": "text",
+          "id": "left_dropcap_3",
+          "label": "Left Dropcap 3"
+        },
+        {
+          "type": "html",
+          "id": "left_dropcap_description_3",
+          "label": "Left Dropcap Description 3"
+        },
+        {
+          "type": "text",
+          "id": "left_dropcap_4",
+          "label": "Left Dropcap 4"
+        },
+        {
+          "type": "html",
+          "id": "left_dropcap_description_4",
+          "label": "Left Dropcap Description 4"
+        },
+        {
+          "type": "text",
+          "id": "left_dropcap_5",
+          "label": "Left Dropcap 5"
+        },
+        {
+          "type": "html",
+          "id": "left_dropcap_description_5",
+          "label": "Left Dropcap Description 5"
+        },
+        {
+          "type": "image_picker",
+          "id": "right_image",
+          "label": "Right Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image Link"
+        }
+      ]
+    },
+    {
+      "type": "1-col-text-center",
+      "name": "1 Col Text Center",
+      "settings": [
+        {
+          "type": "article",
+          "id": "text-center-article",
+          "label": "Article"
+        },
+        {
+          "type": "html",
+          "id": "text_center",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "2-col-large-image",
+      "name": "2 Col Large Image",
+      "settings": [
+        {
+          "type": "article",
+          "id": "limage-limage-article",
+          "label": "Article"
+        },
+        {
+          "type": "image_picker",
+          "id": "left_image",
+          "label": "Left Image"
+        },
+        {
+          "type": "url",
+          "id": "link_left",
+          "label": "Left Image Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "right_image",
+          "label": "Right Image"
+        },
+        {
+          "type": "url",
+          "id": "link_right",
+          "label": "Right Image Link"
+        }
+      ]
+    },
+    {
+      "type": "1-col-text-dropcap",
+      "name": "1 Col Text With DropCap",
+      "settings": [
+        {
+          "type": "article",
+          "id": "text-center-dropcap-article",
+          "label": "Article"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_1",
+          "label": "Dropcap 1"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_1",
+          "label": "Dropcap Description 1"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_2",
+          "label": "Dropcap 2"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_2",
+          "label": "Dropcap Description 2"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_3",
+          "label": "Dropcap 3"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_3",
+          "label": "Dropcap Description 3"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_4",
+          "label": "Dropcap 4"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_4",
+          "label": "Dropcap Description 4"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_5",
+          "label": "Dropcap 5"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_5",
+          "label": "Dropcap Description 5"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_6",
+          "label": "Dropcap 6"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_6",
+          "label": "Dropcap Description 6"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_7",
+          "label": "Dropcap 7"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_7",
+          "label": "Dropcap Description 7"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_8",
+          "label": "Dropcap 8"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_8",
+          "label": "Dropcap Description 8"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_9",
+          "label": "Dropcap 9"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_9",
+          "label": "Dropcap Description 9"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_10",
+          "label": "Dropcap 10"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_10",
+          "label": "Dropcap Description 10"
+        }
+      ]
+    },
+    {
+      "type": "1-col-quote-center",
+      "name": "1 Col Quotes Center",
+      "settings": [
+        {
+          "type": "article",
+          "id": "quote-center-article",
+          "label": "Article"
+        },
+        {
+          "type": "text",
+          "id": "quotes",
+          "label": "Quotes"
+        },
+        {
+          "type": "text",
+          "id": "author_quotes",
+          "label": "Author Quotes"
+        }
+      ]
+    },
+    {
+      "type": "2-col-simage-limage",
+      "name": "2 Col SImage & LImage",
+      "settings": [
+        {
+          "type": "article",
+          "id": "sImage-lImage-article",
+          "label": "Article"
+        },
+        {
+          "type": "image_picker",
+          "id": "simage",
+          "label": "Small Image"
+        },
+        {
+          "type": "url",
+          "id": "link_small",
+          "label": "Small Image Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "limage",
+          "label": "Large Image"
+        },
+        {
+          "type": "url",
+          "id": "link_large",
+          "label": "Large Image Link"
+        }
+      ]
+    },
+    {
+      "type": "2-col-limage-simage",
+      "name": "2 Col LImage & SImage",
+      "settings": [
+        {
+          "type": "article",
+          "id": "lImage-sImage-article",
+          "label": "Article"
+        },
+        {
+          "type": "image_picker",
+          "id": "limage",
+          "label": "Large Image"
+        },
+        {
+          "type": "url",
+          "id": "link_large",
+          "label": "Large Image Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "simage",
+          "label": "Small Image"
+        },
+        {
+          "type": "url",
+          "id": "link_small",
+          "label": "Small Image Link"
+        }
+      ]
+    },
+    {
+      "type": "2-col-image-text",
+      "name": "2 Col Image & Text",
+      "settings": [
+        {
+          "type": "article",
+          "id": "image-text-article",
+          "label": "Article"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_1",
+          "label": "Right Dropcap 1"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_1",
+          "label": "Right Dropcap Description 1"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_2",
+          "label": "Right Dropcap 2"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_2",
+          "label": "Right Dropcap Description 2"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_3",
+          "label": "Right Dropcap 3"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_3",
+          "label": "Right Dropcap Description 3"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_4",
+          "label": "Right Dropcap 4"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_4",
+          "label": "Right Dropcap Description 4"
+        },
+        {
+          "type": "text",
+          "id": "dropcap_5",
+          "label": "Right Dropcap 5"
+        },
+        {
+          "type": "html",
+          "id": "dropcap_description_5",
+          "label": "Right Dropcap Description 5"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image Link"
+        }
+      ]
+    },
+    {
+      "type": "2-col-text-wh-image",
+      "name": "2 Col Text W/H & Image",
+      "settings": [
+        {
+          "type": "article",
+          "id": "text-wh-image-article",
+          "label": "Article"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "html",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image Link"
+        },
+        {
+        "type": "text",
+        "id": "image_title",
+        "label": "Image Title"
+        }
+      ]
+    },
+    {
+      "type": "1-col-text-wh-center",
+      "name": "1 Col Text W/H Center",
+      "settings": [
+        {
+          "type": "article",
+          "id": "text-wh-center-article",
+          "label": "Article"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "html",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "2-col-image-text-wh",
+      "name": "2 Col Image & Text W/H",
+      "settings": [
+        {
+          "type": "article",
+          "id": "image-text-wh-article",
+          "label": "Article"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image Link"
+        },
+        {
+        "type": "text",
+        "id": "image_title",
+        "label": "Image Title"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "html",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "2-col-text-wh-product",
+      "name": "2 Col Text W/H & Product",
+      "settings": [
+        {
+          "type": "article",
+          "id": "text-wh-product-article",
+          "label": "Article"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "html",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    },
+    {
+      "type": "2-col-collection-text-wh",
+      "name": "2 Col Collection & Text",
+      "settings": [
+        {
+          "type": "article",
+          "id": "collection-text-wh-article",
+          "label": "Article"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "html",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "2-col-limage-svideo",
+      "name": "2 Col LImage & SVideo",
+      "settings": [
+        {
+          "type": "article",
+          "id": "limage-svideo-article",
+          "label": "Article"
+        },
+        {
+          "type": "image_picker",
+          "id": "left_image",
+          "label": "Left Image"
+        },
+        {
+          "type": "url",
+          "id": "link_left",
+          "label": "Left Image Link"
+        },
+        {
+        "type": "text",
+        "id": "left_image_author",
+        "label": "Left Image Author"
+        },
+        {
+          "type": "image_picker",
+          "id": "right_image",
+          "label": "Right Image"
+        },
+        {
+          "type": "url",
+          "id": "link_right",
+          "label": "Right Image Link"
+        },
+        {
+          "id": "video_url",
+          "type": "video_url",
+          "label": "Right Video URL",
+          "accept": [
+            "youtube",
+            "vimeo"
+          ]
+        },
+        {
+          "type": "text",
+          "id": "custom_video_url",
+          "label": "Right Custom Video Url"
+        },
+        {
+        "type": "text",
+        "id": "right_image_author",
+        "label": "Right Image/Video Author"
+        }
+      ]
+    },
+    {
+      "type": "1-col-center-image",
+      "name": "1 Col Center Image",
+      "settings": [
+        {
+          "type": "article",
+          "id": "image-center-article",
+          "label": "Article"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image Link"
+        },
+        {
+        "type": "text",
+        "id": "author",
+        "label": "Author"
+        }
+      ]
+    },
+    {
+    "type": "1-col-center-video",
+    "name": "1 Col Center Video",
+    "settings": [
+      {
+      "type": "article",
+      "id": "center-video-article",
+      "label": "Article"
+      },
+      {
+      "id": "video_url",
+      "type": "video_url",
+      "label": "Video URL",
+      "accept": ["youtube","vimeo" ]
+      },
+      {
+      "type": "text",
+      "id": "custom_video_url",
+      "label": "Custom Video Url"
+      }
+      ]
+    },
+    {
+      "type": "carousel",
+      "name": "Text & Carousel",
+      "settings": [
+          {
+            "type": "article",
+            "id": "carousel-article",
+            "label": "Article"
+          },
+          {
+            "type": "select",
+            "id": "carousel_type",
+            "label": "Placement",
+            "options": [
+              {
+                "value": "carousel_left",
+                "label": "Carousel Left Text Right"
+              },
+              {
+                "value": "carousel_right",
+                "label": "Text Left Carousel Right"
+              },
+              {
+                "value": "fullwidth_carousel",
+                "label": "Full Width Carousel"
+              },
+              {
+                "value": "grid_carousel",
+                "label": "3x Grid Carousel"
+              }
+            ],
+            "default": "carousel_left"
+          },
+          {
+            "type": "image_picker",
+            "id": "c_image_1",
+            "label": "Carousel Image 1"
+          },
+          {
+            "type": "url",
+            "id": "link_c_1",
+            "label": "Carousel Image Link 1"
+          },
+          {
+            "type": "text",
+            "id": "c_image_caption_1",
+            "label": "Image Caption 1",
+            "default": "By Nateisha Scott"
+          },
+          {
+            "type": "image_picker",
+            "id": "c_image_2",
+            "label": "Carousel Image 2"
+          },
+          {
+            "type": "url",
+            "id": "link_c_2",
+            "label": "Carousel Image Link 2"
+          },
+          {
+            "type": "text",
+            "id": "c_image_caption_2",
+            "label": "Image Caption 2",
+            "default": "By Nateisha Scott"
+          },
+          {
+            "type": "image_picker",
+            "id": "c_image_3",
+            "label": "Carousel Image 3"
+          },
+          {
+            "type": "url",
+            "id": "link_c_3",
+            "label": "Carousel Image Link 3"
+          },
+          {
+            "type": "text",
+            "id": "c_image_caption_3",
+            "label": "Image Caption 3",
+            "default": "By Nateisha Scott"
+          },
+          {
+            "type": "image_picker",
+            "id": "c_image_4",
+            "label": "Carousel Image 4"
+          },
+          {
+            "type": "url",
+            "id": "link_c_4",
+            "label": "Carousel Image Link 4"
+          },
+          {
+            "type": "text",
+            "id": "c_image_caption_4",
+            "label": "Image Caption 4",
+            "default": "By Nateisha Scott"
+          },
+          {
+            "type": "image_picker",
+            "id": "c_image_5",
+            "label": "Carousel Image 5"
+          },
+          {
+            "type": "url",
+            "id": "link_c_5",
+            "label": "Carousel Image Link 5"
+          },
+          {
+            "type": "text",
+            "id": "c_image_caption_5",
+            "label": "Image Caption 5",
+            "default": "By Nateisha Scott"
+          },
+          {
+            "type": "text",
+            "id": "c_title",
+            "label": "Heading",
+            "default": "Heading"
+          },
+          {
+            "type": "richtext",
+            "id": "c_desc",
+            "label": "Description",
+            "default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>"
+          },
+          {
+            "type": "header",
+            "content": "Slider options"
+          },
+          {
+            "type": "checkbox",
+            "id": "dots",
+            "label": "Show dots",
+            "default": true
+          },
+          {
+            "type": "checkbox",
+            "id": "arrows",
+            "label": "Show arrows",
+            "default": true
+          }
+        ]
+      },
+      {
+        "type": "carousel-product",
+        "name": "Text & Carousel Products",
+        "settings": [
+            {
+              "type": "article",
+              "id": "carousel-article-product",
+              "label": "Article"
+            },
+            {
+              "type": "select",
+              "id": "carousel_type",
+              "label": "Placement",
+              "options": [
+                {
+                  "value": "carousel_left",
+                  "label": "Carousel Left Text Right"
+                },
+                {
+                  "value": "carousel_right",
+                  "label": "Text Left Carousel Right"
+                },
+                {
+                  "value": "grid_carousel",
+                  "label": "3x Grid Carousel"
+                }
+              ],
+              "default": "carousel_left"
+            },
+            {
+              "type": "product",
+              "id": "product_1",
+              "label": "Select Product 1"
+            },
+            {
+              "type": "product",
+              "id": "product_2",
+              "label": "Select Product 2"
+            },
+            {
+              "type": "product",
+              "id": "product_3",
+              "label": "Select Product 3"
+            },
+            {
+              "type": "product",
+              "id": "product_4",
+              "label": "Select Product 4"
+            },
+            {
+              "type": "product",
+              "id": "product_5",
+              "label": "Select Product 5"
+            },
+            {
+              "type": "text",
+              "id": "c_title",
+              "label": "Heading",
+              "default": "Heading"
+            },
+            {
+              "type": "richtext",
+              "id": "c_desc",
+              "label": "Description",
+              "default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>"
+            },
+            {
+              "type": "header",
+              "content": "Slider options"
+            },
+            {
+              "type": "checkbox",
+              "id": "dots",
+              "label": "Show dots",
+              "default": true
+            },
+            {
+              "type": "checkbox",
+              "id": "arrows",
+              "label": "Show arrows",
+              "default": true
+            }
+          ]
+        }      
+  ]
+}
+{% endschema %}

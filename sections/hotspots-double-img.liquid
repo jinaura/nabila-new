@@ -1,0 +1,481 @@
+{% assign _section = section.settings %}
+{% assign image = _section.small_image %}
+{% assign video = _section.video_url %}
+{% assign customVideoUrl = _section.custom_video_url %}
+{% assign customVideoAlt = _section.custom_video_alt %}
+{% capture smallImage %}
+  {{image | image_url: width: 350 | image_tag: width: 350, height: 525, preload: true, alt: image.alt, fetchpriority: 'low' }}
+{% endcapture %}
+{% capture videoYoutube %}<iframe width="350" height="525" src="https://www.youtube.com/embed/{{video.id}}?playlist={{video.id}}&loop=1&autoplay=1&mute=1" fetchpriority="high" title="{{customVideoAlt}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+{% capture videoVimeo %}<iframe width="350" height="525" src="https://player.vimeo.com/video/{{video.id}}" fetchpriority="high" title="{{customVideoAlt}}" frameborder="0" allow="loop;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+{% capture customVideo %}
+  <video id="video-{{ section.id }}" muted loop autoplay preload="auto" playsinline="true" webkit-playsinline="true" width="350px" height="525px" data-setup='{"width": 350, "height": 525}'>
+    <source src="{{customVideoUrl}}" type='video/mp4' />
+  </video>
+{% endcapture %} 
+{{ 'hotspot-product.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'slick.js'  | asset_url | script_tag }}
+
+<section class="hotspots-double-img {{ section.id }}" style="background-color:{{_section.double_background}}">
+  <div class="container {%if _section.big_left_small_right == true %}invert_blocks_dt{% endif%}{%if _section.big_bottom_small_top == true %} invert_blocks_mob{% endif%}">
+    <div class="flex-item small-img">
+      <div>
+        {% if customVideoUrl != '' and _section.enable_video_control %}
+          <div class="player-controls {{_section.controle_alignment}}">
+            <button class="play">{% render 'svg-icons' with 'play' %}</button>
+            <button class="pause">{% render 'svg-icons' with 'pause' %}</button>
+          </div>
+        {% endif %}
+
+
+        {% if image != '' and customVideoUrl != '' %}
+          {{customVideo}}
+        {% else %}
+          {% if image != '' %} {{smallImage}} {% endif %}
+        {% endif %}
+        {% if video.type == 'youtube' %} {{videoYoutube}} {% endif %}
+        {% if video.type == 'vimeo' %} {{videoVimeo}} {% endif %}
+      </div>
+    </div>
+    <div class="flex-item big-img">
+      <div class="big-img__img">
+        {{_section.big_image | image_url: width: 1160 | image_tag: width: 500, height: 550, alt: _section.big_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+        {% assign ind = 0 %}
+        {% for block in section.blocks %}
+          {% unless block.settings.double_prod.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+          {% unless block.settings.double_prod.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+            {% assign ind = ind | plus: 1 %}
+            <button class="hotspot {% if ind == 1 %}hot_active{% endif %}" data-hotspot="{{ind}}" style="top:{{block.settings.position_vertical}}%; left:{{block.settings.position_horizontal}}%;"></button>
+          {% endunless %}
+          {% endunless %}
+        {% endfor %}
+      </div>
+      <div class="big-img__products">
+        {% assign ele = 0 %}
+        {% for block in section.blocks %}
+          {% unless block.settings.double_prod.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+          {% unless block.settings.double_prod.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+            {% assign ele = ele | plus: 1 %}
+            <div class="hotspots-prodts__single-prod" data-hotprod="{{ele}}">
+              {% comment %} <span class="hotspot-highlight"></span> {% endcomment %}
+              {%- include 'hotspot-product' with _product: block.settings.double_prod, hot-variant: block.settings.double_prod_variant, extra_text: block.settings.extra_text, img_hot_prod: block.settings.img_hot_prod -%}
+            </div>
+          {% endunless %}
+          {% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  {% comment %} start video control styling {% endcomment %}
+    .hotspots-double-img .player-controls {
+      position: absolute !important;
+    }
+    .hotspots-double-img .player-controls {
+      position: absolute;
+      z-index: 3;
+      right: 12px;
+      bottom: 20px;
+      display: flex;
+    }
+    .hotspots-double-img .player-controls.left {
+      left: 12px;
+      right: auto;
+    }
+    .hotspots-double-img .player-controls button {
+      padding: 0;
+      border: 0;
+      background: none;
+      width: 12px;
+      height: 12px;
+      margin: 0 8px;
+    }
+    .hotspots-double-img .player-controls button.play {
+      display:none;
+    }
+    .hotspots-double-img .player-controls button.volume {
+      height: 20px;
+      width: 20px;
+      margin-top: -2px;
+    }
+    .hotspots-double-img .player-controls button.volume.unmuted svg path#v {
+      display: none;
+    }
+    .hotspots-double-img .player-controls button svg {
+      width: 100%;
+      height: 100%;
+      filter: invert(1);
+    }
+    @media (max-width:767px) {
+      .hotspots-double-img .player-controls {
+        right: 5px;
+        margin: auto;
+        justify-content: center;
+        bottom: 7px !important;
+      }
+      .hotspots-double-img .player-controls.left {
+        left: 5px;
+        right: auto;
+      }
+    }
+  {% comment %} end video control styling {% endcomment %}
+
+  .hotspots-double-img .container {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    padding-top: 80px;
+    padding-bottom: 140px;
+    max-width: 1061px;
+  }
+  .hotspots-double-img .container.invert_blocks_dt {
+    flex-direction: row-reverse;
+  }
+  .hotspots-double-img .small-img {
+    flex: 1;
+  }
+  .hotspots-double-img .small-img > div {
+    position: relative;
+  }
+  .hotspots-double-img .container:not(.invert_blocks_dt) .small-img {
+    padding-right: 15px;
+  }
+  .hotspots-double-img .container.invert_blocks_dt .small-img {
+    padding-left: 15px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .hotspots-double-img .small-img video {
+    object-fit: cover;
+  }
+  .hotspots-double-img .big-img {
+    max-width: 500px;
+    overflow: hidden;
+  }
+  .hotspots-double-img .big-img .big-img__img {
+    position: relative;
+    max-height: 550px;
+  }
+  {% comment %} to be removed when slider is applied {% endcomment %}
+  .hotspots-double-img .big-img .big-img__img .hotspot.hot_active {
+    pointer-events: none;
+  }
+  {% comment %} to be removed from desktop and added to mobile when slider is applied {% endcomment %}
+  .hotspots-double-img .big-img .big-img__products {
+    padding: 0 8px 15px 0;
+    max-height: 240px;
+  }
+  .hotspots-double-img .product__item.hotspot-product {
+    position: relative;
+  }
+  .hotspots-double-img .product_img_wrapper {
+    position: unset;
+  }
+  .hotspots-double-img .cart_actions .price_btn {
+    background-color: #2a2a2a;
+  }
+  .hotspots-double-img .slick-list {
+    overflow: visible;
+  }
+  {% comment %} to be removed when slider is applied {% endcomment %}
+  @media (max-width: 450px) {
+    .hotspots-double-img .big-img .big-img__products {
+      max-height: 164px;
+    }
+    .hotspots-double-img .product_img_wrapper {
+      max-width: 144px !important;
+    }
+    .hotspots-double-img .product_img_wrapper img {
+      height: auto;
+      max-height: 146px;
+    }
+  }
+  @media (max-width: 767px) {
+    .hotspots-double-img .container,
+    .hotspots-double-img .container.invert_blocks_dt {
+      flex-direction: column-reverse;
+      padding: 40px 20px;
+    }
+    .hotspots-double-img .container.invert_blocks_mob {
+      flex-direction: column;
+    }
+    .hotspots-double-img .flex-item {
+      width: 100%;
+    }
+    .hotspots-double-img .container:not(.invert_blocks_mob) .flex-item:first-child,
+    .hotspots-double-img .container.invert_blocks_mob .flex-item:nth-child(2) {
+      margin-top: 40px;
+    }
+    .hotspots-double-img .container .small-img {
+      flex: none;
+      width: 158px;
+      height: 237px;
+    }
+    .hotspots-double-img .small-img > div {
+      height: inherit;
+    }
+    .hotspots-double-img .container:not(.invert_blocks_dt) .small-img,
+    .hotspots-double-img .container.invert_blocks_dt .small-img {
+      padding-right: 0;
+      padding-left: 0;
+    }
+    .hotspots-double-img .small-img img,
+    .hotspots-double-img .small-img video {
+      height: inherit;
+      object-fit: cover;
+    }
+    .hotspots-double-img .big-img .big-img__products {
+      padding: 20px 8px 15px 0;
+      background-color: #fafafa;
+    }
+
+    .hotspots-double-img .shutter {
+      width: calc(100% + 9px);
+    }
+  }
+  @media (min-width: 768px) {
+    .hotspots-double-img .big-img .big-img__products {
+      padding: 0;
+    }
+    .hotspots-double-img .hotspots-prodts__single-prod {
+      background-color: #fafafa;
+    }
+    .hotspots-double-img .slick-dots {
+      height: 0;
+      margin: 0;
+      bottom: 26px;
+      right: -235px;
+      width: fit-content;
+    }
+    .hotspots-double-img .shutter {
+      padding-bottom: 20px !important;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    //video control
+    if ($('#video-{{ section.id }}').length &&  $('.{{ section.id }} .player-controls').length) {
+      let video = document.getElementById("video-{{ section.id }}");
+      $('.{{ section.id }} .player-controls .play').on('click', function(){
+        video.play();
+        $(this).hide();
+        $('.{{ section.id }} .player-controls .pause').show();
+      });
+      $('.{{ section.id }} .player-controls .pause').on('click', function(){
+        video.pause();
+        $(this).hide();
+        $('.{{ section.id }} .player-controls .play').show();
+      });
+    }
+
+    //hotspot click   //TODO add a slider animation
+    var hotspotId;
+    document.querySelector('.{{ section.id }}').addEventListener('click', function(e) {
+      if (e.target.classList.contains('hotspot')){
+
+        if(e.target.classList.contains('hot_active')) {
+          e.target.classList.remove('hot_active');
+          hotspotId = '';
+        } else {
+          let hotspots = e.target.parentNode.querySelectorAll('.hotspot');
+          hotspots.forEach(el => {
+            if(el.classList.contains('hot_active')){
+              el.classList.remove('hot_active')
+            }
+          });
+          e.target.classList.add('hot_active');
+          hotspotId = e.target.dataset.hotspot;
+          //TODO remove next 2 lines when using slider
+          const carousel = e.target.parentNode.parentNode.parentNode.querySelector('.{{ section.id }}.hotspots-double-img .big-img__products');
+          $(carousel).slick( 'slickGoTo', hotspotId - 1 );
+        }
+
+        //TODO add when slider animation
+        {% comment %} let allProducts = e.target.parentNode.parentNode.parentNode.querySelector('.hotspots-prodts').querySelectorAll('.hotspots-prodts__single-prod');
+        allProducts.forEach(ele => {
+          if(ele.dataset.hotprod == hotspotId) {
+            ele.querySelector('.hotspot-highlight').classList.add('prod_active');
+          } else {
+            ele.querySelector('.hotspot-highlight').classList.remove('prod_active')
+          }
+        }); {% endcomment %}
+      }
+    });
+
+    //product carousel  //TODO remove when slider is added
+    function createCarousel() {
+      $('.{{ section.id }}.hotspots-double-img .big-img__products').slick({
+        infinite: false,
+        dots: true,
+        arrows: true,
+        initialSlide: 0,
+        responsive: [
+          {
+            breakpoint: 767,
+            settings: {
+              arrows: false
+            },
+          },
+        ],
+      }).css({"maxHeight":"unset"});
+    }
+
+    createCarousel();
+
+    //On swipe/drag/dot & arrow click event - carousel
+    $('.{{ section.id }}.hotspots-double-img .big-img__products').on('afterChange', function(event, slick, currentSlide){
+      $(event.currentTarget).parent().find('.big-img__img .hotspot').each(function(ind, el) {
+        $(el).hasClass('hot_active') && $(el).data('hotspot') != slick.currentSlide + 1 ? $(el).removeClass('hot_active') : $(el).data('hotspot') == slick.currentSlide + 1 && $(el).addClass('hot_active');
+      });
+    });
+  });
+</script>
+
+{% schema %}
+    {
+      "name": "Hotspots - Double Image",
+      "max_blocks": 3,
+      "settings": [
+        {
+          "type": "color",
+          "id": "double_background",
+          "label": "Block Background",
+          "default": "#ffffff"
+        },
+        {
+          "type": "header",
+          "content": "Desktop - containers position"
+        },
+        {
+          "type": "checkbox",
+          "id": "big_left_small_right",
+          "label": "Big Image to the LEFT and small image/video to the RIGHT",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Mobile - containers position"
+        },
+        {
+          "type": "checkbox",
+          "id": "big_bottom_small_top",
+          "label": "Big Image to the TOP and small image/video to the BOTTOM",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Small Container"
+        },
+        {
+          "type": "image_picker",
+          "id": "small_image",
+          "label": "Small Image"
+        },
+        {
+          "id": "video_url",
+          "type": "video_url",
+          "label": "Video URL",
+          "accept": ["youtube", "vimeo"]
+        },
+        {
+          "type": "text",
+          "id": "custom_video_url",
+          "label": "Custom Video Url"
+        },
+        {
+          "type": "textarea",
+          "id": "custom_video_alt",
+          "label": "ADA - Custom Video alt text"
+        },
+        {
+          "id": "enable_video_control",
+          "type": "checkbox",
+          "label": "Enable Video Controls",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "controle_alignment",
+          "label": "Video Controls Alligment",
+          "default": "right",
+          "options": [
+            {
+              "label": "Left",
+              "value": "left"
+            },
+            {
+              "label": "Right",
+              "value": "right"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Big Container"
+        },
+        {
+          "type": "image_picker",
+          "id": "big_image",
+          "label": "Big Image"
+        }
+      ],
+      "blocks" : [
+        {
+          "type": "slide",
+          "name": "Hotspot",
+          "settings": [
+            {
+              "type": "product",
+              "id": "double_prod",
+              "label": "Product"
+            },
+            {
+              "type": "text",
+              "id": "double_prod_variant",
+              "label": "Product Variant"
+            },
+            {
+              "type": "image_picker",
+              "id": "img_hot_prod",
+              "label": "Product Image"
+            },
+            {
+              "type": "text",
+              "id": "extra_text",
+              "label": "Extra Text after product description"
+            },
+            {
+              "type": "range",
+              "id": "position_vertical",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": "Vertical Position",
+              "default": 10
+            },
+            {
+              "type": "range",
+              "id": "position_horizontal",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": "Horizontal Position",
+              "default": 10
+            }
+          ]
+        }
+      ],
+      "presets": [
+        {
+          "name": "Hotspots - Double Image",
+          "category": "Text"
+        }
+      ]
+    }
+{% endschema %}

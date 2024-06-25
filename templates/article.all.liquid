@@ -1,0 +1,100 @@
+{% assign check_article = true %}
+{% for tag in article.tags %}
+  {% if tag == 'hide_for_user' %}
+    {% assign check_article = false %}
+  {% endif %}
+{% endfor %}
+
+
+{% capture CFH %}{{ content_for_header  }}{% endcapture %}
+{% assign admin = false %}
+{% if CFH contains 'admin_bar_iframe' %}
+    {% assign admin = true %}
+    {% elsif CFH contains 'preview_bar_injector ' %}
+    {% assign admin = true %}
+    {% elsif CFH contains 'designMode' %}
+    {% assign admin = true %}
+{% endif %}
+
+{% if admin == false and check_article == false %}
+    <!-- User is an admin -->
+    <script> window.location.replace("/");</script>
+{% endif %}
+
+
+{%- include 'editorial-subnavigation' -%}
+
+<section class="heroModule">
+  <div class="ratio_wrapper res-1320x720 res-m-400x500 animate">{{ article.image | img_url: '1024x1024' | img_tag: article.image.alt }}</div>
+  <div class="content-info">
+    <h1>{{- article.title -}}</h1>
+
+    {% assign article_category = article.handle | split: '/' | first %}
+    {% for tag in article.tags %}
+      {% assign words = tag | split: '-'   %}
+      {% assign first_word =  words[0] | downcase %}
+      {% assign blog_title = blog.title | downcase %}
+      {% if first_word == blog_title %}
+          {% assign article_category= words[1] %}
+      {% endif %}
+    {% endfor %}
+
+    <span>{{article_category | capitalize}}</span>
+  </div>
+  <span class="s_btn hidden-sm hidden-md hidden-lg">{%- include 'svg-icons' with 'share' -%}</span>
+</section>
+
+<section class="share_meta">
+  <div class="container">
+    <div class="share">
+      {%- assign date_format = 'date_formats.short' | t -%}
+      {%- assign published_at = article.published_at | date: date_format -%}
+
+      {% assign checkTagAuthor = '' %}
+      {% for tag in article.tags %}
+        {% assign words = tag | split: '-'   %}
+        {% assign first_word =  words[0] | downcase %}
+        {% assign blog_title = blog.title | downcase %}
+        {% if first_word == 'author' %}
+          <span class="auther">By {{ words[1] | capitalize  }}</span>
+          {% assign checkTagAuthor = true %}
+        {% endif %}
+      {% endfor %}
+      {% if checkTagAuthor == '' %}
+        <span class="auther">By {{ article.author | capitalize  }}</span>
+      {% endif %}
+
+      &nbsp; {{- published_at -}}
+    </div>
+    <div class="tags">
+        {% for tag in article.tags %}
+          {% assign words = tag | split: '-'   %}
+          {% assign first_word =  words[0] | downcase %}
+          {% assign blog_title = blog.title | downcase %}
+          {% if first_word == blog_title %}
+            <a href="/blogs/{{ first_word }}?sub_cat={{ words[1]}}">{{ words[1] }}</a>
+          {% endif %}
+
+        {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="article_desc">
+  <div class="container">
+  	{{- article.content -}}
+  </div>
+</section>
+
+<div class="container">
+	
+	{%- section 'all-article-modules' -%}
+	
+	<div class='relatedArticles'>
+		<h2>Related Stories</h2>
+		<hr class="section__divider">
+		{%- include 'article-related-stories' -%}
+      	<hr class="section__divider">
+	</div> 
+
+</div><!-- /.container -->

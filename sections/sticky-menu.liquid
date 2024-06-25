@@ -1,0 +1,206 @@
+{% assign _section = section.settings %}
+{% assign sticky_nav_placement = "" %}
+{% if section.settings.sticky_nav_placement == "bottom" %}
+  {% assign sticky_nav_placement = "sticky-nav-bottom" %}
+{% endif %}
+{% if section.settings.sticky_nav_placement == "top" %}
+  {% assign sticky_nav_placement = "sticky-nav-top" %}
+{% endif %}
+
+<section id="sticky-menu-wrapper" class="sticky-menu {{ sticky_nav_placement }}">
+  <div class="sticky-menu__wrapper hidden-sm hidden-md hidden-lg">
+
+    {% for block in section.blocks %}
+      {% unless block.settings.sticky_menu_text == 'Trial' and localization.country.iso_code == 'GB' %}
+          <a href="{{ block.settings.sticky_menu_url }}">{{ block.settings.sticky_menu_text }}</a>
+          {% if forloop.last != true and forloop.length > 1%}
+            <span>|</span>
+          {% endif%}
+      {% endunless %}
+    {% endfor %}
+
+  </div>
+</section>
+
+<style>
+  @media (max-width: 767px){
+    .sticky-section-menu {
+      height:40px;
+    }
+
+    .wrapper .footer {
+      margin-top: 0!important;
+    }
+  }
+
+  
+  .sticky-menu {
+    position: fixed;
+    left: 0;
+    z-index: 3;
+    background-color: #fff;
+  }
+
+  .sticky-menu::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: 0;
+    width: 27px;
+    height: 36px;
+    transform: rotate(-180deg);
+    background-image: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 104%);
+  }
+
+  .sticky-menu__wrapper {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0 auto;
+    overflow: auto;
+    white-space: nowrap;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #e6e3e0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .sticky-menu__wrapper a {
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #1d1d1d;
+    font-family: var(--font-regular);
+    letter-spacing: 0.86px;
+  }
+  .sticky-menu__wrapper a:first-child {
+    font-family: var(--font-medium);
+  }
+
+  .sticky-menu__wrapper span {
+    margin: 0 12px;
+    color: #e6e3e0;
+    font-size: 12px;
+    font-family: var(--font-medium);
+    letter-spacing: 0.86px;
+  }
+
+  .below-the-fold{
+    position: sticky;
+    top: 100px;
+    z-index: 55;
+  }
+  .below-the-fold .sticky-menu{
+    position:unset;
+  }
+
+  @media only screen and (max-width: 767px) {
+    html.sticky-below-fold body {
+      margin-top: -40px;
+    }
+
+    .sticky-section-menu-fold{
+      position: fixed!important;
+    }
+
+  }
+
+</style>
+
+<script>
+  $(document).ready(function() {
+    stickyMaxWidth();
+
+    $(window).resize(function () {
+      stickyMaxWidth();
+    });
+
+    function stickyMaxWidth() {
+      $('.sticky-menu').css('maxWidth', $(window).width());
+    }
+
+    if($(window).width() < 767) {
+
+      {% if _section.sticky_nav_placement == "below-fold" %}
+      $('.sticky-section-menu').addClass('below-the-fold');
+      $('html').addClass('sticky-below-fold');
+
+      $(window).on('scroll', function () {
+        if ($(window).scrollTop() > $('.sticky-section-menu').offset().top - 90) {
+          $('.sticky-menu').addClass('sticky-section-menu-fold');
+          $('.promoModule').css({'padding-top' : '60px'})
+        } else {
+          $('.sticky-menu').removeClass('sticky-section-menu-fold');
+          $('.promoModule').css({'padding-top' : '20px'})
+        }
+      });
+      {% endif %}
+    }
+
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Sticky Menu",
+    "class": "sticky-section-menu",
+    "max_blocks": 15,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Sticky Nav Settings"
+      },
+      {
+        "type": "radio",
+        "id": "sticky_nav_placement",
+        "label": "Sticky nav placement",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "below-fold",
+            "label": "Below Fold"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ],
+        "default": "top"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "slide",
+        "name": "Menu Link",
+        "settings": [
+          {
+            "type": "text",
+            "id": "sticky_menu_text",
+            "label": "Link Text",
+            "default": "Shop All"
+          },
+          {
+            "type": "url",
+            "id": "sticky_menu_url",
+            "label": "Link to"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Sticky Menu",
+        "category": "Custom",
+        "blocks": [
+          {
+            "type": "slide"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

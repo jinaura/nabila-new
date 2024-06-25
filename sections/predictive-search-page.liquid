@@ -1,0 +1,73 @@
+{%- if predictive_search.performed -%}
+<div class="search-right-column">
+    <div id="SearchContent">
+        <div class="search-tabs-box">
+            <ul class="search-tabs">
+                <li class="clickme"><a href="javascript:;" data-tag="TopProducts" class="activelink TopProducts">Products ({{ predictive_search.resources.products.size }})</a></li>
+                <li class="clickme"><a href="javascript:;" data-tag="TopArticles" class="TopArticles">Articles ({{ predictive_search.resources.articles.size }})</a></li>
+            </ul>
+        </div>
+
+        <div class="search-info">
+            <div class="search-result-for">
+                {% if search.results_count == 0 %}
+                    <h3>NO PRODUCTS FOUND: <span>SEE TOP SELLERS</span></h3>
+                {% else %}
+                    <h3>RESULTS FOR: <span>{{ search.terms | upcase  }}</span></h3>
+                {% endif %}
+            </div>
+
+            <div class="search-result-viewall" style="display: none">
+                <a href="/pages/editorial">View All</a>
+            </div>
+        </div>
+        <!-- search-info -->
+
+        <div id="container">
+            <div class="list" id="TopProducts">
+                <div class="search__results">
+                    {% if predictive_search.resources.products.size > 0 %}
+                       <div class="search__results-inner">
+                                <div class="collection__items">
+
+                                    {%- for product in predictive_search.resources.products -%}
+                                        {% if product.price != 0 and  product.type != 'Gift Box' %}
+                                            {% if product.type == 'Sets Product' %}
+                                                {%- include 'product-item-sets' with product , coll_type: 'sets' -%}
+                                            {% else %}
+                                                {%- include 'product-item' with product, coll_type: 'best-sellers' -%}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                </div><!-- /.search__items -->
+
+                            </div>
+                    {% endif %}
+                </div><!-- /.search__results -->
+            </div>
+            <div class="list" style="display: none;" id="TopArticles">
+                <div class="search__results">
+
+                    {% if predictive_search.resources.articles.size > 0 %}
+                            <div class="search__results-inner">
+                                <div class="collection__items articles-collections">
+                                    {%- for pre_article in predictive_search.resources.articles -%}
+                                        {%unless pre_article.tags contains 'hide_for_user'%}
+                                            {%- include 'search-result-item' with pre_article -%}
+                                        {%endunless%}
+                                    {% endfor %}
+                                </div><!-- /.search__items -->
+                            </div>
+                    {%- endif -%}
+
+                </div><!-- /.search__results -->
+
+                <a href="/pages/editorial" class="showalllink">View Editorial</a>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{%- endif -%}

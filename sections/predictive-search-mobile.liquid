@@ -1,0 +1,57 @@
+{%- if predictive_search.performed -%}
+
+
+    <div id="predictive-search-results" class="popular-product-search-wrap" >
+
+        <div class="search__items {% if predictive_search.resources.products.size < 1 and predictive_search.resources.articles.size < 1 %} no-resultClass {% endif %}  {% if predictive_search.resources.products.size > 1  %} customMargin40 {% endif %}  ">
+            {% if predictive_search.terms contains 'xyz' %}
+                <h3 class="predictive-search__heading">No results found </h3>
+                {% elsif predictive_search.resources.products.size < 1 and predictive_search.resources.articles.size < 1  %}
+                {% include 'search-no-result-mobile' %}
+            {% else %}
+
+            {%- if predictive_search.resources.products.size > 0 -%}
+
+                {%- for product in predictive_search.resources.products -%}
+                    {% if product.price != 0 and  product.type != 'Gift Box' %}
+                        {% if product.type == 'Sets Product' %}
+                            {%- include 'product-item-sets' with product , coll_type: 'sets' -%}
+                        {% else %}
+                            {%- include 'product-item' with product, coll_type: 'best-sellers' -%}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+            {%- endif -%}
+
+            {%-  if predictive_search.resources.articles.size > 0 -%}
+
+                {%- for article in predictive_search.resources.articles -%}
+                    <div class="popular-product-item product__item ">
+                        <div class="p-image">
+                            <a href="{{ article.url }}"><img src="{{article.image | img_url: '600x'}}" alt="{{ article.image.alt }}"></a>
+                        </div>
+                        <div class="inner_content">
+                            <a href="{{ article.url }}" class="buy_btn">Read Now</a>
+                        </div>
+                        <div class="p-title">
+                            <a href="{{ article.url }}"><h3>{{ article.title }}</h3></a>
+                        </div>
+                    </div>
+                {% endfor %}
+
+              {%- endif -%}
+            {%- endif -%}
+        </div>
+
+      
+        <div class="result-details-bottom">
+           <p><a href="/search?q={{ predictive_search.terms | escape }}">View All Results</a></p>
+        </div>
+
+
+      
+    </div>
+{%- endif -%}
+
+

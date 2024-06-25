@@ -1,0 +1,234 @@
+{% assign verticalImage = section.settings %}
+
+{% if verticalImage.ratio == '4:5' %}
+    {% assign ratioClass = 'res-660x800' %}
+    {% assign imageRatio = '660x800' %}
+{% else %}
+    {% assign ratioClass = 'res-400x400' %}
+    {% assign imageRatio = '400x400' %}
+{% endif %}
+
+<section class="verticalImagePos {{ verticalImage.placement }} {{ verticalImage.placement_mobile}}" id="section-{{section.id}}">
+    <div class="image">
+        {% if verticalImage.image != blank %}
+            {% if verticalImage.link == blank %}
+                <div class="ratio_wrapper {{ ratioClass }}">
+                    <img class="animate" src="{{ verticalImage.image | img_url: imageRatio ,scale:2 }}" alt="{{ verticalImage.image.alt }}" fetchpriority="low" loading="lazy">
+                </div>
+            {% else %}
+                <a href="{{ verticalImage.link }}" target="_blank" class="ratio_wrapper {{ ratioClass }}">
+                    <img class="animate" src="{{ verticalImage.image | img_url: imageRatio ,scale:2 }}" alt="{{ verticalImage.image.alt }}" fetchpriority="low" loading="lazy">
+                </a>
+            {% endif %}
+        {% else %}
+            <div>{{ 'image' | placeholder_svg_tag: 'placeholder' }}</div>
+        {% endif %}
+
+        {% if verticalImage.author != ''  %}
+            <span>By {{ verticalImage.author }}</span>
+        {% endif %}
+    </div>
+    <div class="content-info {% if  verticalImage.placement == 'row-center'  %} hideDektop{% endif %}">
+
+        {% if verticalImage.title != blank %}
+            <h2 class="heading">{{verticalImage.title }}</h2>
+        {% endif %}
+
+        {% if verticalImage.desc != ''%}
+            <p>{{verticalImage.desc  }}</p>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+    .verticalImagePos>div span, .verticalImagePos span {
+        text-align: right;
+        font-size: 12px;
+        line-height: 22px;
+        padding: 5px 0;
+        width: 100%;
+    }
+    .verticalImagePos>div {
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-flow: column;
+    }
+    .verticalImagePos {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 80px;
+    }
+    .res-660x800 {
+        padding-top: 121.22%;
+    }
+    .res-400x400 {
+        padding-top: 75%;
+    }
+    .ratio_wrapper {
+        display: block;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+    }
+    .row-center{
+        justify-content: center;
+    }
+  	.verticalImagePos .content-info.hideDektop{
+      display:none;
+    }
+
+    .verticalImagePos .content-info {
+        max-width: 550px;
+        width: 50%;
+      	align-items:flex-start;
+    }
+  
+    @media (max-width:1024px){
+      .verticalImagePos .content-info{
+        padding-left:50px;
+      }
+      .verticalImagePos.row-reverse .content-info{
+        padding-left:0px;
+        padding-right:50px;
+      }
+    }
+
+    @media (max-width: 767px) {
+        .verticalImagePos .content-info.hideDektop{
+          display:block;
+        }
+        .verticalImagePos .content-info, 
+        .verticalImagePos.row-reverse .content-info{
+          padding-left:0;
+          padding-right:0;
+        }
+       .verticalImagePos .image {
+            width: 100%;
+            margin-bottom: 0px;
+        }
+      	.verticalImagePos.row .image{
+          margin-left:-20px;
+        }
+      	.verticalImagePos.row-reverse .image{
+          right: -20px;
+          position: relative;
+        }
+        .verticalImagePos .content-info {
+            max-width: 100%;
+            margin-bottom: 30px;
+          	width:100%;
+        }
+
+        .verticalImagePos, .verticalImagePos.carousel_left, .verticalImagePos.carousel_right {
+            flex-flow: column-reverse;
+            padding-top: 40px;
+        }
+      
+      	.verticalImagePos.mobile-column-reverse{
+          flex-flow: column-reverse;
+        }
+      	.verticalImagePos.mobile-column{
+          flex-flow: column;
+        }
+      	.verticalImagePos.mobile-column .content-info{
+          margin-top: 30px;
+          margin-bottom: 0px;
+        }
+      
+    }
+</style>
+{% schema %}
+{
+   "name":"Vertical Image Position",
+   "tag":"section",
+   "class":"container",
+   "settings":[
+      {
+         "type":"image_picker",
+         "id":"image",
+         "label":"Image"
+      },
+      {
+         "type":"url",
+         "id":"link",
+         "label":"Image Link"
+      },
+      {
+         "type":"text",
+         "id":"author",
+         "label":"Author"
+      },
+      {
+         "type":"select",
+         "id":"ratio",
+         "label":"Ratio",
+         "options":[
+            {
+               "value":"4:5",
+               "label":"4:5"
+            },
+            {
+               "value":"1:1",
+               "label":"1:1"
+            }
+         ],
+         "default":"4:5"
+      },
+      {
+         "type":"select",
+         "id":"placement",
+         "label":"Placement",
+         "options":[
+            {
+               "value":"row-reverse",
+               "label":"Right"
+            },
+            {
+               "value":"row",
+               "label":"Left"
+            },
+            {
+               "value":"row-center",
+               "label":"Center"
+            }
+         ],
+         "default":"row-reverse"
+      },
+      {
+         "type":"text",
+         "id":"title",
+         "label":"Heading",
+         "default":"Heading"
+      },
+      {
+         "type":"richtext",
+         "id":"desc",
+         "label":"Description",
+         "default":"<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>"
+      },
+	  {
+         "type":"select",
+         "id":"placement_mobile",
+         "label":"Content Placement Mobile",
+         "options":[
+            {
+               "value":"mobile-column-reverse",
+               "label":"Above Image"
+            },
+            {
+               "value":"mobile-column",
+               "label":"Below Image"
+            }
+         ],
+         "default":"mobile-column-reverse"
+      }
+   ],
+   "presets":[
+      {
+         "name":"Vertical Image Positioning - Article"
+      }
+   ]
+}
+{% endschema %}

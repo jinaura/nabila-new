@@ -1,0 +1,687 @@
+{% assign gwp_enabled = false %}
+{% assign enable_codeless = false %}
+
+{% if localization.country.iso_code == 'GB' or locale == 'en-GB' or request.host contains 'roseinc.co.uk' %}
+  {% assign enable_codeless = settings.enable_codeless_uk %}
+  {% assign promo_item = settings.codeless_product_uk  | plus: 0 %}
+  {% assign gwp_minimum_amount = settings.codeless_thresh_uk %}
+  {% assign is_child_product = settings.is_child_product_uk %}
+  {% assign child_product_1 = settings.child_product_variant1_uk  | plus: 0 %}
+  {% assign child_product_2 = settings.child_product_variant2_uk  | plus: 0 %}
+  {% assign child_product_3 = settings.child_product_variant3_uk  | plus: 0 %}
+  {% assign child_product_4 = settings.child_product_variant4_uk  | plus: 0 %}
+  {% assign child_product_5 = settings.child_product_variant5_uk  | plus: 0 %}
+  {% assign child_product_6 = settings.child_product_variant6_uk  | plus: 0 %}
+  {% assign child_product_7 = settings.child_product_variant7_uk  | plus: 0 %}
+{% else %}
+  {% assign enable_codeless = settings.enable_codeless_us %}
+  {% assign promo_item = settings.codeless_product_us  | plus: 0 %}
+  {% assign gwp_minimum_amount = settings.codeless_thresh_us %}
+  {% assign is_child_product = settings.is_child_product_us %}
+  {% assign child_product_1 = settings.child_product_variant1_us  | plus: 0 %}
+  {% assign child_product_2 = settings.child_product_variant2_us  | plus: 0 %}
+  {% assign child_product_3 = settings.child_product_variant3_us  | plus: 0 %}
+  {% assign child_product_4 = settings.child_product_variant4_us  | plus: 0 %}
+  {% assign child_product_5 = settings.child_product_variant5_us  | plus: 0 %}
+  {% assign child_product_6 = settings.child_product_variant6_us  | plus: 0 %}
+  {% assign child_product_7 = settings.child_product_variant7_us  | plus: 0 %}
+{% endif %}
+
+{% if enable_codeless %}
+  {% assign gwp_enabled = true %}
+  {% assign promoInCart = "false" %}
+  {% assign promoQtyInCart = 0 %}
+  {% for item in cart.items %}
+  {% assign promoTotal = cart.items_subtotal_price | divided_by: 100 %}
+      {% if item.id == promo_item %}
+        {% assign promoInCart = "true"%}
+        {% assign promoQtyInCart = item.quantity %}
+      {% endif%}
+  {% endfor %}
+  {% for line_item in checkout.line_items %}
+  {% assign promoTotal = checkout.line_items_subtotal_price | divided_by: 100 %}
+    {% if line_item.variant.id == promo_item %}
+      {% assign promoInCart = "true" %}
+      {% assign promoQtyInCart = line_item.quantity %}
+    {% endif %}
+  {% endfor %}
+  {% assign promoQuantity = 0 %}
+  {% for product in collections['exclude-from-purchase'].products %}
+    {% for variant in product.variants %}
+      {% if variant.id == promo_item %}
+        {% assign gwp_product_title = product.title %}
+        {% assign gwp_product_price = product.price %}
+        {% assign gwp_product_image = product.featured_image | img_url: small %}
+        {% assign gwp_product_id = product.id %}
+        {% assign gwp_variant_id = variant.id %}
+        {% assign gwp_product_type = product.type %}
+      {% endif %}
+
+      {% if variant.id == child_product_1 %}
+        {% assign gwp_product_name_1 = product.handle %}
+        {% assign gwp_product_variant_1 = variant.id %}
+        {% assign gwp_product_value_1 = variant.sku %}
+        {% assign gwp_product_quantity_1 = 1 %}
+        {% assign gwp_calculated_bundle_price_1 = variant.price %}
+        {% assign gwp_product_type_1 = product.type %}
+        {% assign gwp_product_title_1 = product.title %}
+        {% assign gwp_product_image_1 = product.featured_image | img_url: small  %}
+        {% assign gwp_product_option_1 = variant.option1 %}
+      {% endif %}
+
+      {% if variant.id == child_product_2 %}
+        {% assign gwp_product_name_2 = product.handle %}
+        {% assign gwp_product_variant_2 = variant.id %}
+        {% assign gwp_product_value_2 = variant.sku %}
+        {% assign gwp_product_quantity_2 = 1 %}
+        {% assign gwp_calculated_bundle_price_2 = variant.price %}
+        {% assign gwp_product_type_2 = product.type %}
+        {% assign gwp_product_title_2 = product.title %}
+        {% assign gwp_product_image_2 = product.featured_image | img_url: small  %}
+        {% assign gwp_product_option_2 = variant.option1 %}
+      {% endif %}
+
+      {% if variant.id == child_product_3 %}
+        {% assign gwp_product_name_3 = product.handle %}
+        {% assign gwp_product_variant_3 = variant.id %}
+        {% assign gwp_product_value_3 = variant.sku %}
+        {% assign gwp_product_quantity_3 = 1 %}
+        {% assign gwp_calculated_bundle_price_3 = variant.price %}
+        {% assign gwp_product_type_3 = product.type %}
+        {% assign gwp_product_title_3 = product.title %}
+        {% assign gwp_product_image_3 = product.featured_image | img_url: small  %}
+        {% assign gwp_product_option_3 = variant.option1 %}
+      {% endif %}
+
+      {% if variant.id == child_product_4 %}
+        {% assign gwp_product_name_4 = product.handle %}
+        {% assign gwp_product_variant_4 = variant.id %}
+        {% assign gwp_product_value_4 = variant.sku %}
+        {% assign gwp_product_quantity_4 = 1 %}
+        {% assign gwp_calculated_bundle_price_4 = variant.price %}
+        {% assign gwp_product_type_4 = product.type %}
+        {% assign gwp_product_title_4 = product.title %}
+        {% assign gwp_product_image_4 = product.featured_image | img_url: small  %}
+        {% assign gwp_product_option_4 = variant.option1 %}
+      {% endif %}
+
+      {% if variant.id == child_product_5 %}
+        {% assign gwp_product_name_5 = product.handle %}
+        {% assign gwp_product_variant_5 = variant.id %}
+        {% assign gwp_product_value_5 = variant.sku %}
+        {% assign gwp_product_quantity_5 = 1 %}
+        {% assign gwp_calculated_bundle_price_5 = variant.price %}
+        {% assign gwp_product_type_5 = product.type %}
+        {% assign gwp_product_title_5 = product.title %}
+        {% assign gwp_product_image_5 = product.featured_image | img_url: small  %}
+        {% assign gwp_product_option_5 = variant.option1 %}
+      {% endif %}
+
+      {% if variant.id == child_product_6 %}
+        {% assign gwp_product_name_6 = product.handle %}
+        {% assign gwp_product_variant_6 = variant.id %}
+        {% assign gwp_product_value_6 = variant.sku %}
+        {% assign gwp_product_quantity_6 = 1 %}
+        {% assign gwp_calculated_bundle_price_6 = variant.price %}
+        {% assign gwp_product_type_6 = product.type %}
+        {% assign gwp_product_title_6 = product.title %}
+        {% assign gwp_product_image_6 = product.featured_image | img_url: small  %}
+        {% assign gwp_product_option_6 = variant.option1 %}
+      {% endif %}
+
+      {% if variant.id == child_product_7 %}
+        {% assign gwp_product_name_7 = product.handle %}
+        {% assign gwp_product_variant_7 = variant.id %}
+        {% assign gwp_product_value_7 = variant.sku %}
+        {% assign gwp_product_quantity_7 = 1 %}
+        {% assign gwp_calculated_bundle_price_7 = variant.price %}
+        {% assign gwp_product_type_7 = product.type %}
+        {% assign gwp_product_title_7 = product.title %}
+        {% assign gwp_product_image_7 = product.featured_image | img_url: small  %}
+        {% assign gwp_product_option_7 = variant.option1 %}
+      {% endif %}
+
+    {% endfor %}
+  {% endfor %}
+
+  <input type="hidden" id="promo_item" value="{{promo_item}}">
+  <input type="hidden" id="promoInCart" value="{{promoInCart}}">
+  <input type="hidden" id="gwp_minimum_amount" value="{{gwp_minimum_amount}}">
+  <input type="hidden" id="promoQtyInCart" value="{{promoQtyInCart}}">
+  <input type="hidden" id="promoTotal" value="{{ promoTotal }}">
+  <input type="hidden" id="promoQuantity" value="{{promoQuantity}}">
+
+{% endif %}
+
+<input type="hidden" id="gwp_single_tier_enabled" value="{{gwp_enabled}}">
+
+<script>
+
+  var gwp_single_tier_enabled = JSON.parse(document.querySelector("#gwp_single_tier_enabled").value);
+  let childItemsMissing = false;
+
+  if (gwp_single_tier_enabled) {
+    var promo_item = parseInt(document.querySelector("#promo_item").value);
+    var promoInCart = JSON.parse(document.querySelector("#promoInCart").value);
+    var gwp_minimum_amount = parseInt(document.querySelector("#gwp_minimum_amount").value);
+    var promoQtyInCart = parseInt(document.querySelector("#promoQtyInCart").value);
+    var promoTotal = parseInt(document.querySelector("#promoTotal").value);
+    var promoQuantity = parseInt(document.querySelector("#promoQuantity").value);
+    GWPCheck(promoTotal);
+  }
+
+  function GWPCheck(promoTotal) {
+    if (promoTotal >= gwp_minimum_amount) {
+      promoQuantity = 1;
+    } else {
+      promoQuantity = 0;
+    }
+    const isBundleGWP = "{{is_child_product}}";
+    const gwpInCart = document.getElementsByClassName('product_' + promo_item);
+
+    if (window.location.href.indexOf("checkout") > -1 && isBundleGWP == 'true') {
+      const checkoutGWPObserver = new MutationObserver(function (mutations, me) {
+        const gwpInCheckout = document.querySelector(`.checkout-gwp-product[data-variant-id="${promo_item}"] .product__description`);
+          if (gwpInCheckout && gwpInCheckout.getElementsByClassName('product__description__property').length == 0) {
+            childItemsMissing = true;
+            promoQuantity = 0;
+            const update = {[promo_item]: promoQuantity};
+            postUpdate(update);
+            me.disconnect(); // stop observing
+            return;
+          }
+      });
+
+      // start observing
+      checkoutGWPObserver.observe(document, {
+        childList: true,
+        subtree: true
+      });
+
+    } else if (window.location.href.indexOf("checkout") < 0 && isBundleGWP == 'true') {
+      if (gwpInCart[0] && gwpInCart[0].getElementsByClassName('bundleItemList').length == 0) {
+        childItemsMissing = true;
+      }
+    }
+  
+    if ((promoQtyInCart != promoQuantity) || (isBundleGWP == 'true' && childItemsMissing)) {
+      if (promoInCart) {
+        const update = {[promo_item]: promoQuantity};
+        postUpdate(update);
+      } else if (window.location.href.indexOf("checkout") < 0) {
+        let removedGwpIds = sessionStorage.getItem('removed_gwps');
+        if (gwpInCart[0] == undefined && (!removedGwpIds || removedGwpIds && !removedGwpIds.includes(promo_item))) {
+          var add = {id: promo_item, quantity: promoQuantity};
+          postAdd(add);
+        }
+      }
+    }
+    if (gwpInCart[0] != undefined) {
+      if (gwpInCart.length > 1) {
+        gwpInCart[0].style.display='none';
+        gwpInCart[0].setAttribute('value', 0)
+        gwpInCart[0].remove();
+      } else if (gwpInCart.length == 1 && promoQuantity != 0) {
+        gwpInCart[0].style.display = 'flex';
+      }
+    }
+  }
+
+  function postUpdate(data) {
+    const isBundleGWP = "{{is_child_product}}";
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/cart/update.js', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        if (gwp_single_tier_enabled) {
+          if (Object.values(data) == 0) {
+            if (window.location.href.indexOf("checkout") > -1) {
+              promoQtyInCart = 0;
+              promoQuantity = 0;
+              promoInCart = false; 
+              window.location.reload(true);
+            } else {
+              if (document.getElementsByClassName('product_{{ gwp_variant_id }}')[0] != undefined) {
+                document.getElementsByClassName('product_{{ gwp_variant_id }}')[0].style.display = 'none';
+                document.getElementsByClassName('quantity_{{ gwp_variant_id }}')[0].setAttribute('value', (0).toString());
+                document.getElementsByClassName('product_{{ gwp_variant_id }}')[0].remove();
+              }
+              promoQtyInCart = 0;
+              promoQuantity = 0;
+              promoInCart = false; 
+              return [promoQtyInCart, promoQuantity, promoInCart];
+            }
+          } else if (Object.values(data) == 1) {
+            if (window.location.href.indexOf("checkout") > -1) {
+              promoQtyInCart = 1;
+              promoQuantity = 1;
+              promoInCart = true; 
+              return [promoQtyInCart, promoQuantity, promoInCart];
+              window.location.reload(true);                     
+            } else {
+              if (isBundleGWP == 'true' && childItemsMissing) {
+                JSON.parse(this.response).items.forEach((cartItem) => {
+                  if (cartItem.id === promo_item) {
+                    var returnResult = bundleGWPChildProduct(cartItem.key);
+                  }
+                });
+
+                let bundleChildItems = document.createElement('div');
+                bundleChildItems.className = 'bundleItemList';
+                bundleChildItems.innerHTML = `
+                  {% if gwp_product_title_1 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_1}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_1 }}" alt="{{ gwp_product_title_1 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_1 }}</h4>{% unless gwp_product_option_1 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_1 }}</p>{% endunless %}</div>{% endif %}
+                  {% if gwp_product_title_2 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_2}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_2 }}" alt="{{ gwp_product_title_2 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_2 }}</h4>{% unless gwp_product_option_2 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_2 }}</p>{% endunless %}</div>{% endif %}
+                  {% if gwp_product_title_3 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_3}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_3 }}" alt="{{ gwp_product_title_3 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_3 }}</h4>{% unless gwp_product_option_3 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_3 }}</p>{% endunless %}</div>{% endif %}
+                  {% if gwp_product_title_4 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_4}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_4 }}" alt="{{ gwp_product_title_4 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_4 }}</h4>{% unless gwp_product_option_4 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_4 }}</p>{% endunless %}</div>{% endif %}
+                  {% if gwp_product_title_5 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_5}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_5 }}" alt="{{ gwp_product_title_5 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_5 }}</h4>{% unless gwp_product_option_5 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_5 }}</p>{% endunless %}</div>{% endif %}
+                  {% if gwp_product_title_6 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_6}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_6 }}" alt="{{ gwp_product_title_6 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_6 }}</h4>{% unless gwp_product_option_6 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_6 }}</p>{% endunless %}</div>{% endif %}
+                  {% if gwp_product_title_7 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_7}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_7 }}" alt="{{ gwp_product_title_7 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_7 }}</h4>{% unless gwp_product_option_7 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_7 }}</p>{% endunless %}</div>{% endif %}
+                `;
+                document.getElementsByClassName('product_' + promo_item)[0].appendChild(bundleChildItems);
+                childItemsMissing = false;
+              }
+              document.getElementsByClassName('product_{{ gwp_variant_id }}')[0].style.display = 'flex';
+              document.getElementsByClassName('quantity_{{ gwp_variant_id }}')[0].setAttribute('value', (1).toString());
+                                          
+              promoQtyInCart = 1;
+              promoQuantity = 1;
+              promoInCart = true; 
+              return [promoQtyInCart, promoQuantity, promoInCart];
+            }
+          }
+        }
+      }
+    }
+    xhr.send(JSON.stringify({updates: data}));
+  }
+
+  function postAdd(data) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/cart/add.js', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        if (gwp_single_tier_enabled) {
+          if (window.location.href.indexOf("checkout") > -1) {
+            window.location.reload(true);
+          } else {
+            var returnResult = bundleGWPChildProduct(JSON.parse(this.response).key);
+
+            document.getElementById('mini_cart_form').insertAdjacentHTML('afterbegin', `
+            <div class="mini-cart__item product_{{ gwp_variant_id}} miniCart-Free-GWP" data-title="{{ gwp_product_title }}" data-product-type="{{ gwp_product_type }}" data-id="{{ gwp_variant_id }}">
+              <a href="#" title="Remove" class="mini-cart__remove mini-cart__remove__{{ gwp_variant_id }}" data-remove-id="{{ gwp_variant_id }}" aria-label="remove from cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21">
+                  <path d="M19.85 19.77c-.112.138-.277.222-.454.23-.178.007-.35-.062-.472-.19L9.99 10.877 1.058 19.81c-.155.16-.383.223-.598.166-.215-.056-.383-.224-.44-.439-.056-.215.007-.444.167-.598l8.932-8.933L.187 1.073C.027.918-.036.69.02.475.077.26.245.092.46.035c.215-.056.443.007.598.167l8.933 8.932L18.924.202c.148-.163.372-.235.587-.188.216.047.39.206.457.416s-4.559 5.015-4.707 5.178l4.534-4.535-8.933 8.933 8.933 8.933c.23.22.254.581.055.83z" transform="translate(-20 -160) translate(0 140) translate(20.002 20.01)"></path>
+                </svg>
+              </a>
+              <div class="mincart-product-thumb giftthumb">
+                <img src="{{ gwp_product_image }}" alt="{{ gwp_product_title }}" fetchpriority="low" loading="lazy">
+              </div>
+              <div class="mini-cart__info">
+                <div class="mini-cart_content">
+                  <span class="block-link-no-deco"><h4>{{ gwp_product_title }}</h4></span>
+                  <span class="free-gifts__free">Free</span>
+                </div>
+                <div class="mini-cart__qty-wrapper" style="visibility: hidden">
+                  <div class="mini-cart__qty">
+                      <button type="button" class="less less_{{ gwp_variant_id }}" aria-label="Quantity minus">-</button>
+                      <input readonly="" id="quantity_{{ gwp_variant_id }}" name="updates[${JSON.parse(this.response).key}]" data-id="{{ gwp_variant_id }}" data-key="${JSON.parse(this.response).key}" class="quantity quantity_{{ gwp_variant_id }} productQuantity" value="1" data-loop="1" data-price="{{ gwp_product_price }}" aria-label="quantity">
+                      <button type="button" class="more more_{{ gwp_variant_id }}" aria-label="Quantity plus">+</button>
+                  </div>
+                </div>
+               </div>
+               {% if is_child_product %}
+               <div class="bundleItemList">
+                    {% if gwp_product_title_1 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_1}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_1 }}" alt="{{ gwp_product_title_1 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_1 }}</h4>{% unless gwp_product_option_1 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_1 }}</p>{% endunless %}</div>{% endif %}
+                    {% if gwp_product_title_2 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_2}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_2 }}" alt="{{ gwp_product_title_2 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_2 }}</h4>{% unless gwp_product_option_2 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_2 }}</p>{% endunless %}</div>{% endif %}
+                    {% if gwp_product_title_3 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_3}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_3 }}" alt="{{ gwp_product_title_3 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_3 }}</h4>{% unless gwp_product_option_3 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_3 }}</p>{% endunless %}</div>{% endif %}
+                    {% if gwp_product_title_4 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_4}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_4 }}" alt="{{ gwp_product_title_4 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_4 }}</h4>{% unless gwp_product_option_4 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_4 }}</p>{% endunless %}</div>{% endif %}
+                    {% if gwp_product_title_5 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_5}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_5 }}" alt="{{ gwp_product_title_5 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_5 }}</h4>{% unless gwp_product_option_5 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_5 }}</p>{% endunless %}</div>{% endif %}
+                    {% if gwp_product_title_6 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_6}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_6 }}" alt="{{ gwp_product_title_6 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_6 }}</h4>{% unless gwp_product_option_6 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_6 }}</p>{% endunless %}</div>{% endif %}
+                    {% if gwp_product_title_7 %}<div class="bundle-cart__item" data-title="{{gwp_product_title_7}}"><div class="bundleItemImage"><img src="{{ gwp_product_image_7 }}" alt="{{ gwp_product_title_7 }}" fetchpriority="low" loading="lazy"></div><h4>{{ gwp_product_title_7 }}</h4>{% unless gwp_product_option_7 == 'Default Title'%}<p class="bundle-variant-info">{{ gwp_product_option_7 }}</p>{% endunless %}</div>{% endif %}
+                </div>
+                {% endif %}
+              </div>`);
+            promoQtyInCart = 1;
+            promoQuantity = 1;
+            promoInCart = true; 
+            return [promoQtyInCart, promoQuantity, promoInCart];
+          }
+        }
+      }
+    }
+    xhr.send(JSON.stringify(data));
+  }
+
+  function bundleGWPChildProduct(gwpKey) {
+    const isBundleGWP = "{{is_child_product}}";
+    let propertiesJson = {};
+
+    if (isBundleGWP == 'true') {
+      var childProductArray = [];
+
+      if ('{{ gwp_product_name_1 }}') {
+        var productDetails = {
+          name : "{{ gwp_product_name_1 }}",
+          variant : "{{ gwp_product_variant_1 }}",
+          value : "{{ gwp_product_value_1 }}",
+          quantity : 1,
+          calculated_bundle_price : "{{ gwp_calculated_bundle_price_1 }}",
+          product_title : "{{ gwp_product_title_1 }}",
+          product_image : "{{ gwp_product_image_1 }}",
+          product_option : "{{ gwp_product_option_1 }}"
+        };
+        childProductArray.push(productDetails);
+      }
+
+      if ('{{ gwp_product_name_2 }}') {
+        var productDetails = {
+          name: "{{ gwp_product_name_2 }}",
+          variant: "{{ gwp_product_variant_2 }}",
+          value: "{{ gwp_product_value_2 }}",
+          quantity: 1,
+          calculated_bundle_price: "{{ gwp_calculated_bundle_price_2 }}",
+          product_title: "{{ gwp_product_title_2 }}",
+          product_image: "{{ gwp_product_image_2 }}",
+          product_option: "{{ gwp_product_option_2 }}"
+        };
+        childProductArray.push(productDetails);
+      }
+
+      if ('{{ gwp_product_name_3 }}') {
+        var productDetails = {
+          name: "{{ gwp_product_name_3 }}",
+          variant: "{{ gwp_product_variant_3 }}",
+          value: "{{ gwp_product_value_3 }}",
+          quantity: 1,
+          calculated_bundle_price: "{{ gwp_calculated_bundle_price_3 }}",
+          product_title: "{{ gwp_product_title_3 }}",
+          product_image: "{{ gwp_product_image_3 }}",
+          product_option: "{{ gwp_product_option_3 }}"
+        };
+        childProductArray.push(productDetails);
+      }
+
+      if ('{{ gwp_product_name_4 }}') {
+        var productDetails = {
+          name: "{{ gwp_product_name_4 }}",
+          variant: "{{ gwp_product_variant_4 }}",
+          value: "{{ gwp_product_value_4 }}",
+          quantity: 1,
+          calculated_bundle_price: "{{ gwp_calculated_bundle_price_4 }}",
+          product_title: "{{ gwp_product_title_4 }}",
+          product_image: "{{ gwp_product_image_4 }}",
+          product_option: "{{ gwp_product_option_4 }}"
+        };
+        childProductArray.push(productDetails);
+      }
+
+      if ('{{ gwp_product_name_5 }}') {
+        var productDetails = {
+          name: "{{ gwp_product_name_5 }}",
+          variant: "{{ gwp_product_variant_5 }}",
+          value: "{{ gwp_product_value_5 }}",
+          quantity: 1,
+          calculated_bundle_price: "{{ gwp_calculated_bundle_price_5 }}",
+          product_title: "{{ gwp_product_title_5 }}",
+          product_image: "{{ gwp_product_image_5 }}",
+          product_option: "{{ gwp_product_option_5 }}"
+        };
+        childProductArray.push(productDetails);
+      }
+
+      if ('{{ gwp_product_name_6 }}') {
+        var productDetails = {
+          name: "{{ gwp_product_name_6 }}",
+          variant: "{{ gwp_product_variant_6 }}",
+          value: "{{ gwp_product_value_6 }}",
+          quantity: 1,
+          calculated_bundle_price: "{{ gwp_calculated_bundle_price_6 }}",
+          product_title: "{{ gwp_product_title_6 }}",
+          product_image: "{{ gwp_product_image_6 }}",
+          product_option: "{{ gwp_product_option_6 }}"
+        };
+        childProductArray.push(productDetails);
+      }
+
+      if ('{{ gwp_product_name_7 }}') {
+        var productDetails = {
+          name: "{{ gwp_product_name_7 }}",
+          variant: "{{ gwp_product_variant_7 }}",
+          value: "{{ gwp_product_value_7 }}",
+          quantity: 1,
+          calculated_bundle_price: "{{ gwp_calculated_bundle_price_7 }}",
+          product_title: "{{ gwp_product_title_7 }}",
+          product_image: "{{ gwp_product_image_7 }}",
+          product_option: "{{ gwp_product_option_7 }}"
+        };
+        childProductArray.push(productDetails);
+      }
+
+      propertiesJson = {
+        bundle_product: JSON.stringify(childProductArray)
+      }
+    }
+
+    $.ajax({
+      url: '/cart/change.js',
+      async : true,
+      dataType: 'json',
+      type: 'post',
+      data: {
+        id: gwpKey,
+        properties: propertiesJson
+      },
+      success: function (response) {}
+    });
+  }
+</script>
+
+{% comment %}
+Buy X Get Y GWP
+{% endcomment %}
+
+{% assign buyXgetY_gwp_enabled = false %}
+{% assign enable_gwp_autodiscount = false %}
+
+{% if localization.country.iso_code == 'GB' or locale == 'en-GB' or request.host contains 'roseinc.co.uk' %}
+  {% assign enable_gwp_autodiscount = settings.enable_gwp_autodiscount_uk %}
+  {% assign buyXgetY_promo_item = settings.gwp_autodiscount_free_product_id_uk  | plus: 0 %}
+  {% assign buyXgetY_productHandles = settings.gwp_autodiscount_purchase_product_uk %}
+  {% assign buyXgetY_productIds = settings.gwp_autodiscount_purchase_product_ids_uk %}
+{% else %}
+  {% assign enable_gwp_autodiscount = settings.enable_gwp_autodiscount_us %}
+  {% assign buyXgetY_promo_item = settings.gwp_autodiscount_free_product_id_us  | plus: 0 %}
+  {% assign buyXgetY_productHandles = settings.gwp_autodiscount_purchase_product_us %}
+  {% assign buyXgetY_productIds = settings.gwp_autodiscount_purchase_product_ids_us %}
+{% endif %}
+
+{% if enable_gwp_autodiscount %}
+  {% assign buyXgetY_gwp_enabled = true %}
+  {% assign buyXgetY_promoInCart = "false" %}
+  {% assign buyXgetY_promoQtyInCart = 0 %}
+  {% assign buyXgetY_promoQuantity = 0 %}
+  {% assign buyXgetY_productHandlesInCart = "" %}
+  {% assign buyXgetY_productIdsInCart = "" %}
+  
+  {% for item in cart.items %}
+    {% assign buyXgetY_productHandlesInCart = cart.items | map: 'url' | join: ',' %}
+    {% assign buyXgetY_productIdsInCart = cart.items | map: 'product_id' | join: ',' %}
+    {% if item.id == buyXgetY_promo_item %}
+      {% assign buyXgetY_promoInCart = "true" %}
+      {% assign buyXgetY_promoQtyInCart = item.quantity %}
+    {% endif%}
+  {% endfor %}
+  
+  {% for line_item in checkout.line_items %}
+    {% assign buyXgetY_productIdsInCart = checkout.line_items | map: 'product_id' | join: ',' %}
+    {% if line_item.variant.id == buyXgetY_promo_item %}
+      {% assign buyXgetY_promoInCart = "true" %}
+      {% assign buyXgetY_promoQtyInCart = line_item.quantity %}
+    {% endif %}
+  {% endfor %}
+  
+  {% for product in collections['exclude-from-purchase'].products %}
+    {% for variant in product.variants %}
+      {% if variant.id == buyXgetY_promo_item %}
+        {% assign buyXgetY_gwp_product_title = product.title %}
+        {% assign buyXgetY_gwp_product_price = product.price %}
+        {% assign buyXgetY_gwp_product_image = product.featured_image | img_url: small %}
+        {% assign buyXgetY_gwp_product_id = product.id %}
+        {% assign buyXgetY_gwp_variant_id = variant.id %}
+        {% assign buyXgetY_gwp_product_type = product.type %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+
+  <input type="hidden" id="buyXgetY_promo_item" value="{{buyXgetY_promo_item}}">
+  <input type="hidden" id="buyXgetY_promoInCart" value="{{buyXgetY_promoInCart}}">
+  <input type="hidden" id="buyXgetY_promoQtyInCart" value="{{buyXgetY_promoQtyInCart}}">
+  <input type="hidden" id="buyXgetY_promoTotal" value="{{ buyXgetY_promoTotal }}">
+  <input type="hidden" id="buyXgetY_promoQuantity" value="{{buyXgetY_promoQuantity}}">
+  <input type="hidden" id="buyXgetY_productHandles" value="{{buyXgetY_productHandles}}">
+  <input type="hidden" id="buyXgetY_productHandlesInCart" value="{{buyXgetY_productHandlesInCart}}">
+  <input type="hidden" id="buyXgetY_productIds" value="{{buyXgetY_productIds}}">
+  <input type="hidden" id="buyXgetY_productIdsInCart" value="{{buyXgetY_productIdsInCart}}">
+
+{% endif %}
+
+<input type="hidden" id="buyXgetY_gwp_enabled" value ="{{buyXgetY_gwp_enabled}}">
+
+<script>
+  var buyXgetY_gwp_enabled = JSON.parse(document.querySelector("#buyXgetY_gwp_enabled").value);
+
+  if (buyXgetY_gwp_enabled) {
+    var buyXgetY_promo_item = parseInt(document.querySelector("#buyXgetY_promo_item").value);
+    var buyXgetY_promoInCart = JSON.parse(document.querySelector("#buyXgetY_promoInCart").value);
+    var buyXgetY_productIds = document.querySelector("#buyXgetY_productIds").value;
+    var buyXgetY_productIdsInCart = document.querySelector("#buyXgetY_productIdsInCart").value;
+    var buyXgetY_promoQtyInCart = parseInt(document.querySelector("#buyXgetY_promoQtyInCart").value);
+    var buyXgetY_promoTotal = parseInt(document.querySelector("#buyXgetY_promoTotal").value);
+    var buyXgetY_promoQuantity = parseInt(document.querySelector("#buyXgetY_promoQuantity").value);
+    var buyXgetY_eligibleproductIdsArrays = buyXgetY_productIds.split(',');
+    var inCartProductIdsArrays = buyXgetY_productIdsInCart.split(',');
+    var strippedInCartIdsArrays = []
+    for (i = 0; i < inCartProductIdsArrays.length; ++i) {
+      strippedInCartIdsArrays.push(inCartProductIdsArrays[i])
+    }
+    buyXgetY_GWPCheck(strippedInCartIdsArrays, buyXgetY_eligibleproductIdsArrays);
+  }
+
+
+  function buyXgetY_GWPCheck(strippedInCartIdsArrays, buyXgetY_eligibleproductIdsArrays) {
+    const inCart = strippedInCartIdsArrays.some(r=> buyXgetY_eligibleproductIdsArrays.includes(r))
+    if (inCart) {
+      buyXgetY_promoQuantity = 1;
+    } else {
+      buyXgetY_promoQuantity = 0;
+    }
+    if (buyXgetY_promoQtyInCart != buyXgetY_promoQuantity) {
+      if (buyXgetY_promoInCart){
+        var update = {[buyXgetY_promo_item]: buyXgetY_promoQuantity};
+        buyXgetY_postUpdate(update);
+      } else {
+        var buyXgetY_gwpInCart = document.getElementsByClassName('product_' + buyXgetY_promo_item)
+        if (buyXgetY_gwpInCart[0] == undefined) {
+          var add = {id: buyXgetY_promo_item, quantity: buyXgetY_promoQuantity}
+          buyXgetY_postAdd(add)
+        }
+      }
+    }
+    var buyXgetY_gwpInCart = document.getElementsByClassName('product_' + buyXgetY_promo_item)
+    if (buyXgetY_gwpInCart[0] != undefined) {
+      if (buyXgetY_gwpInCart.length > 1) {
+        buyXgetY_gwpInCart[0].style.display='none';
+        buyXgetY_gwpInCart[0].setAttribute('value', 0)
+        buyXgetY_gwpInCart[0].remove();
+      } else if (buyXgetY_gwpInCart.length == 1 && buyXgetY_promoQuantity != 0) {
+        buyXgetY_gwpInCart[0].style.display = 'flex'
+      }
+    }
+  }
+
+  function buyXgetY_postUpdate(data) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/cart/update.js', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        if (buyXgetY_gwp_enabled) {
+          if (Object.values(data) == 0) {
+            if (window.location.href.indexOf("checkout") > -1) {
+              window.location.reload(true)
+            } else {
+              if (document.getElementsByClassName('product_{{ buyXgetY_gwp_variant_id }}')[0] != undefined) {
+                document.getElementsByClassName('product_{{ buyXgetY_gwp_variant_id }}')[0].style.display = 'none';
+                document.getElementsByClassName('quantity_{{ buyXgetY_gwp_variant_id }}')[0].setAttribute('value', (0).toString());
+                document.getElementsByClassName('product_{{ buyXgetY_gwp_variant_id }}')[0].remove();
+              }
+              buyXgetY_promoQtyInCart = 0;
+              buyXgetY_promoQuantity = 0;
+              buyXgetY_promoInCart = false; 
+              return [buyXgetY_promoQtyInCart, buyXgetY_promoQuantity, buyXgetY_promoInCart];
+            }
+          } else if (Object.values(data) == 1) {
+            if (window.location.href.indexOf("checkout") > -1) {
+              window.location.reload(true)
+            } else {
+              document.getElementsByClassName('product_{{ buyXgetY_gwp_variant_id }}')[0].style.display = 'none';
+              document.getElementsByClassName('quantity_{{ buyXgetY_gwp_variant_id }}')[0].setAttribute('value', (1).toString());                                
+              buyXgetY_promoQtyInCart = 1;
+              buyXgetY_promoQuantity = 1;
+              buyXgetY_promoInCart = true; 
+              return [buyXgetY_promoQtyInCart, buyXgetY_promoQuantity, buyXgetY_promoInCart];
+            }
+          }
+        }
+      }
+    }
+    xhr.send(JSON.stringify({updates: data}));
+  }
+
+  function buyXgetY_postAdd(data) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", '/cart/add.js', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+        if (buyXgetY_gwp_enabled) {
+          if (window.location.href.indexOf("checkout") > -1) {
+            window.location.reload(true)
+          } else {
+            document.getElementById('mini_cart_form').insertAdjacentHTML('afterbegin', `
+            <div class="mini-cart__item product_{{ buyXgetY_gwp_variant_id}} miniCart-Free-GWP" data-title="{{ buyXgetY_gwp_product_title }}" data-product-type="{{ buyXgetY_gwp_product_type }}" data-id="{{ buyXgetY_gwp_variant_id }}">
+              <a href="#" title="Remove" class="mini-cart__remove mini-cart__remove__{{ buyXgetY_gwp_variant_id }}" data-remove-id="{{ buyXgetY_gwp_variant_id }}" aria-label="remove from cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21">
+                  <path d="M19.85 19.77c-.112.138-.277.222-.454.23-.178.007-.35-.062-.472-.19L9.99 10.877 1.058 19.81c-.155.16-.383.223-.598.166-.215-.056-.383-.224-.44-.439-.056-.215.007-.444.167-.598l8.932-8.933L.187 1.073C.027.918-.036.69.02.475.077.26.245.092.46.035c.215-.056.443.007.598.167l8.933 8.932L18.924.202c.148-.163.372-.235.587-.188.216.047.39.206.457.416s-4.559 5.015-4.707 5.178l4.534-4.535-8.933 8.933 8.933 8.933c.23.22.254.581.055.83z" transform="translate(-20 -160) translate(0 140) translate(20.002 20.01)"></path>
+                </svg>
+              </a>
+              <div class="mincart-product-thumb giftthumb">
+                <img src="{{ buyXgetY_gwp_product_image }}" alt="{{ buyXgetY_gwp_product_title }}" fetchpriority="low" loading="lazy">
+              </div>
+              <div class="mini-cart__info">
+                <div class="mini-cart_content">
+                  <span class="block-link-no-deco"><h4>{{ buyXgetY_gwp_product_title }}</h4></span>
+                  <span class="free-gifts__free">Free</span>
+                </div>
+                <div class="mini-cart__qty-wrapper" style="visibility: hidden">
+                  <div class="mini-cart__qty">
+                      <button type="button" class="less less_{{ buyXgetY_gwp_variant_id }}" aria-label="Quantity minus">-</button>
+                      <input readonly="" id="quantity_{{ buyXgetY_gwp_variant_id }}" name="updates[${JSON.parse(this.response).key}]" data-id="{{ buyXgetY_gwp_variant_id }}" data-key="${JSON.parse(this.response).key}" class="quantity quantity_{{ buyXgetY_gwp_variant_id }} productQuantity" value="1" data-loop="1" data-price="{{ buyXgetY_gwp_product_price }}" aria-label="quantity">
+                      <button type="button" class="more more_{{ buyXgetY_gwp_variant_id }}" aria-label="Quantity plus">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>`);
+            buyXgetY_promoQtyInCart = 1;
+            buyXgetY_promoQuantity = 1;
+            buyXgetY_promoInCart = true; 
+            return [buyXgetY_promoQtyInCart, buyXgetY_promoQuantity, buyXgetY_promoInCart];
+          }
+        }
+      }
+    }
+    xhr.send(JSON.stringify(data));
+  }
+</script>

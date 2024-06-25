@@ -1,0 +1,969 @@
+{% assign url_category = request.path | split:'/' | last %}
+{%- for category in collection.metafields.collection.category_tag -%}
+  {% assign i = forloop.index0 %}
+  {% assign cat = collection.metafields.collection.category_tag[i] | handle %}
+  {% if cat == url_category %}{% break %}{% endif %}
+{%- endfor -%}
+
+{% assign clean_length = '' %}
+{% for _product in collection.products %}
+  {% unless _product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+  {% unless _product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+    {% assign clean_length = clean_length | plus: 1 %}
+  {% endunless %}
+  {% endunless %}
+{% endfor %}
+
+{% if collection.metafields.collection.tout_1_title[i] == blank and collection.metafields.collection.tout_2_title[i] == blank and collection.metafields.collection.tout_3_title[i] == blank %}{% assign no_touts = 'no-touts' %}{% endif %}
+
+<div id="holiday-plp-main-wrapper" class="hide-block">
+  <div class="holiday-plp-product-block-container page_collection___mainWarp">
+    {% if collection.metafields.collection.category_description[i] %}
+      <p class="mobile-description">{{ collection.metafields.collection.category_description[i] }}</p>
+    {% endif %}
+    <div class="holiday-plp-product-block {{no_touts}}">
+
+      <!-- First Category block -->
+      {% assign j = 0 %}
+      {% if collection.metafields.collection.show_category_block[i] == "true" %}
+        {% assign j = 1 %}
+        <div class="cat_block">
+          <span class="cat__item-media cat_media">
+            {% for cat_media in collection.metafields.collection.category_image[i] %}
+              {% if cat_media.media_type == 'image' %}
+                <img src="{{ cat_media.src }}" alt="{{ cat_media.alt }}" class="cat-media"
+                  srcset="
+                  {{ cat_media.src | append: '&transform=resize=600' }} 600w,
+                  {{ cat_media.src | append: '&transform=resize=900' }} 900w,
+                  {{ cat_media.src | append: '&transform=resize=1200' }} 1200w
+                  " 
+                  fetchpriority="high"
+                />
+              {% elsif cat_media.media_type == 'video' %}
+                <video
+                  id="cat-media-video"
+                  class="cat-video animate"
+                  autoplay
+                  loop
+                  muted
+                  playsinline="true" webkit-playsinline="true"
+                  preload="auto"
+                  width="100%"
+                  height="100%"
+                  title="{{ cat_media.alt }}">
+                  <source src="{{ cat_media.src }}" type='video/mp4'/>
+                </video>
+              {% endif %}
+            {% endfor %}
+          </span>
+          <span class="cat__item-text-block cat_text">
+            {% if collection.metafields.collection.category_title[i] %}
+              <h4>{% if localization.country.iso_code == 'GB' and collection.metafields.collection.category_title[i] contains '$' %}{{ collection.metafields.collection.category_title[i] | replace: '$', '£' }}{% else %}{{ collection.metafields.collection.category_title[i] }}{% endif %}</h4>
+            {% endif %}
+            {% if collection.metafields.collection.category_description[i] %}
+              <p>{{ collection.metafields.collection.category_description[i] }}</p>
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+
+      {% assign prod_index = 0 %}
+      {%- for _product in collection.products -%}
+        <!-- Products -->
+        {% unless _product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+        {% unless _product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+          {% assign j = j | plus: 1 %}
+          {% assign prod_index = prod_index | plus: 1 %}
+
+          {% if _product.type == 'Sets Product' %}
+            {%- include 'product-item-sets' with _product, coll_type: collection.handle, holiday_enabled: true -%}
+          {% else %}
+            {%- include 'product-item' with _product, coll_type: collection.handle, holiday_enabled: true -%}
+          {% endif %}
+
+          <!-- GWP module -->
+          {% if prod_index == clean_length and j <= 3 and localization.country.iso_code != 'GB' and settings.enable_holiday_gwp_coll_us %}
+            {%- include 'holiday-gwp-module' -%}
+          {% elsif prod_index == clean_length and j <= 3 and localization.country.iso_code == 'GB' and settings.enable_holiday_gwp_coll_uk %}
+            {%- include 'holiday-gwp-module' -%}
+          {% elsif j == 3 and prod_index != clean_length and localization.country.iso_code != 'GB' and settings.enable_holiday_gwp_coll_us %}
+            {%- include 'holiday-gwp-module' -%}
+          {% elsif j == 3 and prod_index != clean_length and localization.country.iso_code == 'GB' and settings.enable_holiday_gwp_coll_uk %}
+            {%- include 'holiday-gwp-module' -%}
+          {% endif %}
+
+        {% endunless %}
+        {% endunless %}
+
+        <!-- Big Media Block -->
+        {% if j == 6 and collection.metafields.collection.show_big_imagevideo_section[i] == 'true' %}
+          {% for big_media in collection.metafields.collection.big_imagevideo_block[i] %}
+            <div class="big_media_wrapper dt_position_six mob_position_six">
+              {% if big_media.media_type == 'image' %}
+                <img src="{{ big_media.src }}" alt="{{ big_media.alt }}" class="big-media"
+                  srcset="
+                  {{ big_media.src | append: '&transform=resize=300' }} 300w,
+                  {{ big_media.src | append: '&transform=resize=600' }} 600w,
+                  {{ big_media.src | append: '&transform=resize=900' }} 900w,
+                  {{ big_media.src | append: '&transform=resize=1200' }} 1200w,
+                  {{ big_media.src | append: '&transform=resize=2400' }} 2400w
+                  "
+                  fetchpriority="high" loading="lazy"
+                />
+              {% elsif big_media.media_type == 'video' %}
+                <video
+                  id="big-media-video"
+                  class="big-video animate"
+                  autoplay
+                  loop
+                  muted
+                  playsinline="true" webkit-playsinline="true"
+                  preload="auto"
+                  width="100%"
+                  height="100%"
+                  title="{{ big_media.alt }}">
+                  <source src="{{ big_media.src }}" type='video/mp4'/>
+                </video>
+
+                <!-- volume on/off -->
+                <input type="checkbox" id="volume-switcher-big">
+                <label id="switcher-container-big" for="volume-switcher-big"></label> 
+                <input type="checkbox" id="pause-play-switcher-big">
+                <label id="pause-play-switcher-container-big" for="pause-play-switcher-big"></label> 
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          {% if prod_index == clean_length %}
+            {% for n in (1..2) -%}
+              {% assign end_length = clean_length | plus: 1 %}
+              {% assign mod = end_length | modulo: 2 %}
+              <div class="product__item blank_item{%unless n == 1 and mod != 0%} plp_mob_hidden{%endunless%}"></div>
+            {%- endfor %}
+            {% break %}
+          {% endif %}
+
+        {% elsif prod_index == clean_length and j < 6 and collection.metafields.collection.show_big_imagevideo_section[i] == 'true' %}
+          {% if collection.metafields.collection.show_category_block[i] == "true"%}{% assign length = clean_length | plus: 1  %}{% else %}{% assign length = clean_length %}{% endif %}
+          {% if j == 4 and localization.country.iso_code != 'GB' and settings.enable_holiday_gwp_coll_us %}
+            {% assign specialCase = 'plp_dt_hidden' %}
+          {% elsif j == 4 and localization.country.iso_code == 'GB' and settings.enable_holiday_gwp_coll_uk %}
+            {% assign specialCase = 'plp_dt_hidden' %}
+          {% elsif j == 5 and localization.country.iso_code != 'GB' and settings.enable_holiday_gwp_coll_us %}
+            {% assign specialCase = 'plp_dt_hidden' %}
+          {% elsif j == 5 and localization.country.iso_code == 'GB' and settings.enable_holiday_gwp_coll_uk %}
+            {% assign specialCase = 'plp_dt_hidden' %}
+          {% else %}
+            {% assign specialCase = '' %}
+          {% endif %}
+          {% assign mod = length | modulo: 3 %}
+          {% if mod != 0 %}
+            {% for n in (1..5) -%}
+              <div class="product__item blank_item plp_mob_hidden {{specialCase}}"></div>
+              {% assign length = length | plus: 1  %}
+              {% assign new_mod = length | modulo: 3 %}
+              {% if new_mod == 0 %}{% break %}{% endif %}
+            {%- endfor %}
+          {% endif %}
+
+          {% for big_media in collection.metafields.collection.big_imagevideo_block[i] %}
+            <div class="big_media_wrapper {% if j <= 3 and localization.country.iso_code != 'GB' and settings.enable_holiday_gwp_coll_us != true %}dt_position_three{%elsif j <= 3 and localization.country.iso_code == 'GB' and settings.enable_holiday_gwp_coll_uk != true %}dt_position_three{%else%}dt_position_six{%endif%} {%if clean_length <= 4%}mob_position_three{%else%}mob_position_six{%endif%}">
+              {% if big_media.media_type == 'image' %}
+                <img src="{{ big_media.src }}" alt="{{ big_media.alt }}" class="big-media"
+                  srcset="
+                  {{ big_media.src | append: '&transform=resize=300' }} 300w,
+                  {{ big_media.src | append: '&transform=resize=600' }} 600w,
+                  {{ big_media.src | append: '&transform=resize=900' }} 900w,
+                  {{ big_media.src | append: '&transform=resize=1200' }} 1200w,
+                  {{ big_media.src | append: '&transform=resize=2400' }} 2400w
+                  "
+                  fetchpriority="high" loading="lazy"
+                />
+              {% elsif big_media.media_type == 'video' %}
+                <video
+                  id="big-media-video"
+                  class="big-video animate"
+                  autoplay
+                  loop
+                  muted
+                  playsinline="true" webkit-playsinline="true"
+                  preload="auto"
+                  width="100%"
+                  height="100%"
+                  title="{{ big_media.alt }}">
+                  <source src="{{ big_media.src }}" type='video/mp4'/>
+                </video>
+
+                <!-- volume on/off -->
+                <input type="checkbox" id="volume-switcher-big">
+                <label id="switcher-container-big" for="volume-switcher-big"></label> 
+                <input type="checkbox" id="pause-play-switcher-big">
+                <label id="pause-play-switcher-container-big" for="pause-play-switcher-big"></label> 
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          {% for n in (1..2) -%}
+            {% if j == 5 and localization.country.iso_code != 'GB' and settings.enable_holiday_gwp_coll_us %}
+              {% assign specialCase = 'plp_dt_hidden' %}
+            {% elsif j == 5 and localization.country.iso_code == 'GB' and settings.enable_holiday_gwp_coll_uk %}
+              {% assign specialCase = 'plp_dt_hidden' %}
+            {% elsif j == 4 and n == 1 and localization.country.iso_code != 'GB' and settings.enable_holiday_gwp_coll_us %}
+              {% assign specialCase = 'plp_dt_hidden' %}
+            {% elsif j == 4 and n == 1 and localization.country.iso_code == 'GB' and settings.enable_holiday_gwp_coll_uk %}
+              {% assign specialCase = 'plp_dt_hidden' %}
+            {% else %}
+              {% assign specialCase = '' %}
+            {% endif %}
+            {% assign end_length = clean_length | plus: 1 %}
+            {% assign mod = end_length | modulo: 2 %}
+            <div class="product__item blank_item{%unless n == 1 and mod != 0%} plp_mob_hidden{%endunless%} {{specialCase}}"></div>
+          {%- endfor %}
+          {% break %}
+
+        {% elsif collection.metafields.collection.show_big_imagevideo_section[i] != 'true' and prod_index == clean_length %}
+          {% assign length_mob = clean_length  %}
+          {% if collection.metafields.collection.show_category_block[i] == "true"%}{% assign length = clean_length | plus: 1  %}{% else %}{% assign length = clean_length %}{% endif %}
+          {% assign mod = length | modulo: 3 %}
+          {% assign mod_mob = length_mob | modulo: 2 %}
+
+          {% if mod != 0 %}
+            {% for n in (1..5) -%}
+            {% assign new_mod_mob = length_mob | modulo: 2 %}
+              <div class="product__item blank_item{%unless n == 1 and new_mod_mob != 0%} plp_mob_hidden{%endunless%}"></div>
+              {% assign length = length | plus: 1  %}
+              {% assign length_mob = length_mob | plus: 1 %}
+              {% assign new_mod = length | modulo: 3 %}
+              {% if new_mod == 0 %}{% break %}{% endif %}
+            {%- endfor %}
+          {% elsif mod == 0 and mod_mob != 0 %}
+            <div class="product__item blank_item plp_dt_hidden"></div>
+          {% endif %}
+
+          {% break %}
+        {% endif %}
+
+        {% if prod_index == clean_length and collection.metafields.collection.show_big_imagevideo_section[i] == 'true' and j == 7 %}
+          <div class="product__item blank_item element_seven{% if collection.metafields.collection.show_category_block[i] != "true"%} plp_mob_hidden{% endif %}"></div>
+          {% break %}
+        {% elsif prod_index == clean_length and collection.metafields.collection.show_big_imagevideo_section[i] == 'true' and j == 8 and collection.metafields.collection.show_category_block[i] != "true" %}
+          <div class="product__item blank_item plp_dt_hidden"></div>
+        {% elsif prod_index == clean_length and collection.metafields.collection.show_big_imagevideo_section[i] == 'true' and j > 8 %}
+          {% assign total_last_prod = j | minus: 8 %}
+          {% assign mod = total_last_prod | modulo: 3 %}
+          {% assign length_mob = clean_length | plus: 1 %}
+          {% assign mod_mob = length_mob | modulo: 2 %}
+
+          {% if mod != 0 %}
+            {% for n in (1..5) -%}
+            {% assign new_mod_mob = length_mob | modulo: 2 %}
+              <div class="product__item blank_item{%unless n == 1 and new_mod_mob != 0%} plp_mob_hidden{%endunless%}"></div>
+              {% assign total_last_prod = total_last_prod | plus: 1  %}
+              {% assign length_mob = length_mob | plus: 1%}
+              {% assign new_mod = total_last_prod | modulo: 3 %}
+              {% if new_mod == 0 %}{% break %}{% endif %}
+            {%- endfor %}
+          {% elsif mod == 0 and mod_mob != 0 %}
+            <div class="product__item blank_item plp_dt_hidden"></div>
+          {% endif %}
+          {% break %}
+        {% endif %}
+
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <!-- Touts -->
+  {% if collection.metafields.collection.tout_1_title[i] != blank or collection.metafields.collection.tout_2_title[i] != blank or collection.metafields.collection.tout_3_title[i] != blank %}
+    <div class="holiday-plp-product-block-touts animate">
+      {% if collection.metafields.collection.tout_1_title[i] %}
+        <div class="touts_1">
+          <span class="cat__item-media cat_media">
+            {% for tout_1_media in collection.metafields.collection.tout_1_image[i] %}
+              {% if tout_1_media.media_type == 'image' %}
+                <img src="{{ tout_1_media.src }}" alt="{{ tout_1_media.alt }}" class="tout_1_media"
+                  srcset="
+                  {{ tout_1_media.src | append: '&transform=resize=300' }} 300w,
+                  {{ tout_1_media.src | append: '&transform=resize=600' }} 600w,
+                  {{ tout_1_media.src | append: '&transform=resize=900' }} 900w,
+                  {{ tout_1_media.src | append: '&transform=resize=1200' }} 1200w
+                  "
+                  fetchpriority="low" loading="lazy"
+                />
+              {% elsif tout_1_media.media_type == 'video' %}
+                <video
+                  id="tout_1_media-media-video"
+                  class="tout_1_media-video animate"
+                  autoplay
+                  loop
+                  muted
+                  playsinline="true" webkit-playsinline="true"
+                  preload="auto"
+                  width="100%"
+                  height="100%"
+                  title="{{ tout_1_media.alt }}">
+                  <source src="{{ tout_1_media.src }}" type='video/mp4'/>
+                </video>
+              {% endif %}
+            {% endfor %}
+          </span>
+          <span class="cat__item-text-block cat_text">
+            {% if collection.metafields.collection.tout_1_title[i] %}
+              <h4>{{ collection.metafields.collection.tout_1_title[i] }}</h4>
+            {% endif %}
+            {% if collection.metafields.collection.tout_1_description[i] %}
+              <p>{{ collection.metafields.collection.tout_1_description[i] }}</p>
+            {% endif %}
+            {% if collection.metafields.collection.tout_1_cta_text[i] %}
+              <a href="{{collection.metafields.collection.tout_1_link[i]}}" class="cat_text_link">{{collection.metafields.collection.tout_1_cta_text[i]}}</a>
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+      {% if collection.metafields.collection.tout_2_title[i] %}
+        <div class="touts_2">
+          <span class="cat__item-media cat_media">
+            {% for tout_2_media in collection.metafields.collection.tout_2_image[i] %}
+              {% if tout_2_media.media_type == 'image' %}
+                <img src="{{ tout_2_media.src }}" alt="{{ tout_2_media.alt }}" class="tout_2_media" 
+                  srcset="
+                  {{ tout_2_media.src | append: '&transform=resize=300' }} 300w,
+                  {{ tout_2_media.src | append: '&transform=resize=600' }} 600w,
+                  {{ tout_2_media.src | append: '&transform=resize=900' }} 900w,
+                  {{ tout_2_media.src | append: '&transform=resize=1200' }} 1200w
+                  "
+                  fetchpriority="low" loading="lazy"
+                />
+              {% elsif tout_2_media.media_type == 'video' %}
+                <video
+                  id="tout_2_media-media-video"
+                  class="tout_2_media-video animate"
+                  autoplay
+                  loop
+                  muted
+                  playsinline="true" webkit-playsinline="true"
+                  preload="auto"
+                  width="100%"
+                  height="100%"
+                  title="{{ tout_2_media.alt }}">
+                  <source src="{{ tout_2_media.src }}" type='video/mp4'/>
+                </video>
+              {% endif %}
+            {% endfor %}
+          </span>
+          <span class="cat__item-text-block cat_text">
+            {% if collection.metafields.collection.tout_2_title[i] %}
+              <h4>{{ collection.metafields.collection.tout_2_title[i] }}</h4>
+            {% endif %}
+            {% if collection.metafields.collection.tout_2_description[i] %}
+              <p>{{ collection.metafields.collection.tout_2_description[i] }}</p>
+            {% endif %}
+            {% if collection.metafields.collection.tout_2_cta_text[i] %}
+              <a href="{{collection.metafields.collection.tout_2_link[i]}}" class="cat_text_link">{{collection.metafields.collection.tout_2_cta_text[i]}}</a>
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+      {% if collection.metafields.collection.tout_3_title[i] %}
+        <div class="touts_3">
+          <span class="cat__item-media cat_media">
+            {% for tout_3_media in collection.metafields.collection.tout_3_image[i] %}
+              {% if tout_3_media.media_type == 'image' %}
+                <img src="{{ tout_3_media.src }}" alt="{{ tout_3_media.alt }}" class="tout_3_media"
+                  srcset="
+                  {{ tout_3_media.src | append: '&transform=resize=300' }} 300w,
+                  {{ tout_3_media.src | append: '&transform=resize=600' }} 600w,
+                  {{ tout_3_media.src | append: '&transform=resize=900' }} 900w,
+                  {{ tout_3_media.src | append: '&transform=resize=1200' }} 1200w
+                  "
+                  fetchpriority="low" loading="lazy"
+                />
+              {% elsif tout_3_media.media_type == 'video' %}
+                <video
+                  id="tout_3_media-media-video"
+                  class="tout_3_media-video animate"
+                  autoplay
+                  loop
+                  muted
+                  playsinline="true" webkit-playsinline="true"
+                  preload="auto"
+                  width="100%"
+                  height="100%"
+                  title="{{ tout_3_media.alt }}">
+                  <source src="{{ tout_3_media.src }}" type='video/mp4'/>
+                </video>
+              {% endif %}
+            {% endfor %}
+          </span>
+          <span class="cat__item-text-block cat_text">
+            {% if collection.metafields.collection.tout_3_title[i] %}
+              <h4>{{ collection.metafields.collection.tout_3_title[i] }}</h4>
+            {% endif %}
+            {% if collection.metafields.collection.tout_3_description[i] %}
+              <p>{{ collection.metafields.collection.tout_3_description[i] }}</p>
+            {% endif %}
+            {% if collection.metafields.collection.tout_3_cta_text[i] %}
+              <a href="{{collection.metafields.collection.tout_3_link[i]}}" class="cat_text_link">{{collection.metafields.collection.tout_3_cta_text[i]}}</a>
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  {% comment %} start Hunza PLP page {% endcomment %}
+    .holiday-plp.hunza-shop-all .holiday-plp-product-block-container {
+      margin-top: 0 !important;
+    }
+    .holiday-plp.hunza-shop-all .cat_block {
+      position: relative;
+    }
+    .holiday-plp.hunza-shop-all .cat_text {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      max-width: 200px;
+    }
+    .holiday-plp.hunza-shop-all .cat_text h4,
+    .holiday-plp.hunza-shop-all .cat_text p {
+      color: #fff;
+    }
+    .holiday-plp.hunza-shop-all .cat_text h4 {
+      font-size: 18px;
+      letter-spacing: 1.29px;
+    }
+    @media (max-width: 950px){
+      .holiday-plp.hunza-shop-all  .cat_text h4 {
+        font-size: 14px;
+        letter-spacing: 0.86px;
+      }
+      .holiday-plp.hunza-shop-all  .cat_text p {
+        font-size: 12px;
+        letter-spacing: 0.86px;
+      }
+    }
+  {% comment %} end Hunza PLP page {% endcomment %}
+
+  #holiday-plp-main-wrapper {
+    opacity: 1;
+    transition: all 300ms ease-out;
+  }
+
+  #holiday-plp-main-wrapper .back-in-stock.is-open .hide-elements {
+    display: none;
+  }
+
+  #holiday-plp-main-wrapper.hide-block {
+    opacity: 0;
+  }
+
+  .holiday-plp-product-block-container {
+    margin-top: 38px;
+  }
+
+  .holiday-plp-product-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin: auto;
+    background-color: #979797;
+    grid-column-gap: 1px;
+    grid-row-gap: 1px;
+  }
+
+  .holiday-plp-product-block.no-touts {
+    border-bottom: solid 1px #979797;
+  }
+
+  .holiday-plp-product-block .product__item,
+  .holiday-plp-product-block .product__item.blank_item {
+    background-color: #fafafa;
+  }
+
+  .holiday-plp .cat__item-media img,
+  .holiday-plp-product-block .big_media_wrapper img {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .holiday-plp-product-block .cat__item-text-block.cat_text {
+    max-width: 310px;
+  }
+
+  .holiday-plp-product-block-touts {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    border: 1px solid #979797;
+    border-right: unset;
+    border-left: unset;
+  }
+
+  .holiday-plp-product-block-touts .touts_1,
+  .holiday-plp-product-block-touts .touts_2,
+  .holiday-plp-product-block-touts .touts_3 {
+    width: calc(100%/3);
+    position: relative;
+  }
+
+  .holiday-plp-product-block-touts .touts_2 {
+    border-left: 1px solid #979797;
+    border-right: 1px solid #979797;
+    box-sizing: content-box;
+  }
+
+  .holiday-plp .holiday-plp-product-block-touts .cat_text {
+    max-width: 310px;
+  }
+
+  .holiday-plp-product-block .big_media_wrapper {
+    position: relative;
+  }
+
+  @media screen and (max-width: 550px) {
+    .holiday-plp .holiday-plp-product-block .modal__container {
+      margin: 0 20px;
+      padding: 1.5rem;
+    }
+  }
+  @media screen and (min-width: 551px) {
+    .holiday-plp .holiday-plp-product-block .modal__container {
+      margin: 0 auto;
+    }
+  }
+
+  #volume-switcher-big,
+  #pause-play-switcher-big {
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+    z-index: -1;
+  }
+
+  #switcher-container-big,
+  #pause-play-switcher-container-big{
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease-in;
+    -moz-transition: all 0.3s ease-in;
+    transition: all 0.3s ease-in 0s;
+  }
+
+  /* volume on : button */ 
+  #switcher-container-big:after {
+    content: "";
+    border: 0px solid black;
+    background: url({{ 'sound-off-icon.png' | asset_url }}) center center;
+    background-size: 100%;
+    bottom: 61px;
+    left: -75px;
+    position: absolute;
+    width: 23px;
+    height: 20px;
+  }
+
+  #pause-play-switcher-container-big:after  {
+    content: "";
+    border: 0px solid black;
+    background: url({{ 'pause.png' | asset_url }}) center center;
+    background-size: 100%;
+    bottom: 61px;
+    left: -114px;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    filter: invert(1)
+  }
+
+  /* volume off : button */
+  #volume-switcher-big:checked + #switcher-container-big:after {
+    right: 10px;
+    content: "";
+    background: url({{ 'sound-on-icon.png' | asset_url }}) center center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 18px;
+  }
+
+  #pause-play-switcher-big:checked + #pause-play-switcher-container-big:after {
+    right: 10px;
+    content: "";
+    background: url({{ 'play-button.png' | asset_url }}) center center;
+    background-size: 100%;
+    filter: invert(1);
+    width: 18px;
+  }
+
+  @media (min-width: 3840px) {
+    .holiday-plp-product-block .big_media_wrapper,
+    .holiday-plp-product-block .big_media_wrapper img {
+      max-height: 2201px !important;
+    }
+
+    .holiday-plp .holiday-plp-product-block .cat_block,
+    .holiday-plp .holiday-plp-product-block .product__item {
+      height: 1100px;
+    }
+
+    .holiday-plp-product-block-touts .cat_media img {
+      width: 100% !important;
+    }
+  }
+
+  @media (min-width: 3073px) and (max-width: 3839px) {
+    .holiday-plp-product-block .big_media_wrapper,
+    .holiday-plp-product-block .big_media_wrapper img {
+      max-height: 2071px !important;
+    }
+
+    .holiday-plp .holiday-plp-product-block .cat_block,
+    .holiday-plp .holiday-plp-product-block .product__item {
+      height: 1035px;
+    }
+
+    .holiday-plp-product-block-touts .cat_media img {
+      width: 100% !important;
+    }
+  }
+
+  @media (min-width: 2560px) and (max-width: 3072px) {
+    .holiday-plp-product-block .big_media_wrapper,
+    .holiday-plp-product-block .big_media_wrapper img {
+      max-height: 1880px !important;
+    }
+
+    .holiday-plp .holiday-plp-product-block .cat_block,
+    .holiday-plp .holiday-plp-product-block .product__item {
+      height: 940px;
+      overflow: hidden;
+    }
+
+    .holiday-plp-product-block .element_seven {
+      height: 940px;
+    }
+
+    .holiday-plp-product-block-touts .cat_media img {
+      width: 100% !important;
+    }
+  }
+
+  @media (min-width: 1920px) and (max-width: 2559px) {
+    .holiday-plp-product-block .element_seven {
+      min-height: 800px;
+    }
+
+    .product__item.blank_item {
+        min-height: 700px;
+    }
+
+    .holiday-plp-product-block-touts .cat_media,
+    .holiday-plp-product-block-touts .cat_media img {
+      max-height: 800px;
+      width: 100%;
+    }
+
+    .holiday-plp-menu-grid .menu-option.cat_block img {
+      max-height: 600px !important;
+      width: 100%;
+    }
+
+    .holiday-plp-menu-grid .menu-option.cat_block {
+      max-height: 600px;
+      overflow: hidden;
+    }
+  }
+
+  @media (min-width: 1441px) and (max-width: 1919px) {
+    .holiday-plp-product-block .element_seven {
+      min-height: 650px;
+    }
+
+    .product__item.blank_item {
+        min-height: 570px;
+    }
+  }
+
+  @media (min-width: 951px) and (max-width: 1440px) {
+    .holiday-plp-product-block .big_media_wrapper,
+    .holiday-plp-product-block .big_media_wrapper img {
+      max-height: 1250px !important;
+    }
+
+    .product__item.blank_item {
+        min-height: 490px;
+    }
+
+    .holiday-plp-product-block-touts .cat_media {
+      max-height: 600px;
+    }
+
+    .holiday-plp-product-block .element_seven {
+      min-height: 550px;
+    }
+
+    .holiday-plp-product-block-touts .cat_media img {
+      max-height: 600px;
+      width: 100%;
+    }
+
+    .holiday-plp-menu-grid .menu-option.cat_block img {
+      max-height: 450px !important;
+      width: 100%;
+    }
+
+    .holiday-plp-menu-grid .menu-option.cat_block {
+      max-height: 450px;
+      overflow: hidden;
+    }
+  }
+
+  @media (min-width: 951px) {
+    .holiday-plp-product-block-container .mobile-description {
+      display: none;
+    }
+
+    .holiday-plp-product-block .big_media_wrapper.dt_position_three {
+      grid-column: 1/3;
+      grid-row: 2/4;
+    }
+
+    .holiday-plp-product-block .big_media_wrapper.dt_position_six {
+      grid-column: 1/3;
+      grid-row: 3/5;
+    }
+
+    .holiday-plp-product-block .plp_dt_hidden {
+      display: none;
+    }
+
+    .holiday-plp .holiday-plp-product-block .cat_block img {
+      min-width: 100%;
+    }
+
+    .holiday-plp .holiday-plp-product-block .big_media_wrapper img {
+      min-width: 100%;
+    }
+
+    .product_img_wrapper {
+      max-width: 732px;
+      max-height: 708px;
+      margin: 0 auto;
+    }
+  }
+
+  @media (max-width: 950px) {
+    .holiday-plp-product-block-container {
+      margin-top: 50px;
+    }
+
+    .holiday-plp-product-block-container .mobile-description {
+      padding: 15px;
+      margin: 0;
+      text-align: center;
+      border-bottom: 1px solid #979797;
+    }
+
+    .holiday-plp-product-block {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .holiday-plp-product-block .big_media_wrapper.mob_position_three {
+      grid-column: unset;
+      grid-row: unset;
+    }
+
+    .holiday-plp-product-block .big_media_wrapper.mob_position_six {
+      grid-column: 1/2;
+      grid-row: 3/4;
+    }
+
+    .holiday-plp-product-block .plp_mob_hidden {
+      display: none;
+    }
+
+    .holiday-plp .holiday-plp-product-block .cat_block {
+      display: none;
+    }
+
+    #switcher-container-big:after {
+      bottom: 20px;
+      left: -40px;
+    }
+
+    #pause-play-switcher-container-big:after  {
+      bottom: 20px;
+      left: -80px;
+    }
+
+    .holiday-plp-product-block-touts {
+      flex-direction: column;
+      background-color: #f6f3f0;
+      padding: 20px;
+    }
+
+    .holiday-plp-product-block-touts .touts_1,
+    .holiday-plp-product-block-touts .touts_2,
+    .holiday-plp-product-block-touts .touts_3 {
+      width: 100%;
+      position: unset;
+      display: flex;
+      align-items: center;
+    }
+
+    .holiday-plp-product-block-touts .touts_2 {
+      border-left: unset;
+      border-right: unset;
+    }
+
+    .holiday-plp-product-block-touts .touts_2,
+    .holiday-plp-product-block-touts .touts_3 {
+      margin-top: 20px;
+    }
+
+    .holiday-plp .holiday-plp-product-block-touts .cat_media {
+      max-width: 105px;
+    }
+
+    .holiday-plp .holiday-plp-product-block-touts .cat_text {
+      position: unset;
+      padding: 0 10px 0 20px;
+    }
+
+    .holiday-plp .holiday-plp-product-block-touts .cat_text h4 {
+      font-size: 12px;
+      color: #1d1d1d;
+    }
+
+    .holiday-plp .holiday-plp-product-block-touts .cat_text p,
+    .holiday-plp .holiday-plp-product-block-touts .cat_text a {
+      font-size: 12px;
+      color: #545353;
+    }
+
+    .holiday-plp .holiday-plp-product-block-touts .cat_text_link {
+      border-bottom: 2px solid #545353;
+    }
+
+    /* images height */
+
+    .holiday-plp-product-block .big_media_wrapper,
+    .holiday-plp .holiday-plp-product-block .product__item {
+      max-height: 600px !important;
+    }
+
+    .holiday-plp-product-block .big_media_wrapper img {
+      max-height: 600px !important;
+      width: 100%;
+    }
+
+    .holiday-plp-product-block-touts .cat_media {
+      max-height: 130px;
+      height: 130px;
+      width: 105px;
+    }
+
+    .holiday-plp-product-block-touts .cat_media img {
+      height: 130px !important;
+      max-height: 130px;
+      max-width: 105px;
+      width: 100%;
+    }
+
+    .holiday-plp-menu-grid .menu-option.cat_block img {
+      height: 400px !important;
+      width: 100%;
+    }
+
+    .holiday-plp-menu-grid .menu-option.cat_block {
+      max-height: 400px;
+      height: 400px;
+      overflow: hidden;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .holiday-plp-product-block .big_media_wrapper img {
+      width: 100%;
+    }
+
+    .holiday-plp-product-block-touts .cat_media {
+      max-height: 130px;
+      height: 130px;
+      width: 105px;
+    }
+
+    .holiday-plp-product-block-touts .cat_media img {
+      height: 130px !important;
+      max-height: 130px;
+      max-width: 105px;
+      width: 100%;
+    }
+
+    .holiday-plp-menu-grid .menu-option.cat_block img {
+      height: 236px !important;
+      width: 100%;
+    }
+
+    .holiday-plp-menu-grid .menu-option.cat_block {
+      max-height: 236px;
+      height: 236px;
+      overflow: hidden;
+    }
+
+    .holiday-plp-product-block .product__item {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .holiday-plp-product-block .big_media_wrapper {
+      min-height: 330px;
+    }
+
+    .holiday-plp-product-block .big_media_wrapper img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+    }
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+<script>
+  $(document).ready(function() {
+    MicroModal.init();
+    $(document).on("click", '.holiday-coll-btn.buy_btn_ofs', function(e) {
+      e.preventDefault();
+    });
+
+    //Load
+    setTimeout(() => {
+      document.querySelector('#holiday-plp-main-wrapper').classList.remove('hide-block');
+    }, 500);
+
+    //Video settings for Big Block image/video
+    if( document.querySelector("#volume-switcher-big")) {
+      document.querySelector("#volume-switcher-big").onchange = function() {
+        document.querySelector("#big-media-video").muted = !this.checked;
+      }
+    }
+
+    if(document.querySelector("#pause-play-switcher-big")) {
+      document.querySelector("#pause-play-switcher-big").onchange = function() {
+        if (this.checked){
+          document.querySelector("#big-media-video").pause();
+        } else{
+          document.querySelector("#big-media-video").play();
+        }
+      }
+    }
+  });
+
+</script>

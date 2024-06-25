@@ -1,0 +1,141 @@
+{%- assign enable_auto = section.settings.enable_auto_article -%}
+{%- assign gridLimit = section.settings.grid | plus: 0 -%}
+
+<section class="editioral-hero-posts showdesktop">
+    <div class="container">
+
+        {% if enable_auto %}
+            <div class="ed-h-post-row">
+                {% render "editorial-hero-article-auto", gridLimit: gridLimit %}
+            </div>
+        {% else %}
+            <div class="ed-h-post-row">
+                {% render "editorial-hero-article-manual" %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="editioral-hero-posts showmobile">
+    <div class="container">
+        {% if enable_auto %}
+        <div class="ed-h-post-row ed-h-post-row-mobile">
+
+
+            {% for link in linklists.blogs.links limit: 4 %}
+                {% assign blog = link.object %}
+                {% for article in blog.articles limit: 1 %}
+                    <article class="item ed-h-post ed-h-post-right">
+                        {% if article.image %}
+                            {% if hero-article.metafields.article.tile_image[0].src %}
+                                <figure class="animate edh-post-img"><a href="{{ article.url }}"><img src="{{ article.metafields.article.tile_image[0].src }}"></a></figure>
+                            {% else %}
+                                <figure class="animate edh-post-img"><a href="{{ article.url }}"><img src="{{ article.image | img_url: '620x385' }}"></a></figure>
+                            {% endif %}
+                        {% else %}
+                        {{ ifNofeaturedImg }}
+                        {% endif %}
+                        <div class="edh-post-info">
+                            <span class="type"><a href="/blogs/{{article.handle | split: '/' | first }}">{{article.handle | split: '/' | first }}</a></span>
+                            <h3><a href="{{ article.url }}">{{ article.title |truncate: 62 }}</a></h3>
+                            <span class="auther">By {{ article.author }}</span>
+                        </div>
+                    </article>
+                {% endfor %}
+                {% if gridLimit ==  forloop.index %}
+                    {% break %}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <div class="ed-h-post-row ed-h-post-row-mobile">
+            {% for block in section.blocks %}
+                {% assign hero-article = articles[block.settings.hero-article] %}
+                <article class="item ed-h-post ed-h-post-right">
+                    {% if hero-article.image %}
+                    <figure class="animate edh-post-img"><a href="{{ hero-article.url }}"><img src="{{ hero-article.image | img_url: '620x385' }}"></a></figure>
+                {% else %}
+                    {{ ifNofeaturedImg }}
+                {% endif %}
+                    <div class="edh-post-info">
+                        <span class="type"><a href="/blogs/{{hero-article.handle | split: '/' | first }}">{{hero-article.handle | split: '/' | first }}</a></span>
+                        <h3><a href="{{ hero-article.url }}">{{ hero-article.title |truncate: 62 }}</a></h3>
+                        <span class="auther">By {{ hero-article.author }}</span>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    $('.ed-h-post-row-mobile').slick({ "slidesToShow": 1, infinite: true,
+    centerMode: false,
+  //variableWidth: true,
+        responsive: [
+    {
+      
+    
+      breakpoint: 767,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      }
+    }
+  
+  ] });
+</script>
+
+{% schema %}
+{
+    "name":"Hero Article",
+    "class":"hero-article",
+    "max_blocks":4,
+    "settings": [
+        {
+            "type":"checkbox",
+            "id": "enable_auto_article",
+            "label": "Enable Automatic Articles"
+        },
+        {
+            "type": "select",
+            "id": "grid",
+            "label": "Grid Layout",
+            "options": [
+                {
+                "label": "1 Grid Layout",
+                "value": "1"
+                },
+                {
+                "label": "2 Grid Layout",
+                "value": "2"
+                },
+                {
+                "label": "3 Grid Layout",
+                "value": "3"
+                },
+                {
+                "label": "4 Grid Layout",
+                "value": "4"
+                }
+            ],
+            "default": "2"
+        }
+    ],
+    "blocks":[
+       {
+          "type":"slide",
+          "name":"Article",
+          "settings":[
+             {
+                "type":"article",
+                "id":"hero-article",
+                "label":"Article "
+             }
+          ]
+       }
+    ]
+ }
+{% endschema %}

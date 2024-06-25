@@ -1,0 +1,226 @@
+<section class="discover-included">
+    <h2>What's Included</h2>
+    <hr class="section__divider" />
+    <div class="included">
+        <div class="tabsContainer" id="whatsInclude">
+          <div class="tabWrap">
+            {% for productWinc in product.metafields.discovery.product %}
+                {% assign discoveryInc = all_products[productWinc] %}
+                <input class="radioClass" type="radio" {% if forloop.index == 1  %} checked {% endif %} id="{{ discoveryInc.id }}" name="discovery" value="{{ discoveryInc.id }}">
+                <label for="{{ discoveryInc.id }}">
+                        <figure><img src="{{discoveryInc.featured_image | img_url: '200x'}}" alt="{{discoveryInc.alt}}"
+                                 class="bundle-img" fetchpriority="low" loading="lazy" /></figure>
+                    	<h3>{{- discoveryInc.title -}}</h3>
+                </label>
+
+            {% endfor %}
+            </div>
+        </div>
+
+        <div id="mediaContainer" class="mediaContainer">
+            {% for productWinc in product.metafields.discovery.product %}
+                {% assign discoveryInc = all_products[productWinc] %}
+                {% for productWincMedia in product.metafields.discovery.media[forloop.index0] %}
+
+                    <div style="display:none;" class="media-div" id="media_{{ discoveryInc.id }}">
+                        {% if productWincMedia.media_type == 'image' %}
+                            <div class="media_img"><img src="{{ productWincMedia.src }}" alt="{{ productWincMedia.alt }}" class="product__detail animate" fetchpriority="low" loading="lazy" /></div>
+                            {% elsif productWincMedia.media_type == 'video' %}
+                            <div class="media_video">
+                                <video id="discoverWIPlayer{{ discoveryInc.id }}" autoplay="autoplay" loop="" muted="muted" preload="auto"
+                                       playsinline="true" webkit-playsinline="true" width="100%" height="100%"
+                                       data-setup='{"width": 300, "height": 250}' alt="{{ productWincMedia.alt }}">
+                                    <source src="{{ productWincMedia.src }}" type='video/mp4' />
+                                </video>
+
+                                <div class="player-controls left" id="player-controls{{ discoveryInc.id }}">
+                                    <button class="play" >{% render 'svg-icons' with 'play' %}</button>
+                                    <button class="pause" >{% render 'svg-icons' with 'pause' %}</button>
+                                    <button class="volume" >{% render 'svg-icons' with 'volume' %}</button>
+                                </div>
+                            </div>
+
+                            <script>
+
+                                $('#player-controls{{ discoveryInc.id }} .play').on('click', function(){
+                                    var wIVideo = document.getElementById("discoverWIPlayer{{ discoveryInc.id }}");
+                                    wIVideo.play();
+                                    $(this).hide();
+                                    $('#player-controls{{ discoveryInc.id }} .pause').show();
+                                });
+                                $('#player-controls{{ discoveryInc.id }} .pause').on('click', function(){
+                                    var wIVideo = document.getElementById("discoverWIPlayer{{ discoveryInc.id }}");
+                                    wIVideo.pause();
+                                    $(this).hide();
+                                    $('#player-controls{{ discoveryInc.id }} .play').show();
+                                });
+
+                                $('#player-controls{{ discoveryInc.id }} .volume').on('click', function(){
+                                    var wIVideo = document.getElementById("discoverWIPlayer{{ discoveryInc.id }}");
+                                    if(wIVideo.muted){
+                                        wIVideo.muted = false;
+                                        $(this).addClass('unmuted');
+                                    } else {
+                                        wIVideo.muted = true;
+                                        $(this).removeClass('unmuted');
+                                    }
+                                });
+
+                            </script>
+                        {% endif %}
+                        <h3 class="media_title">{{ discoveryInc.title }}</h3>
+                        <p>{{ discoveryInc.description }}</p>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<style>
+  	.discover-included{
+      background-color: #f7f3f0;
+      padding:50px 100px;
+      margin-top:80px;
+      display: flex;
+      flex-flow: column;
+      padding-bottom:60px;
+    }
+    .discover-included hr.section__divider{
+      margin-top:0 !important;
+    }
+  	.discover-included > h2{
+      text-align:center;
+      padding-bottom:50px;
+    }
+  
+  	.included{
+      display:flex;
+      padding-top: 30px;
+    }
+
+  	.tabsContainer{
+      width:100%;
+    }
+  	.tabWrap{
+      display:flex;
+      flex-flow: wrap;
+    }
+  	.tabsContainer label{
+      display:flex;
+      align-items: center;
+      padding-right: 50px;
+      width: 50%;
+      margin-bottom: 25px;
+    }
+  	.tabsContainer label h3{
+  	  line-height:1.57;
+      padding-left:12px;
+      transition: all 0.5s;
+  	}
+  	.tabsContainer label figure{
+      min-width: 78px;
+      max-width: 78px;
+      height: 89px;
+      transition: all 0.5s;
+    }
+  	.tabsContainer label figure img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      vertical-align:unset;
+    }
+
+  	.tabsContainer label:hover h3{
+      color:#919191;
+    }
+  	.tabsContainer label:hover figure{
+      opacity:0.5;
+    }
+  	.tabsContainer label.active figure{
+      box-shadow:0 0 0 2px #979797;
+      opacity:1;
+    }
+
+  	.radioClass{
+      opacity:0;
+      position:absolute;
+      z-index:-1;
+    }
+
+    .mediaContainer {
+      max-width:422px;
+      position: relative;
+      width:100%;
+    }
+  	.mediaContainer h3, .tabsContainer h3{
+      color: var(--secondary-color);
+    }
+  	.mediaContainer .media_img,
+  	.mediaContainer .media_video{
+      max-height:435px;
+      position:relative;
+    }
+  	.mediaContainer .media_img img,
+  	.mediaContainer .media_video video{
+      width:100%;
+      height:100%;
+      max-height:435px;
+      object-fit:cover;
+      object-position: center bottom;
+      display:block;
+    }
+  	.mediaContainer .media_video .player-controls.left{
+      left: 0;
+      bottom: 15px;
+    }
+
+  	.media_title{
+      margin:0;
+      padding:20px 0 14px 0;
+    }
+
+
+  	@media (max-width:1023px){
+      .discover-included{margin-top:30px; padding:40px 20px;}
+      .discover-included .section__divider{margin: 0 !important; padding-bottom: 20px !important;}
+      .discover-included > h2{padding-bottom:30px;}
+
+      .included{padding-top:0px; flex-flow: column;}
+
+      .tabsContainer{overflow-x:scroll; margin-right: -20px; width: auto;}
+      .tabsContainer::-webkit-scrollbar {display: none;}
+      .tabWrap{flex-flow: nowrap; max-width: max-content; margin:auto;}
+      .tabsContainer label{width:auto; padding-right:10px; margin-bottom: 20px;}
+      .tabsContainer label h3{display:none;}
+      .tabsContainer label figure{min-width: 70px; height: 80px; border: 0px solid #f7f3f0; margin-top: 2px; margin-left: 3px;}
+      .tabsContainer label.active figure{box-shadow:0 0 0 1px #979797;}
+      .mediaContainer{padding:0 40px; margin:auto;}
+
+      .details__face{margin-top:40px;}
+
+      .discover-included .player-controls{display: flex;}
+    }
+
+</style>
+
+<script>
+    $(document).ready(function() {
+        $("#whatsInclude input[type=radio]:checked").each(function() {
+            if(this.checked == true){
+                $('#media_'+$(this).attr('id')).show();
+              	$(this).next().addClass('active');
+            }
+        });
+
+        $('body').on('click', '.radioClass', function (e) {
+            $('.media-div').hide();
+            $('#media_'+$(this).attr('id')).show();
+          	$('.radioClass').next().removeClass('active');
+          	$(this).next().addClass('active');
+        });
+
+    });
+</script>

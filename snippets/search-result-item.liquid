@@ -1,0 +1,32 @@
+{%- assign _result = search-result-item -%}
+
+{%- if _result != empty -%}
+	<div class="product__item animate">
+		<div class="product_img_wrapper">
+			<a href="{{ _result.url  }}" class="product__item-link">
+      {% if _result.image %}
+				<span class="product__item-image">
+					{% if _result.metafields.article.tile_image[0].src %}
+						<img src="{{ _result.metafields.article.tile_image[0].src }}"
+							srcset="
+							{{ _result.metafields.article.tile_image[0].src | append: '&transform=resize=600' }} 600w,
+							{{ _result.metafields.article.tile_image[0].src | append: '&transform=resize=900' }} 900w,
+							{{ _result.metafields.article.tile_image[0].src | append: '&transform=resize=1200' }} 1200w
+							"
+							fetchpriority="low" loading="lazy"
+						>
+					{% else %}
+						{%- include 'lazyload-image' _image: _result.image, original_width: '600' -%}
+					{% endif %}
+				</span>
+      {% endif %}
+
+			<h4 class="product__item-title">
+				{{- _result.title -}} {{ ' by ' }} {{ _result.author }}
+			</h4>
+
+		</a>
+		</div>
+	</div><!-- /.product__item -->
+{%- endif -%}
+{%- assign _result = '' -%}

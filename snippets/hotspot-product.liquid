@@ -1,0 +1,242 @@
+{%- assign _product = product-item -%}
+
+<!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+{% unless _product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+{% unless _product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+{%- if _product != empty -%}
+
+  {% assign coming_soon_uk = false %}
+  {% if _product.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+    {% assign coming_soon_uk = true %}
+  {% endif %}
+
+  {% if hot-variant != blank %}
+    {% assign hotspot_variant =  hot-variant | plus: 0 %}
+
+    {% for variant in _product.variants %}
+      {% if variant.id == hotspot_variant %}
+        {% if variant.inventory_quantity > 0 %}
+
+          <div class="product__item hotspot-product {% unless _product.available %}product__item--sold-out{% endunless %}">
+            <div class="product_img_wrapper">
+              <a href="{{- _product.url -}}{%- if variant.title != 'Default Title' -%}?variant={{variant.id}}{%- endif -%}" class="product__item-link">
+                <span class="product__item-image">
+                  {% if img_hot_prod != blank %}
+                    {{img_hot_prod | image_url: width: 600 | image_tag: width: 600, height: 600, alt: img_hot_prod.alt, fetchpriority: 'hight', loading: 'lazy' }}
+                  {% else %}
+                    {% for variant_img in variant.metafields.variant_alternative_img.alternative_img %}
+                      <img src="{{ variant_img.src }}" alt="{{ variant_img.alt }}"
+                          srcset="
+                          {{ variant_img.src | append: '&transform=resize=600' }} 600w,
+                          {{ variant_img.src | append: '&transform=resize=900' }} 900w
+                        "
+                        fetchpriority="high" loading="lazy"
+                      >
+                    {% endfor %}
+                  {% endif %}
+                </span>
+              </a>
+            </div>
+            <div class="product__item-content">
+              <a href="{{- _product.url -}}{%- if variant.title != 'Default Title' -%}?variant={{variant.id}}{%- endif -%}" class="outer_content outer_content--show block-link-no-deco" >
+                <h4 class="product__item-title">{{- _product.title  -}}</h4>
+                {% if _product.metafields.product.properties != blank %}
+                  <p class="product__item-subtitle">{{- _product.metafields.product.properties -}}</p>
+                {% else %}
+                  <div class="product__item-subtitle">{{- _product.description | truncatewords: 8, "..." -}}</div>
+                {% endif %}
+                {% if extra_text != blank %}
+                  <p class="product__item-variant-subtitle">{{- extra_text -}}</p>
+                {% endif %}
+              </a>
+
+              {%- if _product.metafields.product.coming_soon != 'true' and shop.metafields.globals.coming_soon != 'true' and variant.metafields.visibility.coming_soon != 'true' and coming_soon_uk != true and variant.available -%}{% assign btn-variant-classes = 'hotspot-prod-btn add-to-cart-button'%}{%- else -%}{% assign btn-variant-classes = 'hotspot-prod-btn'%}{%- endif -%}
+
+              <button id="{{variant.id}}" class="{{btn-variant-classes}}"
+                data-id="{{_product.id}}"
+                data-purchase-id="{{variant.id}}"
+                {%- unless variant.available and _product.metafields.product.coming_soon != 'true' and shop.metafields.globals.coming_soon != 'true' and variant.metafields.visibility.coming_soon != 'true' and coming_soon_uk != true -%}
+                  disabled
+                {%- endunless -%}
+              >
+                {%- if _product.metafields.product.coming_soon or shop.metafields.globals.coming_soon == 'true' or variant.metafields.visibility.coming_soon -%}
+                  {{- 'products.product.coming_soon' | t -}}
+                {%- elsif coming_soon_uk == true -%}
+                  {{- 'products.product.not_available_in_region' | t -}}
+                {%- elsif variant.available -%}
+                  <div class="p-price__tag" id="variant_price_{{ _product.id }}">
+                    {%- if variant.compare_at_price and localization.country.iso_code != 'GB' -%}
+                      <span class="sr-only">Original price: </span>
+                      <span class="old-price">{{- variant.compare_at_price | money_without_trailing_zeros -}}</span>
+                    {%- endif -%}
+                    <span class="sr-only">Current price: </span>
+                    <span class="new-price">
+                      {%- if variant.inventory_quantity != 0 -%}
+                        {{- variant.price | money_without_trailing_zeros -}}
+                      {%- endif -%}
+                    </span>
+                  </div>
+                  ADD TO BAG
+                {%- else -%}
+                  {{- 'products.product.sold_out' | t -}}
+                {%- endif -%}
+              </button>
+            </div>
+          </div>
+
+        {% endif%}
+
+        {% break %}
+      {% endif%}
+    {% endfor %}
+
+  {% else %}
+
+    <div class="product__item hotspot-product {% unless _product.available %}product__item--sold-out{% endunless %}">
+      <div class="product_img_wrapper">
+        <a href="{{ _product.url }}" class="product__item-link">
+          <span class="product__item-image">
+            {% if img_hot_prod != blank %}
+              {{img_hot_prod | image_url: width: 600 | image_tag: width: 600, height: 600, alt: img_hot_prod.alt, fetchpriority: 'hight', loading: 'lazy' }}
+            {% else %}
+              {% for prod_media in _product.metafields.product.prod_image_holiday_coll %}
+                <img src="{{ prod_media.src }}" alt="{{ prod_media.alt }}"
+                    srcset="
+                    {{ prod_media.src | append: '&transform=resize=600' }} 600w,
+                    {{ prod_media.src | append: '&transform=resize=900' }} 900w
+                  "
+                  fetchpriority="low" loading="lazy"
+                >
+              {% endfor %}
+            {% endif %}
+          </span>
+        </a>
+        <!-- SHUTTER POPUP -->
+          {% include 'variant-selector' with _product %}
+        <!-- SHUTTER POPUP END // -->
+      </div>
+
+      <div class="product__item-content">
+        <a href="{{ _product.url }}" class="outer_content outer_content--show block-link-no-deco" >
+          <h4 class="product__item-title">{{- _product.title -}}</h4>
+          {% if _product.metafields.product.properties != blank %}
+            <p class="product__item-subtitle">{{- _product.metafields.product.properties -}}</p>
+          {% else %}
+            <div class="product__item-subtitle">{{- _product.description | truncatewords: 8, "..." -}}</div>
+          {% endif %}
+          {% if extra_text != blank %}
+            <p class="product__item-variant-subtitle">{{- extra_text -}}</p>
+          {% endif %}
+        </a>
+
+        {% if _product.type == 'Gift Card' %}
+          <a class="hotspot-prod-btn buy_btn_giftcard" href="{{- _product.url -}}">
+            <div class="p-price__tag" id="variant_price_{{ __product.id }}">
+              {%- if __product.variants[checkSelectedOption].compare_at_price and localization.country.iso_code != 'GB' -%}
+                <span class="sr-only">Original price: </span>
+                <span class="old-price">{{- __product.variants[checkSelectedOption].compare_at_price | money_without_trailing_zeros -}}</span>
+              {%- endif -%}
+              <span class="sr-only">Current price: </span>
+              <span class="new-price">
+                {%- if __product.variants[checkSelectedOption].inventory_quantity != 0 -%}
+                  {{- __product.variants[checkSelectedOption].price | money_without_trailing_zeros -}}
+                {%- endif -%}
+              </span>
+            </div>
+            <span>SHOP NOW</span>
+          </a>
+        {% elsif _product.metafields.product.coming_soon == 'true' or coming_soon_uk %}
+          <a href="{{- _product.url -}}" class="hotspot-prod-btn buy_btn_ofs" data-id="{{ _product.id }}">Coming Soon</a>
+        {% elsif _product.variants.size == 1 and _product.variants[0].inventory_quantity >= 1 %}
+          <button class="hotspot-prod-btn buy_btn_direct" data-id="{{ _product.id }}">
+            <div class="p-price__tag" id="variant_price_{{ __product.id }}">
+              {%- if __product.variants[checkSelectedOption].compare_at_price and localization.country.iso_code != 'GB' -%}
+                <span class="sr-only">Original price: </span>
+                <span class="old-price">{{- __product.variants[checkSelectedOption].compare_at_price | money_without_trailing_zeros -}}</span>
+              {%- endif -%}
+              <span class="sr-only">Current price: </span>
+              <span class="new-price">
+                {%- if __product.variants[checkSelectedOption].inventory_quantity != 0 -%}
+                  {{- __product.variants[checkSelectedOption].price | money_without_trailing_zeros -}}
+                {%- endif -%}
+              </span>
+            </div>
+            <span>ADD TO BAG</span>
+          </button>
+        {% elsif _product.variants.size == 1 and _product.variants[0].inventory_quantity < 1 %}
+          <a href="{{- _product.url -}}" class="hotspot-prod-btn buy_btn_ofs" data-id="{{ _product.id }}">Out Of stock</a>
+        {% else %}
+          <button class="hotspot-prod-btn buy_btn" data-id="{{ _product.id }}">
+            {% if shop.metafields.globals.coming_soon != 'true' and _product.metafields.product.coming_soon != 'true' %}
+              <div class="p-price__tag" id="variant_price_{{ __product.id }}">
+                {%- if __product.variants[checkSelectedOption].compare_at_price and localization.country.iso_code != 'GB' -%}
+                  <span class="sr-only">Original price: </span>
+                  <span class="old-price">{{- __product.variants[checkSelectedOption].compare_at_price | money_without_trailing_zeros -}}</span>
+                {%- endif -%}
+                <span class="sr-only">Current price: </span>
+                <span class="new-price">
+                  {%- if __product.variants[checkSelectedOption].inventory_quantity != 0 -%}
+                    {{- __product.variants[checkSelectedOption].price | money_without_trailing_zeros -}}
+                  {%- endif -%}
+                </span>
+              </div>
+              {% if section.settings.product_link_label != blank %}
+                {{ section.settings.product_link_label }}
+              {% else %}
+                <span>QUICK SHOP</span>
+              {% endif %}
+            {% else %}
+              <span>Coming Soon</span>
+            {% endif %}
+          </button>
+        {% endif %}
+
+        <script>
+          var hash_localstorage = localStorage.getItem('email_hash');
+          var hash_comingsoon = `{{ shop.metafields.globals.coming_soon }}`;
+          var hash_metafield = `{{ shop.metafields.globals.hash }}`;
+          if(hash_localstorage == hash_metafield && hash_comingsoon){
+            var getId = $('.buy_btn');
+            var putdata = `{{ section.settings.product_link_label }}`;
+            getId.html(putdata);
+          }
+        </script>
+      </div>
+    </div><!-- /.product__item -->
+
+  {% endif %}
+
+  <script>
+    $(document).ready(function() {
+      $( ".product-form__variants" ).click(function(e) {
+        var variant_price =  $(this).find(':selected').attr('data-price') ;
+        var product_id =  $(this).find(':selected').attr('data-product-id') ;
+        var variant_id =  $(this).val() ;
+        $('#variant_id_'+product_id).val(variant_id);
+        $('#variant_price_'+product_id).html(variant_price);
+      });
+
+      var activeVarId;
+      activeVarId = {{_product.variants[0].id | plus: 0}};
+      // discovery set id
+      const discoverySetVarId = 41853198172348;
+      if (activeVarId == discoverySetVarId) {
+        $.getJSON("/cart.js", function(new_cart) {
+          $.each( new_cart.items, function(key, value) {
+            if (value.id == discoverySetVarId) {
+              const discoveryAddToCart = document.querySelectorAll(`.buy_btn_direct[data-id="${value.product_id}"]`);
+              discoveryAddToCart.forEach((item) => {
+                setTimeout(() => {
+                  item.setAttribute("disabled", "");
+                }, 500);
+              });
+            }
+          });
+        });
+      }
+    });
+  </script>
+{%- endif -%}
+{% endunless %}
+{% endunless %}
+{%- assign _product = '' -%}

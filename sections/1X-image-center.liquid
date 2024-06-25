@@ -1,0 +1,49 @@
+<section>
+
+    {% for block in section.blocks %}
+
+        {% if article.handle == articles[block.settings.image-center-article].handle %}
+            <div style="text-align:center; width:100%;">
+                {{block.settings.image | image_url: width: 1200 | image_tag: width: 285, height: 620, alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 50px 0;
+    }
+
+    td {
+        padding: 10px 0;
+    }
+</style>
+
+{% schema %}
+    {
+    "name": "1X Image Center",
+    "class": "image-center",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "1X Image Center1",
+    "settings": [
+    {
+    "type": "article",
+    "id": "image-center-article",
+    "label": "Article"
+    },
+    {
+    "type": "image_picker",
+    "id": "image",
+    "label": "Image"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

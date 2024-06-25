@@ -1,0 +1,281 @@
+{% if section.settings.show_section == true %}
+{% assign scroll_id = section.settings.scroll_id | downcase %}
+{% assign scroll_id = scroll_id | replace: ' ', '-'  %}
+
+<section class="abt-sect2" id="{{ scroll_id }}">
+  
+  
+  <div class="container">
+    <div class=" desktop" >
+    <div class="s2-grid-wrap ">
+      {% for block in section.blocks %}
+
+          {% assign image = block.settings.image %}
+
+          {% if forloop.index  == 5 %}
+              <div class="s2-grid-col s2-grid-col-txt fade-scroll">
+                  <div class="grid-mid-txt">
+                      <h4>
+                          {{ section.settings.title_text }}
+                      </h4>
+                  </div>
+              </div>
+          {% endif %}
+
+      <div class="s2-grid-col fade-scroll">
+        {{block.settings.image | image_url: width: 1200 | image_tag: width: 400, alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+      </div>
+      {% endfor %}
+    </div>
+    </div>
+
+    <div class=" mobile" >
+    <div class="s2-grid-wrap" >
+          <div class="s2-grid-col fade-scroll">
+            {{section.settings.mobile_image1 | image_url: width: 1200 | image_tag: width: 400, alt: section.settings.mobile_image1.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+          <div class="s2-grid-col fade-scroll">
+            {{section.settings.mobile_image2 | image_url: width: 1200 | image_tag: width: 400, alt: section.settings.mobile_image2.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+
+          <div class="s2-grid-col s2-grid-col-txt fade-scroll">
+              <div class="grid-mid-txt">
+                  <h4>
+                      {{ section.settings.title_text }}
+                  </h4>
+              </div>
+          </div>
+
+          <div class="s2-grid-col fade-scroll">
+            {{section.settings.mobile_image3 | image_url: width: 1200 | image_tag: width: 400, alt: section.settings.mobile_image3.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+          <div class="s2-grid-col fade-scroll">
+            {{section.settings.mobile_image4 | image_url: width: 1200 | image_tag: width: 400, alt: section.settings.mobile_image4.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+  </div>
+</div>
+</div>
+
+</section>
+<style>
+.abt-sect2 {
+background:#e6e3e0;
+  padding: 60px;
+}
+
+.abt-sect2 .mobile {
+  display: none;
+}
+
+.abt-sect2 .s2-grid-wrap {
+display: flex;
+  flex-wrap: wrap;
+  margin-left:-30px;
+  margin-right:-30px;
+}
+
+.abt-sect2 .s2-grid-wrap  .s2-grid-col {
+width:33.3%;
+  padding:30px;
+  height:460px;
+}
+.abt-sect2 .s2-grid-wrap  .s2-grid-col:nth-child(2) {
+  transition-duration: 1.5s !important;
+}
+.abt-sect2 .s2-grid-wrap  .s2-grid-col:nth-child(3) {
+  transition-duration: 2s !important;
+}
+.abt-sect2 .s2-grid-wrap  .s2-grid-col:nth-child(4) {
+  transition-duration: 1s !important;
+}
+.abt-sect2 .s2-grid-wrap  .s2-grid-col:nth-child(5) {
+  transition-duration: 1.5s !important;
+}
+.abt-sect2 .s2-grid-wrap  .s2-grid-col:nth-child(6) {
+  transition-duration: 2s !important;
+}
+.abt-sect2 .s2-grid-wrap  .s2-grid-col:nth-child(7) {
+  transition-duration: 1s !important;
+}
+.abt-sect2 .s2-grid-wrap  .s2-grid-col:nth-child(8) {
+  transition-duration: 1.5s !important;
+}
+.abt-sect2 .s2-grid-wrap  .s2-grid-col:nth-child(9) {
+  transition-duration: 2s !important;
+}
+
+
+
+.abt-sect2 .s2-grid-wrap  .s2-grid-col img {
+width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 15px solid #f4f4f5;
+}
+
+.abt-sect2 .s2-grid-wrap  .s2-grid-col .grid-mid-txt {
+width:100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.abt-sect2 .s2-grid-wrap  .s2-grid-col .grid-mid-txt h4 {
+    font-size:{{ section.settings.font_size }}px;
+  display: flex;
+  align-items: center;
+      justify-content: center;
+ color:#fafafa;
+      font-family: var(--font-medium);
+  font-weight: 500;
+  text-align: center;
+}
+
+@media (max-width:1300px){
+  .abt-sect2 .s2-grid-wrap  .s2-grid-col {
+  height:340px;
+}
+}
+
+@media (max-width:992px){
+  .abt-sect2 .s2-grid-wrap  .s2-grid-col {
+  height:250px;
+  padding: 15px;
+}
+.abt-sect2 .s2-grid-wrap {
+
+margin-left: 15px;
+margin-right: 15px;
+}
+
+}
+@media (max-width:767px){
+  .abt-sect2 {
+  padding: 23px 0;
+}
+
+.abt-sect2 .mobile {
+  display: block;
+}
+.abt-sect2 .desktop {
+  display: none;
+}
+
+  .abt-sect2 .s2-grid-wrap {
+
+    margin-left: -7.5px;
+  margin-right: -7.5px;
+}
+  .abt-sect2 .s2-grid-wrap  .s2-grid-col {
+  height:190px;
+  width: 50%;
+  padding: 7.5px;
+}
+.abt-sect2 .s2-grid-wrap  .s2-grid-col.s2-grid-col-txt{
+
+  width: 100%;
+  height: auto;
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+.abt-sect2 .s2-grid-wrap  .s2-grid-col img  {
+  border: 7px solid #f4f4f5;
+}
+
+.abt-sect2 .s2-grid-wrap .s2-grid-col .grid-mid-txt h4 {
+  font-size: {{ section.settings.font_size_mobile }}px;
+}
+
+}
+
+
+</style>
+{% endif %}
+{% schema %}
+  {
+  "name": "Section 2",
+  "class": "about-section2",
+  "max_blocks": 8,
+  "settings": [
+  {
+  "type": "checkbox",
+  "id": "show_section",
+  "label": "Show Section",
+  "default": false
+  },
+  {
+    "type": "text",
+    "id": "scroll_id",
+    "label": "Section ID",
+    "info": "Use this field to insert the ID to link with the nav items and enable scroll to this section."
+  },
+  {
+  "type": "text",
+  "id": "title_text",
+  "label": "Title",
+  "default": "THIS IS ROSE INC"
+  },
+  {
+  "id": "title_color",
+  "type": "color",
+  "label": "Title Color",
+  "default": "#ffffff"
+  },
+  {
+  "type":      "range",
+  "id":        "font_size",
+  "min":        0,
+  "max":        100,
+  "step":       1,
+  "unit":       "px",
+  "label":     "Font Size",
+  "default":   21
+  },
+  {
+  "type":      "range",
+  "id":        "font_size_mobile",
+  "min":        0,
+  "max":        100,
+  "step":       1,
+  "unit":       "px",
+  "label":     "Font Size For Mobile",
+  "default":   21
+  },
+  {
+  "type": "image_picker",
+  "id": "mobile_image1",
+  "label": "Mobile Image1"
+  },
+  {
+  "type": "image_picker",
+  "id": "mobile_image2",
+  "label": "Mobile Image2"
+  },
+  {
+  "type": "image_picker",
+  "id": "mobile_image3",
+  "label": "Mobile Image3"
+  },
+  {
+  "type": "image_picker",
+  "id": "mobile_image4",
+  "label": "Mobile Image4"
+  }
+  ],
+  "blocks" : [
+  {
+  "type": "slide",
+  "name": "Images",
+  "settings": [
+  {
+  "type": "image_picker",
+  "id": "image",
+  "label": "Image"
+  }
+  ]
+  }
+  ]
+  }
+{% endschema %}

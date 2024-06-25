@@ -1,0 +1,100 @@
+{{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+{{ 'react-index.css' | asset_url | stylesheet_tag }}
+{{ 'react-shade-finder-only.css' | asset_url | stylesheet_tag }}
+{%- render 'react-i18n', translation_key: 'shade_finder' -%}
+<div class="container">
+    <!-- <div class="page--default">
+        <div class="page__content">
+            {%- render 'react-root' -%}
+        </div>
+    </div> -->
+  <div class="octane-ai-quiz " data-quiz-id="6tcjTNWt3fhpniGF" data-embed-type="fullpage" data-mobile-height="match_browser" data-desktop-height="match_browser"></div><script src="https://app.octaneai.com/passlrhfqnp6xm0m/quiz.js" async defer></script>
+
+</div>
+<!-- /.container -->
+
+{%- comment -%}Populate window.shopData, leaving productDetails empty as we don't use it{%- endcomment -%}
+{%- include 'pdp-end', collection:false -%}
+<script type="text/javascript">
+    window.shopData.fixSlick = function () {
+        if (window.jQuery) $('.collection__items').slick("refresh")
+    }
+</script>
+
+{%- assign productDrop = shop.metaobjects.shade_finder_products['singleton'] -%}
+{%- assign mediaDrop = shop.metaobjects.shade_finder_quiz_media['singleton'] -%}
+
+<script type="text/javascript">
+    // Populate shadeFinderProducts with the products used by the Shade Finder
+    // window.shopData.shadeFinderProducts = {
+    //     concealer: {% render 'pdp-end-json', prod: productDrop.concealer.value %}
+    //     foundation: {% render 'pdp-end-json', prod: productDrop.foundation.value %}
+    //     serum: {% render 'pdp-end-json', prod: productDrop.serum.value %}
+    // }
+
+    // // Shade Finder media from shopify
+    // window.shopData.shadeFinderMedia = {
+    //     ['landing_page']: {
+    //         altText:'{{ mediaDrop.landing_page.value.alt }}',
+    //         {% if mediaDrop.landing_page.value.media_type == "video" %}
+    //             isVideo: true,
+    //             sources: [{url:'{{ mediaDrop.landing_page.value.sources[0].url}}', mimeType: '{{ mediaDrop.landing_page.value.sources[0].mime_type}}'}],
+    //         {% else %}
+    //             isImage: true,
+    //             imgScr: '{{ mediaDrop.landing_page.value | image_url }}',
+    //         {% endif %}
+    //     },
+    //     ['coverage_question']: {
+    //         altText:'{{ mediaDrop.coverage_question.value.alt }}',
+    //         {% if mediaDrop.coverage_question.value.media_type == "video" %}
+    //         isVideo: true,
+    //         sources: [{url:'{{ mediaDrop.coverage_question.value.sources[0].url}}', mimeType: '{{ mediaDrop.coverage_question.value.sources[0].mime_type}}'}],
+    //         {% else %}
+    //         isImage: true,
+    //         imgScr: '{{ mediaDrop.coverage_question.value | image_url }}',
+    //         {% endif %}
+    //     },
+    //     ['undertone_question']: {
+    //         altText:'{{ mediaDrop.undertone_question.value.alt }}',
+    //         {% if mediaDrop.undertone_question.value.media_type == "video" %}
+    //         isVideo: true,
+    //         sources: [{url:'{{ mediaDrop.undertone_question.value.sources[0].url}}', mimeType: '{{ mediaDrop.undertone_question.value.sources[0].mime_type}}'}],
+    //         {% else %}
+    //         isImage: true,
+    //         imgScr: '{{ mediaDrop.undertone_question.value | image_url }}',
+    //         {% endif %}
+    //     },
+    //     ['concern_question']: {
+    //         altText:'{{ mediaDrop.concern_question.value.alt }}',
+    //         {% if mediaDrop.concern_question.value.media_type == "video" %}
+    //         isVideo: true,
+    //         sources: [{url:'{{ mediaDrop.concern_question.value.sources[0].url}}', mimeType: '{{ mediaDrop.concern_question.value.sources[0].mime_type}}'}],
+    //         {% else %}
+    //         isImage: true,
+    //         imgScr: '{{ mediaDrop.concern_question.value | image_url }}',
+    //         {% endif %}
+    //     },
+    //     ['selfie']: {
+    //         altText:'{{ mediaDrop.selfie.value.alt }}',
+    //         {% if mediaDrop.selfie.value.media_type == "video" %}
+    //         isVideo: true,
+    //         sources: [{url:'{{ mediaDrop.selfie.value.sources[0].url}}', mimeType: '{{ mediaDrop.selfie.value.sources[0].mime_type}}'}],
+    //         {% else %}
+    //         isImage: true,
+    //         imgScr: '{{ mediaDrop.selfie.value | image_url }}',
+    //         {% endif %}
+    //     },
+    //     ['email_collection']: {
+    //         altText:'{{ mediaDrop.email_collection.value.alt }}',
+    //         {% if mediaDrop.email_collection.value.media_type == "video" %}
+    //         isVideo: true,
+    //         sources: [{url:'{{ mediaDrop.email_collection.value.sources[0].url}}', mimeType: '{{ mediaDrop.email_collection.value.sources[0].mime_type}}'}],
+    //         {% else %}
+    //         isImage: true,
+    //         imgScr: '{{ mediaDrop.email_collection.value | image_url }}',
+    //         {% endif %}
+    //     },
+    // }
+
+    // window.shopData.shadeFinderConfig = {{ 'shade-finder-config.json' |  asset_url | json }}
+</script>

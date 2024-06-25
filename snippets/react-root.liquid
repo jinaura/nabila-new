@@ -1,0 +1,15 @@
+<div id="react-root" class="react-root" data-gem-ignore>
+    <div class="bl-core-loading-animation">
+        <img
+            src="{{ 'loading-animation.svg' | asset_url }}"
+            alt="{{ 'accessibility.loading' | t }}"
+            class="bl-core-loading-animation__img"
+        />
+    </div>
+</div>
+
+{% if page.handle contains 'shade-finder' %}
+<script id="findation-widget-button" type="text/javascript"
+ src="https://www.findation.com/javascripts/widgetv1.js"
+ data-api-key="5ac0b7afca22578e8700b11d0070f005814b25849d7385bac5c763952be1" async ></script>
+{% endif %}

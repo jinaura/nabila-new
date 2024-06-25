@@ -1,0 +1,121 @@
+{% assign _section = section.settings %}
+
+{% if localization.country.iso_code != 'GB' or request.design_mode == true %}
+  <div class="container customer-service payment">
+    <div class="container--inner">
+        <aside>
+            <h1>{{_section.title}}</h1>
+            <a href = "{{_section.link}}">{{_section.link_text}}</a>
+        </aside>
+        <div class="nav-links">
+          {%- for block in section.blocks -%}
+            {%- assign _block = block.settings -%}
+
+            {%- case block.type -%}
+              {%- when 'subtitle' -%}
+                <h2>{{_block.subtitle_text}}</h2>
+              
+              {%- when 'paragraph_title_med' -%}
+                <h3>{{_block.par_title_med}}</h3>
+                  
+              {%- when 'paragraph_title_bold' -%}
+                <h3 class="bold">{{_block.par_title_bold}}</h3>
+              
+              {%- when 'paragraph_text' -%}
+                {{_block.par_text}}
+               
+              {%- when 'ordered_list' -%}
+                <ol class="ol--list">
+                  {%- assign list_items = _block.order_list | split: "," -%}
+                  {% for item in list_items %}
+                    <li class="list__item">{{item}}</li>
+                  {% endfor %}
+                </ol>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+    {
+    "name": "Payment",
+    "settings": [
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Heading",
+    "default": "Payment"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Back Home Link"
+    },
+    {
+    "type": "text",
+    "id": "link_text",
+    "label": "Link Text",
+    "default": "Customer service home"
+    }
+    ],
+    "blocks": [
+      {
+        "type": "subtitle",
+        "name": "Subtitle",
+        "settings": [
+          {
+            "type": "text",
+            "id": "subtitle_text",
+            "label": "Subtitle Text"
+          }
+        ]
+      },
+      {
+        "type": "paragraph_title_med",
+        "name": "Paragraph Title (medium)",
+        "settings": [
+          {
+            "type": "text",
+            "id": "par_title_med",
+            "label": "Paragraph Title (medium)"
+          }
+        ]
+      },
+      {
+        "type": "paragraph_title_bold",
+        "name": "Paragraph Title (bold)",
+        "settings": [
+          {
+            "type": "text",
+            "id": "par_title_bold",
+            "label": "Paragraph Title (bold)"
+          }
+        ]
+      },
+      {
+        "type": "paragraph_text",
+        "name": "Paragraph Text",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "par_text",
+            "label": "Paragraph Text"
+          }
+        ]
+      },
+      {
+        "type": "ordered_list",
+        "name": "Ordered List",
+        "settings": [
+          {
+            "type": "textarea",
+            "id": "order_list",
+            "label": "List Items (comma-separated)"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

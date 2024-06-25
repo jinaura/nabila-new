@@ -1,0 +1,78 @@
+{%- include 'editorial-subnavigation' -%}
+
+<style>
+	.heroModule {
+		display: flex;
+		flex-flow: column;
+		justify-content: flex-end;
+		align-items: center;
+		text-align: center;
+	}
+	.heroModule .ratio_wrapper{
+		width:100%;
+	}
+	.heroModule .content-info{
+		position:absolute;
+		color: #fff;
+		max-width:1320px;
+		padding-bottom:30px;
+	}
+	.heroModule .content-info h1{
+		font-family: var(--font-medium);
+		font-size: 72px;
+		font-weight: normal;
+		line-height: 1;
+		padding-bottom: 25px;
+	}
+	.heroModule .content-info span{
+		letter-spacing:1px;
+		text-transform: uppercase;
+	}
+	.share_meta{
+		padding:75px 0;
+	}
+	.share_meta .container{
+		display:flex;
+		justify-content: space-between;
+	}
+	.share_meta .container .tags a{
+		padding-left:20px;
+	}
+	.article_desc{
+		padding:100px 0;
+	}
+	.article_desc .container{
+		max-width:660px;
+	}
+</style>
+
+<section class="heroModule">
+	<div class="ratio_wrapper res-1320x720">{{ article.image | img_url: '1024x1024' | img_tag: article.image.alt }}</div>
+	<div class="content-info">
+		<h1>{{- article.title -}}</h1>
+		{% assign article_category = article.handle | split: '/' | first %}
+		{% for tag in article.tags %}
+		{% assign words = tag | split: '-'   %}
+		{% assign first_word =  words[0] | downcase %}
+		{% assign blog_title = blog.title | downcase %}
+		{% if first_word == blog_title %}
+			{% assign article_category= words[1] %}
+			{% endif %}
+		{% endfor %}
+		<span>{{article_category }}</span>
+	</div>
+</section>
+
+<section class="article_desc">
+	<div class="container">
+		{{- article.content -}}
+	</div>
+</section>
+
+			{% if blog.comments_enabled? %}
+				{%- include 'article-comments' -%}
+			{% endif %}
+
+		</div><!-- /.article__listing -->
+	</div>
+</div><!-- /.container -->

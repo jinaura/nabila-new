@@ -1,0 +1,161 @@
+{% assign secSettings  = section.settings %}
+<section class="carousel-product" id="section-{{section.id}}">
+    {% assign sectionId = section.id %}
+    {% assign imageRatio = 'res-400x500' %}
+
+    <div class="container section__item section_spacing">
+        <h2 class="heading-with-link">{{ secSettings.title }}</h2>
+        <hr class="section__divider">
+        {{ secSettings.desc }}
+        <hr class="divider--start">
+    </div>
+
+    {% assign slidesToShow = 3 %}
+    {% capture sliderSettings_sectionId %}
+        data-slick='{
+        "slidesToShow": {{ slidesToShow }},
+        "slidesToScroll": {{ slidesToShow }},
+        "dots": {{ secSettings.dots }},
+        "infinite": true,
+        "arrows": {{ secSettings.arrows }},
+        "autoplay": false,
+        "adaptiveHeight": false,
+        "speed": 500,
+        "centerMode": false,
+        "centerPadding": "1px",
+        "responsive": [
+        {
+        "breakpoint": 768,
+        "settings":{
+        "slidesToShow": 1,
+        "slidesToScroll": 1
+        }
+        },
+        {
+        "breakpoint": 1024,
+        "settings":{
+        "slidesToShow": 2,
+        "slidesToScroll": 2
+        }
+        }
+        ]
+        }'
+    {% endcapture %}
+
+    <div class="container">
+        <div class="commonSlider collection__items" {{ sliderSettings_sectionId }}>
+            {% if secSettings.collection == blank %}
+                {% for block in section.blocks %}
+                    {% if block.type == 'product' %}
+                        <div {{ block.shopify_attributes }}>
+                            {% if block.settings.product != blank %}
+                                {% if all_products[block.settings.product].type == 'Sets Product'%}
+                                    {%- include 'product-item-sets' with all_products[block.settings.product] -%}
+                                {% else %}
+                                    {%- include 'product-item' with all_products[block.settings.product] -%}
+                                {% endif %}
+                            {% else %}
+                                {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% for _product in collections[secSettings.collection].products %}
+                    {% if _product.type == 'Sets Product'%}
+                        {%- include 'product-item-sets' with _product -%}
+                    {% else %}
+                        {%- include 'product-item' with _product -%}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+</section>
+
+<style>
+    .collection__items .product__item{
+        flex-basis: 100%;
+        max-width: 100%;
+        margin: 0;
+    }
+    .product__item hr.divider--start{
+        display: none;
+    }
+    .shutter{
+        z-index: 6;
+    }
+    
+    .collection__items .price_btn--wrapper{
+        bottom: 0;
+    }
+    .collection__items .section__flex-item h3, .collection__items .section__flex-item p{
+        font-size: 12px;
+        line-height: 1.3;
+    }
+    .collection__items .product__item-image img {
+        height: 500px;
+    }
+
+    @media (min-width:767px){
+        .collection__items .product_set{
+            bottom: 75px;
+            margin: 0;
+            max-height: 520px;
+            padding: 0px;
+        }
+        .collection__items .product_set .popupHeader {
+            top: 0;
+            padding-top: 20px;
+        }
+    }
+</style>
+
+
+{% schema %}
+{
+    "name": "Pro/Set Carousel",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "desc",
+        "label": "Description",
+        "default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>"
+      },
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "Select Collection"
+      },
+      {
+        "type": "header",
+        "content": "Slider options"
+      },
+      {
+        "type": "checkbox",
+        "id": "dots",
+        "label": "Show dots",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "arrows",
+        "label": "Show arrows",
+        "default": true
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product or Set Carousel - Product"
+      }
+    ]
+  }
+{% endschema %}

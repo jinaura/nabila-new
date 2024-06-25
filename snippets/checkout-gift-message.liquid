@@ -1,0 +1,309 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<div class="checkbox-container" data-gift-note-html>
+  <h2 class="section__title" style="margin-bottom: .75em">Gift Options</h2>
+  <input type="checkbox" class="input-checkbox" id="gift-message" {% if checkout.attributes.gift_message %}checked{% endif %}>
+  <label for="gift-message"><span>{% if checkout.attributes.gift_message %}Edit{% else %}Add{% endif %} Gift Message</span></label>
+  <div id="msg_text">
+    <div class="gift_info_wrapper">
+      <input type="text" class="field__input gift_recipient" id="gift_recipient" maxlength="40" placeholder="Recipient name" value="{% if checkout.attributes.gift_recipient %}{{checkout.attributes.gift_recipient}}{% endif %}"/>
+    </div>
+    <div class="gift_info_wrapper">
+      <input type="text" class="field__input gift_sender" id="gift_sender" maxlength="40" placeholder="Sender name" value="{% if checkout.attributes.gift_sender %}{{checkout.attributes.gift_sender}}{% endif %}"/>
+    </div>
+    <textarea class="field__input gift_message_text" id="gift_message_text" placeholder="Gift message. 100 character limit." maxlength="100">{% if checkout.attributes.gift_message %}{{checkout.attributes.gift_message}}{% endif %}</textarea>
+    <br />
+    <div class="btn add_msg">{% if checkout.attributes..gift_message %}Edit{% else %}Add{% endif %} Gift Message</div>
+  </div>
+</div>
+<script>
+if ($('.section--shipping-address').length) {
+  $('.section--contact-information').before($('[data-gift-note-html]'));
+}
+var saveCartNote = function() {
+  var cartNote = $('#msg_text textarea').val();
+  var senderName = $('.gift_sender').val();
+  var recipientName = $('.gift_recipient').val();
+  $('#msg_text .btn').addClass('loading');
+  $.ajax({
+    url: '/cart/update.js',
+    method: 'POST',
+    dataType: 'json',
+    data: {
+      attributes: {
+        'gift_message': cartNote,
+        'gift_recipient': recipientName,
+        'gift_sender': senderName
+      }
+    },
+    success:function(data) {
+      $('#msg_text textarea').addClass('note_saved');
+      $('#msg_text textarea').css('cursor', 'not-allowed');
+      $('#msg_text textarea').prop('disabled', 'true');
+      $('#msg_text .btn').removeClass('loading');
+      window.location.reload();
+    },
+    error: function(err) {
+      console.log('error:', err)
+    }
+  })
+};
+
+$('#gift-message').on('click', function() {
+  if (!(this).checked) {
+    $('#msg_text textarea').removeClass('note_saved');
+    $('#msg_text textarea').css('cursor', 'default');
+    $('#msg_text textarea').prop('disabled', '');
+    $.post(window.location.origin + '/cart/update.js', {note: ''}, function() {
+      $('#msg_text textarea').val('');
+    }, 'json');
+  }
+});
+$('.add_msg').on('click', function() {
+  saveCartNote();
+});
+</script>
+<style>
+#msg_text {
+  display: none;
+  padding-top: 1.5em;
+}
+#msg_text textarea {
+  height: 150px;
+}
+#msg_text textarea.note_saved {
+  resize: none;
+}
+.checkbox-container {
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+}
+.checkbox-container label {
+  cursor: pointer;
+  padding-top: 1.5em;
+  padding-left: 8px;
+}
+.checkbox-container input[type=checkbox]:checked ~ #msg_text {
+  display: block;
+}
+.og_btn {
+  display: inline-block;
+  border-radius: 4px;
+  font-weight: 500;
+  padding: 1.4em 1.7em;
+  box-sizing: border-box;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  background: #222;
+  color: white;
+}
+.og_btn:hover {
+  background: #090909;
+  color: white;
+}
+.edit_msg {
+  display: none;
+}
+#msg_text .btn.loading:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border: 2px solid #084b6d;
+    border-top: 2px solid #fffefb;
+    border-bottom: 2px solid #fffefb;
+    -webkit-animation: spinner 0.6s linear infinite;
+            animation: spinner 0.6s linear infinite;
+    z-index: 2; }
+#msg_text .btn.loading:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fffefb;
+    opacity: 0.5; }
+  .checkbox-container {
+  	display: none;
+  }
+  .step__sections .checkbox-container { display: block; }
+  .gift_info_wrapper {
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 10px;
+  }
+  .gift_info_wrapper .field__input {
+  	margin: 10px 0;
+  }
+
+
+  /* ------------------------------------------------------------ *\
+  Variables
+\* ------------------------------------------------------------ */
+
+:root {
+  --font-heading: "Cochin";
+  --font-regular: "Euclid Circular Regular";
+  --font-medium: "Euclid Circular Medium";
+  --font-semibold: "Euclid Circular SemiBold";
+  --font-bold: "Euclid Circular Bold";
+  --primary-color: #1d1d1d;
+  --secondary-color: #545353;
+  --border-color: #919191;
+  --border-color-light: #e6e3e0;
+  --body-copy: 14px;
+}
+
+/* ------------------------------------------------------------ *\
+	Fonts
+\* ------------------------------------------------------------ */
+
+@font-face {
+  font-family: "Euclid Circular Regular";
+  src: url({{ 'EuclidCircularB-Regular.woff2' | asset_url }}) format("woff2"), url({{ 'EuclidCircularB-Regular.woff' | asset_url }}) format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Euclid Circular Medium";
+  src: url({{ 'EuclidCircularB-Medium.woff2' | asset_url }}) format("woff2"), url({{ 'EuclidCircularB-Medium.woff' | asset_url }}) format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Euclid Circular SemiBold";
+  src: url({{ 'EuclidCircularB-SemiBold.woff2' | asset_url }}) format("woff2"), url({{ 'EuclidCircularB-SemiBold.woff' | asset_url }}) format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Euclid Circular Bold";
+  src: url({{ 'EuclidCircularB-Bold.woff2' | asset_url }}) format("woff2"), url({{ 'EuclidCircularB-Bold.woff' | asset_url }}) format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Cochin";
+  src: url({{ 'cochin.woff2' | asset_url }}) format("woff2"), url({{ 'cochin.woff' | asset_url }}) format("woff");
+  font-weight: normal; 
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Didot";
+  src: url("./Didot-HTF-L16-Light.woff2") format("woff2"), url("./Didot-HTF-L16-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: var(--font-regular);
+  color: var(--secondary-color);
+}
+h1 {
+  font-family: var(--font-heading);
+  font-size: 42px;
+}
+
+h2, h3, h4, h5, h6, .product__description__name {
+  font-size: var(--body-copy);
+  font-family: var(--font-medium);
+  font-weight: normal;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.logo__image--small{
+    max-width: 233px;
+}
+
+.field__input{
+    border-radius: 0;
+}
+.btn, .sp-modal-toggle{
+    text-transform: uppercase;
+    border-radius: 0;
+    letter-spacing: 1px;
+}
+.step__footer__continue-btn.btn {
+    min-width: 60%;
+    cursor: pointer;
+}
+.step__footer__continue-btn.btn[disabled="true"] {
+  background-color: #919191;
+  cursor: default;
+}
+.input-checkbox{
+    border-radius: 0;
+    border: solid 1px #919191;
+    background: none !important;
+}
+.input-checkbox, .input-radio{
+  width: 15px;
+  height: 15px;
+}
+.section--contact-information a{
+  text-decoration: underline;
+}
+.total-line__name.payment-due-label{
+    text-transform: uppercase;
+    font-family: var(--font-medium);
+}
+.payment-due__price{
+    font-size: 18px;
+    font-family: var(--font-bold);
+}
+.sidebar .heading-3, .sidebar h3{
+    padding-bottom: 20px;
+    color:var(--primary-color);
+}
+
+.review-block a {
+    text-decoration: underline;
+}
+
+.product-thumbnail__quantity{
+    background: var(--secondary-color);
+    font-family: var(--font-bold);
+    color: #fafafa;
+}
+
+.product-thumbnail__wrapper, .product-thumbnail::after{
+    border-radius: 0;
+}
+.product-thumbnail__image{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+.product td{
+    padding-top: 20px;
+}
+
+@media (min-width: 1000px){
+    .sidebar::after {
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+}
+@media (max-width: 749px){
+    .logo{text-align: center;}
+    .logo__image--small{max-width: 140px;}
+    .step__footer__continue-btn.btn{width: 100%;}
+
+    .sidebar .heading-3, .sidebar h3{padding-top:20px;}
+    .order-summary-toggle{background: #f6f3f0;}
+
+    .total-recap__final-price{font-size: 14px; font-family: var(--font-medium); color: var(--secondary-color);}
+}
+
+</style>

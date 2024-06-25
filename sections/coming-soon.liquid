@@ -1,0 +1,300 @@
+{% assign _section = section.settings %}
+<div class="invisible">
+  <button class="see-more password" data-micromodal-trigger="modal-password">LOGIN</button>
+</div>
+<div class="modal micromodal-slide password" id="modal-password" aria-hidden="true">
+  <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+    <div class="modal__wrapper" data-micromodal-close>
+      <div class="modal__container" role="dialog" aria-modal="true">
+        <header class="modal__header">
+          <h3 class="section__subtitle">Enter store using password:</h3>
+          <button class="modal__close close" aria-label="Close modal" data-micromodal-close>Close</button>
+        </header>
+        <main class="modal__content" id="modal-password-content">
+          {% form 'storefront_password' %}
+            {{ form.errors | default_errors }}
+            <input type='password' name='password' id='password' autofocus />
+            <div class="actions">
+              <input class="btn" name="commit" type="submit" value="Enter" />
+            </div>
+        {% endform %}
+        </main>
+      </div>
+  </div>
+  </div>
+</div>
+<div class="container coming-soon">
+  <div class="container--inner">
+    <div class="content__wrapper flex">
+      <article class="flex-column">
+        <h2 class="promo__heading">{{_section.title}}</h2>
+        <p class="promo__text">{{_section.description}}</p>
+      </article>
+      <article class="vertical-line hidden-xs"></article>
+      <article class="flex-column">
+        <div class="newsletter-form">
+          <form id="launch_signup" class="footer__signup-form klaviyo_styling klaviyo_gdpr_embed_TvzYRz" action="//manage.kmail-lists.com/subscriptions/subscribe" data-ajax-submit="//manage.kmail-lists.com/ajax/subscriptions/subscribe" method="GET" target="_blank" novalidate="novalidate">
+            <input type="hidden" name="g" value="TvzYRz">
+            <input type="hidden" name="$fields" value="email,phone_number"/>
+            <input class="signup klaviyo-input" type="email" value="" name="email" id="email" placeholder="Your email" aria-label="Email Address" />
+            <input class="signup klaviyo-input" type="tel" value="" name="phone_number" id="phone_number" placeholder="Your mobile # (optional)" aria-label="Mobile Number" />
+            <div class="klaviyo_messages">
+              <div class="success_message" style="display:none;">
+                <p class="thank_you" >Your email was received! Welcome to Rose Inc.</p>
+              </div>
+              <div class="error_message"></div>
+            </div>
+            <div class="klaviyo_form_actions">
+              <button class="btn subscribe">{{_section.link_text}}</button>
+            </div>
+          </form>
+          <p class="newsletter-disclaimer">By signing up for emails and texts, I accept the 
+            <span><a href="/pages/privacy-policy" target="_blank">Privacy Policy</a></span> and the 
+            <span><a href="/pages/terms-conditions" target="_blank">Terms of Service</a></span>.
+            We don't sell personal information to 3rd parties.
+          </p>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+
+<style>
+
+  body.template-password footer, body.template-password .mobileToggle {
+    display: none;
+  }
+  body.template-password .wrapper {
+    min-height: unset;
+  }
+  body.template-password header.custom {
+    top: 0 !important;
+  }
+  body.template-password .header__announcement-bar, body.template-password .mainNav, body.template-password .toolBar {
+    display: none;
+  }
+
+  body.template-page--{{page.title | handleize}} footer, body.template-page--{{page.title | handleize}} .mobileToggle {
+    display: none;
+  }
+  body.template-page--{{page.title | handleize}} .wrapper {
+    min-height: unset;
+  }
+  body.template-page--{{page.title | handleize}} header.custom {
+    top: 0 !important;
+  }
+  body.template-page--{{page.title | handleize}} .header__announcement-bar, body.template-page--{{page.title | handleize}} .mainNav, body.template-page--{{page.title | handleize}} .toolBar {
+    display: none;
+  }
+
+  #modal-password .modal__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #modal-password .modal__container {
+    min-height: 200px;
+  }
+  #modal-password .modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+  #modal-password .section__subtitle {
+    padding-bottom: 1rem;
+    padding-top: 2rem;
+    font-size: 20px;
+  }
+  #modal-password input#password {
+    height: 2rem;
+    border: 1px solid grey;
+    margin: 1rem 0;
+    width: 100%;
+  }
+  div.invisible {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 99999;
+  }
+  button.password {
+    color: transparent;
+  }
+  
+  .container--inner .content__wrapper.flex {
+    display: flex;
+    max-width: 1350px;
+    justify-content: center;
+    padding: 8rem 1rem 3rem 1rem;
+  }
+  .container--inner .content__wrapper.flex article.flex-column {
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 1rem;
+  }
+  .container--inner .content__wrapper.flex article.flex-column h6 {
+    padding-bottom: 1rem;
+  }
+  .container--inner .content__wrapper.flex article.vertical-line {
+    border-right: 1px solid var(--border-color-light);
+    margin-right: 140px;
+    margin-left: 140px;
+  }
+  .container--inner .content__wrapper.flex .promo__heading {
+    font-size: 64px;
+    font-weight: 500;
+    color: var(--primary-color);
+    font-family: var(--font-medium);
+    line-height: 72px;
+    letter-spacing: 1.78px;
+    text-transform: none;
+  }
+  .container--inner .content__wrapper.flex .promo__text {
+    padding-top: 30px;
+  }
+  .container--inner .newsletter-form {
+    position: relative;
+  }
+  .container--inner .footer__signup-form {
+    display: flex;
+    flex-direction: column;
+  }
+  .container--inner .footer__signup-form input {
+    padding: 1rem 0;
+    padding-top: 1.5rem;
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid #919191;
+    margin-bottom: 0.5rem;
+  }
+  .container--inner .footer__signup-form input[type=tel] {
+    margin-bottom: 1rem;
+  }
+  .container--inner .newsletter-disclaimer {
+    font-size: 12px;
+    margin-top: 0.2rem;
+  }
+  @media (max-width: 1250px) {
+    .container--inner .content__wrapper.flex article.vertical-line {
+      margin-right: 7vw;
+      margin-left: 7vw;
+    }
+  }
+  @media (max-width: 767px) {
+    .container--inner .content__wrapper.flex {
+      flex-direction: column;
+      align-items: center;
+      padding: 6rem 0.5rem 2rem 0.5rem;
+    }
+    .container--inner .content__wrapper.flex .promo__heading {
+      font-size: 36px;
+      line-height: 42px;
+      letter-spacing: 1px;
+    }
+    .container--inner hr.divider--start {
+      padding-bottom: 0;
+      padding-top: 0.8rem;
+    }
+    .container--inner .content__wrapper.flex article.flex-column h6 {
+      padding-bottom: 0.5rem;
+    }
+    .container--inner .content__wrapper.flex .promo__text {
+      padding-top: 1rem;
+    }
+  }
+</style>
+
+{% schema %}
+    {
+    "name": "Coming Soon",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Something big is coming"
+      },
+      {
+        "type": "textarea",
+        "id": "description",
+        "label": "Description"
+      },
+      {
+        "type": "text",
+        "id": "link_text",
+        "label": "Link Text",
+        "default": "Subscribe for exclusive access"
+      }
+    ]
+  }
+{% endschema %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js" defer="defer"></script>
+<script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+<script>
+  $(document).ready(function() {
+    KlaviyoSubscribe.attachToForms('#launch_signup', {
+      hide_form_on_success: true,
+      extra_properties: {
+        $source: 'All Active 9.14',
+        $method_type: "Klaviyo Form",
+        $method_id: 'embed',
+        $consent_version: 'Embed default text'
+      },
+      custom_success_message: true
+    });
+
+    MicroModal.init();
+
+    const submitBtnKlav = $('.container.coming-soon .footer__signup-form .btn.subscribe');
+    submitBtnKlav.prop('disabled', true);
+    $('.container.coming-soon .footer__signup-form input.signup').keyup(function() {
+    $('.container.coming-soon .footer__signup-form input.signup').each((function () {
+      const inputId = $(this).attr('id');
+      const str = $(this).val();
+      switch (inputId) {
+        case 'email':
+          const emailPattern = /^.+@.+\..+$/;
+          if (emailPattern.test(str)) {
+            $(this).addClass('valid').removeClass('invalid');
+          } else {
+            $(this).addClass('invalid').removeClass('valid');
+          }
+          break;
+        case 'phone_number':
+          const phonePattern = /^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/gm;
+          if (str == '' || phonePattern.test(str)) {
+            $(this).addClass('valid').removeClass('invalid');
+          } else {
+            $(this).addClass('invalid').removeClass('valid');
+          }
+          break;
+      };
+      const messageId = 'klaviyo_error_' + inputId;
+      const messageEl = document.getElementById(messageId);
+      if ($(this).hasClass('invalid') && (messageEl == null)) {
+        const inputName = $(this).attr('aria-label');
+        const message = inputName + ' is invalid';
+        p = document.createElement('p');
+        p.innerHTML = message;
+        p.setAttribute('id', messageId);
+        $('.container.coming-soon div.error_message').append(p);
+      } else if ($(this).hasClass('valid') && messageEl) {
+        messageEl.parentNode.removeChild(messageEl);
+      }
+      }));
+      const inputId = $(this).attr('id');
+      const messageId = 'klaviyo_error_' + inputId;
+      const messageEl = document.getElementById(messageId);
+      $(messageEl).css('display', 'block');
+      if ($('.container.coming-soon .footer__signup-form input.signup').hasClass('valid') == true && $('.container.coming-soon .footer__signup-form input.signup').hasClass('invalid') == false) {
+        submitBtnKlav.prop('disabled', false);
+      } else {
+        submitBtnKlav.prop('disabled', true);
+      }
+	    });
+  });
+</script>

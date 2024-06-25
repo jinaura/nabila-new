@@ -1,0 +1,168 @@
+<script>window.location.replace("/#openCart");</script>
+<!-- Begin ReCharge code -->
+{% include 'subscription-cart-footer' %}
+
+{%- assign gift_wrap = all_products[settings.gift_product] -%}
+
+{%- assign gift_wrap_added = false -%}
+
+<!-- End ReCharge code -->
+<form action="/cart" method="post" novalidate class="form form--default form--cart">
+	{%- if cart.item_count > 0 -%}
+
+		<div class="form__body">
+			<h2>
+				{{- 'cart.general.title' | t -}}
+			</h2>
+			{%- assign shipping_price = settings.price_free_shipping | plus: 0 -%}
+			{%- if cart.total_price < shipping_price -%}
+				{%- assign price_diff = shipping_price | minus: cart.total_price | money -%}
+				<p class="shipping-text">{{ 'layout.cart.shipping_price' | t: price: price_diff }}</p>
+			{%- else -%}
+				<p class="shipping-text">{{ 'layout.cart.shipping_free' | t }} <a href="{{ settings.shopping_url }}">{{ 'layout.cart.continue' | t }}</a></p>
+			{%- endif -%}
+			<div class="table table--cart">
+				<table>
+					<thead>
+						<tr>
+							<th class="table__name" >
+								{{- 'cart.label.name' | t -}}
+							</th>
+
+							<th></th>
+
+							<th class="table__quantity">
+								{{- 'cart.label.quantity' | t -}}
+							</th>
+
+							<th class="table__price">
+								{{- 'cart.label.price' | t -}}
+							</th>
+
+							<th>
+							</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{%- for line_item in cart.items -%}
+							{%- if gift_wrap.id == line_item.product.id -%}
+								{%- assign gift_wrap_added = true -%}
+							{%- endif -%}
+							<tr>
+							
+								<td class="table__image">
+									<a href="{{line_item.url}}" class="item-image" style="background-image: url({{line_item.image | img_url: '220x'}})"></a>
+								</td>
+
+								<td class="table__name">
+									<a href="{{- line_item.url -}}" class="table__product">
+										{{- line_item.product.title -}}
+									</a>
+
+									<div class="price visible-xs-block">
+										{{- line_item.price | money -}}{% if line_item.properties.subscription_id != blank %}/mo{% endif %}
+									</div><!-- /.price -->
+
+									{%- unless line_item.variant.title contains 'Default' -%}
+										<p class="table__variant">{{- line_item.variant.title -}}</p><!-- /.table__variant -->
+									{%- endunless -%}
+
+									{%- assign property_size = line_item.properties | size -%}
+
+									{%- if property_size > 0 -%}
+										<p class="table__properties">
+											{%- for p in line_item.properties -%}
+												{%- unless p.last == blank or p.first == "subscription_id" or p.first == "shipping_interval_frequency" or p.first == "shipping_interval_unit_type" -%}
+													<span>
+														{{- p.first -}}:
+
+														{%- if p.last contains '/uploads/' -%}
+															<a href="{{- p.last -}}">{{- p.last | split: '/' | last -}}</a>
+														{%- else -%}
+															{{- p.last -}}
+														{%- endif -%}
+													</span>
+												{%- endunless -%}
+											{%- endfor -%}
+											{% if line_item.properties.subscription_id != blank %}
+												{%- assign line_price = line_item.price | money -%}
+												<p>{{ 'layout.cart.recharge_text' | t: price: line_price, days: line_item.properties.shipping_interval_frequency }}</p>
+											{% endif %}
+										</p><!-- /.table__properties -->
+									{%- endif -%}
+
+									<div class="visible-xs-block">
+										{%- unless gift_wrap.id == line_item.product.id -%}
+											<div class="qty">
+												<span class="qty-minus"></span>
+												<input type="text" name="updates[{{line_item.variant_id}}]" data-mirror="true" value="{{ line_item.quantity }}" />
+												<span class="qty-plus"></span>
+											</div><!-- /.qty -->
+										{%- endunless -%}
+									</div><!-- /.visible-xs-block -->
+								</td>
+
+								<td class="table__quantity hidden-xs" data-attr="{{- 'cart.label.quantity' | t -}}">
+									{%- unless gift_wrap.id == line_item.product.id -%}
+										<div class="qty">
+											<span class="qty-minus"></span>
+											<input type="text" name="updates[{{line_item.variant_id}}]" data-mirror="true" value="{{ line_item.quantity }}" />
+											<span class="qty-plus"></span>
+										</div><!-- /.qty -->
+									{%- endunless -%}
+								</td>
+
+								<td class="table__price hidden-xs" data-attr="{{- 'cart.label.price' | t -}}">
+									{{- line_item.price | money -}}{% if line_item.properties.subscription_id != blank %}/mo{% endif %}
+								</td>
+
+								<td class="table__remove">
+									<a href="/cart/change?line={{- forloop.index -}}&amp;quantity=0" class="remove"></a>
+								</td>
+							</tr>
+						{%- endfor -%}
+					</tbody>
+				</table>
+
+				{%- if settings.gift_product != blank and gift_wrap.available -%}
+					{%- unless gift_wrap_added -%}
+						<div class="gift-wrap">
+							<a class="checkbox add-btn js-add" href="/cart/add?id={{gift_wrap.first_available_variant.id}}" >
+								<span></span>
+								{%- assign git_wrap_price = gift_wrap.price | money -%}
+								{{ 'layout.cart.gift_text' | t: price: git_wrap_price }}
+							</a><!-- /.checkbox -->
+						</div><!-- /.gift-wrap -->
+					{%- endunless -%}
+				{%- endif -%}
+			</div><!-- /.table table-cart -->
+		</div><!-- /.form-body -->
+
+		<div class="form__actions">
+			<h3>{{ 'cart.general.order_summary' | t }}</h3>
+			<div class="total_row">
+				<h6>{{- 'cart.general.subtotal' | t -}}</h6>
+				<span class="price">{{- cart.total_price | money -}}</span>
+			</div><!-- /.total_row -->
+			<p>{{- 'cart.general.shipping_at_checkout' | t -}}</p>
+			<button type="submit" name="checkout" class="btn btn--border btn--checkout">
+				{{- 'cart.general.checkout' | t -}}
+			</button>
+		</div><!-- /.form__actions -->
+	{%- else -%}
+		<div class="form__empty">
+			<h2>
+				{{- 'cart.general.title' | t -}}
+			</h2>
+
+			<p>
+				{{- 'cart.general.empty' | t -}}
+			</p>
+
+			<p>
+				{{- 'cart.general.continue_browsing_html' | t -}}
+			</p>
+		</div><!-- /.cart-empty -->
+	{%- endif -%}
+</form>

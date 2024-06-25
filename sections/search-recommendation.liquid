@@ -1,0 +1,182 @@
+    {{ 'slick.js'  | asset_url | script_tag     }}
+    
+    {% if search.results_count != 0 %}
+    <section class="section__container search__results-inner " >
+        <div class="container section__item section_spacing">
+            <h2 class="heading-with-link">{{ section.settings.search_recom_heading }} <a href="{{ section.settings.search_recom_cta_url }}">{{ section.settings.search_recom_cta }}</a></h2>
+            <hr class="section__divider" />
+
+            <div class="swap-x" role="region" aria-label="carousel">
+                <div class="multiple-items collection__items"
+                     data-slick='{
+             "slidesToShow": 3,
+             "slidesToScroll": 3,
+             "dots": {{ section.settings.dots }},
+             "infinite": false,
+             "arrows": {{ section.settings.arrows }},
+             "autoplay": {{ section.settings.autoplay }},
+             "autoplaySpeed": {{ section.settings.autoplayspeed | times: 1000}},
+             "adaptiveHeight": false,
+             "speed": 500,
+             "centerMode": false,
+             "centerPadding": "1px",
+             "responsive": [
+                 {
+                  "breakpoint": 768,
+                  "settings": "unslick"
+                  },
+                  {
+                  "breakpoint": 1024,
+                    "settings":{
+                        "slidesToShow": 2,
+                        "slidesToScroll": 2
+                    }
+                  }
+             ]
+        }'>
+
+
+                    {% for search_recom in collections[section.settings.search_recommendation].products %}
+                        {% assign  _product = search_recom %}
+                        {% if _product.type == 'Sets Product' %}
+                            {%- include 'product-item-sets' with _product -%}
+                        {% else %}
+                            {%- include 'product-item' with _product -%}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </section>
+      {% endif %}
+
+    <style>
+        .collection__items{
+            display: block;
+            width: auto;
+        }
+        .multiple-items.collection__items .product__item {
+            flex-basis: unset;
+            max-width: unset;
+            margin: 0;
+        }
+        .multiple-items.collection__items .product__item hr.divider--start {
+            display: none;
+        }
+        .multiple-items.collection__items .section__flex-item {
+            bottom: 0;
+        }
+        .multiple-items.collection__items .price_btn--wrapper{
+            bottom:0;
+        }
+        @media (max-width: 767px) {
+            .multiple-items.collection__items .product__item-image img {
+                height: 100%
+            }
+            .multiple-items.collection__items .shutter {
+                bottom: 0;
+                margin: 0;
+                width: 102vw;
+            }
+            body .swap-x{
+                margin: 0;
+            }
+
+          body .search__results-inner  .swap-x .product__item .product__item-image { height: 184px;}
+          body .search__results-inner .swap-x .collection__items .product__item { width: 40vw;}
+
+         .search__results-inner  .heading-with-link a { white-space: nowrap;  margin-bottom: 2px;}
+
+          
+        }
+    </style>
+
+    <script>
+
+        var slider = $('.multiple-items').slick();
+
+        var hold = false;
+        $(".rangeSlider").hover(function() {
+            //slider.slick("slickSetOption", "accessibility", hold);
+            slider.slick("slickSetOption", "draggable", hold);
+            slider.slick("slickSetOption", "swipe", hold);
+            slider.slick("slickSetOption", "touchMove", hold);
+
+            hold = !hold;
+            console.log('hover');
+        });
+
+    </script>
+
+{% schema %}
+    {
+    "name": "Search Recomm - Search",
+    "settings": [
+    {
+    "type": "header",
+    "content": "Best Seller"
+    },
+    {
+    "type": "text",
+    "id": "search_recom_heading",
+    "label": "Recommendation Heading"
+    },
+    {
+    "type": "text",
+    "id": "search_recom_cta",
+    "label": "Recommendation CTA"
+    },
+    {
+    "type": "url",
+    "id": "search_recom_cta_url",
+    "label": "Recommendation CTA URL"
+    },
+    {
+    "type": "collection",
+    "id": "search_recommendation",
+    "label": "Collection"
+    },
+    {
+    "type": "header",
+    "content": "Grid"
+    },
+    {
+    "type": "header",
+    "content": "Slider options"
+    },
+    {
+    "type": "checkbox",
+    "id": "autoplay",
+    "label": "Auto rotate",
+    "default": true
+    },
+    {
+    "type": "checkbox",
+    "id": "dots",
+    "label": "Show dots",
+    "default": false
+    },
+    {
+    "type": "checkbox",
+    "id": "arrows",
+    "label": "Show arrows",
+    "default": true
+    },
+    {
+    "type": "range",
+    "id": "autoplayspeed",
+    "label": "Slide changes every",
+    "min": 3,
+    "max": 10,
+    "step": 1,
+    "unit": "s",
+    "default": 5
+    }
+    ],
+    "presets": [{
+    "name": "No Result",
+    "category": "Collection"
+    }]
+    }
+{% endschema %}

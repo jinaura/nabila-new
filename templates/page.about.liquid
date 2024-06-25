@@ -1,0 +1,128 @@
+<div class="page-about-main">
+
+{%- section 'about-hero-section' -%}
+{%- section 'about-section1' -%}
+
+{%- section 'about-section2' -%}
+
+  
+
+{%- section 'about-section4' -%}
+
+{%- section 'about-section5' -%}
+
+{%- section 'about-section6' -%}
+
+{%- section 'about-section7' -%}
+
+{%- section 'about-section8' -%}
+
+{%- section 'about-section9' -%}
+</div>
+<style>
+  html {
+   scroll-behavior: smooth;
+  }
+   .animate-scroll {
+       opacity: 0;
+       transform: translate3d(0,100px,0);
+   transition-property: opacity,transform;
+   transition-duration: 1s;
+   transition-timing-function: ease-in;
+
+   /* opacity: 0;
+   transition: opacity 1s; */
+   /* transition-timing-function: cubic-bezier(.175,.885,.32,1.275); */
+}
+   .fade-scroll {
+     
+   opacity: 0;
+   transition: opacity 1s;
+   /* transition-timing-function: cubic-bezier(.175,.885,.32,1.275); */
+}
+.ad2 {
+ transition-duration: 2s;
+} 
+.ad3 {
+ transition-duration: 3s;
+} 
+.ad4 {
+ transition-duration: 4s;
+} 
+
+
+   
+   .is-visible {
+       opacity: 1;
+   transform: translateZ(0);
+
+ 
+}
+
+.template-page--about footer.footer {
+    margin-top: 10px !important;
+}
+</style>
+<script>
+   var scroll = window.requestAnimationFrame ||
+            // IE Fallback
+            function(callback){ window.setTimeout(callback, 1000/60)};
+var elementsToShow = document.querySelectorAll('.animate-scroll ,.fade-scroll'); 
+
+function loop() {
+
+   Array.prototype.forEach.call(elementsToShow, function(element){
+     if (isElementInViewport(element)) {
+       element.classList.add('is-visible');
+     } else {
+       element.classList.remove('is-visible');
+     }
+   });
+
+   scroll(loop);
+}
+
+
+loop();
+
+
+function isElementInViewport(el) {
+ if (typeof jQuery === "function" && el instanceof jQuery) {
+   el = el[0];
+ }
+ var rect = el.getBoundingClientRect();
+ return (
+   (rect.top <= 0
+     && rect.bottom >= 0)
+   ||
+   (rect.bottom >= (window.innerHeight || document.documentElement.clientHeight) &&
+     rect.top <= (window.innerHeight || document.documentElement.clientHeight))
+   ||
+   (rect.top >= 0 &&
+     rect.bottom <= (window.innerHeight || document.documentElement.clientHeight))
+ );
+}
+</script>
+<script>
+ $(function() {
+        
+      var hash = location.hash;
+      var target = $(hash);
+      var topbar = $(".header__announcement-bar").height();
+      var topHeader = $("header.custom").height();
+      if (target.length) {
+          $('html').animate({
+              scrollTop: target.offset().top - topbar - topHeader - 40
+          }, 200);
+      }
+
+    
+      $('.beauty-sect-specs a[href*=\\#], .about-hero-section__btn a[href*=\\#]').on('click', function(event){   
+        var topbar = $(".header__announcement-bar").height();
+      var topHeader = $("header.custom").height();  
+    event.preventDefault();
+    $('html,body').animate({scrollTop:$(this.hash).offset().top - topbar - topHeader - 40}, 200);
+});
+  });
+
+  </script>

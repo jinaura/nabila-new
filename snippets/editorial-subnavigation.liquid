@@ -1,0 +1,95 @@
+<section id="editioral-subnavigation" class="editioral-nav">
+    <div class="container">
+        <div class="mobile-cat-snippets hidden-sm hidden-md hidden-lg">
+            <h4 class="lbl-cat">Categories</h4>
+            <div class="close-menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g fill="none" fill-rule="evenodd">
+                        <g fill="#545353" fill-rule="nonzero">
+                            <g>
+                                <path d="M19.85 19.77c-.112.138-.277.222-.454.23-.178.007-.35-.062-.472-.19L9.99 10.877 1.058 19.81c-.155.16-.383.223-.598.166-.215-.056-.383-.224-.44-.439-.056-.215.007-.444.167-.598l8.932-8.933L.187 1.073C.027.918-.036.69.02.475.077.26.245.092.46.035c.215-.056.443.007.598.167l8.933 8.932L18.924.202c.148-.163.372-.235.587-.188.216.047.39.206.457.416s-4.559 5.015-4.707 5.178l4.534-4.535-8.933 8.933 8.933 8.933c.23.22.254.581.055.83z" transform="translate(-178.000000, -220.000000) translate(178.000000, 220.000000)"/>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+                
+            </div>
+        </div>
+        <ul class="hidden-sm hidden-md hidden-lg">
+            {% for link in linklists.blogs.links %}
+                {% assign blogs = link.object %}
+                <li>
+                    <a href="/blogs/{{ blogs.handle }}">{{ link.title }}</a>
+                    <div class="cat-info">{{ blogs.metafields.blog.description }}</div>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="latest-article-link hidden-sm hidden-md hidden-lg">
+            <ul>
+                <li><a href="">Latest Articles</a></li>
+            </ul>
+        </div>
+        <div class="desktop-editorial-nav hidden-xs">
+            <ul class="top-links">
+                {% for link in linklists.blogs.links %}
+                {% assign blogs = link.object %}
+                    <li>
+                        <a href="/blogs/{{ blogs.handle }}">{{ link.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="bottom-links">
+                <ul class="list">
+                    {% for link in linklists.blogs.links %}
+                    {% assign blogs = link.object %}
+                        <li>
+                            <div class="cat-info">{{ blogs.metafields.blog.description }}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="latest-article-link">
+                    <ul>
+                        <li><a href="">Latest Articles</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<script>
+    $(window).scroll(function() {
+
+        var windowTop = $(window).scrollTop();
+        if (windowTop > 0) {
+            $('#editioral-subnavigation').addClass('fixed');
+        } else {
+            $('#editioral-subnavigation').removeClass('fixed');
+        }
+    });
+    $(document).ready(function(){
+        let mainNav = $('.editioral-nav');
+        let mainNavUl = $('.mobile-cat-snippets');
+        $('.mobile-cat-snippets h4').click(function(){
+            mainNav.addClass('open');
+            mainNavUl.addClass('open');
+        })
+
+        $('.mobile-cat-snippets .close-menu').click(function(){
+            mainNav.removeClass('open');
+            mainNavUl.removeClass('open');
+        })
+
+
+        $( ".desktop-editorial-nav" ).hover(
+            function() {
+                $( '.bottom-links' ).stop( true, false ).slideDown();
+                setTimeout(() => {
+                    $('.bottom-links').addClass('appear');
+                }, 200);
+            }, function() {
+                $( '.bottom-links' ).removeClass('appear').stop( true, false ).slideUp();
+            }
+        );
+    })
+</script>

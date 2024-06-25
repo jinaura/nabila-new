@@ -1,0 +1,68 @@
+{%- comment -%} prod: product for fetching metafields & tags {%- endcomment -%}
+{%- assign featuretag = prod.metafields.product.featuretag -%}
+{%- if prod.metafields.product.show_shade_finder_link -%}
+    {%- assign featuretag = "Find My Shade" -%}
+{%- endif -%}
+{%- for tag in prod.tags -%}
+    {%- if tag == 'virtual_try' -%}
+        {%- assign featuretag = "Try It On" -%}
+    {%- endif -%}
+{%- endfor -%}
+{% if featuretag %}
+    {% if featuretag == "Find My Shade" %}
+        <div class="feature_tags"><a href="/pages/shade-finder?skip-intro">
+    {% elsif featuretag == "Try It On" %}
+        <div class="product_options_modal product_options_modal_source_prompt product_options_modal_plp" data-url="{{prod.url}}">
+            {% if template contains 'collection' %}
+                <div class="ctas">
+                    <button type="button" class="close">Close</button>
+                </div>
+            {% endif %}
+            <button
+                class="product_options_modal_button coll_mob_btn"
+            >
+                Camera
+            </button>
+            <label class="product_options_modal_button hide-input text-center">
+                <input
+                    type="file"
+                    accept="image/png, image/jpeg"
+                />
+                Photo
+            </label>
+            <button class="product_options_modal_button text-left coll_mob">
+                <small class="ri-x-small">
+                    By selecting camera or image you are providing
+                    this website camera and photo access pursuant
+                    and opt-in to the Rose, Inc.
+                    <a
+                        href="/pages/privacy-policy"
+                        target={'_blank'}
+                    >
+                        Privacy Policy
+                    </a>
+                </small>
+            </button>
+        </div>
+        <div class="feature_tags"><a class="vto-label"> {%- comment -%} TODO {%- endcomment -%}
+    {% endif %}
+    <span class="tag_label">
+        {{featuretag}}
+    </span>
+    {% if featuretag == "Find My Shade" or featuretag == "Try It On" %}
+        </a></div>
+    {% endif %}
+{% endif %}
+
+<style>
+    .mini-cart__wrapper #minicard-recom .product_card .product_options_modal {
+        border: 1px solid #919191;
+        left: 0;
+    }
+
+    @media(max-width: 767px) {
+        .mini-cart__wrapper #minicard-recom .product_card .product_options_modal {
+            left: 15px;
+        }
+    }
+</style>

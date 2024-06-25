@@ -1,0 +1,98 @@
+<section class="dropcapTextModule">
+
+    {% for block in section.blocks %}
+
+        {% if article.handle == articles[block.settings.text-center2-article].handle %}
+            <div class="content-info">
+              <ul>
+                <li><b>{{ block.settings.dropcap_1 }}</b>{{ block.settings.dropcap_description_1  }}</li>
+                <li><b>{{ block.settings.dropcap_2  }}</b>{{ block.settings.dropcap_description_2  }}</li>
+                <li><b>{{ block.settings.dropcap_3  }}</b>{{ block.settings.dropcap_description_3  }}</li>
+                <li><b>{{ block.settings.dropcap_4  }}</b>{{ block.settings.dropcap_description_4  }}</li>
+              </ul>
+            </div>
+
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+.dropcapTextModule{
+  display: flex;
+  justify-content: center;
+  text-align: left;
+  padding-bottom:120px;
+}
+.dropcapTextModule .content-info{
+  max-width:720px;
+  width:100%;
+}
+.dropcapTextModule .content-info ul li{
+  padding-bottom:20px;
+  display: flex;
+}
+.dropcapTextModule .content-info ul li b{
+  min-width:60px;
+  display:inline-block;
+}
+</style>
+
+{% schema %}
+    {
+    "name": "1X Text Center2",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "1X Text Center2",
+    "settings": [
+    {
+    "type": "article",
+    "id": "text-center2-article",
+    "label": "Article"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_1",
+    "label": "Dropcap 1"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_1",
+    "label": "Dropcap Description 1"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_2",
+    "label": "Dropcap 2"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_2",
+    "label": "Dropcap Description 2"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_3",
+    "label": "Dropcap 3"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_3",
+    "label": "Dropcap Description 3"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_4",
+    "label": "Dropcap 4"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_4",
+    "label": "Dropcap Description 4"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

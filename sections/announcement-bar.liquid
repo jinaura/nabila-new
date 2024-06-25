@@ -1,0 +1,402 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% assign handlesPromoHide = section.settings.hide_promo | split: ' ' %}
+{% assign disablePromo = '' %}
+
+{% for myhandle in handlesPromoHide %}
+    {% if handle == myhandle %}
+        {% assign disablePromo = myhandle %}
+    {% endif %}
+{% endfor %}
+
+{% unless handle == disablePromo %}
+  {{ 'owl.carousel.min.js'  | asset_url | script_tag     }}
+  {{ 'owl.carousel.min.css' | asset_url | stylesheet_tag: preload: true }}
+  <div class="grid-container full header__announcement-bar" >
+    {%include 'announcement-snippets' %}
+  </div>
+{% endunless %}
+
+
+{% schema %}
+
+    {
+    "name": "Announcement Bar",
+    "settings": [
+    {
+    "type": "text",
+    "id": "announcement_interval",
+    "label": "Interval (milisecond)",
+    "default": "5000"
+    },
+    {
+    "type": "textarea",
+    "id": "hide_promo",
+    "label": "Hide Announcement Bar form the following pages (Use page handle/slug)"
+    },
+	{
+    "type": "checkbox",
+    "id": "hide_promo_from_home",
+    "label": "Hide Announcement Bar form Homepage",
+	"default": false
+    }  
+    ],
+    "blocks": [
+    {
+    "type": "first-section",
+    "name": "Announcement bar",
+    "settings": [
+    {
+    "type": "checkbox",
+    "id": "announcement_visibility",
+    "label": "Visibility (On / Off)",
+    "default": true
+    },
+    {
+      "type": "radio",
+      "id": "locale",
+      "label": "Localization Visibility",
+      "options": [
+        {
+          "value": "us",
+          "label": "Only US"
+        },
+        {
+          "value": "uk",
+          "label": "Only UK"
+        },
+        {
+          "value": "us_uk",
+          "label": "US & UK"
+        }
+      ],
+      "default": "us"
+    },
+    {
+      "type": "header",
+      "content": "Beauty Advisor"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_live_advisor",
+      "label": "Enable Live Advisor Chat",
+      "default": false
+    },
+    {
+    "type": "header",
+    "content": "Pulsing Text"
+    },
+    {
+    "type": "checkbox",
+    "id": "pulsing_visibility",
+    "label": "Pulsing Text Visibility (On / Off)"
+    },
+    {
+    "type": "text",
+    "id": "pulsing_text",
+    "label": "Pulsing Text",
+    "default": ".Live Now"
+    },
+    {
+    "type": "text",
+    "id": "pulsing_speed",
+    "label": "Pulsing Speed",
+    "default": ".5",
+    "info": "Pulsing speed would be in seconds e:g 0.5,1.0 ..."
+    },
+    {
+    "type": "color",
+    "id": "pulsing_text_color",
+    "label": "Pulsing Text color",
+    "default": "#FF0000"
+    },
+    {
+    "type": "header",
+    "content": "Announcement Text"
+    },
+    {
+    "type": "html",
+    "id": "announcement_text",
+    "label": "Text",
+    "default": "<p>Default <em>richtext</em> <a href=\"https://example.com/\">content</a></p>"
+    },
+    {
+    "type": "color",
+    "id": "announcement_text_color",
+    "label": "Text color",
+    "default": "#000000"
+    },
+    {
+    "type": "header",
+    "content": "Start date"
+    },
+    {
+    "type": "checkbox",
+    "id": "start_date_check",
+    "label": "Enabled",
+    "default": false,
+    "info": "Please check to enable publish date"
+    },
+    {
+    "type": "select",
+    "id": "s_year",
+    "label": "Year",
+    "options": [
+    { "value": "2021", "label": "2021"},
+    { "value": "2022", "label": "2022"},
+    { "value": "2023", "label": "2023"},
+    { "value": "2024", "label": "2024"},
+    { "value": "2025", "label": "2025"},
+    { "value": "2026", "label": "2026"},
+    { "value": "2027", "label": "2027"},
+    { "value": "2028", "label": "2028"},
+    { "value": "2029", "label": "2029"},
+    { "value": "2030", "label": "2030"},
+    { "value": "2031", "label": "2031"},
+    { "value": "2032", "label": "2032"},
+    { "value": "2033", "label": "2033"},
+    { "value": "2034", "label": "2034"},
+    { "value": "2035", "label": "2035"},
+    { "value": "2036", "label": "2036"},
+    { "value": "2037", "label": "2037"},
+    { "value": "2038", "label": "2038"},
+    { "value": "2039", "label": "2039"},
+    { "value": "2040", "label": "2040"}
+    ],
+    "default": "2021"
+    },
+    {
+    "type": "select",
+    "id": "s_month",
+    "label": "Month",
+    "options": [
+    { "value": "01", "label": "1"},
+    { "value": "02", "label": "2"},
+    { "value": "03", "label": "3"},
+    { "value": "04", "label": "4"},
+    { "value": "05", "label": "5"},
+    { "value": "06", "label": "6"},
+    { "value": "07", "label": "7"},
+    { "value": "08", "label": "8"},
+    { "value": "09", "label": "9"},
+    { "value": "10","label": "10"},
+    { "value": "11","label": "11"},
+    { "value": "12","label": "12"}
+    ],
+    "default": "01"
+    },
+    {
+    "type": "select",
+    "id": "s_day",
+    "label": "Day",
+    "options": [
+    { "value": "01",  "label": "1"},
+    { "value": "02",  "label": "2"},
+    { "value": "03",  "label": "3"},
+    { "value": "04",  "label": "4"},
+    { "value": "05",  "label": "5"},
+    { "value": "06",  "label": "6"},
+    { "value": "07",  "label": "7"},
+    { "value": "08",  "label": "8"},
+    { "value": "09",  "label": "9"},
+    { "value": "10", "label": "10"},
+    { "value": "11", "label": "11"},
+    { "value": "12", "label": "12"},
+    { "value": "13", "label": "13"},
+    { "value": "14", "label": "14"},
+    { "value": "15", "label": "15"},
+    { "value": "16", "label": "16"},
+    { "value": "17", "label": "17"},
+    { "value": "18", "label": "18"},
+    { "value": "19", "label": "19"},
+    { "value": "20", "label": "20"},
+    { "value": "21", "label": "21"},
+    { "value": "22", "label": "22"},
+    { "value": "23", "label": "23"},
+    { "value": "24", "label": "24"},
+    { "value": "25", "label": "25"},
+    { "value": "26", "label": "26"},
+    { "value": "27", "label": "27"},
+    { "value": "28", "label": "28"},
+    { "value": "29", "label": "29"},
+    { "value": "30", "label": "30"},
+    { "value": "31", "label": "31"}
+    ],
+    "default": "01"
+    },
+    {
+    "type": "header",
+    "content": "End date"
+    },
+    {
+    "type": "checkbox",
+    "id": "end_date_check",
+    "label": "Enabled",
+    "default": false,
+    "info": "Please check to enable end date"
+    },
+    {
+    "type": "select",
+    "id": "e_year",
+    "label": "Year",
+    "options": [
+    { "value": "2021", "label": "2021"},
+    { "value": "2022", "label": "2022"},
+    { "value": "2023", "label": "2023"},
+    { "value": "2024", "label": "2024"},
+    { "value": "2025", "label": "2025"},
+    { "value": "2026", "label": "2026"},
+    { "value": "2027", "label": "2027"},
+    { "value": "2028", "label": "2028"},
+    { "value": "2029", "label": "2029"},
+    { "value": "2030", "label": "2030"},
+    { "value": "2031", "label": "2031"},
+    { "value": "2032", "label": "2032"},
+    { "value": "2033", "label": "2033"},
+    { "value": "2034", "label": "2034"},
+    { "value": "2035", "label": "2035"},
+    { "value": "2036", "label": "2036"},
+    { "value": "2037", "label": "2037"},
+    { "value": "2038", "label": "2038"},
+    { "value": "2039", "label": "2039"},
+    { "value": "2040", "label": "2040"}
+    ],
+    "default": "2021"
+    },
+    {
+    "type": "select",
+    "id": "e_month",
+    "label": "Month",
+    "options": [
+    { "value": "01", "label": "1"},
+    { "value": "02", "label": "2"},
+    { "value": "03", "label": "3"},
+    { "value": "04", "label": "4"},
+    { "value": "05", "label": "5"},
+    { "value": "06", "label": "6"},
+    { "value": "07", "label": "7"},
+    { "value": "08", "label": "8"},
+    { "value": "09", "label": "9"},
+    { "value": "10","label": "10"},
+    { "value": "11","label": "11"},
+    { "value": "12","label": "12"}
+    ],
+    "default": "01"
+    },
+    {
+    "type": "select",
+    "id": "e_day",
+    "label": "Day",
+    "options": [
+    { "value": "01",  "label": "1"},
+    { "value": "02",  "label": "2"},
+    { "value": "03",  "label": "3"},
+    { "value": "04",  "label": "4"},
+    { "value": "05",  "label": "5"},
+    { "value": "06",  "label": "6"},
+    { "value": "07",  "label": "7"},
+    { "value": "08",  "label": "8"},
+    { "value": "09",  "label": "9"},
+    { "value": "10", "label": "10"},
+    { "value": "11", "label": "11"},
+    { "value": "12", "label": "12"},
+    { "value": "13", "label": "13"},
+    { "value": "14", "label": "14"},
+    { "value": "15", "label": "15"},
+    { "value": "16", "label": "16"},
+    { "value": "17", "label": "17"},
+    { "value": "18", "label": "18"},
+    { "value": "19", "label": "19"},
+    { "value": "20", "label": "20"},
+    { "value": "21", "label": "21"},
+    { "value": "22", "label": "22"},
+    { "value": "23", "label": "23"},
+    { "value": "24", "label": "24"},
+    { "value": "25", "label": "25"},
+    { "value": "26", "label": "26"},
+    { "value": "27", "label": "27"},
+    { "value": "28", "label": "28"},
+    { "value": "29", "label": "29"},
+    { "value": "30", "label": "30"},
+    { "value": "31", "label": "31"}
+    ],
+    "default": "01"
+    }
+    ]
+    }]
+
+    }
+{% endschema %}
+
+
+{% if section.settings.hide_promo_from_home and request.path == '/' %}
+  <style>
+    .header__announcement-bar, #shopify-section-announcement-bar{padding:0; display:none; height:0px; width:0px;}
+    .closeMenu{left: auto; right: 15px; top: 10px;}
+    
+    @media (max-width:1024px){
+      .header__announcement-bar, #shopify-section-announcement-bar{padding:0; display:none}
+      .shopify-section .mobile-search-wrap{top: 60px;}
+      #miniCart{top: 0; height: 100%;}
+    }
+  </style>
+{% endif %}
+
+<script>
+  $(window).on('load', function(){
+    $('.header__announcement-bar .lbl-n-t').removeClass('opt');
+    {% if template != 'index' %}$('.promo_.commonSliderBar').slick();{% endif %}
+  })
+</script>
+
+{% unless handle == disablePromo %}
+
+  <style>
+    .header__announcement-bar{
+      padding: 0px !important;
+      height:40px;
+      text-align: center;
+      background-color: #f5f4f4;
+      overflow: hidden;
+    }
+    .header__announcement-bar a{
+      text-decoration: underline;
+      margin-left: 4px;
+    }
+    .promo_.commonSliderBar .slick-list{
+      padding:0;
+    }
+    .promo_.commonSliderBar .slick-slide {
+      margin:0;
+      display: flex;
+      align-items: center;
+      height: 40px;
+      justify-content: center;
+    }
+    .promo_.commonSliderBar .opt {
+      opacity:0;
+    }
+
+    @media (max-width:767px) {
+      .header__announcement-bar .lbl-n-t{
+        padding: 0px 20px !important;
+        line-height: 14px;
+        overflow:hidden;
+        margin-top: 3px;
+      }
+    }
+  </style>
+{% endunless %}
+
+{% if handle == disablePromo %}
+      <style>
+        body{padding-top: 80px;}
+        header.custom{top: 0;}
+        .closeMenu{left: auto; right: 15px; top: 10px;}
+
+        @media (max-width:1024px){
+          body{padding-top: 60px;}
+          .shopify-section .mobile-search-wrap{top: 60px;}
+          #miniCart{top: 0; height: 100%;}
+        }
+      </style>
+{% endif %}

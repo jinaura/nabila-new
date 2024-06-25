@@ -1,0 +1,96 @@
+{% assign _section = section.settings %}
+
+<div class="container customer-service modern-slavery-compliance-statement">
+    <div class="container--inner">
+        <div class="nav-links" style="margin: auto">
+            {%- for block in section.blocks -%}
+                {%- assign _block = block.settings -%}
+
+                {%- case block.type -%}
+                    {%- when 'subtitle' -%}
+                        <h2>{{_block.subtitle_text}}</h2>
+
+                    {%- when 'paragraph_title_med' -%}
+                        <h3>{{_block.par_title_med}}</h3>
+
+                    {%- when 'paragraph_title_bold' -%}
+                        <h3 class="bold">{{_block.par_title_bold}}</h3>
+
+                    {%- when 'paragraph_text' -%}
+                        {{_block.par_text}}
+
+                    {%- when 'ordered_list' -%}
+                        <ol class="ol--list">
+                            {%- assign list_items = _block.order_list | split: "," -%}
+                            {% for item in list_items %}
+                                <li class="list__item">{{item}}</li>
+                            {% endfor %}
+                        </ol>
+                {%- endcase -%}
+            {%- endfor -%}
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "Modern Slavery Compliance",
+  "blocks": [
+    {
+      "type": "subtitle",
+      "name": "Subtitle",
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitle_text",
+          "label": "Subtitle Text"
+        }
+      ]
+    },
+    {
+      "type": "paragraph_title_med",
+      "name": "Paragraph Title (medium)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "par_title_med",
+          "label": "Paragraph Title (medium)"
+        }
+      ]
+    },
+    {
+      "type": "paragraph_title_bold",
+      "name": "Paragraph Title (bold)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "par_title_bold",
+          "label": "Paragraph Title (bold)"
+        }
+      ]
+    },
+    {
+      "type": "paragraph_text",
+      "name": "Paragraph Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "par_text",
+          "label": "Paragraph Text"
+        }
+      ]
+    },
+    {
+      "type": "ordered_list",
+      "name": "Ordered List",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "order_list",
+          "label": "List Items (comma-separated)"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

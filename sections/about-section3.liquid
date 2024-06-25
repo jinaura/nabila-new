@@ -1,0 +1,240 @@
+{% assign scroll_id = section.settings.scroll_id | downcase %}
+{% assign scroll_id = scroll_id | replace: ' ', '-'  %}
+
+<section class="abt-sect3" style="background-color: {{section.settings.bg_color}};">
+  
+  <div class="abt-sect3__top-heading container" id="{{ scroll_id }}">
+        <h1 class="heading-with-link">{{ section.settings.title }} </h1>
+        <hr class="section__divider" />
+  </div>
+  
+  <div class="container">
+    <div class="s3-row-wrap">
+
+      {% for block in section.blocks %}
+      {% assign image = block.settings.image %}
+      {% assign title = block.settings.title_text %}
+      {% assign description = block.settings.description %}
+      <div class="s3-row s3-row-{{forloop.index}}">
+        <div class="s3-col s3-col-img fade-scroll">
+          <div class="s3-col-img-wrap">
+            {{image | image_url: width: 1200 | image_tag: width: 500, height: 600, alt: image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+        </div>
+
+        <div class="s3-col s3-col-content fade-scroll ad2">
+          <div class="s3-col-c-wrap">
+            <h3>{{ title }}</h3>
+            <div>{{ description }}</div>
+          </div>   
+        </div>
+
+      </div>  
+      {% endfor %}
+    </div>     
+
+  </div>
+</section>
+
+<style>
+
+  .abt-sect3__top-heading {
+    margin-bottom: 23px;
+}
+
+  .abt-sect3__top-heading .heading-with-link {
+    display: flex;
+    align-items: baseline;
+    font-size: 32px;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1;
+    font-family: var(--font-heading);
+  }
+  
+  #shopify-section-about-section3 .abt-sect3 .s3-row {
+    padding-bottom: 0px;
+}
+
+#shopify-section-about-section3 .s3-row.s3-row-2 {
+    margin-top: -40px;
+}
+  
+  #shopify-section-about-section3 .abt-sect3 {
+    padding: 87px 0 71px 0;
+  }
+  
+  .about_us.abt-dyn-s-4 .section__item.section_spacing {
+    padding-top: 92px;
+  }
+
+
+  .abt-sect3 .s3-row {
+  display: flex;
+    flex-wrap: wrap;
+    padding-bottom:60px;
+  }
+  .abt-sect3 .s3-row:last-child {
+   padding-bottom:0;
+  }
+  
+   .abt-sect3 .s3-row-2 {
+   flex-direction: row-reverse;
+   }
+  .abt-sect3 .s3-row .s3-col-img {
+    width:38.9%;
+  }
+  
+  .abt-sect3 .s3-row .s3-col-content {
+    width:61.1%;
+    flex-grow: 1;
+    padding: 0 0 0px 120px;
+    align-items: center;
+    display: flex;
+  }
+  
+  .abt-sect3 .s3-row .s3-col-content h3 {
+    font-family: var(--font-heading);
+      font-size: 24px;
+      color: #545353;
+      margin-bottom: 11px;
+  }
+  
+    .abt-sect3 .s3-row-2 .s3-col-content {
+  
+    
+
+    padding: 0 120px 0 0 !important;
+  
+  }
+  
+.s3-col-img-wrap img {
+    width: 100%;
+}
+
+.s3-col-content {
+    max-width: 610px;
+    margin: 0 auto;
+}
+  @media (max-width:992px){
+    .abt-sect3 .s3-row .s3-col-content {
+  
+    
+  width:61.1%;
+
+  padding: 0 0 0px 60px;
+
+
+}
+.abt-sect3 .s3-row-2 .s3-col-content {
+  
+    
+
+  padding: 0 60px 0 0 !important;
+
+}
+  }
+  @media (max-width:767px){
+    .abt-sect3 {
+      padding:60px 0 0 0;
+    }
+
+    .abt-sect3 .s3-row-wrap {
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .abt-sect3 .s3-row {
+      margin-right: -1px;
+    }
+
+
+    .abt-sect3 .s3-row .s3-col-img {
+
+
+      width:100%;
+      padding: 0 0 30px 0px;
+
+    }
+    .abt-sect3 .s3-row .s3-col-content {
+
+
+      width:100%;
+
+      padding: 0 0 30px 0px;
+
+
+    }
+    
+    .abt-sect3 .s3-row .s3-col-content h3 {
+      margin-bottom: 13px;
+      font-size: 21px;
+    }
+    .abt-sect3 .s3-row-2 .s3-col-content {
+      padding: 0 0px 30px 0 !important;
+
+    }
+
+    #shopify-section-about-section3 .s3-row.s3-row-2 {
+      margin-top: 0px;
+    }
+    #shopify-section-about-section3 .abt-sect3 {
+      padding: 58px 0px 34px 0px;
+    }
+    .about_us.abt-dyn-s-4 .section__item.section_spacing {
+    padding-top: 54px;
+  }
+  }
+
+
+</style>
+
+{% schema %}
+    {
+    "name": "Section 3",
+    "class": "about-section3",
+    "max_blocks": 4,
+    "settings": [
+  {
+    "type": "text",
+    "id": "scroll_id",
+    "label": "Section ID",
+    "info": "Use this field to insert the ID to link with the nav items and enable scroll to this section."
+  },
+	{
+    "type": "color",
+    "id": "bg_color",
+    "label": "Background Color"
+  },
+	{
+    "type": "text",
+    "id": "title",
+    "label": "Title"
+    }
+    ],
+    "blocks": [
+    {
+    "type": "slide",
+    "name": "Block",
+    "settings": [
+    {
+    "type": "image_picker",
+    "id": "image",
+    "label": "Image"
+    },
+    {
+    "type": "text",
+    "id": "title_text",
+    "label": "Title",
+    "default": "Beauty in being."
+    },
+    {
+    "type": "richtext",
+    "id": "description",
+    "label": "Description",
+    "default": "<p>Beauty in being</p>"
+    }
+]}]
+
+    }
+{% endschema %}

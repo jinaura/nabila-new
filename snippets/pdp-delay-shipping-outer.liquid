@@ -1,0 +1,24 @@
+{%- if active_variant.product.type == 'Sets Product' -%}
+{%- liquid
+    assign set_product = active_variant.product
+    assign delayed = false
+    for productItem in set_product.metafields.bundle.product_items
+        assign bundleProductItem = all_products[productItem]
+        if bundleProductItem.variants[0].metafields.delay.delayed
+            assign delayed = true
+            break
+        endif
+    endfor
+-%}
+<div class="delay_shipping sets_product{% if delayed %} delayed{% endif %}">
+  {{ active_variant.product.metafields.delay.prompt }}
+  <a class="see-more" data-micromodal-trigger="modal-delay-shipping" href="#">See details</a>
+</div>
+{%- else -%}
+<div class="delay_shipping{% if active_variant.metafields.delay.delayed %} delayed{% endif %}">
+  {%- capture ship_date -%}<span class="ship-date">{{ active_variant.metafields.delay.shipping_date.value | date: "%m/%d" }}</span>{%- endcapture -%}
+  {%- assign prompt_text=active_variant.product.metafields.delay.prompt | replace: '{date}', ship_date -%}
+  {{ prompt_text }}
+  <a class="see-more" data-micromodal-trigger="modal-delay-shipping" href="#">See details</a>
+</div>
+{%- endif -%}

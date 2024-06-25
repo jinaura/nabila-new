@@ -1,0 +1,72 @@
+{% comment %}
+  main: whether it is the primary buy button for the page
+  classes: additional classes to assign to the button element
+{% endcomment %}
+{% assign coming_soon_uk = false %}
+{% if product.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+  {% assign coming_soon_uk = true %}
+{% endif %}
+
+<button
+  class="btn btn--border{% unless active_variant.available %} unavailable{% endunless %}
+    {{classes}}{% if main %} buy-button{% else %} fixed_form_submit{% endif %}
+    {% if product.metafields.product.coming_soon != 'true' and shop.metafields.globals.coming_soon != 'true' and coming_soon_uk != true %} 
+      add-to-cart-button
+    {% endif %}
+    {% if product.type == 'Gift Card' or product.type == 'Gift Cards' %} Rise-add-to-cart-button product-form__cart-submit{% endif %}"
+    onclick="pintrk('track', 'addtocart', {
+      value: {{product.selected_or_first_available_variant.price | money_without_currency }},
+      product_name: '{{product.title}}',
+      product_id: '{{product.id}}',
+      product_price: {{product.selected_or_first_available_variant.price | money_without_currency }},
+      currency: 'USD'
+    });"
+  data-id="{{product.id}}"
+  data-purchase-id="{{ product.selected_or_first_available_variant.id }}"
+  {%- unless active_variant.available and product.metafields.product.coming_soon != 'true' and shop.metafields.globals.coming_soon != 'true' and active_variant.metafields.visibility.coming_soon != 'true' and coming_soon_uk != true -%}
+    disabled
+  {%- endunless -%}
+>
+  {%- if product.metafields.product.coming_soon or shop.metafields.globals.coming_soon == 'true' or active_variant.metafields.visibility.coming_soon -%}
+    <span class='variant_price'></span>
+    <span class='variant_cta'>{{- 'products.product.coming_soon' | t -}}</span>
+  {%- elsif coming_soon_uk == true -%}
+    <span class='variant_price'></span>
+    <span class='variant_cta'>{{- 'products.product.not_available_in_region' | t -}}</span>
+  {%- elsif product.type == 'Gift Card' or product.type == 'Gift Cards' -%}
+    <div class="gwbutton">Send as a Gift</div>
+  {%- elsif active_variant.available -%}
+    <span class='variant_price'>{%- include 'price' with active_variant -%}</span>
+    <span class='variant_cta'>Add to Bag</span>
+  {%- else -%}
+    <span class='variant_cta'>{{- 'products.product.sold_out' | t -}}</span>
+  {%- endif -%}
+</button>
+<style>
+  button.add-to-cart-button span, button.fixed_form_submit span, .variant_price, .variant_cta, ins {
+    pointer-events: none;
+    text-decoration: none;
+  }
+  .money[class*="compare__"] {
+    text-decoration: line-through;
+  }
+</style>
+
+<script>
+  $(document).ready(function() {
+    var activeVarId;
+    // discovery set id
+    const discoverySetVarId = 41853198172348;
+    activeVarId = {{active_variant.id | plus: 0}};
+    
+    if (activeVarId == discoverySetVarId) {
+      var productId = document.getElementsByClassName('mini-cart__item')
+        for (i=0; i < productId.length; i++) {
+          if(productId[i].dataset.id == discoverySetVarId) {
+            const discoveryAddToCart = document.querySelectorAll(`.btn.btn--border[data-id="${value.product_id}"]`);
+            discoveryAddToCart.setAttribute("disabled", "");
+          }
+        }
+    }
+  });
+</script>

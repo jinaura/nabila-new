@@ -1,0 +1,294 @@
+{% unless localization.country.iso_code != 'GB' %}
+
+<div class="container hidden-xs">
+  <a href="{{ section.settings.shade_finder_link }}" class="shadeFinder {{ section.settings.content_alignment }}">
+    <div class="sf-content">
+      <h3>{{section.settings.shade_finder_title }}</h3>
+      <p>{{- section.settings.shade_finder_description | truncatewords: 20, "" -}}</p>
+      <span>{{section.settings.shade_finder_label }}</span>
+    </div>
+    <div class="sf-wrapper">
+      {% for block in section.blocks %}
+        <div class="item animate">
+          {{block.settings.image | image_url: width: 1200 | image_tag: width: 440, height: 600, alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+        </div>
+      {% endfor %}
+    </div>
+  </a>
+</div>
+
+<div class="container hidden-sm hidden-md hidden-lg">
+  <hr class="section__divider" />
+  <a href="{{ section.settings.shade_finder_link }}" class="shadeFinder sf-mobile h-center">
+    <div class="sf-wrapper">
+      <div class="item animate">
+        <div class="sf-content">
+          <h3>{{section.settings.shade_finder_title_mobile }}</h3>
+          <p>{{- section.settings.shade_finder_description_mobile | truncatewords: 20, "" -}}</p>
+          <span>{{section.settings.shade_finder_label_mobile }}</span>
+        </div>
+        {{section.settings.mobile_top_image | image_url: width: 1200 | image_tag: width: 670, height: 540, alt: section.settings.mobile_top_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+      </div>
+      <div class="item animate">
+        {{section.settings.mobile_bottom_image | image_url: width: 1000 | image_tag: width: 382, height: 260, alt: section.settings.mobile_bottom_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+      </div>
+    </div>
+  </a>
+</div>
+
+<style>
+.shadeFinder .sf-content h3{
+    color: {{ section.settings.shade_finder_title_color }};
+}
+.shadeFinder .sf-content p{
+    color: {{ section.settings.shade_finder_description_color }};
+}
+.shadeFinder .sf-content span{
+    color: {{ section.settings.shade_finder_label_color }};
+}
+.sf-mobile .sf-content h3{
+    color: {{ section.settings.shade_finder_title_color_mobile }};
+}
+.sf-mobile .sf-content p{
+    color: {{ section.settings.shade_finder_description_color_mobile }};
+}
+.sf-mobile .sf-content span{
+    color: {{ section.settings.shade_finder_label_color_mobile }};
+}
+.shadeFinder {
+  position: relative;
+  text-decoration:none;
+  display:flex;
+  width:100%;
+  margin:70px 0
+}
+.shadeFinder, .shadeFinder h3 {
+  color: #545353;
+}
+.shadeFinder img {
+  display:block;
+  margin:0;
+  width:100%;
+}
+.shadeFinder .sf-wrapper {
+  display: flex;
+  width: 100%;
+}  
+.shadeFinder .sf-wrapper .item {
+  width:34.33%;
+}
+.sf-content {
+  max-width: 230px;
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  display: block;
+  margin:6% 0;
+  z-index: 1;
+}
+
+.mlr .sf-content {
+  margin:6% 8%;
+}
+.sf-content span {
+  text-decoration:underline;
+  padding-top:20px
+}
+  
+.shadeFinder.sf-mobile .sf-wrapper {
+  flex-direction: column;
+}
+.shadeFinder.sf-mobile .sf-wrapper .item {
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
+}
+  
+@media (max-width:1024px) {
+  .mlr .sf-content {
+  margin:6% 5%;
+}
+}
+@media (max-width:900px) {
+  .mlr .sf-content {
+    margin:6% 2.1%;
+  }
+} 
+  
+@media (max-width:767px) {
+  .sf-content {
+    bottom:0;
+  }
+  .shadeFinder {
+    margin: 20px 0 53px 0;
+  }
+}
+</style>
+
+{% endunless %}
+
+{% schema %}
+    {
+    "name": "Shade finder",
+    "class": "shade-finder",
+    "max_blocks": 3,
+    "settings": [
+    {
+    "type": "text",
+    "id": "shade_finder_title",
+    "label": "Title",
+    "default": "Shade Finder"
+    },
+    {
+    "type": "color",
+    "id": "shade_finder_title_color",
+    "label": "Title color",
+    "default": "#fafafa"
+    },
+    {
+    "type": "textarea",
+    "id": "shade_finder_description",
+    "label": "Description",
+    "default": "With 20 shades representing 6 undertone types, use our AI driven tech to accurately find your match."
+    },
+    {
+    "type": "color",
+    "id": "shade_finder_description_color",
+    "label": "Description color",
+    "default": "#fafafa"
+    },
+    {
+    "type": "text",
+    "id": "shade_finder_label",
+    "label": "Button Label",
+    "default": "Find your match"
+    },
+    {
+    "type": "color",
+    "id": "shade_finder_label_color",
+    "label": "Button Label color",
+    "default": "#fafafa"
+    },
+    {
+    "type": "url",
+    "id": "shade_finder_link",
+    "label": "Button link"
+    },
+    {
+    "type": "select",
+    "id": "content_alignment",
+    "label": "Content Alligment",
+    "default": "v-top h-left mlr",
+    "options": [
+    {
+    "label": "Top left",
+    "value": "v-top h-left mlr"
+    },
+    {
+    "label": "Top center",
+    "value": "v-top h-center"
+    },
+    {
+    "label": "Top right",
+    "value": "v-top h-right mlr"
+    },
+    {
+    "label": "Middle left",
+    "value": "v-middle h-left mlr"
+    },
+    {
+    "label": "Middle center",
+    "value": "v-middle h-center"
+    },
+    {
+    "label":"Middle right",
+    "value": "v-middle h-right mlr"
+    },
+    {
+    "label":"Bottom left",
+    "value": "v-bottom h-left mlr"
+    },
+    {
+    "label": "Bottom center",
+    "value": "v-bottom h-center"
+    },
+    {
+    "label": "Bottom right",
+    "value": "v-bottom h-right mlr"
+    }
+    ]
+    },
+    {
+    "type": "image_picker",
+    "id": "mobile_top_image",
+    "label": "Mobile Top Image"
+    },
+    {
+    "type": "image_picker",
+    "id": "mobile_bottom_image",
+    "label": "Mobile Bottom Image"
+    },
+    {
+    "type": "text",
+    "id": "shade_finder_title_mobile",
+    "label": "Mobile Title",
+    "default": "Shade Finder"
+    },
+    {
+    "type": "color",
+    "id": "shade_finder_title_color_mobile",
+    "label": "Mobile Title color",
+    "default": "#fafafa"
+    },
+    {
+    "type": "textarea",
+    "id": "shade_finder_description_mobile",
+    "label": "Mobile Description",
+    "default": "With 20 shades representing 6 undertone types, use our AI driven tech to accurately find your match."
+    },
+    {
+    "type": "color",
+    "id": "shade_finder_description_color_mobile",
+    "label": "Mobile Description color",
+    "default": "#fafafa"
+    },
+    {
+    "type": "text",
+    "id": "shade_finder_label_mobile",
+    "label": "Mobile Button Label",
+    "default": "Calculate match"
+    },
+    {
+    "type": "color",
+    "id": "shade_finder_label_color_mobile",
+    "label": "Mobile Button Label color",
+    "default": "#fafafa"
+    }],
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "Image",
+    "settings": [
+    {
+    "type": "image_picker",
+    "id": "image",
+    "label": "Image"
+    }
+    ]
+    }
+    ],
+    "presets": [
+    {
+    "name": "Shade Finder",
+    "category": "Image",
+    "blocks": [
+    {
+    "type": "slide"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

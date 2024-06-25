@@ -1,0 +1,48 @@
+{%- liquid
+    comment We don't need to pass products into this snippet, as we can retrive them from the variants
+    endcomment
+    assign main_product = main_variant.product
+    assign brush_product = brush_variant.product
+%}
+
+<div class="bl-sf-results-block-best-results__step-product">
+    <img class="bl-sf-results-block-best-results__step-product-image" src="{{- main_variant.featured_image | image_url: width: 255, height:303 -}}" alt="{{- main_product.title -}}" />
+    <div class="bl-sf-results-block-best-results__step-product-content">
+        <div class="bl-sf-results-block-best-results__step-product-title-wrapper">
+            <h3 class="bl-sf-results-block-best-results__step-product-title">{{- main_product.title -}}</h3>
+            <p class="bl-sf-results-block-best-results__step-product-variant-name">{{- main_variant.title -}}</p>
+        </div>
+        <div class="bl-sf-results-block-best-results__step-product-info">
+            {% if main_variant.available -%}
+                <div class="fake-link add-to-cart-button add-to-cart-button--best-results"
+                     data-product-handle="{{- main_product.handle -}}"
+                     data-variant-color-name="{{- main_variant.title -}}"
+                     data-purchase-id="{{- main_variant.id -}}"
+                >Add to bag</div>
+            {% else %}
+                <div>{{- 'products.product.sold_out' | t -}}</div>
+            {%- endif -%}
+            <div>{{- main_variant.price | money_without_trailing_zeros -}}</div>
+        </div>
+    </div>
+</div>
+
+<div class="bl-sf-results-block-best-results__step-product">
+    <img class="bl-sf-results-block-best-results__step-product-image" src="{{- brush_product.featured_image | image_url: width: 255, height:303 -}}" alt="{{- brush_product.title -}}" />
+    <div class="bl-sf-results-block-best-results__step-product-content">
+        <div class="bl-sf-results-block-best-results__step-product-title-wrapper">
+            <h3 class="bl-sf-results-block-best-results__step-product-title">{{- brush_product.title -}}</h3>
+        </div>
+        <div class="bl-sf-results-block-best-results__step-product-info">
+            {% if brush_variant.available -%}
+                <div class="fake-link add-to-cart-button add-to-cart-button--best-results"
+                     data-product-handle="{{- brush_product.handle -}}"
+                     data-purchase-id="{{- brush_variant.id -}}"
+                >Add to bag</div>
+            {% else %}
+                <div>{{- 'products.product.sold_out' | t -}}</div>
+            {%- endif -%}
+            <div>{{- brush_variant.price | money_without_trailing_zeros -}}</div>
+        </div>
+    </div>
+</div>

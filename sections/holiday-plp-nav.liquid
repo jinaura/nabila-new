@@ -1,0 +1,122 @@
+{% assign url_category = request.path | split:'/' | last %}
+<div class="holiday-plp-nav">
+  <ul class="holiday-plp-nav_list">
+    {% if localization.country.iso_code == 'GB' %}
+      {% for link in linklists.holiday-plp-uk.links %}
+        {% assign cleanLink = link.url | remove: '/' %}
+        {% if localization.country.iso_code == 'GB'%}
+          {% assign baseUrl = '' %}
+        {% else %}
+          {% assign baseUrl = shop.url %}
+        {% endif %}
+          <li {% if url_category == cleanLink %}class="active"{% endif %}>
+            <a href="{{baseUrl}}/collections/{{collection.handle}}{{ link.url }}" class="holiday-filter content_link" id="element-{{ forloop.index }}" data-id="{{ link.url | remove: "/" }}">
+              {% if link.title contains '$' %}
+                {{ link.title | replace: '$', '£'}}
+              {% else %}
+                {{ link.title }}
+              {% endif %}
+            </a>
+          </li>
+      {% endfor %}
+    {% elsif localization.country.iso_code != 'GB' %}
+      {% for link in linklists.holiday-plp.links %}
+        {% assign cleanLink = link.url | remove: '/' %}
+        {% if localization.country.iso_code == 'GB'%}
+          {% assign baseUrl = '' %}
+        {% else %}
+          {% assign baseUrl = shop.url %}
+        {% endif %}
+          <li {% if url_category == cleanLink %}class="active"{% endif %}>
+            <a href="{{baseUrl}}/collections/{{collection.handle}}{{ link.url }}" class="holiday-filter content_link" id="element-{{ forloop.index }}" data-id="{{ link.url | remove: "/" }}">
+              {{ link.title }}
+            </a>
+          </li>
+      {% endfor %}
+    {% endif %}
+    <div class="js-holiday-underline holiday-underline"></div>
+  </ul>
+</div>
+
+<style>
+  .holiday-plp-nav {
+    z-index: 59;
+    width: 100%;
+    border-top: 1px solid #979797;
+    border-bottom: 1px solid #979797;
+    background-color: #fafafa;
+    margin-bottom: -38px;
+    overflow: hidden;
+    scroll-behavior: smooth;
+  }
+
+  ul.holiday-plp-nav_list {
+    display: flex;
+    margin: auto;
+    justify-content: unset;
+    padding: 0 15px 0 35px;
+    align-items: center;
+    height: 38px;
+    width: fit-content;
+    overflow: auto;
+    white-space: nowrap;
+    position: relative;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  ul.holiday-plp-nav_list::-webkit-scrollbar {
+    display: none;
+  }
+
+  ul.holiday-plp-nav_list li:not(:nth-last-child(2)) {
+    padding: 0 30px 0 0;
+  }
+
+  ul.holiday-plp-nav_list li.active a {
+    font-family: var(--font-medium);
+    pointer-events: none;
+  }
+
+  ul.holiday-plp-nav_list a {
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #1d1d1d;
+  }
+
+  ul.holiday-plp-nav_list .holiday-underline {
+    background-color: #1d1d1d;
+    bottom: 0;
+    display: block;
+    height: 3px;
+    left: 0;
+    position: absolute;
+    -webkit-transform-origin: left center;
+            transform-origin: left center;
+    width: 100%;
+    transition: 0.5s;
+    opacity: 0;
+  }
+
+  @media (max-width: 950px) {
+    .holiday-plp-nav {
+      margin-bottom: -50px;
+      z-index: 3;
+    }
+
+    ul.holiday-plp-nav_list {
+      height: 50px;
+    }
+
+    ul.holiday-plp-nav_list a {
+      font-size: 14px;
+      letter-spacing: 0.6px;
+    }
+
+    ul.holiday-plp-nav_list a.is_selected::after {
+      bottom: -14px;
+    }
+  }
+</style>

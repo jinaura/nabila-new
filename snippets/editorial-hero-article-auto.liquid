@@ -1,0 +1,92 @@
+{% assign articleLimit = gridLimit | plus: 0 %}
+
+{% assign count = 0 %}
+{% for link in linklists.blogs.links  %}
+    {% assign blog = link.object %}
+
+    {% for article in blog.articles %}
+
+        {% assign check_article = true %}
+        {% for tag in article.tags %}
+            {% if tag == 'hide_for_user' %}
+                {% assign check_article = false %}
+            {% endif %}
+        {% endfor %}
+
+        {% if check_article == true %}
+            {% assign count = count | plus: 1 %}
+        {% capture thecycle %}{% cycle 'odd', 'even' %}{% endcapture %}
+        <article class="item ed-h-post {% if thecycle == 'odd' %}ed-h-post-left{% else %}ed-h-post-right{% endif %}">
+            {% assign fetchPrio = 'auto' %}
+            {% if count < 3 %}
+                {% assign fetchPrio = 'high' %}
+            {% endif %}
+
+            {% unless thecycle == 'odd' %}
+                {% if article.image %}
+                    {% if article.metafields.article.tile_image[0].src %}
+                        <figure class="{% unless count < 3 %} animate{% endunless %} edh-post-img">
+                            <a href="{{ article.url }}">
+                                {{article.metafields.article.tile_image[0].src | image_url: width: 1200 | image_tag: preload: true, alt: article.metafields.article.tile_image[0].alt, fetchpriority: fetchPrio }}
+                            </a>
+                        </figure>
+                    {% else %}
+                        <figure class="{% unless count < 3 %} animate{% endunless %} edh-post-img">
+                            <a href="{{ article.url }}">
+                                {{article.image | image_url: width: 1200 | image_tag: preload: true, alt: article.image.alt, fetchpriority: fetchPrio }}
+                            </a>
+                        </figure>
+                    {% endif %}
+                {% else %}
+                    {{ ifNofeaturedImg }}
+                {% endif %}
+            {% endunless %}
+    
+            <div class="edh-post-info">
+                <span class="type"><a href="/blogs/{{article.handle | split: '/' | first }}">{{article.handle | split: '/' | first }}</a></span>
+                <h3><a href="{{ article.url }}">{{ article.title |truncate: 62 }}</a></h3>
+                {% assign checkTagAuthor = '' %}
+                {% for tag in article.tags %}
+                    {% assign words = tag | split: '-'   %}
+                    {% assign first_word =  words[0] | downcase %}
+                    {% assign blog_title = blog.title | downcase %}
+                    {% if first_word == 'author' %}
+                        <span class="auther">By {{ words[1] | capitalize }}</span>
+                        {% assign checkTagAuthor = true %}
+                    {% endif %}
+                {% endfor %}
+                {% if checkTagAuthor == '' %}
+                    <span class="auther">By {{ article.author | capitalize}}</span>
+                {% endif %}
+            </div>
+            
+            {% unless thecycle == 'even' %}
+                {% if article.image %}
+                    {% if article.metafields.article.tile_image[0].src %}
+                        <figure class="{% unless count < 3 %} animate{% endunless %} edh-post-img">
+                            <a href="{{ article.url }}">
+                                {{article.metafields.article.tile_image[0].src | image_url: width: 1200 | image_tag: preload: true, alt: article.metafields.article.tile_image[0].alt, fetchpriority: fetchPrio }}
+                            </a>
+                        </figure>
+                    {% else %}
+                        <figure class="{% unless count < 3 %} animate{% endunless %} edh-post-img">
+                            <a href="{{ article.url }}">
+                                {{article.image | image_url: width: 1200 | image_tag: preload: true, alt: article.image.alt, fetchpriority: fetchPrio }}
+                            </a>
+                        </figure>
+                    {% endif %}
+                    {{ ifNofeaturedImg }}
+                {% endif %}
+            {% endunless %}
+    
+        </article>
+            {% break %}
+        {% endif %}
+    {% endfor %} 
+
+
+    {% if articleLimit ==  count %}
+        {% break %}
+    {% endif %}
+    
+{% endfor %}

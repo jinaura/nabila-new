@@ -1,0 +1,110 @@
+<h2 class="section__title">Community</h2>
+<hr class="section__divider">
+<section class="section__container community">
+  <article class="section__item">
+      <p>Mention us with @roseinc and tag us with #loverosie for a chance to be featured here!</p>
+      <hr class="divider--start hidden-xs">
+  </article>
+  <div class="section__flex-row community hidden-xs">
+    <article class="section__flex-item">
+      <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/screen-shot-2021-05-04-at-6-17-59-pm_2x_85108c54-3e57-4d9b-8824-7d220554d07d.png?v=1621939404" class="community animate" fetchpriority="low" loading="lazy" />
+      <p>@laulauchan</p>
+    </article>
+    <article class="section__flex-item">
+      <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/screen-shot-2021-05-04-at-6-16-50-pm_2x_1e46674f-aa59-47da-893e-480a14df92f9.png?v=1621939375" class="community animate" fetchpriority="low" loading="lazy" />
+      <p>@jacksonfrolick</p>
+    </article>
+    <article class="section__flex-item">
+      <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/screen-shot-2021-05-04-at-6-17-07-pm_2x_fdcc2490-2229-4b52-8ecc-fda752f25e31.png?v=1621939238" class="community animate" fetchpriority="low" loading="lazy" />
+      <p>@maryairyann</p>
+    </article>
+  </div>
+  <div class="slider visible-xs-block" id="communityImageSlider">
+    <article class="section__flex-item">
+      <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/screen-shot-2021-05-04-at-6-17-59-pm_2x_85108c54-3e57-4d9b-8824-7d220554d07d.png?v=1621939404" class="community animate" fetchpriority="low" loading="lazy" />
+      <p>@laulauchan</p>
+    </article>
+    <article class="section__flex-item">
+      <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/screen-shot-2021-05-04-at-6-16-50-pm_2x_1e46674f-aa59-47da-893e-480a14df92f9.png?v=1621939375" class="community animate" fetchpriority="low" loading="lazy" />
+      <p>@jacksonfrolick</p>
+    </article>
+    <article class="section__flex-item">
+      <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/screen-shot-2021-05-04-at-6-17-07-pm_2x_fdcc2490-2229-4b52-8ecc-fda752f25e31.png?v=1621939238" class="community animate" fetchpriority="low" loading="lazy" />
+      <p>@maryairyann</p>
+    </article>
+  </div>
+  <hr class="section__divider community">
+</section>
+
+<style>
+  .section__item p {
+    margin-bottom: 1.7rem;
+  }
+  .product__container .section__flex-row.community .section__flex-item {
+    flex-basis: unset;
+    max-width: unset;
+    margin: 0 1.7rem;
+  }
+  .product__container .section__flex-row.community .section__flex-item:first-child {
+    margin: 0 1.7rem 0 0;
+  }
+  .product__container .section__flex-row.community .section__flex-item:last-child {
+    margin: 0 0 0 1.7rem;
+  }
+  .product__container hr.section__divider.community {
+    margin-bottom: 8rem;
+    margin-top: 1.7rem;
+  }
+  #communityImageSlider-ow [data-controls] {
+    display: none;
+  }
+  @media screen and (max-width: 767px) {
+    .section__item  {
+      margin: 0 1.5rem;
+    }
+    #communityImageSlider-iw {
+      margin-right: 30px;
+    }
+    #communityImageSlider-ow [data-controls] {
+      display: inline-block;
+      border: 0;
+      margin: 0;
+      padding: 0 0.6rem;
+      position: absolute;
+      z-index: 1;
+      background: transparent;
+      height: 50%;
+    }
+    #communityImageSlider-ow [data-controls="prev"] {
+      left: 0;
+    }
+    #communityImageSlider-ow [data-controls="next"] {
+      right: 0;
+    }
+    #communityImageSlider .section__flex-item.tns-item img.community {
+      padding-right: 0.7rem;
+    }
+    #communityImageSlider .section__flex-item.tns-item p {
+      margin: 0.5rem 1.5rem 0;
+    }
+    .product__container hr.section__divider.community {
+      margin-bottom: 2rem;
+      margin-top: 1.7rem;
+    }
+  }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
+<script>
+  const communityImageSlider = tns({
+    container: '#communityImageSlider',
+    items: 1,
+    controls: true,
+    controlsText: ['<div class="left slider--arrow" aria-label="Previous"></div>', '<div class="right slider--arrow" aria-label="Next"></div>'],
+    lazyload: true,
+    nav: false,
+    speed: 400
+  });
+</script>

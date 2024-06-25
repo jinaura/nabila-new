@@ -1,0 +1,163 @@
+<h2 class="section__title">Sustainability</h2>
+<hr class="section__divider sustainability">
+<ul class="sustainability-tabs" role="menubar" aria-label="Sustainability Menu">
+  {% for i in (1..product.metafields.product.no_of_items) %}
+    {% assign sustainabilityTitle = "sustainability_title_" | append: i %}
+    {% assign sustainabilityTitle = product.metafields.product[sustainabilityTitle] %}
+    <li data-id="{{ i }}" role="none"><a href="#_" class="content_link" tabindex="0" role="menuitem">{{  sustainabilityTitle }}</a></li>
+  {% endfor %}
+  <div class="js-sust-underline prod-underline"></div>
+</ul>
+<hr class="divider--start">
+
+{% for i in (1..product.metafields.product.no_of_items) %}
+  {% assign sustainabilityDescription = "sustainability_description_" | append: i %}
+  {% assign sustainabilityDescription = product.metafields.product[sustainabilityDescription] %}
+  <div id="content_div{{ i }}" class="content_div {% if i != 1 %} hideDiv {% endif %}" >
+    <div class=" leftDiv"> {{  sustainabilityDescription }}</div>
+
+    {% assign sustainabilityMedia = "sustainability_media_" | append: i %}
+    {% assign sustainabilityMedia = product.metafields.product[sustainabilityMedia] %}
+    {% for sustainability_image in sustainabilityMedia %}
+      {% if sustainability_image.media_type == 'image' %}
+        <div class=" rightDiv">
+          <img src="{{ sustainability_image.src }}" alt="{{ sustainability_image.alt }}" class="rosie--quote"
+            srcset="
+            {{ sustainability_image.src | append: '&transform=resize=600' }} 600w,
+            {{ sustainability_image.src | append: '&transform=resize=900' }} 900w,
+            {{ sustainability_image.src | append: '&transform=resize=1200' }} 1200w
+            " 
+            fetchpriority="low" loading="lazy"
+          />
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endfor %}
+
+<style>
+  .sustainability-tabs {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    overflow: auto;
+    scroll-snap-type: x mandatory;
+    position: relative;
+  }
+  .sustainability-tabs li {
+    scroll-snap-align: start;
+  }
+  .sustainability-tabs li a {
+    font-family: var(--font-medium);
+    font-size: 14px;
+    letter-spacing: .6px;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 27px 20px;
+    display: inline-block;
+  }
+  .sustainability-tabs li a:focus-visible {
+    border: 1px solid var(--secondary-color);
+  }
+  .flex--sustainability .hideDiv {
+    display: none !important;
+  }
+  .flex--sustainability .showDiv {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s linear 0s, opacity 300ms;
+  }
+  .flex--sustainability .leftDiv {
+    width: 30%;
+    float: left;
+  }
+  .flex--sustainability .rightDiv {
+    padding: 0 0 60px 60px;
+    width: 70%;
+    float: right;
+  }
+  .flex--sustainability .content_div {
+    padding-top: 12px;
+  }
+  .flex--sustainability .content_div ul li {
+    list-style: none;
+    padding-left: 10px;
+  }
+  .flex--sustainability .content_div ul li::before {
+    content: "•";
+    position: absolute;
+    margin-left: -10px;
+    z-index: -1;
+  }
+  .flex--sustainability .content_div  h4 {
+    padding-bottom:5px;
+    margin:0;
+  }
+  .flex--sustainability p {
+    padding-bottom: 0.5rem;
+  }
+  .flex--sustainability img {
+    width:100%;
+  }
+  .clear {
+    clear: both
+  }
+  
+  @media (max-width:767px){
+    .flex--sustainability .content_div {
+      display: flex;
+      flex-flow: column-reverse;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      padding-bottom: 50px;
+    }
+    .flex--sustainability ul.sustainability-tabs {
+      margin-left: unset;
+      margin: 0 1.5rem;
+    }
+    .flex--sustainability .leftDiv, .flex--sustainability .rightDiv {
+      width: 100%;
+      padding: 0px;
+    }
+    .flex--sustainability .leftDiv {
+      padding-top: 40px;
+    }
+    .flex--sustainability hr.divider--start {
+      margin: 0 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  $( document ).ready(function() {
+    $( ".sustainability-tabs li:first-child" ).addClass('active');
+    let currentWidth = $(".sustainability-tabs li:first-child").width();
+    const line = document.querySelector(".js-sust-underline");
+    line.style.width = `${currentWidth}px`;
+    
+    setTimeout(() => {
+      line.style.opacity = '1';
+    }, 1000)
+
+    $( ".sustainability-tabs li" ).on( "click", function(e) {
+      e.preventDefault();
+      $( ".sustainability-tabs li" ).removeClass('active');
+      $(this).addClass('active');
+
+      currentWidth = $(this).width();
+      let widthAdd = 0;
+      let lengthPreItems = $('.sustainability-tabs li.active').prevAll().length;
+
+      for (i=0; i<lengthPreItems; i++) {
+        widthAdd = widthAdd+parseInt($('.sustainability-tabs li.active').siblings().eq(i).width());
+      }
+
+      line.style.transform = `translateX(${widthAdd}px)`;
+      line.style.width = `${currentWidth}px`;
+
+      $('.content_div').addClass('hideDiv');
+      $('#content_div'+$(this).attr('data-id')).removeClass('hideDiv');
+    });
+  });
+</script>

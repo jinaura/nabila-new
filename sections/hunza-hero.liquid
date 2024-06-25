@@ -1,0 +1,422 @@
+{% assign _section = section.settings %}
+
+{% assign customDesktopVideoUrl = _section.custom_desktop_video_url %}
+{% assign customMobileVideoUrl = _section.custom_mobile_video_url %}
+{% capture desktopImage %}
+  {{_section.desktop_image | image_url: width: 5760 | image_tag: width: nil, height: nil, widths: '832, 1200, 1920, 2400, 3000, 3800', preload: true, class: 'hunza-asset', alt: _section.desktop_image.alt, fetchpriority: 'high' }}
+{% endcapture %}
+{% capture mobileImage %}
+  {{_section.mobile_image | image_url: width: 1200 | image_tag: width: nil, height: nil, preload: true, class: 'hunza-asset', alt: _section.mobile_image.alt, fetchpriority: 'high' }}
+{% endcapture %}
+{% capture desktopYoutube %}<iframe class="hunza-asset" width="560" height="315" src="https://www.youtube.com/embed/{{_section.desktop_video_url.id}}?playlist={{_section.desktop_video_url.id}}&loop=1&autoplay=1&mute=1" fetchpriority="high" title="{{_section.hero_title_desk}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+{% capture mobileYoutube %}<iframe class="hunza-asset" width="560" height="315" src="https://www.youtube.com/embed/{{_section.mobile_video_url.id}}?playlist={{_section.mobile_video_url.id}}&loop=1&autoplay=1&mute=1" fetchpriority="high" title="{{_section.hero_title_mob}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+{% capture desktopVimeo %}<iframe class="hunza-asset" width="560" height="315" src="https://player.vimeo.com/video/{{_section.desktop_video_url.id}}" fetchpriority="high" title="{{_section.hero_title_desk}}" frameborder="0" allow="loop;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+{% capture mobileVimeo %}<iframe class="hunza-asset" width="560" height="315" src="https://player.vimeo.com/video/{{_section.mobile_video_url.id}}" fetchpriority="high" title="{{_section.hero_title_mob}}" frameborder="0" allow="loop;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+{% capture desktopCustomVideo %}
+  <video class="hunza-asset" id="video-{{ section.id }}-1" muted loop autoplay preload="auto" playsinline="true" webkit-playsinline="true" width="100%" height="100%" data-setup='{"width": 300, "height": 250}'>
+    <source src="{{ customDesktopVideoUrl }}" type='video/mp4' />
+  </video>
+{% endcapture %}
+{% capture mobileCustomVideo %}
+  <video class="hunza-asset" id="video-{{ section.id }}-2" muted loop autoplay preload="auto" playsinline="true" webkit-playsinline="true" width="100%" height="100%" data-setup='{"width": 300, "height": 250}'>
+    <source src="{{ customMobileVideoUrl }}" type='video/mp4' />
+  </video>
+{% endcapture %}
+
+<section class="hunza-hero hidden-xs">
+  <div class="container">
+    {% if _section.desktop_image != '' and customDesktopVideoUrl != '' %}
+      <div class="video-container">
+        {{ desktopCustomVideo }}
+        <div class="hide">{{ _section.custom_desktop_video_description }}</div>
+        <div class="player-controls" id="pControl-{{section.id}}-1">
+          <button class="play">{% render 'svg-icons' with 'play' %}</button>
+          <button class="pause">{% render 'svg-icons' with 'pause' %}</button>
+          <button class="volume">{% render 'svg-icons' with 'volume' %}</button>
+        </div>
+      </div> 
+    {% else %}
+      {% if _section.desktop_image != '' %} {{ desktopImage }} {% endif %}
+    {% endif %}
+
+    {% if video.type == 'youtube' %} {{desktopYoutube}} {% endif %}
+    {% if video.type == 'vimeo' %} {{desktopVimeo}} {% endif %}
+
+    <div class="text-block">
+      <h1>{{_section.hero_title_desk}}</h1>
+      {% if _section.hero_description_desk != blank %}
+        {{_section.hero_description_desk}}
+      {% endif %}
+      <div class="img-container">
+        {% for block in section.blocks  %}
+          {% assign _block = block.settings %}
+          {{_block.icon_image | image_url: width: 500 | image_tag: width: 152, height: nil, preload: true, class: 'icon-img', alt: _block.icon_image.alt, fetchpriority: 'high' }}
+          {% unless forloop.last %}
+            <div>
+              <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.71466 0.926171H8.40666L5.47866 5.03017L8.52666 9.32617H6.78666L4.56666 6.12217L2.35866 9.32617H0.666656L3.70266 5.05417L0.786656 0.926171H2.52666L4.60266 3.96217L6.71466 0.926171Z" fill="black"/>
+              </svg>
+            </div>
+          {% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hunza-hero visible-xs-block">
+  <div class="container">
+    {% if _section.mobile_image != '' and customMobileVideoUrl != '' %} 
+      <div class="video-container">
+        {{ mobileCustomVideo }}
+        <div class="hide">{{ _section.custom_mobile_video_description }}</div>
+        <div class="player-controls" id="pControl-{{section.id}}-2">
+          <button class="play">{% render 'svg-icons' with 'play' %}</button>
+          <button class="pause">{% render 'svg-icons' with 'pause' %}</button>
+          <button class="volume">{% render 'svg-icons' with 'volume' %}</button>
+        </div>
+      </div>
+    {% else %}
+      {% if _section.mobile_image != '' %} {{ mobileImage }} {% endif %}
+    {% endif %}
+
+    {% if video.type == 'youtube' %} {{mobileYoutube}} {% endif %}
+    {% if video.type == 'vimeo' %} {{mobileVimeo}} {% endif %}
+
+    <div class="text-block">
+      <h1>{{_section.hero_title_mob}}</h1>
+      {% if _section.hero_description_mob != blank %}
+        {{_section.hero_description_mob}}
+      {% endif %}
+      <div class="img-container">
+        {% for block in section.blocks  %}
+          {% assign _block = block.settings %}
+          {{_block.icon_image | image_url: width: 500 | image_tag: width: 152, height: nil, preload: true, class: 'icon-img', alt: _block.icon_image.alt, fetchpriority: 'high' }}
+          {% unless forloop.last %}
+            <div>
+              <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.71466 0.926171H8.40666L5.47866 5.03017L8.52666 9.32617H6.78666L4.56666 6.12217L2.35866 9.32617H0.666656L3.70266 5.05417L0.786656 0.926171H2.52666L4.60266 3.96217L6.71466 0.926171Z" fill="black"/>
+              </svg>
+            </div>
+          {% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .template-page--hunza-lp header.custom {
+    background: transparent;
+  }
+  .template-page--hunza-lp.light header.custom .mainNav:not(.menuOpened) nav a {
+    color: #fff;
+  }
+  .template-page--hunza-lp.light header:not(.relative) .logo, .template-page--hunza-lp.light header:not(.relative) .toolBar, .template-page--hunza-lp.light header:not(.relative) .mobileToolBar {
+    -webkit-filter: invert(1) brightness(100);
+    filter: invert(1) brightness(100);
+  }
+  .hunza-hero {
+    padding-bottom: 225px;
+  }
+  .hunza-hero.visible-xs-block {
+    padding-bottom: 135px;
+  }
+  .hunza-hero .container {
+    max-width: unset;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    margin-top: -80px;
+  }
+  .hunza-hero.visible-xs-block .container {
+    margin-top: -60px;
+  }
+  .hunza-hero .video-container {
+    position: relative;
+  }
+  .hunza-hero .container img.hunza-asset {
+    width: 100%;
+    object-fit: cover;
+  }
+  .hunza-hero .container .text-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    margin-top: {{_section.text_margin_top_desk}};
+    color: var(--primary-color);
+  }
+  .hunza-hero.visible-xs-block .container .text-block {
+    margin-top: {{_section.text_margin_top_mob}};
+  }
+  .hunza-hero .container .text-block h1 {
+    font-family: var(--font-regular);  
+    font-size: 110px;
+    font-weight: 400;
+    line-height: 139.48px;
+    letter-spacing: 1.51px;
+    padding-bottom: 10px;
+  }
+  .hunza-hero.visible-xs-block .container .text-block h1 {
+    font-size: 44.4px;
+    line-height: 56.3px;
+    letter-spacing: 0.77px;
+    padding-bottom: 6px;
+  }
+  .hunza-hero .container .text-block p {
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.31px;
+    margin-bottom: 20px;
+  }
+  .hunza-hero.visible-xs-block .container .text-block p {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.24px;
+  }
+  .hunza-hero .container .img-container {
+    padding-top: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hunza-hero.visible-xs-block .container .img-container {
+    padding-top: 0;
+  }
+  .hunza-hero .container .img-container div {
+    margin-top: 6px;
+    margin-left: 22px;
+    margin-right: 28px;
+  }
+  .hunza-hero.visible-xs-block .container .img-container div {
+    margin-top: 2px;
+    margin-left: 11px;
+    margin-right: 12px;
+  }
+  .hunza-hero .container .img-container img {
+    width: 152px;
+  }
+  .hunza-hero.visible-xs-block .container .img-container img {
+    width: 80px;
+  }
+  .template-page--hunza-lp .player-controls {
+    position: absolute !important;
+    bottom: 22px;
+    z-index: 3;
+    right: 18px;
+    display: flex;
+  }
+  .template-page--hunza-lp .visible-xs-block .player-controls {
+    right: 8px;
+    bottom: 30px;
+  }
+  .template-page--hunza-lp .player-controls button {
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    border: 0;
+    background: none;
+    margin: 0 8px;
+  }
+  .template-page--hunza-lp .player-controls button.play {
+    display: none;
+  }
+  .template-page--hunza-lp .player-controls button.volume {
+    height: 20px;
+    width: 20px;
+    margin-top: -2px;
+  }
+  .template-page--hunza-lp .player-controls button.volume.unmuted svg path#v {
+    display: none;
+  }
+  .template-page--hunza-lp .player-controls button svg {
+    width: 100%;
+    height: 100%;
+    filter: invert(1);
+  }
+  @media screen and (min-width: 768px) {
+    .template-page--hunza-lp header.custom:hover {
+      background: #fff;
+    }
+    .template-page--hunza-lp.light header.custom:hover .mainNav nav a {
+      color: var(--secondary-color);
+    }
+    .template-page--hunza-lp.light header:hover .logo, .template-page--hunza-lp.light header:hover .toolBar {
+      -webkit-filter: invert(1) brightness(0);
+      filter: invert(1) brightness(0);
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(e) {
+    let getHeroBottomPercentage;
+    const gnavTextColor = "{{_section.gnav_color}}";
+    const hunzaLPBodyEl = document.querySelector('body.template-page--hunza-lp');
+    const hunzaLPHeroEl = document.querySelector('.template-page--hunza-lp header');
+
+    if (gnavTextColor === 'light') {
+      hunzaLPBodyEl.classList.add('light');
+    }
+
+    windowAndHero();
+    window.addEventListener('resize', windowAndHero);
+
+    function windowAndHero () {
+      const getHeroHeight = document.querySelector('.hunza-hero.hidden-xs .hunza-asset').getBoundingClientRect().height;
+      const getHeroMobileHeight = document.querySelector('.hunza-hero.visible-xs-block .hunza-asset').getBoundingClientRect().height;
+      const getWindowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      if (getWindowWidth >= 768){
+        getHeroBottomPercentage =  getHeroHeight - 80;
+      } else if (getWindowWidth < 768) {
+        getHeroBottomPercentage =  getHeroMobileHeight - 60;
+      }
+    }
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > getHeroBottomPercentage){
+        hunzaLPBodyEl.classList.remove('light');
+        hunzaLPHeroEl.style.background = '#fff';
+      } else {
+        hunzaLPBodyEl.classList.add('light');
+        hunzaLPHeroEl.style.background = 'transparent';
+      }
+    });
+
+    mediaControls('video-{{section.id}}-1', 'pControl-{{section.id}}-1');
+    mediaControls('video-{{section.id}}-2', 'pControl-{{section.id}}-2');
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Hunza Hero",
+    "max_blocks": 4,
+    "settings": [
+      {
+        "type": "text",
+        "id": "hero_title_desk",
+        "label": "Desktop Title",
+        "default": "The Solar Effect"
+      },
+      {
+        "type": "richtext",
+        "id": "hero_description_desk",
+        "label": "Desktop Description",
+        "default": "<p>A new wave of summer style featuring the Solar Collection <br>and Hunza G's signature swimsuits.<\/p>"
+      },
+      {
+        "type": "text",
+        "id": "text_margin_top_desk",
+        "label": "Desktop text position - margin from top",
+        "default":"-81px",
+        "info" : "Enter 0 for text right below hero asset, negative margin (-20px) for overlap on top of asset, 20px for gap between. Default -81px."
+      },
+      {
+        "type": "image_picker",
+        "id": "desktop_image",
+        "label": "Desktop Image"
+      },
+      {
+        "id": "desktop_video_url",
+        "type": "video_url",
+        "label": "Desktop Video URL (Youtube or Vimeo)",
+        "accept": ["youtube", "vimeo"]
+      },
+      {
+        "type": "text",
+        "id": "custom_desktop_video_url",
+        "label": "Desktop Custom Video URL (Shopify)"
+      },
+      {
+        "type": "textarea",
+        "id": "custom_desktop_video_description",
+        "label": "ADA - Desktop Custom Video Summary"
+      },
+      {
+        "type": "text",
+        "id": "hero_title_mob",
+        "label": "Mobile Title",
+        "default": "The Solar Effect"
+      },
+      {
+        "type": "richtext",
+        "id": "hero_description_mob",
+        "label": "Mobile Description",
+        "default": "<p>Our Solar Collection and iconic <br>crinkle swimsuit by Hunza come <br>together to spark your summer style.<\/p>"
+      },
+      {
+        "type": "text",
+        "id": "text_margin_top_mob",
+        "label": "Mobile text position - margin from top",
+        "default":"-29px",
+        "info" : "Enter 0 for text right below hero asset, negative margin (-20px) for overlap on top of asset, 20px for gap between. Default -29px."
+      },
+      {
+        "type": "image_picker",
+        "id": "mobile_image",
+        "label": "Mobile Image"
+      },
+      {
+        "id": "mobile_video_url",
+        "type": "video_url",
+        "label": "Mobile Video URL (Youtube or Vimeo)",
+        "accept": ["youtube", "vimeo"]
+      },
+      {
+        "type": "text",
+        "id": "custom_mobile_video_url",
+        "label": "Mobile Custom Video URL (Shopify)"
+      },
+      {
+        "type": "textarea",
+        "id": "custom_mobile_video_description",
+        "label": "ADA - Mobile Custom Video Summary"
+      },
+      {
+        "type": "radio",
+        "id": "gnav_color",
+        "label": "Gnav text & icon color",
+        "options": [
+          {
+            "value": "dark",
+            "label": "Dark (default)"
+          },
+          {
+            "value": "light",
+            "label": "Light"
+          }
+        ],
+          "default": "dark"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "icon",
+        "name": "icon",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "icon_image",
+            "label": "Icon Image"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Hunza Hero",
+        "category": "Image",
+        "blocks": [
+          {
+            "type": "icon"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

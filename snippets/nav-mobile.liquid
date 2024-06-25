@@ -1,0 +1,592 @@
+<!-- main menu MOBILE -->
+<div class="mobileWrapper">
+    <div class="topLayer">
+      <div class="posRel">
+        <ul class="m-gnav">
+            <li class="m-gnav-toggle active" id="shop">SHOP</li>
+            <li class="m-gnav-toggle" id="explore"> EXPLORE</li>
+        </ul>
+      </div>
+
+        <ul id="shop-ul" class="hide">
+            {% assign autoIncrMobile = 1 %}
+            {% for block in section.blocks %}
+                {% if block.type == 'linklist' %}
+                {% assign getType = block.settings.nav_type %}
+                    {% if getType == 'shop' %}
+
+                        {% assign mobileNavTitle = block.settings.title_collection  %}
+                        {% assign mobileUpdatedNav = block.settings.collection-menu %}
+
+                        <li><h3 class="group-heading">{{ mobileNavTitle }}</h3></li>
+                        {% for link in linklists[mobileUpdatedNav].links %}
+                            {% unless localization.country.iso_code == 'GB' and link.url contains 'body' %}
+                            {% unless localization.country.iso_code == 'GB' and link.url contains 'trial' %}
+                            {% unless localization.country.iso_code == 'GB' and link.url contains 'discovery' %}
+                                {% assign linkHandle =  link.url %}
+                                {% assign collection_handle = linkHandle | slice: 13, linkHandle.size %}
+                                {% assign gnav_collection = collections[collection_handle]  %}
+
+
+                                {% if link.links.size > 0 %}
+
+                                    {% assign subLinkHandleType =  link.links[0].url %}
+                                    {% assign sub_collection_handle_type = subLinkHandleType | slice: 13, subLinkHandleType.size %}
+                                    {% assign sub_collection_handle_type = collections[sub_collection_handle_type]  %}
+
+                                    <li {% if sub_collection_handle_type.metafields.gnav.image[0].src  %} class="subMenuClassMobile openState hoverClass" {% else %} class="subMenuClassMobile" {% endif %}><a href="javascript:">{{ link.title }}</a>
+
+                                    <ul class="subMenuInner {% if sub_collection_handle_type.metafields.gnav.image[0].src  %} flexmenu {% endif %}">
+                                    {% assign subMenuClass =  "" %}
+                                    {% for child_link in link.links %}
+
+                                        {% assign subLinkHandle =  child_link.url %}
+                                        {% assign sub_collection_handle = subLinkHandle | slice: 13, subLinkHandle.size %}
+                                        {% assign sub_gnav_collection = collections[sub_collection_handle]  %}
+
+                                        {% if sub_gnav_collection.metafields.gnav.image[0].src %}
+                                            {% assign childlinkimg = sub_gnav_collection.metafields.gnav.image[0].src %}
+                                            <li class="flex-layout-style"><div class="drop-style-wrap">
+                                                    <div class="drop-style-img">
+                                                        <a href="{{- child_link.url -}}"><img src="{{ childlinkimg }}"></a>
+                                                    </div>
+                                                    <div class="drop-style-txt"><a href="{{- child_link.url -}}">{{- child_link.title -}}</a></div>
+                                                </div></li>
+                                        {% else %}
+                                            <li><a href="{{- child_link.url -}}" >{{- child_link.title -}}</a></li>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                    </ul>
+                                    </li>
+                                    {% assign autoIncrMobile = autoIncrMobile | plus : 1 %}
+                                {% else %}
+                                    <li><a href="{{ link.url }}" style="display: block;">{{ link.title }}</a></li>
+                                {% endif %}
+                            {% endunless %}
+                            {% endunless %}
+                            {% endunless %}
+                        {% endfor %}
+
+                    {% endif %}
+            {% endif %}
+            {% endfor %}
+
+            <!---- Under Menu CTA ---->
+            {% if section.settings.is_enable_menu_cta %}
+            <li>
+                {% assign under_menu_cta = section.settings.under_menu_cta %}
+                <ul class="twoColNav paddingOverwrite">
+                    {% for link in linklists[under_menu_cta].links %}
+                        {% unless localization.country.iso_code == 'GB' and link.url contains 'makeup-artist' %}
+                            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                        {% endunless %}
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endif %}
+
+            <!---- Promo Module ---->
+            {% if section.settings.is_enable_promo and localization.country.iso_code != 'GB' %}
+            <li>
+                <div class="gnav-promo-container">
+                    {% if section.settings.gnav_panels == 'one' %}{% assign blockNumber = 'onecol' %}{% assign loopCount = 1 %}{% endif %}
+                    {% if section.settings.gnav_panels == 'two' %}{% assign blockNumber = 'twocol' %}{% assign loopCount = 2 %}{% endif %}
+
+                    {% for i in (1.. loopCount ) %}
+
+                        {% assign promo_background_color =  "gnav_promo_background_color_" | append : i %}
+                        {% assign promo_text_color =  "gnav_promo_text_color_" | append : i %}
+                        {% assign promo_img =  "gnav_imag_" | append : i %}
+                        {% assign promo_title =  "gnav_title_" | append : i %}
+                        {% assign promo_link =  "gnav_link_" | append : i %}
+                        {% assign promo_link_text =  "gnav_link_txt_" | append : i %}
+                        {% assign promo_text_aligment =  "gnav_text_alignment_" | append : i %}
+                        {% assign promo_content_aligment =  "gnav_content_alignment_" | append : i %}
+
+
+                        <div id="gnav-promo-div-{{ i }}" class="image-mobile-gnav imageBoxHeightGnav {{ blockNumber }}" {% if section.settings[promo_background_color] != '' %}
+                            style="background-color: {{section.settings[promo_background_color]}};"
+                                {% endif %} >
+
+                            {% if section.settings[promo_img] %}
+                                {% assign promoImageGnav =  section.settings[promo_img] | img_url %}
+                                {% unless promoImageGnav contains 'no-image' %}
+                                    <img src="{{ section.settings[promo_img] | img_url: "600x200", scale: 2 }}"
+                                         alt="{{ section.settings[promo_img].alt }}" fetchpriority="low"> {% endunless %}
+                            {% endif %}
+
+                            <div class="content">
+                                <h3>{{ section.settings[promo_title] }}</h3>
+                                <a href="{{ section.settings[promo_link] }}" class="btn-custom-class">{{ section.settings[promo_link_text] }}</a>
+                            </div>
+                        </div>
+
+                        <style>
+
+                            {% if section.settings.gnav_panels == 'two' and i == 1 %}
+                                #gnav-promo-div-1{border-radius:10px 0 0 10px}
+                            {% elsif section.settings.gnav_panels == 'two' and i == 2 %}
+                                #gnav-promo-div-2{border-radius:0 10px 10px 0}
+                            {% elsif section.settings.gnav_panels == 'one'%}
+                                .imageBoxHeightGnav{border-radius:10px}
+                            {% endif %}
+
+                            #gnav-promo-div-{{ i }}.image-mobile-gnav .content {
+                                padding: 47px 50px 53px 50px;
+                                background-color:#e6e3e0;
+                                display: flex;
+                                align-items: {{ section.settings[promo_text_aligment] }};
+                                justify-content: center;
+                                flex-flow: column;
+                                max-width:227px;
+                            }
+                            #gnav-promo-div-{{ i }}.image-mobile-gnav {
+                                display:flex !important;
+                                justify-content: {{ section.settings[promo_content_aligment] }};
+                                align-items: center;
+                            }
+
+                            #gnav-promo-div-{{ i }}.image-mobile-gnav.onecol .content {
+                                display:flex;
+                                align-items: {{ section.settings[promo_text_aligment] }};
+                                padding: 0 30px;
+                                text-align: left;
+                            }
+
+                            #gnav-promo-div-{{ i }}.image-mobile-gnav.twocol .content {
+                                display:flex;
+                                align-items: {{ section.settings[promo_text_aligment] }};
+                                padding: 0 20px;
+                                text-align: left;
+                            }
+
+                            #gnav-promo-div-{{ i }}.image-mobile-gnav .content h3,
+                            #gnav-promo-div-{{ i }}.image-mobile-gnav .content p {
+                            {% if section.settings[promo_text_aligment] == 'flex-start' %}
+                                text-align: left;
+                            {% elsif section.settings[promo_text_aligment] == 'flex-end' %}
+                                text-align: right;
+                            {% else %}
+                                text-align: {{ section.settings[promo_text_aligment] }};
+                            {% endif %}
+                            }
+
+                            #shop-ul #gnav-promo-div-{{ i }}.onecol .content h3 {
+                                text-transform: uppercase;
+                                font-size: 20px;
+                                color: {{ section.settings[promo_text_color] }};
+                                font-weight: normal;
+                            }
+                            #shop-ul #gnav-promo-div-{{ i }}.twocol .content h3 {
+                                text-transform: uppercase;
+                                font-size: 14px;
+                                color: {{ section.settings[promo_text_color] }};
+                                font-weight: normal;
+                                line-height: 1.43 ;
+                            }
+                            #gnav-promo-div-{{ i }}.image-mobile-gnav .content a {
+                                text-transform: uppercase;
+                                border: none;
+                                background: none;
+                                letter-spacing: 1px;
+                                border-bottom: 2px solid {{ section.settings[promo_text_color] }};
+                                color: {{ section.settings[promo_text_color] }};
+                                padding-bottom: 1px;
+                                font-family: var(--font-medium);
+                                text-decoration: none;
+                                margin-top: 8px;
+                                margin-bottom: 0;
+                                font-size:14px;
+                                line-height: normal;
+                                letter-spacing: 1px;
+                            }
+
+                        </style>
+                    {% endfor %}
+                </div>
+            </li>
+            {% endif %}
+
+            <!--- Best Seller --->
+            {% if section.settings.is_enable_topseller %}
+            <li class="top-seller-wrap">
+              <div class="dFlex-nospace">
+                <h2 class='noMarginTop menu-headingStyle'>{{ section.settings.gnav_topseller_heading }}</h2>
+                <a href="{{ section.settings.gnav_cta_url }}" class="menu-headingStyle-link">{{ section.settings.gnav_cta_txt }}</a>
+              </div>
+                <div class="swap-x" >
+                    <div  class="commonSlider collection__items "
+                         data-slick='{
+                            "responsive": [
+                                {
+                                    "breakpoint": 768,
+                                    "settings": "unslick"
+                                }
+                            ]
+                            }'>
+                    <div class="card-box-style">
+                        {% for product in collections[section.settings.gnav_top_seller].products %}
+                           <div class="product_card">
+                                <div class="image_wrapper">
+
+                                    <a href="{{ product.url }}" class="block-link-no-deco-mini">
+                                        <img src="{{ product.featured_image.src | img_url: '400x500', scale: 2 }}" alt="{{ product.featured_image.alt }}">
+                                    </a>
+
+                                </div>
+
+                                <a href="#_" class="outer_content block-link-no-deco-mini">
+                                    <h3>{{- product.title  -}}</h3>
+                                </a>
+
+                           </div>
+                        {% endfor %}
+               </div>
+
+                    </div>
+                </div>
+            </li>
+            {% endif %}
+
+        </ul>
+
+        <ul id="explore-ul" class="hide">
+            {% assign editorialCount = 1 %}
+            {% assign aboutCount = 1 %}
+
+            {% for block in section.blocks %}
+                {% assign getType = block.settings.nav_type %}
+                {% if getType == 'about' %}
+                    {% if aboutCount == 1 %}
+                        {% assign aboutCount = aboutCount | plus: 1 %}
+                        <li><h3 class="group-heading">About US</h3></li>
+                    {% endif %}
+                    <li><a href="{{ block.settings.menu_link }}" style="display: block;">{{ block.settings.title }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% for block in section.blocks %}
+                {% assign getType = block.settings.nav_type %}
+                {% if getType == 'editorial' %}
+                    {% if editorialCount == 1 %}
+                        {% assign editorialCount = editorialCount | plus: 1 %}
+                        <li><h3 class="group-heading">Editorial</h3></li>
+                    {% endif %}
+                    <li><a href="{{ block.settings.menu_link }}" style="display: block;">{{ block.settings.title }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            <!--- Best Seller --->
+            {% if section.settings.is_enable_latestart %}
+                <li class="explorer-top-seller-wrap">
+               <div class="dFlex-nospace">
+                    <h2 class='noMarginTop menu-headingStyle'>{{ section.settings.gnav_la_heading }}</h2>
+                    <a href="{{ section.settings.gnav_cta_url_la }}"  class="menu-headingStyle-link">{{ section.settings.gnav_cta_txt_la }}</a>
+                </div>
+                    <div class="swap-x" >
+                        <div  class="commonSlider collection__items "
+                              data-slick='{
+                            "responsive": [
+                                {
+                                    "breakpoint": 768,
+                                    "settings": "unslick"
+                                }
+                            ]
+                            }'>
+                      <div class="card-box-style2">
+                          {% assign count = 0 %}
+                          {% for link in linklists.blogs.links limit: 4 %}
+                          {% assign blog = link.object %}
+
+                              {% for article in blog.articles limit: 1%}
+
+                                  {% assign check_article = true %}
+                                  {% for tag in article.tags %}
+                                      {% if tag == 'hide_for_user' %}
+                                          {% assign check_article = false %}
+                                      {% endif %}
+                                  {% endfor %}
+
+                                  {% if check_article == true %}
+                                  {% assign count = count | plus: 1 %}
+                                    <div class="product_card">
+                                      <div class="image_wrapper">
+                                          <a href="{{ article.url }}" class="block-link-no-deco-mini">
+                                              <img src="{{ article.image | img_url: '400x500', scale: 2 }}" alt="{{ article.image.alt }}">
+                                          </a>
+                                      </div>
+                                        <a href="{{ article.url }}" class="outer_content block-link-no-deco-mini">
+                                            <h3>{{ article.title |truncate: 60 }}</h3>
+                                        </a>
+                                    </div>
+                                  {% endif %}
+                              {% endfor %}
+                          {% endfor %}
+                         </div>
+                        </div>
+                    </div>
+                </li>
+            {% endif %}
+
+        </ul>
+    </div>
+
+
+    <!-- footer //  -->
+    {% assign bottom_links_mobile_footer = section.settings.bottom_links_mobile_footer %}
+    <div class='mobileFooter'>
+        {% for link in linklists[bottom_links_mobile_footer].links %}
+            <a href='{{ link.url }}'>{{ link.title }}</a>
+        {% endfor %}
+    </div>
+    <!-- end footer //  -->
+
+</div>
+<!-- end main menu MOBILE //  -->
+ 
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js'></script>
+
+  <script>
+      // adds sliding underline HTML
+    $('.m-gnav').append('<li class="slide-line"></li>');
+
+    // set initial position of slide line
+    TweenMax.set('.m-gnav .slide-line', {
+      css:{width: 100, x: 20, y: 30}
+    });
+   
+    // animate slide-line on click
+    $(document).on('click', '.m-gnav li ', function () {
+    
+            var $this = jQuery(this),
+                offset = $this.offset(),
+                //find the offset of the wrapping div  
+                offsetBody = jQuery('.posRel').offset();
+    
+            // GSAP animate to clicked menu item
+            TweenMax.to('.m-gnav .slide-line', 1.1, {
+              css:{
+                width: $this.outerWidth()+'px',
+                x: (offset.left-offsetBody.left)+'px',
+                y: (offset.top-offsetBody.top+$this.height())+'px',
+                rotation: 0.01
+              },
+              ease: Elastic.easeOut.config(0.1,0.0)
+            });
+    
+            return false;
+    });
+    
+    setTimeout(function(){
+    $('.m-gnav > li').first().trigger("click");
+    },200);
+    
+</script>
+
+<style>
+    /*.openState{padding: 0 0 15px;}*/
+   .gnav-promo-container .onecol {
+        width: 100%
+    }
+   .gnav-promo-container .twocol {
+        width: calc(50% - 1px);
+        flex-basis: calc(50% - 1px);
+    }
+    .gnav-promo-container {
+        display: flex; 
+        position: relative;
+    }
+    .dFlex-nospace {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 34px;
+        margin-bottom: 16.5px;
+    }
+    .dFlex-nospace .menu-headingStyle {
+        font-family: var(--font-regular);
+        font-size: 14px;
+        line-height: 30px;
+        letter-spacing: 1px;
+        color: #545353;
+    }
+    .dFlex-nospace .menu-headingStyle-link {
+        font-family: var(--font-regular);
+        font-size: 12px;
+        line-height: 30px;
+        letter-spacing: 0.5px;
+        color:#545353;
+        text-decoration: underline;
+        text-transform: none;
+    }
+
+    @media (max-width: 767px){
+        body .top-seller-wrap .swap-x { 
+            margin: 0 -20px 30px -20px;
+        }
+
+        [data-navigation-panel] .navPanel { width: initial;    border-top: none; top: initial;}
+    }
+  
+  .card-box-style {display:flex;}
+  .card-box-style .product_card {max-width: 125px;    margin-right: 0px; margin-left: 15px;}
+  .card-box-style .product_card .image_wrapper a { padding-top:0;}
+  .card-box-style .product_card .image_wrapper a img {    position: initial; border-radius: 10px;}
+   .card-box-style .product_card .outer_content {padding:10px 0 0 0;}
+  .card-box-style .product_card .outer_content h3 {font-size:14px; line-height:20px; letter-spacing:1px;font-family: var(--font-medium); color:#1D1D1D;}
+
+  .explorer-top-seller-wrap {border-top: 1px solid #E6E3E0;   margin-top:30px!important;}
+  .explorer-top-seller-wrap .dFlex-nospace {margin-top:10px;}
+  .card-box-style2 {display:flex;}
+  .card-box-style2 .product_card {max-width: 325px; margin-right: 0px; margin-left: 15px; display: flex;}
+
+  .card-box-style2 .product_card .image_wrapper a {
+      padding-top: 0;
+      display: block;
+      width: 130px;
+      height: 100%;
+  }
+  .card-box-style2 .product_card .image_wrapper a img {
+      position: initial;
+      border-radius: 10px;
+      object-fit: cover;
+      height: 130px;
+      width: 130px;
+  }
+  .card-box-style2 .product_card .outer_content {padding:10px 0 0 20px;}
+  .card-box-style2 .product_card .outer_content h3 {font-size:14px; line-height:20px; letter-spacing:1px;font-family: var(--font-medium); color:#1D1D1D;}
+
+   @media (max-width: 767px){
+          .mobileWrapper .topLayer ul {
+              padding-bottom: calc(var(--footer-height)*1);
+              padding-top: 12px;
+          }
+
+       .group-heading {margin-top: 18px !important;
+           color: #979797;}
+   }
+  
+  
+    .hide-child-gnav{ display: none;  }
+    #explore-ul{display:none;}
+
+    .twoColNav {border-top:1px solid #E6E3E0;border-bottom:1px solid #E6E3E0; padding:0!important; display:flex!important;width: 100%; flex-wrap: wrap;margin:30px 0 30px 0;}
+    .twoColNav li {padding: 10px 0!important; margin:0!important; width: 50%;}
+    .twoColNav.paddingOverwrite {    padding: 5px 0!important; margin-top: 24px;}
+    .twoColNav.paddingOverwrite li {padding: 9px 0 9px 0!important;}
+    .twoColNav li a {text-decoration:none;font-size:12px; color:#545353;  display: block;line-height: 19px;letter-spacing: 1px; font-family: var(--font-regular)}
+
+    .posRel{position:relative;margin-top: 10px;}
+    .m-gnav {display:flex!important;justify-content: center; margin: 0 20px!important; 	    position: relative!important;  padding: 0!important;}
+    .m-gnav  .m-gnav-toggle {width: 100%;color: #979797; border-bottom:1px solid #979797;padding: 0 0 5px 0; letter-spacing: 1.75px;  font-size: 14px;   line-height: 30px;     cursor: pointer; font-family: var(--font-medium)}
+    .m-gnav  .m-gnav-toggle.active {color:#545353;font-weight:400;}
+    .header__line_mobile{background-color:#545353;bottom:0;content:"";display:block;height:3px;left:0;position:absolute;transform:scaleX(0);transform-origin:left center;width:100%;transform:translate(20.3px,0px);transition:all .5s ease-in-out;width:80px}
+
+  .m-gnav  li.slide-line {display: block;padding:0; margin:0;background: none #1D1D1D;z-index: 0;position: absolute;top: 0;	border-radius:0px;  width: 47px;   height: 3px;    left: -20px;  top: 3px;   animation: unset;    opacity: 1;}
+
+   #shop-ul,#explore-ul {text-align:left;}
+   #shop-ul li,#explore-ul li {margin:0 20px;font-family: var(--font-medium)}
+
+   #shop-ul li.subMenuClass.hoverClass {font-weight:600;}
+
+
+  .mobileWrapper a {font-size: 16px; line-height: 37px; letter-spacing: 0.89px; text-decoration: none;  text-transform: uppercase;}
+
+
+  .group-heading {margin-top: 23px;}
+
+
+  .subMenuInner {margin: 0 -20px 0 -20px!important ;background: #F6F3F0;    padding-top: 8px;  padding-bottom: 8px!important ;}
+  .subMenuInner li a {font-size:14px; line-height:50px;letter-spacing: 1px;font-family: var(--font-regular);}
+
+    .flexmenu {display:flex;padding-top: 40px !important;  padding-bottom: 22px!important ;justify-content: space-evenly; }
+   .flexmenu li{margin: 0 20px !important;}
+   .flexmenu li:first-child{margin: 0 0 0 20px !important;}
+   .flexmenu li:last-child{margin: 0 20px 0 0 !important;}
+
+  .flex-layout-style {display:flex;}
+  .drop-style-wrap {display:flex;flex-direction: column;}
+  .drop-style-wrap .drop-style-img {overflow: hidden;  border-radius: 8px; width: 100px;height: 75px;}
+  .drop-style-wrap .drop-style-img img{object-fit:cover;}
+  .drop-style-wrap .drop-style-txt {text-align: center;
+      line-height: 44px;
+      letter-spacing: 0.78px;
+      text-transform: uppercase;}
+
+
+  .mobileWrapper .mobileFooter { background-color: #fff;   border-top: 1px solid #e6e3e0;max-height: 51px;align-items: baseline;}
+  .mobileWrapper .mobileFooter a { border-right: 1px solid #e6e3e0; padding:8px 0 8px 0;}
+  .mobileWrapper .mobileFooter a:last-child {border:none}
+
+  .innerMenu li a{
+     font-family: var(--font-medium);
+  }
+
+     .image-mobile-gnav.onecol img {
+        display: block;
+        object-fit: cover;
+        object-position: center;
+        width:100%;
+    }
+
+    .image-mobile-gnav.twocol img {
+       display: block;
+       object-fit: cover;
+       object-position: left;
+       align-self: normal;
+       width:100%;
+   }
+    .imageBoxHeightGnav {overflow: hidden; height: 124px; position: relative; margin-top:40px;}
+    .imageBoxHeightGnav .content {position: absolute; background: transparent!important;}
+
+
+    .image-mobile-gnav .content h3 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        /*-webkit-line-clamp: 2;*/
+        -webkit-box-orient: vertical;
+        line-height: 22px;
+        letter-spacing: 0.83px;
+        }
+
+   .mobileWrapper .selectTab li {
+       animation: fade-in 1s ease forwards, slide-in-right 1s ease forwards;
+       opacity: 0;
+   }
+   .subMenuInner li {animation:unset !important; opacity: 1 !important;}
+
+   .subMenuClass > a,.subMenuClassMobile > a  {
+       display:block;
+   }
+
+    @media screen and (max-width: 1400px) and (max-height: 768px) {
+        .navPanel .innerMenu li {
+            line-height: 32px;
+        }
+        .navPanel .group-heading {
+            margin-top: 12px;
+        }
+        [data-panel-2] .scroll-bar.one-img {
+            padding-top:80px;
+        }
+        [data-navigation-panel] [data-panel-2] {
+            width: 450px!important;
+        }
+
+        .list-box .img-box img {
+            object-fit: cover;
+            height: 130px;
+        }
+        .scroll-bar.img-menu {
+            height: 80%;
+        }
+        [data-panel-1] {
+            padding-top: 30px;
+        }
+        [data-panel-1] .scroll-bar {
+            padding: 0 0 80px 40px;
+        }
+    }
+
+</style>

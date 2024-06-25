@@ -1,0 +1,480 @@
+{% assign _section = section.settings %}
+{{ 'hotspot-product.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'slick.js'  | asset_url | script_tag     }}
+
+<section class="hotspots-prodts-img-split {{ section.id }}" style="background-color:{{_section.split_background}}">
+  <div class="container {%if _section.image_left_prod_right == true %}invert_blocks{% endif%}">
+    <div class="flex-item hotspots-prodts" style="background-color:{{_section.split_background}}">
+      {% assign ind = 0 %}
+      {% for block in section.blocks %}
+        {% unless block.settings.split_prod.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+        {% unless block.settings.split_prod.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+          {% assign ind = ind | plus: 1 %}
+          <div class="hotspots-prodts__single-prod" data-hotprod="{{ind}}">
+            <span class="hotspot-highlight"></span>
+            {%- include 'hotspot-product' with _product: block.settings.split_prod, hot-variant: block.settings.split_prod_variant, extra_text: block.settings.extra_text, img_hot_prod: block.settings.img_hot_prod -%}
+          </div>
+        {% endunless %}
+        {% endunless %}
+      {% endfor %}
+    </div>
+    <div class="flex-item hotspots-img">
+      <div class="hotspots-img__text">
+        <h2>{{_section.split_title}}</h2>
+        {{_section.split_description}}
+      </div>
+      <div class="hotspots-img__img">
+        {{_section.split_image | image_url: width: 1160 | image_tag: width: 580, height: 580, alt: _section.split_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+        {% assign ele = 0 %}
+        {% for block in section.blocks %}
+          {% unless block.settings.split_prod.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+          {% unless block.settings.split_prod.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+            {% assign ele = ele | plus: 1 %}
+            <button class="hotspot" data-hotspot="{{ele}}" style="top:{{block.settings.split_vertical}}%; left:{{block.settings.split_horizontal}}%;"></button>
+          {% endunless %}
+          {% endunless %}
+          {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hotspots-prodts-img-split .container {
+    display: flex;
+    flex-direction: row;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    max-width: 1270px;
+    justify-content: space-between;
+  }
+  .hotspots-prodts-img-split .container.invert_blocks {
+    flex-direction: row-reverse;
+  }
+  .hotspots-prodts-img-split .container:not(.invert_blocks) .flex-item:first-child,
+  .hotspots-prodts-img-split .container.invert_blocks .flex-item:nth-child(2) {
+    margin-right: 15px;
+  }
+  .hotspots-prodts-img-split .container .flex-item.hotspots-prodts {
+    flex-basis: 528px;
+  }
+  .hotspots-prodts-img-split .container .flex-item.hotspots-img {
+    flex-basis: 580px;
+  }
+  .hotspots-prodts-img-split .hotspots-img__text h2 {
+    font-size: 60px;
+    line-height: 65px;
+    font-family: var(--font-regular);
+    color: #1D1D1D;
+    text-transform: none;
+  }
+  .hotspots-prodts-img-split .hotspots-img__text p {
+    font-size: 18px;
+    line-height: 23px;
+    margin-bottom: 25px;
+  }
+  .hotspots-prodts-img-split .hotspots-img__img {
+    position: relative;
+    max-width: 580px;
+    max-height: 580px;
+  }
+  .hotspots-prodts-img-split .hotspots-img__img img {
+    width: 100%;
+    max-width: 100%;
+    object-fit: cover;
+  }
+  .hotspots-prodts-img-split .cart_actions .price_btn {
+    background-color: #2a2a2a;
+  }
+
+  @media (max-width: 767px) {
+    .hotspots-prodts-img-split {
+      background-color: #ffffff !important;
+    }
+    .hotspots-prodts-img-split .container,
+    .hotspots-prodts-img-split .container.invert_blocks {
+      flex-direction: column-reverse;
+      padding: 0;
+      overflow: hidden;
+    }
+    .hotspots-prodts-img-split .flex-item {
+      width: 100%;
+    }
+    .hotspots-prodts-img-split .container:not(.invert_blocks) .flex-item:first-child,
+    .hotspots-prodts-img-split .container.invert_blocks .flex-item:nth-child(2) {
+      margin-right: 0;
+    }
+    .hotspots-prodts-img-split .container .flex-item.hotspots-prodts {
+      flex-basis: unset;
+      padding: 15px 0 15px 0;
+      max-height: 240px;
+      z-index: 1;
+    }
+    .hotspots-prodts-img-split .container .flex-item.hotspots-img {
+      flex-basis: unset;
+      z-index: 0;
+    }
+    .hotspots-prodts-img-split .product__item.hotspot-product {
+      position: relative;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper {
+      position: unset;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter {
+      width: 100%;
+      left: 0;
+    }
+    .product__item.hotspot-product .product__item-content {
+      padding: 0 20px 0 15px;
+    }
+    .hotspots-prodts-img-split .cart_actions .price_btn {
+      background-color: #2a2a2a;
+    }
+    .hotspots-prodts-img-split .slick-list {
+      overflow: visible;
+    }
+    .hotspots-prodts-img-split .shutter {
+      width: calc(100% + 9px);
+    }
+    .hotspots-prodts-img-split .hotspots-img__text {
+      padding: 0 20px;
+    }
+    .hotspots-prodts-img-split .hotspots-img__text h2 {
+      font-size: 40px;
+      line-height: 41px;
+      letter-spacing: 0.28px;
+    }
+    .hotspots-prodts-img-split .hotspots-img__text p {
+      font-size: 12px;
+      line-height: 15px;
+      letter-spacing: 0.21px;
+      margin-bottom: 10px;
+    }
+    .hotspots-prodts-img-split .hotspots-img__img {
+      position: relative;
+      max-width: unset;
+      max-height: unset;
+    }
+    .hotspots-prodts-img-split .hotspots-img__img .hotspot.hot_active {
+      pointer-events: none;
+    }
+  }
+  @media (max-width: 450px) {
+    .hotspots-prodts-img-split .container .flex-item.hotspots-prodts {
+      max-height: 173px;
+    }
+  }
+  @media (min-width: 768px) {
+    .hotspots-prodts-img-split .product_img_wrapper {
+      position: unset;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter {
+      width: calc(100% - 220px);
+      right: 0;
+      padding-bottom: 10px;
+      padding-top: 0;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter .ctas {
+      padding-bottom: 15px;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter .shutter-info {
+      display: none;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter .color_info {
+      padding-top: 0;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter .color_info .color_radio {
+      padding-bottom: 15px;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter .color_info .color_radio label {
+      width: 54px;
+      height: 54px;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter .color_radio.special_txt label span {
+      margin: 56px auto auto;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter .rangeSlider {
+      margin-bottom: 8px;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter .variant_info {
+      padding-bottom: 10px!important;
+    }
+    .hotspots-prodts-img-split .product_img_wrapper .shutter .variant_info .color__name,
+    .hotspots-prodts-img-split .product_img_wrapper .shutter .variant_info .color__description {
+      font-size: 12px;
+    }
+    .hotspots-prodts-img-split .cart_actions {
+      width: 204px;
+    }
+    .hotspots-prodts-img-split .cart_actions .price_btn,
+    .hotspots-prodts-img-split .cart_actions .price_btn .add_btn {
+      max-height: 40px;
+      min-width: unset;
+      padding: 0;
+    }
+    .hotspots-prodts-img-split .cart_actions .price_btn .add_btn {
+      padding-right: 20px;
+    }
+    .hotspots-prodts-img-split .product_form .add_btn.variant-notavailable-button,
+    .hotspots-prodts-img-split .price_btn .var_price.variant-notavailable-span {
+      height: 40px;
+      min-height: 40px;
+      padding: 0 20px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    //hotspot click
+    var hotspotId;
+    document.querySelector('.{{ section.id }}').addEventListener('click', function(e) {
+      if (e.target.classList.contains('hotspot')){
+
+        if(e.target.classList.contains('hot_active')) {
+          e.target.classList.remove('hot_active');
+          hotspotId = '';
+        } else {
+          let hotspots = e.target.parentNode.querySelectorAll('.hotspot');
+          hotspots.forEach(el => {
+            if(el.classList.contains('hot_active')){
+              el.classList.remove('hot_active')
+            }
+          });
+          e.target.classList.add('hot_active');
+          hotspotId = e.target.dataset.hotspot;
+          if(window.innerWidth < 768) {
+            const carousel = e.target.parentNode.parentNode.parentNode.querySelector('.{{ section.id }}.hotspots-prodts-img-split .hotspots-prodts');
+            $(carousel).slick( 'slickGoTo', hotspotId - 1 );
+          }
+        }
+
+        let allProducts = e.target.parentNode.parentNode.parentNode.querySelector('.hotspots-prodts').querySelectorAll('.hotspots-prodts__single-prod');
+        allProducts.forEach(ele => {
+          if(ele.dataset.hotprod == hotspotId) {
+            ele.querySelector('.hotspot-highlight').classList.add('prod_active');
+          } else {
+            ele.querySelector('.hotspot-highlight').classList.remove('prod_active')
+          }
+        });
+      }
+    });
+
+    //product carousel
+    function createCarousel() {
+      if(window.innerWidth < 768) {
+        $('.{{ section.id }}.hotspots-prodts-img-split .hotspots-prodts').slick({
+          infinite: false,
+          dots: true,
+          arrows: false,
+          initialSlide: hotspotId != undefined && hotspotId != '' ? hotspotId - 1 : 0
+        }).css({"maxHeight":"unset"});
+      } else {
+        if($('.{{ section.id }}.hotspots-prodts-img-split .hotspots-prodts').hasClass('slick-slider')){$('.{{ section.id }}.hotspots-prodts-img-split .hotspots-prodts').slick('unslick');}
+      }
+    }
+
+    //hotspot mobile already selected
+    function loadMobileHotspot() {
+      if(window.innerWidth < 768 && (hotspotId == undefined || hotspotId == '')) {
+        let getHotspots = document.querySelector('.{{ section.id }}.hotspots-prodts-img-split').querySelectorAll('.hotspot');
+        getHotspots.forEach((el, ind) => {
+          if(ind == 0){el.classList.add('hot_active');return false;}
+        });
+      }
+    }
+
+    createCarousel();
+    loadMobileHotspot();
+    window.addEventListener('resize', () => {
+      createCarousel();
+      loadMobileHotspot();
+    });
+
+    //On swipe/drag/dot & arrow click event - carousel
+    $('.{{ section.id }}.hotspots-prodts-img-split .hotspots-prodts').on('afterChange', function(event, slick, currentSlide){
+      $(event.currentTarget).parent().find('.hotspots-img .hotspots-img__img .hotspot').each(function(ind, el) {
+        $(el).hasClass('hot_active') && $(el).data('hotspot') != slick.currentSlide + 1 ? $(el).removeClass('hot_active') : $(el).data('hotspot') == slick.currentSlide + 1 && $(el).addClass('hot_active');
+        $('.{{ section.id }}.hotspots-prodts-img-split .hotspots-prodts .hotspot-highlight.prod_active').removeClass('prod_active');
+        $('.{{ section.id }}.hotspots-prodts-img-split .hotspots-prodts .slick-current .hotspot-highlight').addClass('prod_active');
+      });
+    });
+  });
+
+  // hotspot buy now analytics
+  $('.hotspot-prod-btn.add-to-cart-button').click(function() {
+    let productInfoTitle = $(this).prev().find('.product__item-title').text();
+    let productInfoPrice = $(this).find('.p-price__tag > .new-price').text();
+    let productVariantId = $(this).data('purchase-id');
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      'event': 'hotspotAddToCart',
+      'ecommerce' : {
+        'add' : {
+         'products' : [{
+           'id' : productVariantId,
+           'name' : productInfoTitle,
+           'price' :productInfoPrice,
+           'quantity' : 1
+         }],
+         'product_name' : productInfoTitle,
+         'product_id' :productVariantId,
+         'price' : productInfoPrice,
+         'currency' : 'USD'
+       }
+     }
+     });
+  });
+
+  let quickProductInfoTitle;
+  let quickProductInfoPrice;
+
+  $('.hotspot-prod-btn.buy_btn').click(function() {
+    quickProductInfoTitle = $(this).prev().find('.product__item-title').text();
+    quickProductInfoPrice = $(this).find('.p-price__tag > .new-price').text();
+  })
+
+  $('.price_btn ').click(function() {
+    let quickProductVariantId = $(this).data('purchase-id');
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      'event': 'hotspotQuickAddToCart',
+      'ecommerce' : {
+        'add' : {
+         'products' : [{
+           'id' : quickProductVariantId,
+           'name' : quickProductInfoTitle,
+           'price' : quickProductInfoPrice,
+           'quantity' : 1
+         }],
+         'product_name' : quickProductInfoTitle,
+         'product_id' : quickProductVariantId,
+         'price' : quickProductInfoPrice,
+         'currency' : 'USD'
+       }
+     }
+     });
+  })
+
+  // hotspot product view
+  $('button.hotspot').click(function() {
+    var self = this;
+    setTimeout(() => {   
+      let hotspotPickedProduct = $(this).parent().next().find('.slick-current .hotspots-prodts__single-prod .product__item-content .product__item-title').text()
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+      'event': 'hotspotProductView',
+      'hotspotProductViewed' : hotspotPickedProduct
+     });
+    },10);
+  })
+
+  // hotspot dot product view
+  $(document).ready(function() {
+    $('.slick-initialized').on('click', '.slick-dots li button', function() {
+      var self = this;
+      setTimeout(() => {   
+        let hotspotDotPickedProduct = $(this).parent().parent().parent().find('.slick-current .hotspots-prodts__single-prod .product__item-content .product__item-title').text()
+        console.log('dot product picked: ' + hotspotDotPickedProduct)
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+        'event': 'hotspotDotProductView',
+        'hotspotDotProductViewed' : hotspotDotPickedProduct
+        });
+      },10);
+    });
+  });
+</script>
+
+{% schema %}
+    {
+      "name": "Hotspots - Products + Img",
+      "max_blocks": 3,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "image_left_prod_right",
+          "label": "Image to the LEFT and Products to the RIGHT",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "split_background",
+          "label": "Block Background",
+          "default": "#fafafa"
+        },
+        {
+          "type": "text",
+          "id": "split_title",
+          "label": "Title",
+          "default": "Sunrise Radiance"
+        },
+        {
+          "type": "richtext",
+          "id": "split_description",
+          "label": "Description",
+          "default": "<p>Soft copper tones that add gentle warmth.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "split_image",
+          "label": "Image"
+        }
+      ],
+      "blocks" : [
+        {
+          "type": "slide",
+          "name": "Hotspot",
+          "settings": [
+            {
+              "type": "product",
+              "id": "split_prod",
+              "label": "Product"
+            },
+            {
+              "type": "text",
+              "id": "split_prod_variant",
+              "label": "Product Variant"
+            },
+            {
+              "type": "image_picker",
+              "id": "img_hot_prod",
+              "label": "Product Image"
+            },
+            {
+              "type": "text",
+              "id": "extra_text",
+              "label": "Extra Text after product description"
+            },
+            {
+              "type": "range",
+              "id": "split_vertical",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": "Vertical Position",
+              "default": 10
+            },
+            {
+              "type": "range",
+              "id": "split_horizontal",
+              "min": 0,
+              "max": 100,
+              "step": 1,
+              "unit": "%",
+              "label": "Vertical Position",
+              "default": 10
+            }
+          ]
+        }
+      ],
+      "presets": [
+        {
+          "name": "Hotspots - Products + Img",
+          "category": "Text"
+        }
+      ]
+    }
+{% endschema %}

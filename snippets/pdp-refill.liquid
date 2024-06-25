@@ -1,0 +1,88 @@
+{% assign refill_product = product.metafields.product.refill_product.value %}
+  <a href="{{refill_product.url}}">
+    <div class="refill-prod">
+      {% if  product.metafields.product.refill_image[0] %}
+        <img src="{{ product.metafields.product.refill_image[0].src }}" alt="{{ product.metafields.product.refill_image[0].alt }}"
+          srcset="
+          {{ product.metafields.product.refill_image[0].src | append: '&transform=resize=150' }} 150w,
+          {{ product.metafields.product.refill_image[0].src | append: '&transform=resize=250' }} 250w
+          "
+          fetchpriority="low" loading="lazy"
+        >
+      {% else %}
+        {{refill_product.featured_media | image_url: width: 250 | image_tag: width: 200, height: 200, alt: refill_product.featured_media.alt, fetchpriority: 'low', loading: 'lazy' }}
+      {% endif %}
+      <div class="prod-info">
+        <div>
+          <h3>
+            {% if product.metafields.product.refill_title %}
+              {{- product.metafields.product.refill_title -}}
+            {% else %}
+              {{refill_product.title}}
+            {% endif %}
+          </h3>
+          <p>
+            {% if product.metafields.product.refill_description %}
+              {{- product.metafields.product.refill_description -}}
+            {% else %}
+            {{refill_product.content}}
+            {% endif %}
+          </p>
+        </div>
+        <div class="prod-link">
+          <p>
+            {% if product.metafields.product.refill_link_text %}
+              {{- product.metafields.product.refill_link_text -}}
+            {% else %}
+              Shop Refill
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </a>
+
+<style>
+  .refill-link.visible-xs-block {
+    padding: 30px 0;
+  }
+  .refill-link.visible-xs-block .refill-prod .prod-link p {
+    padding-top: 6px;
+  }
+  .refill-link a {
+    text-decoration: none;
+  }
+  .refill-link .refill-prod {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 20px;
+  }
+  .refill-link .refill-prod .prod-info {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .refill-link .refill-prod .prod-info h3 {
+    letter-spacing: 1px;
+  }
+  .refill-link .refill-prod img {
+    width: 80px;
+    height: 80px;
+  }
+  .refill-link .refill-prod .prod-link p {
+    text-decoration: underline;
+    padding-top: 4px;
+  }
+  .refill-link .refill-prod .prod-link p:hover {
+    color: var(--border-color);
+  }
+  @media (max-width: 767px) {
+    .refill-link {
+      padding-top: 24px;
+      padding-bottom: 12px;
+    }
+  }
+</style>

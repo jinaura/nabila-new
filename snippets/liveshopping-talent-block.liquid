@@ -1,0 +1,29 @@
+<article class="talent-profile" data-talent-id="{{- _block.talent_id -}}">
+    <figure class="animate">
+    {% if _block.url != blank %}
+        <a href="{{- _block.url -}}">
+            {% endif %}
+            <img class="animate" src="{{ _block.image | img_url: '420x420', scale:1}}" alt="{{ _block.image.alt }}" fetchpriority="low" loading="lazy">
+            {% if _block.url != blank %}
+        </a>
+        {% endif %}
+    </figure>
+{% if _block.url != blank %}
+    <a href="{{- _block.url -}}">
+        {% endif %}
+        <div class="profile-info">
+            {% if _block.role != blank %}
+                <span>{{- _block.role -}}</span>
+            {% endif %}
+            <h3>{{_block.name}}</h3>
+            {% if _block.desc != blank %}
+                <div class="desc">{{ _block.desc }}</div>
+            {% endif %}
+            {% if _block.url != blank %}
+                <a href="{{-_block.url -}}" class="profile-url">{{link_text}}</a>
+            {% endif %}
+        </div>
+        {% if _block.url != blank %}
+    </a>
+    {% endif %}
+</article>

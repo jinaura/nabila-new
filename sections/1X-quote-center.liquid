@@ -1,0 +1,67 @@
+<section class="quoteModule">
+
+    {% for block in section.blocks %}
+
+        {% if article.handle == articles[block.settings.quote-center-article].handle %}
+			<div>
+              <h2>{{ block.settings.quotes }}</h2>
+              <h2 class="auther">{{ block.settings.author_quotes }}</h2>
+  			</div>
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+.quoteModule{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding-bottom:120px;
+}
+.quoteModule > div{
+  max-width:650px;
+  width:100%;
+}
+.quoteModule > div h2{
+  font-size:42px;
+  line-height: 1;
+  padding-bottom:30px;
+}
+.quoteModule > div h2.auther{
+  font-size:21px;
+  text-transform:uppercase;
+  padding-bottom:0px;
+}
+  
+</style>
+
+{% schema %}
+    {
+    "name": "1X Quote Center",
+    "class": "quote-center",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "quote-center",
+    "settings": [
+    {
+    "type": "article",
+    "id": "quote-center-article",
+    "label": "Article"
+    },
+    {
+    "type": "text",
+    "id": "quotes",
+    "label": "Quotes"
+    },
+    {
+    "type": "text",
+    "id": "author_quotes",
+    "label": "Author Quotes"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

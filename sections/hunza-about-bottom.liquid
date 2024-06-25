@@ -1,0 +1,74 @@
+{% assign _section = section.settings %}
+
+<section class="hunza-about_bottom {{section.id}}">
+  <div class="container">
+    <div class="flex-item gallery_img_1">
+      {{_section.about_gallery_image_1 | image_url: width: 1800 | image_tag: width: 580, height: 725, alt: _section.about_gallery_image_1.alt, fetchpriority: 'low', loading: 'lazy' }}
+    </div>
+    <div class="flex-item gallery_img_2">
+      {{_section.about_gallery_image_2 | image_url: width: 900 | image_tag: width: 326, height: 490, alt: _section.about_gallery_image_2.alt, fetchpriority: 'low', loading: 'lazy' }}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hunza-about_bottom {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  .hunza-about_bottom .container {
+    max-width: 1137px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+  }
+  .hunza-about_bottom .flex-item.gallery_img_1 {
+    flex-basis: 56%;
+  }
+  .hunza-about_bottom .flex-item.gallery_img_2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    margin-left: 3rem;
+  }
+  @media (max-width: 767px) {
+    .hunza-about_bottom {
+      padding-top: 10px;
+      padding-bottom: 26px;
+    }
+    .hunza-about_bottom .flex-item.gallery_img_1 {
+      flex-basis: 54%;
+    }
+    .hunza-about_bottom .flex-item.gallery_img_2 {
+      margin-left: 28px;
+      margin-right: 8px;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Hunza About - images",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "about_gallery_image_1",
+        "label": "Left Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "about_gallery_image_2",
+        "label": "Right Image"
+
+      }
+    ],
+    "presets": [
+      {
+        "name": "Hunza About - images",
+        "category": "Image"
+      }
+    ]
+  }
+{% endschema %}

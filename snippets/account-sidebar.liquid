@@ -1,0 +1,62 @@
+<div class="account__sidebar ac-sidebar">
+    <h1>
+        Account
+    </h1>
+<div class="accounts-links">
+
+<div class="profile-info">
+    {% if customer %}
+<ul>
+<li><a href="" class="username">
+{{ customer.first_name }} 
+{{ customer.last_name }}
+</a></li>
+<li><a href="">{{ customer.email }}</a></li>
+</ul>
+{% endif %}
+</div>
+
+{%- if customer.metafields.account.groups contains 'influencer' -%}
+<div class="other-links">
+    <ul>
+        <li>
+            <a href='/pages/profile/profileDetails'>
+                {{ 'livestream.personal_details.title' | t }}
+            </a>
+        </li>
+        <li>
+            <a href='/pages/profile/livestreams'>
+                {{ 'livestream.livestreams.title' | t }}
+            </a>
+        </li>
+        <li>
+            <a href='/pages/profile/channelSettings'>
+                {{ 'livestream.channel_settings.title' | t }}
+            </a>
+        </li>
+        <li>
+            <a href='/pages/profile/channelPreview'>
+                {{ 'channel_preview.title' | t }}
+            </a>
+        </li>
+    </ul>
+</div>
+{%- endif -%}
+
+<div class="other-links">
+<ul>
+    {% unless localization.country.iso_code == 'GB' %}
+        <li>
+            <a href="/tools/recurring/login/">
+                Manage Subscriptions
+            </a>
+        </li>
+    {% endunless %}
+    <li><a href="/pages/myaccount?operation=changePassword">Change password</a></li>
+    <!-- <li><a href="/pages/myaccount?operation=signOut">Logout</a></li> -->
+  <li><a href="/account/logout">Logout</a></li>
+</ul>
+</div>
+
+</div>
+</div>

@@ -1,0 +1,36 @@
+<section class="section__container sets results {% if forloop.index == 1 %}selected{% endif %}" id="{{__product.handle}}">
+    <div class="section__flex-row">
+        <article class="section__flex-item">
+            <summary>{{__product.metafields.product.ideal_for}}</summary>
+            <hr class="divider--start">
+            <div>
+                {{ __product.metafields.product.results_description }}
+            </div>
+            <hr class="divider--end">
+        </article>
+        <article class="section__flex-item lab-results">
+            <h3 class="section__subtitle">Lab-tested Results</h3>
+            <hr class="divider--start">
+            {{__product.metafields.product.labtested_results}}
+            <hr class="divider--end">
+        </article>
+        <article class="section__flex-item benefits">
+            <h3 class="section__subtitle hidden-xs">Benefits</h3>
+            <div class="subtitle__wrapper visible-xs-block">
+                <h3 class="section__subtitle">Benefits</h3>
+                <svg class="icon-plus" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+                    <g fill="none" fill-rule="evenodd">
+                        <g fill-rule="nonzero" stroke="#919191">
+                            <path d="M345 631c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm-.052 4.278c.136-.015.272.03.374.122.1.093.157.225.154.362v4.762h4.762c.172-.003.332.088.418.236.087.148.087.332 0 .48-.086.148-.246.239-.418.236h-4.762v4.762c.003.172-.088.332-.236.418-.148.087-.332.087-.48 0-.148-.086-.239-.246-.236-.418v-4.762h-4.762c-.17.008-.332-.075-.424-.219-.092-.143-.1-.324-.022-.476.078-.151.231-.25.401-.257H344.524v-4.762c-.005-.247.179-.457.424-.484z" transform="translate(-334 -630)"/>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="accordion__content not-shown">
+                <hr class="divider--start">
+                {{__product.metafields.product.benefits}}
+            </div>
+            <hr class="divider--end">
+        </article>
+    </div>
+</section>

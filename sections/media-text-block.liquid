@@ -1,0 +1,322 @@
+<div class="media-text-block__container">
+    {% for block in section.blocks %}
+        <div class="media-text-block {% if block.settings.reverse %}mtb_flex-row-reverse{% endif %}">
+            <div class="media-text-block__text {% if block.settings.use-video == true %}media-text-block__text-video{% endif %}">
+                <div class="media-text-block__text__container">
+                    <div class="media-text-block__text_heading">{{ block.settings.text-heading }}</div>
+                    <div class="media-text-block__text__content">{{ block.settings.text }}</div>
+                </div>
+
+
+                
+            </div>
+            <div class="media-text-block__media {% if block.settings.use-video == true %}media-text_video-container media-text_video-container-mobile{% endif %} {% if block.settings.reverse-m == true %}mtb_align-self-right{% endif %}"> 
+                {% if block.settings.use-video != true %}
+                    <img src="{{ block.settings.media-image | img_url: 'master' }}" alt="" fetchpriority="low" loading="lazy">
+                {% else %}
+                    <video autoplay="autoplay" loop="" muted="muted" webkit-playsinline="" playsinline="" class="video" id="media-text-theplayer" type="video/mp4" width="100%" height="auto" style="display:block; margin:0 ; padding: 0;"><source src="{{ block.settings.video-url }}" type="video/mp4">
+                    </video>
+
+
+                    <input type="checkbox" id="media-text-volume-switcher">
+                    <label id="media-text-switcher-container" for="media-text-volume-switcher"></label> 
+                    <input type="checkbox" id="media-text-pause-play-switcher">
+                    <label id="media-text-pause-play-switcher-container" for="media-text-pause-play-switcher"></label> 
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+
+<style>
+    .media-text-block__container{
+        background: url({{ section.settings.d-background | img_url: 'master' }});
+        background-repeat: no-repeat;
+    }
+    @media (max-width:767px){
+        .media-text-block__container{
+            background: url({{ section.settings.m-background | img_url: 'master' }});
+            background-repeat: no-repeat;
+            background-position: right top;
+        }
+    }
+    .media-text-block{
+        display: flex;
+        max-width: 1320px;
+        margin: 60px auto;
+
+    }
+    @media (max-width:767px){
+        .media-text-block{
+            flex-direction: column-reverse;
+        }
+    }
+    
+    .media-text-block__text{
+        flex: 1 0 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    @media (max-width:767px){
+        .media-text-block__text{
+            justify-content: flex-start;
+            margin-left: 30px;
+            margin-top: 55px;
+        }
+    }
+    .media-text-block__media{
+        flex: 1 0 50%;
+        max-height: 660px;
+    }
+    @media (max-width:550px){
+        .media-text-block__media{
+            max-width: 85%;
+            height: 310px;
+        }
+    }
+    .media-text-block__media img, .media-text-block__media video{
+        object-fit: cover;
+        height: 100%;
+    }
+    .media-text-block__text__content{
+        font-size: 18px;
+        letter-spacing: 0.5px;
+    }
+    @media (max-width:767px){
+        .media-text-block__text__content{
+            font-size: 14px;
+        }    
+        .media-text-block__text__content strong{
+            font-size: 16px;
+        }
+    }
+    .media-text-block__text_heading{
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #1d1d1d;
+        margin-bottom: 30px;
+        text-transform: uppercase;
+        letter-spacing: 1.14px;
+    }
+    @media (max-width:767px){
+        .media-text-block__text_heading{
+            font-size: 16px;
+            margin-bottom: 21px;
+        }
+        .media-text-block__text-video .media-text-block__text_heading{
+            margin-bottom: 11px;
+        }
+    }
+
+    .media-text_video-container {
+        padding:0;
+        position: relative;
+        display: block; 
+        overflow: hidden; 
+        height: 660px;
+        
+
+    }
+    @media (max-width:900px){
+        .media-text_video-container {
+            height: 410px;
+        }
+    }
+
+
+    @media (max-width:767px){
+        .media-text_video-container-mobile{
+            max-width: 100%;
+        }
+        .media-text-block__text-video{
+            justify-content: center;
+            margin-left: 0;
+            text-align: center;
+        }
+    }
+    .media-text_video-container video{
+        position: relative;
+
+    }
+    @media (max-width:767px){
+        .media-text_video-container video{
+            height: 375px;
+
+        }
+    }
+
+
+
+
+
+    #media-text-volume-switcher, #media-text-pause-play-switcher {
+        display: none; 
+    }
+
+
+
+    #media-text-switcher-container, #media-text-pause-play-switcher-container {
+        display:block;
+        position: absolute;
+        top:0; 
+        cursor: pointer;
+        -webkit-transition: all 0.3s ease-in;
+        -moz-transition: all 0.3s ease-in;
+        transition: all 0.3s ease-in 0s;
+    }
+
+    @media (min-width:767px){
+        #media-text-switcher-container{
+            top: auto;
+            bottom: 75px;
+            left: 45px;
+        }
+        #media-text-pause-play-switcher-container {
+            top: auto;
+            bottom: 45px;
+            left: 15px;
+        }
+    }
+    /* volume on : button */ 
+    #media-text-switcher-container:after {
+        content: "";
+        border: 0px solid black;
+        background: url({{ 'sound-off-icon.png' | asset_url }}) center center;
+        background-size: 100%;
+        top: 40px;
+        left: 10px;
+        position: absolute;
+        width: 23px;
+        height: 20px;
+    }
+    #media-text-pause-play-switcher-container:after  {
+        content: "";
+        border: 0px solid black;
+        background: url({{ 'pause.png' | asset_url }}) center center;
+        background-size: 100%;
+        top: 10px;
+        left: 10px;
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        filter: invert(1)
+    }
+
+
+
+    /* volume off : button */
+    #media-text-volume-switcher:checked + #media-text-switcher-container:after {
+        right: 10px;
+        content: "";
+        background: url({{ 'sound-on-icon.png' | asset_url }}) center center;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        width: 18px;
+    }
+    #media-text-pause-play-switcher:checked + #media-text-pause-play-switcher-container:after {
+        right: 10px;
+        content: "";
+        background: url({{ 'play-button.png' | asset_url }}) center center;
+        background-size: 100%;
+        filter: invert(1);
+        width: 18px;
+    }
+
+
+
+
+    @media (max-width:767px){
+        .mtb_align-self-right{
+            margin-left: auto;
+        }
+    }
+
+
+    @media (min-width:767px){
+        .mtb_flex-row-reverse{
+            flex-direction: row-reverse;
+        }
+    }
+
+</style>
+
+
+<script>
+	document.querySelector("#media-text-volume-switcher").onchange = function() {
+		document.querySelector("#media-text-theplayer").muted = !this.checked;
+	}     
+    document.querySelector("#media-text-pause-play-switcher").onchange = function() {
+        if (this.checked){
+            document.querySelector("#media-text-theplayer").pause();
+        }else{
+            document.querySelector("#media-text-theplayer").play();
+        }
+    }             
+</script>
+
+{% schema %}
+{
+    "name":"Media Text",
+    "max_blocks":4,
+    "settings": [
+
+        {
+            "type": "image_picker",
+            "id": "d-background",
+            "label": "Background Image Desktop"
+        },
+        {
+            "type": "image_picker",
+            "id": "m-background",
+            "label": "Background Image Mobile"
+        }
+    ],
+    "blocks":[
+       {
+          "type":"image",
+          "name":"Media Text",
+          "settings":[
+            {
+                "type":"text",
+                "id": "text-heading",
+                "label": "Heading"
+            },
+            {
+                "type":"richtext",
+                "id": "text",
+                "label": "Text"
+            },
+            {
+                "type": "image_picker",
+                "id": "media-image",
+                "label": "Image"
+            },
+            {
+                "type": "checkbox",
+                "id": "use-video",
+                "label": "Use Video As Media"
+            },
+            {
+                "type": "text",
+                "id": "video-url",
+                "label": "Video URL"
+            },
+
+            {
+                "type": "checkbox",
+                "id": "reverse",
+                "label": "Reverse Blocks"
+            },
+            {
+                "type": "checkbox",
+                "id": "reverse-m",
+                "label": "Align Media to Right for Mobile"
+            }
+          ]
+       }
+    ]
+ }
+{% endschema %}

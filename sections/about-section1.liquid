@@ -1,0 +1,338 @@
+{% if section.settings.show_section == true %}
+{% assign scroll_id = section.settings.scroll_id | downcase %}
+{% assign scroll_id = scroll_id | replace: ' ', '-'  %}
+
+<section class="abt-sect1" id="{{ scroll_id }}">
+  <div class="video-sect">
+      <div class="short-video">
+          <video
+                  id=""
+                  muted
+                  loop
+                  muted
+                  playsinline="true"
+                  webkit-playsinline="true"
+                  autoplay
+                  preload="auto"
+                  width="100%"
+                  height="100%"
+                  data-setup='{"width": 300, "height": 250}' >
+              <source src="{{ section.settings.short_video }}" type='video/mp4' /></video>
+        
+        
+      </div>
+     
+      <div class="long-video">
+          <video
+                  id="long-video"
+                  controls
+                  muted
+                  playsinline="true"
+                              webkit-playsinline="true"
+                  
+                  preload="auto"
+                  width="100%"
+                  height="100%"
+                  data-setup='{"width": 300, "height": 250}' class="responsive-iframe">
+                  
+              <source src="{{ section.settings.long_video }}" type='video/mp4' /></video>
+      </div>
+  
+    <div class="video-lbl">{% if section.settings.display_content %}{{ section.settings.title_text }} {% endif %}</div>
+    
+    <div class="long-video-BtnPlay">
+      
+      <span class="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
+      <g fill="none" fill-rule="evenodd">
+          <g fill="#545353" fill-rule="nonzero">
+              <g>
+                  <path d="M7 14c-.12 0-.235-.089-.32-.248L.133 1.448C.003 1.206-.036.841.034.524.104.207.27 0 .452 0h13.096c.183 0 .348.207.418.524.07.317.03.682-.098.924L7.319 13.752c-.084.16-.2.249-.319.248z" transform="translate(-90 -906) rotate(-90 505 415)"/>
+              </g>
+          </g>
+      </g>
+  </svg>
+      </span>
+      
+      <span class="txt">{{ section.settings.video_link_label }}</span>
+    
+    </div>
+    
+    </div>
+    
+    <div class="abt-desc">
+      <div class="container">
+      <div class="abt-sesc-wrap">{{ section.settings.descripton }}</div>
+      </div>
+  
+  
+    </div>
+    
+  </section>
+  
+  <style>
+    .abt-sect1 {
+        width:100%;
+          padding: 60px;
+    }
+    
+    .page-about-main  .live_text {
+    pointer-events: none;
+    }
+    .page-about-main  .container {
+    max-width: 1350px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0 auto;
+  }
+    .abt-sect1 .video-sect {
+    position: relative;
+          max-width: 1320px;
+      margin: 0 auto;
+      height: 750px;
+      background: #1d1d0e;
+    }
+    
+   .abt-sect1 .short-video {
+     
+     width:100%;
+     height:100%;
+      position: absolute;
+      z-index: 2;
+    
+    }
+    
+    .abt-sect1 .short-video video {
+    width:100%;
+      height:100%;
+      object-fit:cover;
+          position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index:2;
+      pointer-events: none;
+    }
+    
+    .abt-sect1 .long-video {
+      
+       width:100%;
+     height:100%;
+          position: absolute;
+      z-index: 1;
+    
+    }
+    
+      .abt-sect1 .long-video video {
+    width:100%;
+      height:100%;
+      object-fit:cover;
+          position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+        z-index:1;
+    }
+    
+    .abt-sect1  .video-lbl {
+      position: absolute;
+      z-index: 5;
+        top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      font-size:{{ section.settings.font_size }}px;
+      display: flex;
+      align-items: center;
+          justify-content: center;
+     color:#fafafa;
+          font-family: var(--font-medium);
+      font-weight: 500;
+  }
+   
+    
+   .abt-sect1  .long-video-BtnPlay {
+      position: absolute;
+      z-index: 6;
+      left: 30px;
+      bottom: 30px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+     color:#545353;
+  }
+    
+    .abt-sect1  .long-video-BtnPlay .icon {
+      margin-right: 20px;
+      margin-top: 4px;
+    }
+    
+   .abt-sect1  .long-video-BtnPlay:hover .txt {
+   text-decoration: underline;
+   }
+    
+    
+   .abt-sect1 .abt-desc {
+        padding-top: 30px;
+    }
+    .abt-sect1 .abt-sesc-wrap {
+    
+      width:50%;
+    
+    }
+    
+    
+    @media (max-width:1300px){
+       .abt-sect1 {
+          padding: 40px;
+    }
+      .abt-sect1 .video-sect {
+  
+          max-width: 1000px;
+  
+      height: 550px;
+    }
+    .abt-sect1 .abt-sesc-wrap {
+    
+    width:100%;
+  
+  }
+    }
+    
+      @media (max-width:768px){
+       .abt-sect1 {
+          padding:0 0 40px 0;
+        
+    }
+      .abt-sect1 .video-sect {
+  
+          max-width: 1000px;
+          padding-left: 15px;
+      padding-right: 15px;
+      height: 480px;
+    }
+  
+    .abt-sect1 .short-video {
+      left: 0;
+      top: 0;
+  }
+    
+    .abt-sect1 .long-video {
+      left: 0;
+      top: 0;
+  }
+    }
+    @media (max-width:767px){
+      .page-about-main  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  
+  }
+    }
+    
+    
+  </style>
+  
+  <script>
+  
+      function isScrolledIntoView(elem) {
+          let docViewTop = $(window).scrollTop(),
+              docViewBottom = docViewTop + $(window).height(),
+              elemTop = $(elem).offset().top,
+              elemBottom = elemTop + $(elem).height();
+  
+          return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+      }
+  
+    $( document ).ready(function() {
+      
+      var vid = document.getElementById("long-video");
+      $(".long-video-BtnPlay").click(function(){
+      $(".short-video ,.long-video-BtnPlay").remove();
+        vid.muted=false;
+        vid.play();
+        $(".video-lbl").fadeOut();
+        setTimeout(function(){ 
+        $(".video-lbl").remove();
+        }, 2000);
+        
+        
+      })
+  });
+  </script>
+  
+  {% endif %}
+  
+  
+  {% schema %}
+      {
+      "name": "Section 1",
+      "class": "about-section1",
+      "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_section",
+        "label": "Show Section",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "scroll_id",
+        "label": "Section ID",
+        "info": "Use this field to insert the ID to link with the nav items and enable scroll to this section."
+      },
+      {
+      "type": "text",
+      "id": "short_video",
+      "label": "Short Video",
+      "info": "Use text field for custom video url"
+      },
+      {
+      "type": "text",
+      "id": "long_video",
+      "label": "Long Video",
+      "info": "Use text field for custom video url"
+      },
+      {
+      "type": "richtext",
+      "id": "descripton",
+      "label": "Description",
+      "default": "<p>Description</p>"
+      },
+      {
+      "type": "text",
+      "id": "video_link_label",
+      "label": "Video Link Label"
+      },
+      {
+      "type": "checkbox",
+      "id": "display_content",
+      "label": "Show Content",
+      "default": true
+      },
+      {
+      "type": "text",
+      "id": "title_text",
+      "label": "Title"
+      },
+      {
+      "id": "title_label_color",
+      "type": "color",
+      "label": "Title Label Color",
+      "default": "#ffffff"
+      },
+      {
+      "type":      "range",
+      "id":        "font_size",
+      "min":        0,
+      "max":        100,
+      "step":       1,
+      "unit":       "px",
+      "label":     "Font Size",
+      "default":   21
+      }
+      ]
+      }
+  {% endschema %}

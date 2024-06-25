@@ -1,0 +1,134 @@
+<div class="edt-category-page edt-category-pageAuther">
+	{%- include 'editorial-subnavigation' -%}
+<div class="container">
+
+	<div class="default--holder">
+
+	
+{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+{%- assign page_url = contentForQuerystring | split:'"pageurl":"' | last | split:'"' | first | split:'.myshopify.com' | last |   replace:'\/','/' |    replace:'%20',' ' |    replace:'\u0026','&'  -%}
+{%- assign param_page = '' -%}
+{%- for i in (1..1) -%}
+    {%- unless page_url contains "?" -%}{% break %}{%- endunless -%}
+    {%- assign query_string = page_url | split:'?' | last -%}
+    {%- assign qry_parts= query_string | split:'&' -%}
+    {%- for part in qry_parts -%}
+        {%- assign key_and_value = part | split:'=' -%}
+        {%- if key_and_value.size > 1 -%}
+            {% if key_and_value[0] == 'name' %}
+                {%- assign param_page = key_and_value[1] -%}
+            {% endif%}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endfor -%}
+
+
+<div class="ed-cat-post-head">
+    <div class="h-wrap">
+        <h2>By {{ param_page }}</h2>
+    </div>
+</div>
+
+<div class="blog__listing">
+    <div class="blog__inner">
+    {% for link in linklists.blogs.links %}
+    {% assign blog = link.object %}
+    {% for article in blog.articles %}
+        {% if article.author == param_page %}
+        <article class="article">
+            <header class="article__head">
+
+                {% if article.image %}
+                    <figure class="animate">
+                        <a href="{{ article.url }}">
+                            {{article.image | image_url: width: 1800 | image_tag: width: 1000, alt: article.title, fetchpriority: 'low', loading: 'lazy' }}
+                        </a>
+                    </figure>
+                {% else %}
+
+                    {% assign hero_image = '' %}
+                    {% assign html_tags = article.excerpt_or_content | split: '<' %}
+                    {% for html_tag in html_tags %}
+                        {% assign img_check = html_tag | slice: 0,3 %}
+                        {% if img_check == 'img' %}
+                            {% assign img_tag = html_tag | split: '>' %}
+                            {% assign hero_image = '<' | append: img_tag.first | append: '>' %}
+                            {% break %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if hero_image.size > 0 %}
+                    <div class="hero-image-new"><a href="{{ article.url }}"> {{ hero_image }}</a></div>
+                        {% else %}
+                        <a href="{{ article.url }}"><img src="{{ 'no-image.gif' | img_url: '1000x' }}" alt="" fetchpriority="low" loading="lazy" /></a>
+                 
+                    {% endif %}
+
+                {% endif %}
+            </header>
+                <div class="article__body ed-cat-slide-info">
+                    <div class="type">
+                        <a href="/blogs/{{article.handle | split: '/' | first }}">{{article.handle | split: '/' | first }}</a>
+                    </div>
+
+                    <h4 class="article__title">
+                        <a href="{{- article.url -}}">
+                            {{ article.title |truncate: 62 }}
+                        </a>
+                    </h4><!-- /.article__title -->
+
+                    <p class="desc">{{ article.excerpt |truncate: 62 }}</p>
+                </div><!-- /.article__body -->
+            </article>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+</div>
+    
+    
+</div><!-- /.blog__listing -->
+
+
+
+{% comment %}
+start
+{% for blog in blogs %}
+    {% for article in blog.articles %}
+        {{ article.title }}
+    {% endfor %}
+{% endfor %}
+
+		{% for blog in blogs %}
+            {{ blog.title }}
+        {% endfor %}
+end
+
+
+{% assign category = 'news' %}
+{% unless blogs[category].empty? or blogs[category].articles.size == 0 %}
+    {% for article in blogs[category].articles %}
+        {{ article.title }}
+    {% endfor %}
+{% endunless %}
+
+{% for article in blogs.articles limit:15 %}
+    {{ article.title }}
+{% endfor %}
+
+{% assign pageurl = content_for_header | split:'"pageurl":"' | last | split:'"' | first %}
+{{ pageurl }}
+
+{% for link in linklists.blogs.links %}
+    {% assign blog = link.object %}
+    {{ blog.title }}
+    <p>{{ blog.metafields.blog.description }}</p>
+    {% for article in blog.articles %}
+        {{ article.author }}
+        <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
+    {% endfor %}
+{% endfor %}
+{% endcomment %}
+		
+	</div>
+</div>
+</div>

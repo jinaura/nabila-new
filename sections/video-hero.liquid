@@ -1,0 +1,234 @@
+<!-- container video -->
+<container class="lslp_video-container">
+
+	<!-- video -->
+	<video autoplay="autoplay" loop="" muted="muted" webkit-playsinline="" playsinline="" class="video" id="theplayer" type="video/mp4" width="100%" height="auto" style="display:block; margin:0 ; padding: 0;"><source src="{{ section.settings.video }}" type="video/mp4">
+	</video>
+		
+	<!-- volume on/off -->
+	<input type="checkbox" id="volume-switcher">
+	<label id="switcher-container" for="volume-switcher"></label> 
+	<input type="checkbox" id="pause-play-switcher">
+	<label id="pause-play-switcher-container" for="pause-play-switcher"></label> 
+
+    <div class="video-hero_text-container">
+        <div class="video-hero_heading">{{ section.settings.heading }}</div>
+        <div class="video-hero_sub-heading">{{ section.settings.sub-heading }}</div>
+        <a href="#vto-product-lipstick"><div class="video-hero_scroll-button"></div></a>
+    </div>
+
+</container>
+
+<style>
+
+    .lslp_video-container {
+            padding:0;
+            position: relative;
+            display: block; 
+            overflow: hidden; 
+            margin-bottom: 60px;
+        }
+        {% if section.settings.check-vid-vh == true %}
+            @media (min-width:767px){
+                .lslp_video-container {
+                    height: {{ section.settings.video_vh }}vh;
+                }
+            }
+        {% endif %}
+        @media (max-width:767px){
+            .lslp_video-container {
+                height: 60vh;
+                margin-bottom: 36px;
+            }
+        }
+
+    .lslp_video-container video{
+        display: block;
+        position: relative;
+        border: 0; 
+        padding: 0; 
+        object-fit: cover;
+        height: 100%
+    }
+
+    .video-hero_text-container{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        text-align: center;
+    }
+    @media (max-width:767px){
+        .video-hero_text-container{
+            top: auto;
+            bottom: 0%;
+            white-space: nowrap;
+        }
+    }
+    .video-hero_text-container .video-hero_heading {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: 1.43px;
+    }
+    @media (max-width:767px){
+        .video-hero_text-container .video-hero_heading {
+            font-size: 18px;
+        }
+    }
+    .video-hero_text-container .video-hero_sub-heading {
+        font-size: 14px;
+        margin-bottom: 23px;
+        font-weight: 600;
+        letter-spacing: 1.43px;
+    }
+    .video-hero_text-container .video-hero_scroll-button{
+        width: 15px;
+        height: 15px;
+        border-left: 1px solid;
+        border-bottom: 1px solid;
+        transform: rotate(-45deg);
+        margin: 0px auto;
+        cursor: pointer;
+    }
+
+
+
+
+
+    #volume-switcher, #pause-play-switcher {
+        display: none; 
+    }
+
+
+    #switcher-container {
+        display:block;
+        position: absolute;
+        top:0; 
+        cursor: pointer;
+        -webkit-transition: all 0.3s ease-in;
+        -moz-transition: all 0.3s ease-in;
+        transition: all 0.3s ease-in 0s;
+    }
+    #pause-play-switcher-container{
+        display:block;
+        position: absolute;
+        top:0; 
+        cursor: pointer;
+        -webkit-transition: all 0.3s ease-in;
+        -moz-transition: all 0.3s ease-in;
+        transition: all 0.3s ease-in 0s;
+    }
+    @media (min-width:767px){
+        #switcher-container {
+
+            top:auto;
+            bottom: 90px;
+            left: 62px;
+ 
+        }
+        #pause-play-switcher-container{
+            top: auto;
+            bottom: 60px;
+            left: 32px
+        }
+    }
+
+    /* volume on : button */ 
+    #switcher-container:after {
+        content: "";
+        border: 0px solid black;
+        background: url({{ 'sound-off-icon.png' | asset_url }}) center center;
+        background-size: 100%;
+        top: 40px;
+        left: 10px;
+        position: absolute;
+        width: 23px;
+        height: 20px;
+    }
+    #pause-play-switcher-container:after  {
+        content: "";
+        border: 0px solid black;
+        background: url({{ 'pause.png' | asset_url }}) center center;
+        background-size: 100%;
+        top: 10px;
+        left: 10px;
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        filter: invert(1)
+    }
+
+
+    /* volume off : button */
+    #volume-switcher:checked + #switcher-container:after {
+        right: 10px;
+        content: "";
+        background: url({{ 'sound-on-icon.png' | asset_url }}) center center;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        width: 18px;
+    }
+    #pause-play-switcher:checked + #pause-play-switcher-container:after {
+        right: 10px;
+        content: "";
+        background: url({{ 'play-button.png' | asset_url }}) center center;
+        background-size: 100%;
+        filter: invert(1);
+        width: 18px;
+    }
+</style>
+
+<script>
+    document.querySelector("#volume-switcher").onchange = function() {
+        document.querySelector("#theplayer").muted = !this.checked;
+    }     
+    document.querySelector("#pause-play-switcher").onchange = function() {
+        if (this.checked){
+            document.querySelector("#theplayer").pause();
+        }else{
+            document.querySelector("#theplayer").play();
+        }
+    }           
+</script>
+
+
+{% schema %}
+{
+    "name":"Video Hero",
+    "settings": [
+
+        {
+          "type": "text",
+          "id": "video",
+          "label": "Video URL"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Hero Heading"
+        },
+        {
+            "type": "html",
+            "id": "sub-heading",
+            "label": "Hero Sub-Heading"
+        },
+        {
+            "type": "checkbox",
+            "id": "check-vid-vh",
+            "label": "Use Custom Height for Desktop Video"
+        },
+        {
+            "type": "range",
+            "id": "video_vh",
+            "min": 50,
+            "max": 100,
+            "step": 1,
+            "unit": "vh",
+            "label": "Desktop Video Height",
+            "default": 100,
+            "info": "This is relative to the height of your screen, 100vh means 100% of the height of your screen."
+        }
+    ]
+ }
+{% endschema %}

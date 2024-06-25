@@ -1,0 +1,144 @@
+{% liquid
+assign collection = collections["virtual-try-on"]
+
+assign page_name = "/pages/" | append: handle | append: "/"
+assign path_parts = request.path | split: page_name
+assign parts_count = path_parts | size
+
+if parts_count == 2 and path_parts[0] == ''
+assign product_handle = path_parts[1]
+endif
+
+if product_handle
+for possible_product in collection.products
+unless possible_product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB'
+unless possible_product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB'
+if possible_product.handle == product_handle
+assign product = possible_product
+break
+endif
+endunless
+endunless
+endfor
+endif
+
+if product
+comment
+Would be nice if liquid had a way to check if something was nil, rather than just if something was not nil
+endcomment
+else
+for possible_product in collection.products
+if possible_product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB'
+continue
+elsif possible_product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB'
+continue
+else
+assign product = possible_product
+break
+endif
+endfor
+endif
+%}
+
+{%- include 'pdp-start' -%}
+
+{{ 'react-index.css' | asset_url | stylesheet_tag }}
+{% comment %} Include VTO page specific styles afterwards so that they are not overwritten {% endcomment %}
+{{ 'react-vto-only.css' | asset_url | stylesheet_tag }}
+
+<div id="product" class="product__container">
+  <div class="container">
+    <div class="top">
+      <h2 class="title">Virtual Try-On</h2>
+      <hr id="thick-line">
+      <p class="try-on-your-favourite">
+        Explore shades virtually to find the perfect hue.
+      </p>
+      <hr id="thin-line">
+    </div>
+    <div class="flex-row product__top">
+      {%- include 'collection-images', mobile:true, collection:collection -%}
+      {%- include 'pdp-info', mobile:true, see_more:false, show_reviews:false -%}
+      <div class="product_page_wrapper">
+        {% assign product_image = active_variant.image | default: product.featured_image %}
+        {{product_image | image_url: width: 2400 | image_tag: width: 1160, height: 1160, id: 'placeholder_image', alt:
+        product_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+        <div id="react-root"></div>
+      </div>
+      {%- include 'collection-images', mobile:false, collection:collection %}
+      <div class="product__entry">
+        {%- include 'pdp-info', mobile:false, see_more:false, show_reviews:false -%}
+        <hr class="divider--end hidden-xs">
+        {%- assign color_option = "option" | append: product.options_by_name['Color'].position %}
+        {%- assign size_option = "option" | append: product.options_by_name['Size'].position %}
+        {% form 'product', product, class: "form product__form", data-productid: product.id, onsubmit: "return false;"
+        %}
+        {%- include 'variant.list', dont_find_shade:true -%}
+        <hr class="divider--start">
+        <a href="{{ product.url }}#details" class="see-more">See Product Details</a>
+        <hr class="divider--end">
+
+        {% assign coming_soon_uk = false %}
+        {% if product.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+        {% assign coming_soon_uk = true %}
+        {% endif %}
+
+        <div class="inner-form">
+          <div class="flex-row justify">
+            <div
+              class="form__foot {% if shop.metafields.globals.coming_soon == 'true' or product.metafields.product.coming_soon or active_variant.metafields.visibility.coming_soon or coming_soon_uk %} have_coming__btn {%- endif -%}">
+              {%- include 'size-select' -%}
+              {%- include 'buy-button', main: true, classes:'' -%}
+            </div><!-- /.form__foot -->
+          </div><!-- /.flex-row justify -->
+          <div
+            class="notify_when_available {% unless active_variant.available %} unavailable{% endunless %} {% if product.metafields.product.coming_soon or active_variant.metafields.visibility.coming_soon or coming_soon_uk %} unavailable{% endif %}">
+            <a class="see-more" data-micromodal-trigger="modal-back-in-stock" href='#'>Sign up to be notified when this
+              product is available</a>
+          </div>
+        </div><!-- /.inner-form -->
+        {% endform %}
+        {%- include 'pdp-back-in-stock' -%}
+      </div> <!-- /.product__entry -->
+    </div><!-- /.product__top -->
+  </div><!-- /.flex-row -->
+</div><!-- /#product.product__container -->
+
+<script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function (e) {
+    MicroModal.init();
+    const observeUrlChange = () => {
+      const body = document.querySelector('body');
+      const currentUrl = document.location.href;
+      const observer = new MutationObserver((mutations, me) => {
+        mutations.forEach(() => {
+          const prodTitle = document.location.href.split('/')[5];
+          if (prodTitle) {
+            const prodTitleShort = prodTitle.split('-').pop();
+            const firstLetterCap = prodTitleShort.charAt(0).toUpperCase();
+            const remainingLetters = prodTitleShort.slice(1);
+            const productTitle = `${firstLetterCap}${remainingLetters}`;
+            const currentTitleArray = document.title.split('|');
+            let newTitle;
+            if (currentTitleArray[3]) {
+              newTitle = `${currentTitleArray[0]} | ${productTitle} | ${currentTitleArray[2]} | ${currentTitleArray[3]}`;
+            } else {
+              newTitle = `${currentTitleArray[0]} | ${productTitle} | ${currentTitleArray[1]} | ${currentTitleArray[2]}`;
+            }
+
+            if (document.title != newTitle) {
+              document.title = newTitle;
+              return;
+            }
+          }
+        });
+      });
+      observer.observe(body, { childList: true, subtree: true });
+    };
+
+    window.onload = observeUrlChange;
+  });
+</script>
+
+{%- include 'pdp-end', collection: collection -%}

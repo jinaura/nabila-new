@@ -1,0 +1,205 @@
+<section id="{{ section.settings.nav_id | remove: "#"}}">
+
+  <div class="eyeLP">
+    <div class="container">
+      <div class="pro">
+        {% assign product =  all_products[section.settings.eye_product] %}
+        <div class="lp-variant-selector ">
+        {% include 'variant-selector-without-shutter' with product %}
+        </div>
+      </div>
+
+      <div class="pro-media hidden-xs hidden-sm">
+          {%- include 'eye-product-media' -%}
+      </div>
+
+      <div class="pro-tabs selfAlignStart">
+
+        <ul class="product-card-tabs">
+          <li><a href="{{ section.settings.product_card_nav1 }}" class="subnav_content_link " data-id="{{section.id}}_1" oncontextmenu="return false;">{{ section.settings.product_card_nav1 }}</a></li>
+          <li><a href="{{ section.settings.product_card_nav2 }}" class="subnav_content_link " data-id="{{section.id}}_2" oncontextmenu="return false;">{{ section.settings.product_card_nav2 }}</a></li>
+        </ul>
+        <div class="content_container">
+          <div id="content_div{{section.id}}_1" class="content_div">
+            <div class="content_media">
+            {% if section.settings.product_card_image1 != '' and section.settings.custom_desktop_video_url1 == '' %}
+            <img class="animate" src="{{ section.settings.product_card_image1 | img_url: '500x500' ,scale:2}}" alt="{{ section.settings.product_card_image1.alt }}" fetchpriority="low" loading="lazy">
+            {% else %}
+            <video id="video-{{section.id}}-1" muted loop autoplay preload="auto" playsinline="true" webkit-playsinline="true" width="100%" height="100%" data-setup='{"width": 300, "height": 250}'>
+              <source src="{{ section.settings.custom_desktop_video_url1 }}" type='video/mp4' />
+            </video>
+            <div class="hide">{{ section.settings.custom_desktop_video_description1 }}</div>
+
+            <div class="player-controls {% if section.settings.controle_alignment %} {{ section.settings.controle_alignment }} {% endif %}" id="pControl-{{section.id}}-1">
+              <button class="play">{% render 'svg-icons' with 'play' %}</button>
+              <button class="pause">{% render 'svg-icons' with 'pause' %}</button>
+              <!-- <button class="volume">{% render 'svg-icons' with 'volume' %}</button> -->
+            </div>
+  
+            {% endif %}
+            </div>
+            <div class="descWrap">
+            <h4>{{ section.settings.product_card_title1 }}</h4>
+            <p>{{ section.settings.product_card_description1 }}</p>
+            </div>
+          </div>
+          <div id="content_div{{section.id}}_2" style="display: none;" class="content_div ">
+            <div class="content_media">
+            {% if section.settings.product_card_image2 != '' and section.settings.custom_desktop_video_url2 == '' %}
+            <img class="animate" src="{{ section.settings.product_card_image2 | img_url: '500x500' ,scale:2}}" alt="{{ section.settings.product_card_image1.alt }}" fetchpriority="low" loading="lazy">
+            {% else %}
+            <video id="video-{{section.id}}-2" muted loop autoplay preload="auto" playsinline="true" webkit-playsinline="true" width="100%" height="100%" data-setup='{"width": 300, "height": 250}'>
+              <source src="{{ section.settings.custom_desktop_video_url2 }}" type='video/mp4' />
+            </video>
+            <div class="hide">{{ section.settings.custom_desktop_video_description2 }}</div>
+            <div class="player-controls {% if section.settings.controle_alignment %} {{ section.settings.controle_alignment }} {% endif %}" id="pControl-{{section.id}}-2">
+              <button class="play">{% render 'svg-icons' with 'play' %}</button>
+              <button class="pause">{% render 'svg-icons' with 'pause' %}</button>
+              <!--<button class="volume">{% render 'svg-icons' with 'volume' %}</button>-->
+            </div>
+            {% endif %}
+            </div>
+            <div class="descWrap">
+            <h4>{{ section.settings.product_card_title2 }}</h4>
+            <p>{{ section.settings.product_card_description2 }}</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div> <!-- container -->
+  </div> <!-- eysLP -->
+
+</section>
+
+<script>
+  $(window).on('load', function(){
+    mediaControls('video-{{section.id}}-1', 'pControl-{{section.id}}-1');
+    mediaControls('video-{{section.id}}-2', 'pControl-{{section.id}}-2');
+  });
+</script>
+
+<style>
+  #shopify-section-{{ section.id }} .player-controls{bottom: 15px; left:0; position:absolute;}
+  #shopify-section-{{ section.id }} .player-controls.bottom-left{bottom: 15px; left:0;}
+  #shopify-section-{{ section.id }} .player-controls.bottom-right{bottom: 15px; right: 0; left: initial;}
+  #shopify-section-{{ section.id }} .player-controls.top-right{bottom: initial; left: initial; top: 15px; right: 10px;}
+  #shopify-section-{{ section.id }} .player-controls.top-left{bottom: initial; left: 0; top: 15px;}
+   .mobileVariant {display:none!important;}
+ .page--eye-collection-landing-page  .descWrap {min-height:100px}
+    @media only screen and (max-width: 767px) {
+      .desktopVariant {display:none!important;}
+      .mobileVariant {display:block!important;}
+    }
+</style>
+
+{% schema %}
+    {
+    "name": "Eye Collection",
+    "class": "eye-collextion-section",
+    "settings": [
+    {
+    "type": "url",
+    "id": "nav_id",
+    "label": "Navigation Id",
+    "info" : "Use the same value which is entered in the navigation link"
+    },
+    {
+    "type":"product",
+    "id":"eye_product",
+    "label":"Eye Product"
+    },
+    {
+    "type":"text",
+    "id":"product_card_nav1",
+    "label":"Card Navigation 1"
+    },
+    {
+    "type":"text",
+    "id":"product_card_title1",
+    "label":"Card Title 1"
+    },
+    {
+    "type":"richtext",
+    "id":"product_card_description1",
+    "label":"Card Description 1"
+    },
+    {
+    "type":"image_picker",
+    "id":"product_card_image1",
+    "label":"Card Image 1"
+    },
+    {
+    "type": "text",
+    "id": "custom_desktop_video_url1",
+    "label": "Desktop Custom  Video Url 1"
+    },
+    {
+    "type": "textarea",
+    "id": "custom_desktop_video_description1",
+    "label": "ADA - Desktop Custom Video Summary1"
+    },
+    {
+    "type":"text",
+    "id":"product_card_nav2",
+    "label":"Card Navigation 2"
+    },
+    {
+    "type":"text",
+    "id":"product_card_title2",
+    "label":"Card Title 2"
+    },
+    {
+    "type":"richtext",
+    "id":"product_card_description2",
+    "label":"Card Description 2"
+    },
+    {
+    "type":"image_picker",
+    "id":"product_card_image2",
+    "label":"Card Image 2"
+    },
+    {
+    "type": "text",
+    "id": "custom_desktop_video_url2",
+    "label": "Desktop Custom  Video Url 2"
+    },
+    {
+    "type": "textarea",
+    "id": "custom_desktop_video_description2",
+    "label": "ADA - Desktop Custom Video Summary2"
+    },
+    {
+        "type": "select",
+        "id": "controle_alignment",
+        "label": "Video Controls Alignment",
+        "default": "bottom-left",
+        "options": [
+        {
+            "label": "Top Left",
+            "value": "top-left"
+          },
+          {
+            "label": "Top Right",
+            "value": "top-right"
+          },
+          {
+            "label": "Bottom Left",
+            "value": "bottom-left"
+          },
+          {
+            "label": "Bottom Right",
+            "value": "bottom-right"
+          }
+        ]
+      }
+    ],
+    "presets": [
+        {
+        "name": "Eye Collection"
+        }
+    ]
+    }
+{% endschema %}

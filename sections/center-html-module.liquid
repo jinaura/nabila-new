@@ -1,0 +1,56 @@
+{% assign centerHtml = section.settings %}
+<div class="htmlModule" id="section-{{section.id}}">
+  <div class="emb {% if centerHtml.full_width %}full-width{% endif %}">
+    <div class="ratio_wrapper res-1320x745">{{ centerHtml.html }}</div>
+  </div>
+</div>
+
+<style>
+.htmlModule{
+  padding-top:80px;
+}
+.emb{
+  width:50%;
+  margin:auto;
+  
+}
+.emb.full-width{
+  width:100%;
+}
+
+@media (max-width:767px){
+  .htmlModule{padding-top:40px;}
+}
+</style>
+
+
+{% schema %}
+  {
+     "name":"Center Html Module",
+     "tag":"section",
+     "class":"container",
+     "settings":[
+        {
+           "type":"checkbox",
+           "id":"full_width",
+           "label":"Full Width",
+           "default":false
+        },
+        {
+           "type":"paragraph",
+           "content":"By default 50% of width ,Checked on the checkbox will give fullwidth"
+        },
+        {
+           "type":"html",
+           "id":"html",
+           "label":"Html",
+           "default":"Lorem Ipsum is simply dummy"
+        }
+     ],
+     "presets":[
+        {
+           "name":"Center Html - Article"
+        }
+     ]
+  }
+{% endschema %}

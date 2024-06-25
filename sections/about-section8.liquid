@@ -1,0 +1,183 @@
+{% assign css_class = section.settings.title | replace: ' ', '_' | downcase %}
+{% assign scroll_id = section.settings.scroll_id | downcase %}
+{% assign scroll_id = scroll_id | replace: ' ', '-'  %}
+
+<section class="{{css_class}} abt-dyn-s-8" id="{{ scroll_id }}">
+    <div class="container section__item no-pad-mobile">
+        <hr class="section__divider">
+
+        {% if section.settings.image %}<a href="{{ section.settings.button_link }}">{% endif %}
+            <div class="iframe-container fade-scroll">
+                {% if section.settings.image %}
+                {%- include 'lazyload-image' _image: section.settings.image, original_width: '675', additional_classes: 'responsive-iframe' -%}
+                {% elsif section.settings.video_url.type == 'youtube' %}
+                <iframe  class="responsive-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{section.settings.video_url.id}}?playlist={{section.settings.video_url.id}}&loop=1&autoplay=1&mute=1" title="{{section.settings.title}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                {% elsif section.settings.video_url.type == 'vimeo' %}
+                <iframe  class="responsive-iframe" width="560" height="315" src="https://player.vimeo.com/video/{{section.settings.video_url.id}}" title="{{section.settings.title}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                {% elsif section.settings.custom_video_url %}
+                <video
+                        id=""
+                        loop
+                        muted
+                        autoplay
+                        preload="auto"
+                        width="100%"
+                        height="100%"
+                        playsinline="true" webkit-playsinline="true"
+                        data-setup='{"width": 300, "height": 250}' class="responsive-iframe">
+                    <source src="{{ section.settings.custom_video_url }}" type='video/mp4' /></video>
+                    {% endif %}
+              
+              	<div class="live_text">
+                  {% if section.settings.live_text_1 != blank %}<h3>{{ section.settings.live_text_1 }}</h3>{% endif %}
+                  {% if section.settings.live_text_2 != blank %}<h3>{{ section.settings.live_text_2 }}</h3>{% endif %}
+              	</div>
+            </div>
+            {% if section.settings.image %}</a>{% endif %}
+
+    </div>
+</section>
+
+<style>
+    hr.divider--start{
+        padding-bottom: 1.8rem;
+    }
+
+    .abt-dyn-s-8 .iframe-container{
+        margin: 72px 0 0px 0;
+        /* padding-top:54.55%; */
+        padding-top:56.2%;
+    }
+    .abt-dyn-s-8 img.responsive-iframe,.abt-dyn-s-8 video.responsive-iframe{
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .abt-dyn-s-8 .beauty-sect-specs .s-wrap{
+        display: flex;
+        flex-wrap: wrap;
+        padding-bottom: 30px;
+        margin-left:-15px;
+        margin-right:-15px;
+
+    }
+
+    .abt-dyn-s-8  .beauty-sect-specs .s-wrap .s-col{
+        padding:0 15px;
+        width:25%;
+
+    }
+
+    .abt-dyn-s-8  .beauty-sect-specs .s-wrap .s-col p {
+        margin-bottom:5px;
+    }
+  
+ 	.live_text{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+  	.live_text > *{
+      flex:1 0 auto;
+      font-size:21px;
+      letter-spacing:1.5px;
+      margin-bottom:0px;
+      color:{{ section.settings.live_text_color }};
+      min-width: 50%;
+    }
+
+    @media (max-width:1023px){
+        .abt-dyn-s-8  .beauty-sect-specs .s-wrap .s-col{
+            width:33.3%;
+
+        }
+    }
+
+    @media (max-width:767px){
+        .abt-dyn-s-8 .iframe-container{
+            margin: 30px 0 28px 0;
+            /* padding-top:100%; */
+        }
+
+        .abt-dyn-s-8 .beauty-sect-specs {
+
+            overflow-x: auto;
+
+        }
+
+        .abt-dyn-s-8 .beauty-sect-specs-c {
+
+            width:767px;
+
+        }
+
+
+
+    }
+</style>
+
+{% schema %}
+    {
+    "name": "Section 8",
+    "class": "about-section8",
+    "settings": [
+    {
+    "type": "text",
+    "id": "scroll_id",
+    "label": "Section ID",
+    "info": "Use this field to insert the ID to link with the nav items and enable scroll to this section."
+    },
+    {
+    "type": "image_picker",
+    "id": "image",
+    "label": "Image"
+    },
+    {
+    "type": "text",
+    "id": "live_text_1",
+    "label": "Live text 1",
+    "default": "Extra"
+    },
+    {
+    "type": "text",
+    "id": "live_text_2",
+    "label": "Live text 2",
+    "default": "Ordinary"
+    },
+    {
+    "type": "color",
+    "id": "live_text_color",
+    "label": "Live text Color",
+    "default": "#ffffff"
+    },
+    {
+    "id": "video_url",
+    "type": "video_url",
+    "label": "Video URL",
+    "accept": ["youtube", "vimeo"]
+    },
+    {
+    "type": "text",
+    "id": "custom_video_url",
+    "label": "Custom Video Url"
+    },
+    {
+    "type": "text",
+    "id": "button_label",
+    "label": "Button Label",
+    "default": "Learn more"
+    },
+    {
+    "type": "url",
+    "id": "button_link",
+    "label": "Button link"
+    }
+    ]
+    }
+{% endschema %}

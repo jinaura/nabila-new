@@ -1,0 +1,22 @@
+<div class="size_select{% unless product.options_by_name["Size"].values.size > 0 %} d-none{% endunless %} {% if product.options_by_name["Size"].values.size == 1 %}single-size{% endif %}" onclick="window.shopData.handleSizeOnOpen(this)">
+    <span>{{ active_variant[size_option] }} </span>
+    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M10 14a.997.997 0 01-.707-.293l-5-5a.999.999 0 111.414-1.414L10 11.586l4.293-4.293a.999.999 0 111.414 1.414l-5 5A.997.997 0 0110 14z"
+            fill="#5C5F62"
+        />
+    </svg>
+    <div class="size_select_options_wrapper" data-open="false">
+        {%- for variant in product.variants -%}
+        <div
+            class="size_select_option"
+            onclick="window.shopData.handleSizeOptionOnClick(this)"
+            data-size="{{ variant.option1 }}"
+            data-selected="{% if active_variant[size_option] == variant.option1 %}true{% else %}false{% endif %}"
+            data-variant-id="{{variant.id}}"
+        >
+            {{ variant.option1 }}
+        </div>
+       {%- endfor -%}
+    </div>
+</div>

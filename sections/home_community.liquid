@@ -1,0 +1,267 @@
+{% assign css_class = section.settings.section_title | replace: ' ', '_' | downcase %}
+
+<section class="{{css_class}} h_shop__bundles__mainWrap shop_bundles section_spacing">
+    <article class="container section__item">
+        <h2 class="heading-with-link">{{ section.settings.section_title }} <a href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a></h2>
+        <hr class="section__divider" />
+        <div>{{ section.settings.description }}</div>
+        <hr class="divider--start">
+
+        <div data-crl8-container-id="homepage"></div>
+    </article>
+  	
+</section>
+
+<style>
+  #pageWrapper {
+    opacity: 1;
+    transition: opacity 300ms ease-out 700ms;
+  }
+
+  #pageWrapper.fadeout {
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+  }
+
+  #crl8-homepage-carousel .Eupuh,
+  #crl8-homepage-carousel .gyuXbe, 
+  #crl8-homepage-carousel .sc-5zmgce-0, 
+  #crl8-homepage-carousel-modal .sc-1c1xgjm-0, 
+  #crl8-homepage-carousel-modal .eqWKXO{
+    display:none;
+  }
+
+  #crl8-homepage-carousel [aria-label="Next slide - Media Carousel"],
+  #crl8-homepage-carousel [aria-label="Previous slide - Media Carousel"] {
+    padding:0 10px;
+  }
+
+  #crl8-homepage-carousel [aria-label="Next slide - Media Carousel"] > div,
+  #crl8-homepage-carousel [aria-label="Previous slide - Media Carousel"] > div {
+    display:none
+  }
+
+  #crl8-homepage-carousel [aria-label="Next slide - Media Carousel"]::before,
+  #crl8-homepage-carousel [aria-label="Previous slide - Media Carousel"]::before{
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 10px solid #545353;
+    border-radius: 1px;
+    display: block;
+  }
+  #crl8-homepage-carousel [aria-label="Previous slide - Media Carousel"]::before {
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-right: 10px solid var(--secondary-color);
+    border-left: 0;
+  }
+
+
+  .sc-1344o91-1 [aria-label="Next post"],
+  .sc-1344o91-1 [aria-label="Previous post"] {
+      padding:0 10px;
+  }
+
+  .sc-1344o91-1 .lxl4y8-0 {
+      display:none !important;
+  }
+
+  .sc-1344o91-1 [aria-label="Next post"]::before,
+  .sc-1344o91-1 [aria-label="Previous post"]::before{
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-left: 10px solid #545353;
+      border-radius: 1px;
+      display: block;
+  }
+  .sc-1344o91-1 [aria-label="Previous post"]::before {
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-right: 10px solid var(--secondary-color);
+      border-left: 0;
+  }
+  #crl8-homepage-carousel-modal .hlKcuJ:active::before, #crl8-homepage-carousel-modal .hlKcuJ:focus::before
+  {
+      border-top: 9px solid transparent !important;
+      border-bottom: 9px solid transparent !important;
+      border-left: 10px solid #545353 !important;
+      border-radius: 1px !important;
+      outline: none !important;
+      margin: 8px 0 0 4px !important;
+  }
+
+  #crl8-homepage-carousel-modal .iAjGCQ:active::before, #crl8-homepage-carousel-modal .iAjGCQ:focus::before {
+      margin: 8px 0 0 4px;
+  }
+
+  #crl8-homepage-carousel-modal .iAjGCQ:active::after, #crl8-homepage-carousel-modal .iAjGCQ:focus::after {
+      border: none;
+  }
+
+  #crl8-homepage-carousel-modal .hlKcuJ:active::after, #crl8-homepage-carousel-modal .hlKcuJ:focus::after {
+      border: none;
+  }
+
+  .sc-1344o91-1 [aria-label="Previous post"]::before {
+      border-top: 9px solid transparent!important;
+      border-bottom: 9px solid transparent!important;
+      border-right: 10px solid var(--secondary-color)!important;
+      border-left: 0!important;
+  }
+
+  #crl8-homepage-carousel-modal .eiBktt {
+      height: 75% !important;
+      width: 75% !important;
+  }
+
+  #crl8-homepage-carousel-modal .jKyrLb:active, #crl8-homepage-carousel-modal .jKyrLb:focus {
+      outline: none !important;
+  }
+
+
+
+
+  #crl8-homepage-carousel .zsa45s-0 button:focus,
+  #crl8-homepage-carousel .sc-4p2pym-0 button:focus {
+    outline: unset;
+  }
+  
+  #crl8-homepage-carousel button:focus, 
+  #crl8-homepage-carousel div:focus, 
+  #crl8-homepage-carousel img:focus, 
+  #crl8-homepage-carousel a:focus, 
+  #crl8-homepage-carousel-modal .dsmhVW:active, #crl8-homepage-carousel-modal .dsmhVW:focus, 
+  #crl8-homepage-carousel-modal .fZulUe:active, #crl8-homepage-carousel-modal .fZulUe:focus{
+    outline:none !important;
+  }
+  
+  #crl8-homepage-carousel .SZUkZ:active::before, #crl8-homepage-carousel .SZUkZ:focus::before, 
+  #crl8-homepage-carousel .SZUkZ:active::after, #crl8-homepage-carousel .SZUkZ:focus::after, 
+  #crl8-homepage-carousel-modal .eqWKXO{
+    display:none
+  }
+  
+  
+  @media(min-width: 1401px) {
+    #crl8-homepage-carousel {
+      margin: 0 -50px;
+    }
+
+    #crl8-homepage-carousel .zsa45s-0 {
+      right: 10px;
+    }
+
+    #crl8-homepage-carousel .sc-4p2pym-0 {
+      left: 10px;
+    }
+  }
+  
+  @media(min-width: 768px) and (max-width: 1400px){
+    #crl8-homepage-carousel {
+      margin: 0 -50px;
+    }
+
+    #crl8-homepage-carousel .zsa45s-0 {
+      right: 55px;
+    }
+
+    #crl8-homepage-carousel .sc-4p2pym-0 {
+      left: 55px;
+    }
+
+      #crl8-homepage-carousel-modal .ihHcav {
+          height: 10.8em !important;
+      }
+  }
+  
+@media (max-width:767px){
+#crl8-homepage-carousel .sc-1u8gxhy-0 {
+    z-index: 2;
+}
+.community.h_shop__bundles__mainWrap hr.divider--start{
+  padding:0;
+}
+#crl8-homepage-carousel{
+  margin-left: -35px;
+  margin-right: -15px;
+}
+#crl8-homepage-carousel .eAaVxo{
+  padding:0;
+}
+
+#crl8-homepage-carousel [aria-label="Previous slide - Media Carousel"]{
+  margin-left: 10px;
+}
+
+
+#crl8-product-carousel .zsa45s-0 {
+  right: 14px;
+}
+
+#crl8-product-carousel .sc-4p2pym-0 {
+  left: 9px;
+}
+
+#crl8-homepage-carousel-modal .GBpwp{
+  outline:none;
+  padding:0;
+}
+
+}
+</style>
+
+<script>
+  $(document).ready(function() {
+
+    $('#crl8-homepage-carousel').click(function(e) {
+      if ($('.gSgHeR')[0] !== e.target && $('.iA-DsCJ')[0] !== e.target) { 
+        return;
+      } else {
+        $('#pageWrapper').addClass('fadeout');
+      }
+    });
+
+    $('#crl8-homepage-carousel-modal').click(function(e) {
+      if ($('.hUupgC')[0] !== e.target  && $('.jKyrLb')[0] !== e.target) { 
+        return;
+      } else {
+        $('#pageWrapper').removeClass('fadeout');
+      }
+    });
+
+  });
+</script>
+
+
+{% schema %}
+    {
+    "name": "Home Community",
+    "class": "home-community",
+    "settings": [
+    {
+    "type": "text",
+    "id": "section_title",
+    "label": "Title",
+    "default": "Community"
+    },
+    {
+    "type": "richtext",
+    "id": "description",
+    "label": "Description",
+    "default": "<p>Snap, share and inspire by tagging @roseinc #roseinc.﻿</p>"
+    }
+    ],
+    "presets": [
+    {
+    "name": "Home Community",
+    "category": "Text"
+    }
+    ]
+    }
+{% endschema %}

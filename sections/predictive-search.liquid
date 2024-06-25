@@ -1,0 +1,66 @@
+{%- if predictive_search.performed -%}
+
+    {% if predictive_search.resources.products.size >= 1 or predictive_search.resources.articles.size >= 1 %}
+        <div class="result-details">
+        <p>Top Results</p> <p><a href="/search?q={{ predictive_search.terms | escape }}">View All Results</a></p>
+        </div>
+    {% endif %}
+
+    <div id="predictive-search-results" class="popular-product-search-wrap" >
+
+    {% if predictive_search.terms contains 'xyz' %}
+      <h3 class="predictive-search__heading">No results found </h3>
+    {% elsif predictive_search.resources.products.size < 1 and predictive_search.resources.articles.size < 1  %}
+        {% include 'search-no-result' %}
+    {% endif %}
+
+    {%- if predictive_search.resources.products.size > 0 -%}
+
+        {%- for product in predictive_search.resources.products -%}
+        <div class="popular-product-item">
+            <div class="p-image">
+                <a href="{{ product.url }}"><img src="{{product.featured_image | img_url: '600x'}}" alt="{{ product.featured_image.alt }}"></a>
+            </div>
+
+            <div class="p-type">
+                <p>{{ product.type }}</p>
+            </div>
+
+            <div class="p-title">
+                <a href="{{ product.url }}"><h3>{{ product.title }}</h3></a>
+            </div>
+
+
+            <div class="p-price">
+                <h3>{{ product.price | money_without_trailing_zeros }}</h3>
+            </div>
+        </div>
+        {% endfor %}
+    {%- endif -%}
+    
+    {%- if predictive_search.resources.articles.size > 0 -%}
+    {%- for article in predictive_search.resources.articles -%}
+        <div class="popular-product-item">
+            <div class="p-image">
+                <a href="{{ article.url }}"><img src="{{article.image | img_url: '600x'}}" alt="{{ article.image.alt }}"></a>
+            </div>
+
+            <div class="p-type">
+                <p>Article</p>
+            </div>
+
+            <div class="p-title">
+                <a href="{{ article.url }}"><h3>{{ article.title }}</h3></a>
+            </div>
+
+        </div>
+    {% endfor %}
+    {%- endif -%}
+
+  </div>
+    <style>
+        .isActiveSearch{
+            height: 80%;
+        }
+    </style>
+{%- endif -%}

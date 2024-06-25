@@ -1,0 +1,163 @@
+<section class="editioral-cat-posts">
+    <div class="container">
+
+
+        <div class="ed-cat-post-head">
+            <div class="h-wrap">
+                <h2>{{ section.settings.article_category4 }}</h2>
+                <div class="ed-post-alllink"><a href="/blogs/{{ section.settings.article_category4 }}">{{
+                        section.settings.button_label }}</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="ed-cat-post-desc">
+
+            <div class="ed-cat-post-desc-wrap">{{ section.settings.description }}</div>
+        </div>
+
+
+    {% assign featured_article4 = articles[section.settings.featured_article4] %}
+
+    {% capture ifNofeaturedImg %}
+    {% assign hero_image = '' %}
+    {% assign html_tags = featured_article1.excerpt_or_content | split: '<' %}
+        {% for html_tag in html_tags %}
+            {% assign img_check = html_tag | slice: 0,3 %}
+            {% if img_check == 'img' %}
+                {% assign img_tag = html_tag | split: '>' %}
+                {% assign hero_image = '<' | append: img_tag.first | append: '>' %}
+                {% break %}
+            {% endif %}
+        {% endfor %}
+
+        {% if hero_image.size > 0 %}
+        <figure class="animate img-wrap"><a href="{{ featured_article3.url }}">
+            <div class="hero-image-new">{{ hero_image }}</div>
+        </a></figure>
+        {% endif %}
+    {% endcapture %}
+
+    <article class="ed-cat-article">
+        {% if featured_article4.image %}
+            <figure class="animate img-wrap"><a href="{{ featured_article4.url }}"><img
+                src="{{ featured_article4.image | img_url: '1350x', scale: 2 }}" fetchpriority="low" loading="lazy"></a></figure>
+       
+            {% else %}
+            {{ ifNofeaturedImg }}
+        {% endif %}
+        <div class="ed-cat-article-info">
+            <!-- <span class="type"><a
+                    href="/blogs/{{featured_article2.handle | split: '/' | first }}">{{featured_article2.handle |
+                    split: '/' | first }}</a></span> -->
+            <h3><a href="{{ featured_article4.url }}">{{ featured_article4.title |truncate: 62 }}</a></h3>
+            <span class="auther">{{ featured_article4.author }}</span>
+        </div>
+
+
+    </article>
+
+
+ 
+        <div class="ed-cat-slider-wrap">
+            <div id="article-category4" class="ed-cat-slider">
+        {% for article in blogs[section.settings.article_category4].articles %}
+
+            {% capture ifNofeaturedImg %}
+            {% assign hero_image = '' %}
+            {% assign html_tags = article.excerpt_or_content | split: '<' %}
+                {% for html_tag in html_tags %}
+                    {% assign img_check = html_tag | slice: 0,3 %}
+                    {% if img_check == 'img' %}
+                        {% assign img_tag = html_tag | split: '>' %}
+                        {% assign hero_image = '<' | append: img_tag.first | append: '>' %}
+                        {% break %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if hero_image.size > 0 %}
+                <figure class="animate">
+                    <a href="{{ article.url }}">
+                        <div class="hero-image-new">{{ hero_image }}</div>
+                    </a>
+                </figure>
+                {% else %}
+                <figure class="animate">
+                    <a href="{{ article.url }}"> <img src="{{ 'no-image.gif' | img_url: '1000x' }}" alt="" fetchpriority="low" loading="lazy" />
+                    </a>
+                </figure>
+                {% endif %}
+            {% endcapture %}
+
+            <article >
+                {% if article.image %}
+                    <figure class="animate"><a href="{{ article.url }}"><img
+                        src="{{ article.image | img_url: '1000x' }}" fetchpriority="low" loading="lazy"></a></figure>
+                
+                    {% else %}
+                    {{ ifNofeaturedImg }}
+                {% endif %}
+                <div class="ed-cat-slide-info">
+                    <span class="type"><a
+                            href="/blogs/{{article.handle | split: '/' | first }}">{{article.handle |
+                            split: '/' | first }}</a></span>
+                    <h3><a href="{{ article.url }}">{{ article.title | truncate: 100 }}</a></h3>
+                    <div class="desc"><a href="{{ article.url }}">{{ article.excerpt | truncate: 100 }}</a>
+                    </div>
+
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+    </div>
+
+    </div>
+</section>
+
+
+<script>
+    $('#article-category4').slick({"slidesToShow": 3, infinite: false, 
+        responsive: [
+    {
+      
+    
+      breakpoint: 767,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+      }
+    }
+  
+  ]});
+</script>
+
+{% schema %}
+    {
+    "name": "Article Category 4",
+    "class": "article_category4",
+    "settings": [
+    {
+    "type": "richtext",
+    "id": "description",
+    "label": "Description",
+    "default": "<p>Description</p>"
+    },
+    {
+    "type": "text",
+    "id": "button_label",
+    "label": "Button Label",
+    "default": "See more"
+    },
+    {
+    "type": "article",
+    "id": "featured_article4",
+    "label": "Featured Article"
+    },
+    {
+    "type": "blog",
+    "id": "article_category4",
+    "label": "Article Category 4"
+    }
+    ]
+    }
+{% endschema %}

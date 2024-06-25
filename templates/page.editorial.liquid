@@ -1,0 +1,197 @@
+<div class="page-editorial-main">
+    {{ 'slick.js'  | asset_url | script_tag     }}
+
+    {% comment %}{%- section 'editorial-navigation' -%} {% endcomment %}
+    {%- include 'editorial-subnavigation' -%}
+
+    {%- section 'editorial-hero-article' -%}
+
+    {% for link in linklists.blogs.links %}
+        {% assign blogs = link.object %}
+        <section class="editioral-cat-posts">
+            <div class="container">
+                <div class="ed-cat-post-head">
+                    <div class="h-wrap">
+                        <h2>{{ blogs.title }}</h2>
+                        <div class="ed-post-alllink">
+                            <a href="/blogs/{{ blogs.handle }}">See all {{ blogs.title | capitalize }}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ed-cat-post-desc">
+
+                    <div class="ed-cat-post-desc-wrap">{{ blogs.metafields.blog.description }}</div>
+                </div>
+
+                {% for article in blogs.articles %}
+                {% assign first_article = true %}
+                {% for tag in article.tags %}
+                    {% if tag == 'hide_for_user' %}
+                        {% assign first_article = false %}
+                    {% endif %}
+                {% endfor %}
+
+                    {% if first_article == true %}
+                    {% capture ifNofeaturedImg %}
+                    {% assign hero_image = '' %}
+                    {% assign html_tags = article.excerpt_or_content | split: '<' %}
+                        {% for html_tag in html_tags %}
+                            {% assign img_check=html_tag | slice: 0,3 %} {% if img_check=='img' %}
+                            {% assign img_tag=html_tag | split: '>' %}
+                            {% assign hero_image='<' | append: img_tag.first | append: '>' %}
+                            {% break %}
+                        {% endif %}
+                        {% endfor %} {%
+                        if hero_image.size> 0 %}
+                        <figure class="animate img-wrap"><a href="{{ article.url }}"><div class="hero-image-new">{{ hero_image }}</div></a></figure>
+                    {% endif %}
+                    {% endcapture %}
+
+                    <article class="ed-cat-article">
+                        {% if article.image %}
+                            <figure class="animate img-wrap"><a href="{{ article.url }}">
+                                {%- include 'lazyload-image' _image: article.image, original_width: '675' -%}
+                            </a></figure>
+                        {% else %}
+                            {{ ifNofeaturedImg }}
+                        {% endif %}
+                        <div class="ed-cat-article-info">
+                            <h3><a href="{{ article.url }}">
+                                    {{ article.title |truncate: 62 }}
+                                </a></h3>
+
+                            {% assign checkTagAuthor = '' %}
+                            {% for tag in article.tags %}
+                                {% assign words = tag | split: '-'   %}
+                                {% assign first_word =  words[0] | downcase %}
+                                {% assign blog_title = blog.title | downcase %}
+                                {% if first_word == 'author' %}
+                                    <span class="auther">By {{ words[1] | capitalize }}</span>
+                                    {% assign checkTagAuthor = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if checkTagAuthor == '' %}
+                                <span class="auther">By {{ article.author | capitalize}}</span>
+                            {% endif %}
+                        </div>
+                    </article>
+                    {% break %}
+                    {% endif %}
+
+                {% endfor %}
+
+
+                <div class="ed-cat-slider-wrap">
+                    <div  class="ed-cat-slider article-category">
+
+                        {% assign counter = 1 %}
+                        {% for article in blogs.articles %}
+                            {% assign check_article = true %}
+                            {% for tag in article.tags %}
+                                {% if tag == 'hide_for_user' %}
+                                    {% assign check_article = false %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if check_article == true  %}
+                            {% if counter > 1  %}
+                                {% capture ifNofeaturedImg %}
+                                {% assign hero_image = '' %}
+                                {% assign html_tags = article.excerpt_or_content | split: '<' %} {% for html_tag in html_tags %} {%
+                                    assign img_check=html_tag | slice: 0,3 %} {% if img_check=='img' %} {% assign img_tag=html_tag |
+                                    split: '>' %} {% assign hero_image='<' | append: img_tag.first | append: '>' %} {% break %} {%
+                                    endif %} {% endfor %} {% if hero_image.size> 0 %}
+                                    <figure class="animate">
+                                        <a href="{{ article.url }}">
+                                            <div class="hero-image-new">{{ hero_image }}</div>
+                                        </a>
+                                    </figure>
+                                {% else %}
+                                    <figure class="animate">
+                                        <a href="{{ article.url }}"> 
+                                        {%- include 'lazyload-image' _image: 'no-image.gif', original_width: '500' -%}
+                                        </a>
+                                    </figure>
+                                {% endif %}
+                                {% endcapture %}
+
+                                <article>
+
+                                    {% if article.image %}
+                                        {% if article.metafields.article.tile_image[0].src  %}
+                                            <figure class="animate"><a href="{{ article.url }}">
+                                                {%- include 'lazyload-image' _image: article.metafields.article.tile_image[0].src, metafield_image -%}
+                                            </a></figure>
+                                        {% else %}
+                                            <figure class="animate"><a href="{{ article.url }}">
+                                                {%- include 'lazyload-image' _image: article.image, original_width: '500' -%}
+                                            </a></figure>
+                                        {% endif %}
+
+                                    {% else %}
+                                        {{ ifNofeaturedImg }}
+                                    {% endif %}
+
+                                    <div class="ed-cat-slide-info">
+                                <span class="type"><a
+                                            href="/blogs/{{article.handle | split: '/' | first }}">{{article.handle |
+                                        split: '/' | first }}</a></span>
+                                        <h3><a href="{{ article.url }}">{{ article.title | strip_html | truncate: 100 }}</a></h3>
+                                        <div class="desc"><a href="{{ article.url }}">{{ article.excerpt | strip_html | truncate: 100 }}</a>
+                                        </div>
+
+                                    </div>
+                                </article>
+                            {% endif %}
+
+                                {% assign counter = counter | plus:1 %}
+                            {% endif %}
+
+                            {% if counter == 10 %}
+                                {% break %}
+                            {% endif %}
+
+                        {% endfor %}
+
+
+                        <article class="ed-cat-slide-seemore">
+                            <figure class="animate animated">
+                                <a href="/blogs/{{ blogs.handle }}">
+                                    <span class="txt-seemore">
+                                        See More
+                                    </span>
+                                </a>
+                            </figure>
+
+                        </article>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    {% endfor %}
+
+</div>
+
+<script>
+    $('.article-category').slick({
+
+        "slidesToShow": 3, infinite: false,
+
+        responsive: [
+            {
+
+
+                breakpoint: 767,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                }
+            }
+
+        ]
+
+
+    });
+</script>

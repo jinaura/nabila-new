@@ -1,0 +1,302 @@
+{% assign s = section.settings %}
+{% assign productIncluded = false %}
+{% assign productIncluded_Class = '' %}
+
+{% for block in section.blocks %}
+	{% if block.type == 'product' %}
+		{% assign getLen = block.type | size %}
+		{% if getLen > 0 %}
+			{% assign productIncluded = true %}
+		{% endif %}
+	{% endif %}
+{% endfor %}
+
+
+<section class="textImageModule carousel {{ s.carousel_type }}" id="section-{{section.id}}">
+  {% assign sectionId = section.id %}
+  {% assign imageRatio = 'res-400x500' %}
+  {% assign slidesToShow = 1 %}
+
+  {% unless s.carousel_type == 'fullwidth_carousel' or s.carousel_type == 'grid_carousel' %}
+    <div class="content-info">
+      <h2 class="heading">{{ s.title }}</h2>
+      <p>{{ s.desc }}</p>
+    </div>
+  {% endunless %}
+
+  {% if s.carousel_type == 'fullwidth_carousel'%}
+    {% assign imageRatio = 'res-1320x720' %}
+    {% assign slidesToShow = 1 %}
+  {% endif %}
+
+  {% if s.carousel_type == 'grid_carousel'%}
+    {% assign slidesToShow = 3 %}
+  {% endif %}
+
+  {% capture sliderSettings_sectionId %}
+    data-slick='{
+    "slidesToShow": {{ slidesToShow }},
+    "slidesToScroll": {{ slidesToShow }},
+    "dots": {{ s.dots }},
+    "infinite": true,
+    "arrows": {{ s.arrows }},
+    "autoplay": false,
+    "adaptiveHeight": false,
+    "speed": 500,
+    "centerMode": false,
+    "centerPadding": "1px",
+    "responsive": [
+    {
+    "breakpoint": 768,
+    "settings":{
+    "slidesToShow": 1,
+    "slidesToScroll": 1
+    }
+    },
+    {
+    "breakpoint": 1024,
+    "settings":{
+    "slidesToShow": 1,
+    "slidesToScroll": 1
+    }
+    }
+    ]
+    }'
+  {% endcapture %}
+  
+ 
+  {% if productIncluded %}
+  	{% assign productIncluded_Class = "imageWithProduct" %}
+  {% else %}
+  	{% assign productIncluded_Class = "ratio_wrapper " | append: imageRatio %}
+  {% endif %}
+
+  <div class="image text-left">
+    <div class="commonSlider collection__items" {{ sliderSettings_sectionId }}>
+      {% for block in section.blocks %}
+        {% if block.type == 'image' %}
+          <div {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+
+              {% if block.settings.link == blank %}
+                <div class="{{ productIncluded_Class }}">
+              {% else %}
+                <a href="{{ block.settings.link }}" target="_blank" class="{{ productIncluded_Class }}">
+              {% endif %}
+
+              {% if s.carousel_type == 'fullwidth_carousel'%}
+                {{ block.settings.image | img_tag: block.settings.image.alt, 'resp-img', '1320x720@2x' }}
+              {% else %}
+                {{ block.settings.image | img_tag: block.settings.image.alt, 'resp-img', '400x500@2x' }}
+              {% endif %}
+              {% if block.settings.link == blank %}</div>{% else %}</a>{% endif %}
+
+            {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder' }}
+            {% endif %}
+            {% if block.settings.caption != blank %}<span class="caption">{{ block.settings.caption }}</span>{% endif %}
+          </div>
+          {% elsif  block.type == 'product' %}
+          <div {{ block.shopify_attributes }}>
+            {% if block.settings.product != blank %}
+              {% if all_products[block.settings.product].type == 'Sets Product'%}
+                {%- include 'product-item-sets' with all_products[block.settings.product] -%}
+              {% else %}
+                {%- include 'product-item' with all_products[block.settings.product] -%}
+              {% endif %}
+            {% else %}
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function(){
+      setTimeout(function(){
+        var sl = $('#section-{{section.id}}.textImageModule.carousel_right .slick-slide');
+        sl.length < 2 ? sl.children().addClass('first-slide') : '';
+      }, 1000)
+    })
+  </script>
+
+  <style>
+    #section-{{section.id}} .collection__items{
+      display: block;
+    }
+/*     #section-{{section.id}} .collection__items .product__item-image img{
+      height: 723px;
+    } */
+    .imageWithProduct{
+      height:525px;
+    }
+    .imageWithProduct img{
+      object-fit:cover;
+      width:100%;
+      height:100%;
+    }
+    
+    {% if productIncluded %}
+      .textImageModule.carousel .commonSlider .slick-next, 
+      .textImageModule.carousel .commonSlider .slick-prev{
+        top:calc(50% - 70px);
+      }
+      .textImageModule.carousel .slick-dots{
+        top: 10px;
+        text-align: right;
+        bottom:auto;
+      }
+    {% endif %}
+    
+    @media (max-width:1024px){
+      .textImageModule .content-info{
+        padding-left:50px;
+      }
+      .textImageModule.row-reverse .content-info{
+        padding-left:0px;
+        padding-right:50px;
+      }
+    }
+    
+    @media (max-width:767px){
+      .imageWithProduct{
+        height:335px;
+      }
+      .textImageModule .content-info, 
+      .textImageModule.row-reverse .content-info{
+        padding-left:0;
+        padding-right:0;
+      }
+      
+      {% if productIncluded %}
+      .textImageModule.carousel .slick-dots{
+        padding-right:50px;
+      }
+      {% endif %}
+    }
+  </style>
+
+</section>
+
+
+{% schema %}
+{
+   "name":"Text & Img/Pro Carousel",
+   "tag":"section",
+   "class":"container",
+   "max_blocks":10,
+   "settings":[
+      {
+         "type":"select",
+         "id":"carousel_type",
+         "label":"Placement",
+         "options":[
+            {
+               "value":"carousel_left",
+               "label":"Carousel Left Text Right"
+            },
+            {
+               "value":"carousel_right",
+               "label":"Text Left Carousel Right"
+            },
+            {
+               "value":"fullwidth_carousel",
+               "label":"Full Width Carousel"
+            },
+            {
+               "value":"grid_carousel",
+               "label":"3x Grid Carousel"
+            }
+         ],
+         "default":"carousel_left"
+      },
+      {
+         "type":"text",
+         "id":"title",
+         "label":"Heading",
+         "default":"Heading"
+      },
+      {
+         "type":"richtext",
+         "id":"desc",
+         "label":"Description",
+         "default":"<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>"
+      },
+      {
+         "type":"header",
+         "content":"Slider options"
+      },
+      {
+         "type":"checkbox",
+         "id":"dots",
+         "label":"Show dots",
+         "default":false
+      },
+      {
+         "type":"checkbox",
+         "id":"arrows",
+         "label":"Show arrows",
+         "default":true
+      }
+   ],
+   "blocks":[
+      {
+         "type":"image",
+         "name":"Image",
+         "settings":[
+            {
+               "type":"image_picker",
+               "id":"image",
+               "label":"Carousel Image"
+            },
+            {
+               "type":"url",
+               "id":"link",
+               "label":"Image Link"
+            },
+            {
+               "type":"text",
+               "id":"caption",
+               "label":"Image Caption",
+               "default":"By Nateisha Scott"
+            }
+         ]
+      },
+      {
+         "type":"product",
+         "name":"Product",
+         "settings":[
+            {
+               "type":"product",
+               "id":"product",
+               "label":"Select Product"
+            }
+         ]
+      }
+   ],
+   "presets":[
+      {
+         "name":"Text & Image/Product Carousel - Article",
+         "settings":{
+            "title":"Heading"
+         },
+         "blocks":[
+            {
+               "type":"image",
+               "settings":{
+                  
+               }
+            },
+            {
+               "type":"product",
+               "settings":{
+                  
+               }
+            }
+         ]
+      }
+   ]
+}
+{% endschema %}

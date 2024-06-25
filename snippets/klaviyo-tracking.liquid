@@ -1,0 +1,37 @@
+<script type="text/javascript" async src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=KDZ4Dd"></script>
+<script type="text/javascript">
+
+    window._learnq = window._learnq || [];
+
+    function sendKlaviyoIdentifyEvent(email, onIdentifiedCallback) {
+        _learnq.push(['identify', { '$email': email}]);
+
+        if(onIdentifiedCallback) {
+            let attempts = 0;
+            const interval = setInterval(function () {
+                if (window.isKlaviyoIdentified() || attempts > 10) {
+                    clearInterval(interval);
+
+                    onIdentifiedCallback()
+                }
+                attempts++;
+            }, 100);
+        }
+    }
+
+    function sendKlaviyoTrackEvent(eventName, payload) {
+        _learnq.push(['track', eventName, payload]);
+    }
+
+    function isKlaviyoIdentified()
+    {
+        if (window._learnq && _learnq.isIdentified) {
+            return _learnq.isIdentified()
+        }
+        else
+        {
+            return false
+        }
+    }
+
+</script>

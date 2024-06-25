@@ -1,0 +1,65 @@
+<section>
+
+    {% for block in section.blocks %}
+
+        {% if article.handle == articles[block.settings.text-wh-image-article].handle %}
+            <div style="float: left;width:50%;">
+                <h2>{{ block.settings.heading }}</h2>
+                <br>
+                <p>{{ block.settings.description }}</p>
+            </div>
+
+            <div style="float: right;width:50%;">
+                {{block.settings.image | image_url: width: 1200 | image_tag: width: 285, height: 620, alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 50px 0;
+    }
+
+    td {
+        padding: 10px 0;
+    }
+</style>
+
+{% schema %}
+    {
+    "name": "2X Text WH|Image",
+    "class": "text-wh-image",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "2X Text WH|Image",
+    "settings": [
+    {
+    "type": "article",
+    "id": "text-wh-image-article",
+    "label": "Article"
+    },
+    {
+    "type": "text",
+    "id": "heading",
+    "label": "Heading"
+    },
+    {
+    "type": "textarea",
+    "id": "description",
+    "label": "Description"
+    },
+    {
+    "type": "image_picker",
+    "id": "image",
+    "label": "Image"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

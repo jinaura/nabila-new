@@ -1,0 +1,302 @@
+{%- comment -%}
+  prod: the product to output data for
+{%- endcomment -%}
+{
+  {%- liquid
+    comment
+      Get selected or default variant active_variant
+    endcomment
+    assign active_variant = false
+    if prod == product
+      assign active_variant = product.selected_variant
+    endif
+    unless active_variant
+      if prod.metafields.product.default_variant
+        assign variant_id = prod.metafields.product.default_variant | split: ':' | last | plus: 0
+        assign active_variant = prod.variants | where: "id", variant_id | first
+        if prod.available
+          unless active_variant.available or active_variant.metafields.visibility.hide != 'true'
+            assign active_variant = false
+          endunless
+        endif
+      endif
+    endunless
+    unless active_variant
+      for variant in prod.variants
+        unless variant.metafields.visibility.hide or variant.available == false
+          assign active_variant = variant
+          break
+        endunless
+      endfor
+    endunless
+    comment
+      This final section just ensures at least something is selected if everything is out of stock (unlikely in prod)
+    endcomment
+    unless active_variant
+      for variant in prod.variants
+        unless variant.metafields.visibility.hide
+          assign active_variant = variant
+          break
+        endunless
+      endfor
+    endunless
+  -%}
+
+  {%- comment -%} List product details {%- endcomment -%}
+  id: {{ prod.id }},
+  handle: "{{ prod.handle }}",
+  priceV2: {
+    amount: "{{ prod.price | divided_by: 100.00 }}",
+    currencyCode: "{{ shop.currency }}",
+  },
+  compareAtPriceStr: "{{ prod.compare_at_price | money_without_trailing_zeros }}",
+  priceStr: "{{ prod.price | money_without_trailing_zeros }}",
+  available: {{ prod.available }},
+  title: "{{ prod.title | replace: '"', '\"' }}",
+  description: `{{ prod.description | replace: '${', '' | replace: '`', '\`' }}`,
+  productType: "{{ prod.type }}",
+  selectedVariantId: {{ active_variant.id }},
+  colorVariantSlider: {{ prod.metafields.product.color_variant_slider | default: false }},
+  pdpV2: {{ prod.metafields.product.enable_v2_pdp | default: false}},
+  carouselShowShadeFinderLink: {{ prod.metafields.product.show_shade_finder_link | default: false }},
+  comingSoon: {{ prod.metafields.product.coming_soon | default: false }},
+  {%- if prod.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' -%}
+    comingSoonUk: true,
+  {%- endif -%}
+  featureTag: "{{ prod.metafields.product.featuretag }}",
+  sizes: [
+  {%- for size in prod.options_by_name["Size"].values -%}
+    {{ size | json }},
+  {%- endfor -%}
+  ],
+  images: [
+    {%- for image in prod.images limit:100 -%}
+    {%- unless image.attached_to_variant? or image.alt == 'hover' -%}
+    {
+      altText: "{{ image.alt | replace: '"', '\"' | strip_newlines }}",
+      originalSrc: "{{ image.src | img_url: "" }}",
+    },
+    {%- endunless -%}
+    {%- endfor -%}
+  ],
+  extraImages: [
+    {%- for media in prod.metafields.media.extra -%}
+    {
+      altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    },
+    {%- endfor -%}
+    {% if localization.country.iso_code == 'GB' %}
+      {%- for media in prod.metafields.media.extra_uk -%}
+      {
+        altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+        originalSrc: "{{ media.src }}",
+        mediaType: "{{ media.media_type }}"
+      },
+      {%- endfor -%}
+    {% else %}
+      {%- for media in prod.metafields.media.extra_us -%}
+      {
+        altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+        originalSrc: "{{ media.src }}",
+        mediaType: "{{ media.media_type }}"
+      },
+      {%- endfor -%}
+    {% endif %}
+  ],
+  {%- assign media = prod.metafields.shadeguide.deep_image[0] -%}
+  {%- if media -%}
+    shadeguideDeepImage: [{
+      altText: "{{ media.alt | strip | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    }],
+  {%- endif -%}
+  {%- assign media = prod.metafields.shadeguide.medium_deep_image[0] -%}
+  {%- if media -%}
+    shadeguideMediumDeepImage: [{
+      altText: "{{ media.alt | strip | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    }],
+  {%- endif -%}
+  {%- assign media = prod.metafields.shadeguide.medium_image[0] -%}
+  {%- if media -%}
+    shadeguideMediumImage: [{
+      altText: "{{ media.alt | strip | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    }],
+  {%- endif -%}
+  {%- assign media = prod.metafields.shadeguide.light_medium_image[0] -%}
+  {%- if media -%}
+    shadeguideLightMediumImage: [{
+      altText: "{{ media.alt | strip | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    }],
+  {%- endif -%}
+  {%- assign media = prod.metafields.shadeguide.light_image[0] -%}
+  {%- if media -%}
+    shadeguideLightImage: [{
+      altText: "{{ media.alt | strip | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    }],
+  {%- endif -%}
+  {%- assign media = prod.metafields.shadeguide.fair_image[0] -%}
+  {%- if media -%}
+    shadeguideFairImage: [{
+      altText: "{{ media.alt | strip | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    }],
+  {%- endif -%}
+  {%- assign media = prod.metafields.media.badge[0] -%}
+  {%- if media and localization.country.iso_code != 'GB' -%}
+    badge: [{
+      altText: "{{ media.alt | strip | strip_newlines }}",
+      originalSrc: "{{ media.src }}"
+    }],
+  {%- endif -%}
+  videos: [
+    {%- for video in product.media -%}
+      {% if video.media_type == 'video' %}
+        {
+          altText: "{{ video.alt | replace: '"', '\"' | strip_newlines }}",
+          originalSrc: "{{ video.sources[1].url }}",
+          mediaType: "{{ video.media_type }}"
+        },
+      {% endif %}
+    {%- endfor -%}
+  ],
+  {%- assign media = prod.metafields.product.productsmearimage[0] -%}
+  {%- if media -%}
+    smearImage: [{
+      altText: "{{ media.alt | strip | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    }],
+  {%- endif -%}
+  {%- assign media = prod.metafields.product.productsmearimagemobile[0] -%}
+  {%- if media -%}
+    smearImageMobile: [{
+      altText: "{{ media.alt | strip | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    }],
+  {%- endif -%}
+  {%- assign media = prod.metafields.product.productbottommedia[0] -%}
+  {%- if media -%}
+    bottomMedia: [{
+      altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    }],
+  {%- endif -%}
+  {%- assign media = prod.metafields.product.productbottommediamobile[0] -%}
+  {%- if media -%}
+    bottomMediaMobile: [{
+      altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+      originalSrc: "{{ media.src }}",
+      mediaType: "{{ media.media_type }}"
+    }],
+  {%- endif -%}
+  productVariants: [
+    {%- for variant in prod.variants -%}
+      {% unless variant.metafields.visibility.hide %}
+        {
+          {%- if prod.options_by_name["Color"].values.size > 0 -%}
+            colorName: "{{ variant.metafields.color.name }}",
+            colorHex: "{{ variant.metafields.color.hex }}",
+            colorTexture: "{{ variant.metafields.color.texture[0].src | default: "" }}",
+          {%- endif -%}
+          {%- if prod.options_by_name["Size"].values.size > 0 -%}
+            size: "{{ variant[size_option] }}",
+          {%- endif -%}
+          description: "{{ variant.metafields.description.value | replace: '"', '\"' }}",
+          id: {{ variant.id }},
+          shortID: {{ variant.id }},
+          compareAtPrice: {{ variant.compare_at_price | default: "undefined" }},
+          price: {{ variant.price }},
+          compareAtPriceStr: "{{ variant.compare_at_price | money_without_trailing_zeros }}",
+          priceStr: "{{ variant.price | money_without_trailing_zeros }}",
+          available: {{ variant.available }},
+          comingSoon: {{ variant.metafields.visibility.coming_soon | default: false }},
+          delayed: {{ variant.metafields.delay.delayed | default: false }},
+          shippingDate: "{{ variant.metafields.delay.shipping_date.value | date: "%m/%d" }}",
+          title: "{{ variant.title | replace: '"', '\"' }}",
+          priceV2: {
+            amount: "{{ variant.price | divided_by: 100.00 }}",
+            currencyCode: "{{ shop.currency }}",
+          },
+          vto: {{ variant.metafields.vto.data | default: "null" | replace: "=>", ":" | replace: ", ", ","}},
+          skintone: "{{ variant.metafields.shadefinder.skintone }}",
+          flagTitle: "{{ variant.metafields.flag.title | replace: '"', '\"' }}",
+          modelDeepImages: [
+            {%- for media in variant.metafields.model.deep -%}
+            {
+              altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+              originalSrc: "{{ media.src }}",
+              mediaType: "{{ media.media_type }}"
+            },
+            {%- endfor -%}
+          ],
+          modelMediumImages: [
+            {%- for media in variant.metafields.model.medium -%}
+            {
+              altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+              originalSrc: "{{ media.src }}",
+              mediaType: "{{ media.media_type }}"
+            },
+            {%- endfor -%}
+          ],
+          modelLightImages: [
+            {%- for media in variant.metafields.model.light -%}
+            {
+              altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+              originalSrc: "{{ media.src }}",
+              mediaType: "{{ media.media_type }}"
+            },
+            {%- endfor -%}
+          ],
+          image: {
+            {%- assign variant_image = variant.image | default: prod.featured_image -%}
+            altText: "{{ variant_image.alt | replace: '"', '\"' | strip_newlines }}",
+            originalSrc: "{{ variant_image.src | img_url: ""}}",
+          },
+          shadeFinderImage: {
+            originalSrc: "{{ variant.metafields.shade_finder.featured_image | image_url: width:750 }}"
+          },
+          extraImages: [
+            {%- for media in variant.metafields.media.extra -%}
+            {
+              altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+              originalSrc: "{{ media.src }}",
+              mediaType: "{{ media.media_type }}"
+            },
+            {%- endfor -%}
+            {% if localization.country.iso_code == 'GB' %}
+              {%- for media in variant.metafields.media.extra_uk -%}
+              {
+                altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+                originalSrc: "{{ media.src }}",
+                mediaType: "{{ media.media_type }}"
+              },
+              {%- endfor -%}
+            {% else %}
+              {%- for media in variant.metafields.media.extra_us -%}
+              {
+                altText: "{{ media.alt | replace: '"', '\"' | strip_newlines }}",
+                originalSrc: "{{ media.src }}",
+                mediaType: "{{ media.media_type }}"
+              },
+              {%- endfor -%}
+            {% endif %}
+          ],
+        },
+      {% endunless %}
+    {%- endfor -%}
+  ],
+},

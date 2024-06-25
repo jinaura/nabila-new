@@ -1,0 +1,456 @@
+{%- assign _section = section.settings -%}
+{%- assign section_footer_bg = _section.footer_bg -%}
+
+<link rel="stylesheet" href="https://klaviyo.com/media/css/public/klaviyo_subscribe.css" defer="defer">
+
+<footer id="footer-wrapper" class="footer" {%- include 'inline-style' bgcolor: section_footer_bg -%}>
+
+  <div class="container">
+
+    {% if _section.enable_seo %}
+    <div class="seo-text-container">
+      <h3>{{ _section.seo_title }}</h3>
+      <p>
+        {{ _section.seo_description  }}
+      </p>
+    </div>
+
+    <hr class="divider--start">
+    {% endif %}
+
+    <div class="flex-row justify">
+      {%- for block in section.blocks -%}
+          {%- assign _block = block.settings -%}
+
+          {%- case block.type -%}
+            {%- when 'newsletter' -%}
+              <div class="footer__box footer__box--{{block.type}}">
+                {%- assign block_title = _block.title -%}
+                {%- assign block_content = _block.content -%}
+
+                {%- if block_title != blank -%}
+                  <h6>{{block_title}}</h6>
+                {%- endif -%}
+
+                {%- if block_content != blank -%}
+                  <p>{{block_content}}</p>
+                {%- endif -%}
+
+                <div class="newsletter-form">
+                  <form id="newsletter_signup" class="footer__signup-form klaviyo_styling" onsubmit="return false;" novalidate="novalidate">
+                    <input class="signup klaviyo-input" type="email" value="" name="email" id="email" placeholder="Your email" aria-label="Email address" />
+                    <input class="signup klaviyo-input" type="tel" value="" name="$phone_number" id="phone_number" placeholder="Your mobile # (optional - to sign up for texts)" aria-label="Phone number" />
+                    <div class="klaviyo_messages">
+                      <div class="success_message" style="display:none;">
+                        <p class="thank_you" >Your email was received! Welcome to Rose Inc.</p>
+                      </div>
+                      <div class="error_message"></div>
+                    </div>
+                    <p class="newsletter-disclaimer">By signing up for emails and/or texts, you accept the
+                      <span><a href="/pages/privacy-policy" target="_blank">Privacy Policy</a></span> and the
+                      <span><a href="/pages/terms-conditions" target="_blank">Terms of Service</a></span>.
+                      By submitting this form with your email address and/or mobile number, you agree to receive recurring automated promotional and personalized marketing messages (e.g. cart reminders) from Rose Inc. at the submitted email address and/or cell number. Consent is not a condition of any purchase. You can withdraw your consent at any time by following the unsubscribe instructions in any email we send you or replying STOP to any text message. Reply HELP for text message help. Msg frequency varies. Std text msg & data rates may apply.
+                    </p>
+                    <div class="klaviyo_form_actions">
+                      <button type="submit" class="btn subscribe">Subscribe</button>
+                    </div>
+                  </form>
+                  <hr class="divider--start visible-xs-block">
+                </div><!-- /.newsletter-form -->
+              </div>
+            <div class="footer__box menu__container">
+              <div class="footer__box menu__wrapper">
+              {%- when 'menu' -%}
+                <div class="footer__box footer__box--{{block.type}}">
+                {%- assign block_title = _block.title -%}
+                {%- assign block_link = _block.menu_link -%}
+                {%- assign block_menu = _block.menu -%}
+                
+                {%- if block_title != blank -%}
+                  {% if block_link != blank %}
+                    <a href="{{block_link}}"><h6>{{block_title}}</h6></a>
+                  {% else %}
+                    <h6>{{block_title}}</h6>
+                  {% endif %}
+                {%- endif -%}
+                {%- if block_menu != blank -%}
+                  {%- include 'menu' handle: block_menu -%}
+                {% else %}
+                  <div class="icons__wrapper">
+                    <span>
+                      <a href="{{_section.insta_url}}" target="_blank" aria-label="Instagram Logo">
+                        <img src="{{ 'icon-social-insta.svg' | asset_url }}" alt="Instagram Logo" fetchpriority="low" loading="lazy" />
+                      </a>
+                    </span>
+                    <span>
+                      <a href="{{_section.yt_url}}" target="_blank" aria-label="YouTube Logo">
+                        <img src="{{ 'icon-social-youtube.svg' | asset_url }}" alt="YouTube Logo" fetchpriority="low" loading="lazy" />
+                      </a>
+                    </span>
+                    <span>
+                      <a href="{{_section.fb_url}}" target="_blank" aria-label="Facebook Logo">
+                        <img src="{{ 'icon-social-fb.svg' | asset_url }}" alt="Facebook Logo" fetchpriority="low" loading="lazy" />
+                      </a>
+                    </span>
+                    <span>
+                      <a href="{{_section.twitter_url}}" target="_blank" aria-label="Twitter Logo">
+                        <img src="{{ 'icon-social-twitter.svg' | asset_url }}" alt="Twitter Logo" fetchpriority="low" loading="lazy" />
+                      </a>
+                    </span>
+                    <span>
+                      <a href="{{_section.tiktok_url}}" target="_blank" aria-label="Tiktok Logo">
+                        <img src="{{ 'icon-social-tiktok.svg' | asset_url }}" alt="Tiktok Logo" fetchpriority="low" loading="lazy" />
+                      </a>
+                    </span>
+                    <span>
+                      <a href="{{_section.pinterest_url}}" target="_blank" aria-label="Pinterest Logo">
+                        <img src="{{ 'icon-social-pinterest.svg' | asset_url }}" alt="Pinterest Logo" fetchpriority="low" loading="lazy" />
+                      </a>
+                    </span>
+                  </div>
+                {%- endif -%}
+              </div>
+              {% if forloop.index == 3 %}
+                <hr class="divider--start mobile-show">
+              {% endif %}
+            {%- endcase -%}
+        {%- endfor -%}
+          </div>
+          <hr class="divider--start">
+          {%- include 'logo-icon' -%}
+          <div class="footer__copyright">
+            <span>© <span class="year" id="currYear"></span> Nabilla Beauty</span>
+            <span><a href="/pages/terms-conditions" target="_blank">Terms and conditions</a></span>
+            <span><a href="/pages/privacy-policy" target="_blank">Privacy&nbsp;Policy</a></span>
+            <span><a href="/pages/accessibility" target="_blank">Accessibility</a></span>
+            <span><a href="https://privacyportal.onetrust.com/webform/98047a31-3d58-41f5-9075-01d4bc384264/03177c0f-b7f9-43af-8cae-00592ec748ca" target="_blank">Your privacy rights</a></span>
+            {% if localization.country.iso_code == 'GB' %}
+              <span><a href="/pages/modern-slavery-statement" target="_blank">Modern Slavery Compliance Statement</a></span>
+            {% endif %}
+          </div>
+      </div>
+    </div><!-- /.flex-row -->
+  </div><!-- /.container -->
+</footer><!-- /.footer -->
+
+<style>
+
+  .footer .container .seo-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    top: 33%;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+  .footer .container .seo-text-container h3 {
+    color: {{_section.seo_title_color}};
+    font-size: 26px;
+    letter-spacing: 1.86px;
+    line-height: 30px;
+  }
+  .footer .container .seo-text-container p {
+    color: {{_section.seo_description_color}};
+    font-size: 22px;
+    letter-spacing: 1.57px;
+    line-height: 1.2;
+    margin-top: 10px;
+  }
+
+  .footer .footer__copyright span.year {
+    padding-right: 0;
+  }
+  .footer__signup-form {
+    max-width: unset;
+  }
+  .klaviyo_condensed_styling input[type=text], .klaviyo_condensed_styling input[type=email], .klaviyo_styling input[type=text], .klaviyo_styling input[type=tel], .klaviyo_styling input[type=email], .klaviyo_back_in_stock input[type=email] {
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+    color: var(--secondary-color);
+    height: auto;
+    border-radius: unset;
+    width: 100%;
+  }
+  .klaviyo_back_in_stock input[type=email] {
+    width: 100%;
+  }
+  .klaviyo_styling .klaviyo_messages .error_message, .klaviyo_styling .klaviyo_messages .success_message {
+    padding: 0;
+    margin-bottom: 0;
+  }
+  .footer__signup-form .error_message p, .footer__signup-form .success_message p {
+    margin-bottom: 4px;
+  }
+
+  @media (max-width: 767px) {
+    .footer .container .seo-text-container h3, .footer .container .seo-text-container p {
+      font-size: 16px;
+      letter-spacing: 1.14px;
+      line-height: 20px;
+    }
+    .footer .container .seo-text-container p {
+      margin-top: 0;
+      margin-bottom: 18px;
+    }
+    .footer .container .seo-text-container h3, .footer .container .seo-text-container p {
+      font-size: 16px;
+      letter-spacing: 1.14px;
+      line-height: 20px;
+    }
+    .footer .container .seo-text-container p {
+      margin-top: 0;
+      margin-bottom: 22px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "color",
+      "id": "footer_bg",
+      "label": "Footer Background Color"
+    },
+    {
+      "type": "url",
+      "id": "insta_url",
+      "label": "Instagram (link)"
+    },
+    {
+      "type": "url",
+      "id": "yt_url",
+      "label": "YouTube (link)"
+    },
+    {
+      "type": "url",
+      "id": "fb_url",
+      "label": "Facebook (link)"
+    },
+    {
+      "type": "url",
+      "id": "twitter_url",
+      "label": "Twitter (link)"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "Tiktok (link)"
+    },
+    {
+      "type": "url",
+      "id": "pinterest_url",
+      "label": "Pinterest (link)"
+    },
+    {
+    "type": "header",
+    "content": "SEO Section"
+    },
+    {
+    "type": "checkbox",
+    "id": "enable_seo",
+    "label": "Enable SEO Section",
+    "default": false
+    },
+    {
+    "type": "text",
+    "id": "seo_title",
+    "label": "Title"
+    },
+    {
+    "type": "color",
+    "id": "seo_title_color",
+    "label": "Title color",
+    "default": "#1d1d1d"
+    },
+    {
+    "type": "textarea",
+    "id": "seo_description",
+    "label": "Description"
+    },
+    {
+    "type": "color",
+    "id": "seo_description_color",
+    "label": "Description color",
+    "default": "#545353"
+    }
+  ],
+  "max_blocks": 5,
+  "blocks": [
+    {
+      "type": "newsletter",
+      "name": "Newsletter & Social",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "menu_link",
+          "label": "Menu Link"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const currentYear = new Date().getFullYear();
+    document.getElementById("currYear").innerHTML = currentYear;
+
+    const postDataToKlaviyo = (formEl, emailValue, phoneValue, countryCode, sourceKlaviyo) => {
+      // Klaviyo tracking
+      var _learnq = window._learnq || [];
+      const listId = "TvzYRz";
+      const settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://manage.kmail-lists.com/ajax/subscriptions/subscribe",
+        "method": "POST",
+        "headers": {
+          "content-type": "application/x-www-form-urlencoded",
+          "cache-control": "no-cache"
+        },
+        "data": {
+          "g": listId,
+          "$fields": "email, $phone_number, $source, country, sms_consent",
+          "email": emailValue,
+          "$phone_number": phoneValue,
+          "$source": sourceKlaviyo,
+          "country": countryCode,
+          "sms_consent": true
+        }
+      }
+      $.ajax(settings)
+        .done(function(response) {
+          formEl.reset();
+          formEl.querySelector('.success_message').style.display = "block";
+          formEl.querySelector('.klaviyo_form_actions').style.display = "none";
+          _learnq.push([
+            "identify", {
+              "$email": emailValue,
+              "$phone_number": phoneValue
+            }
+          ]);
+        })
+        .fail(function(response) {
+          p = document.createElement('p');
+          p.innerHTML = 'Something went wrong. Please try to subscribe again.';
+          formEl.querySelector('.error_message').append(p);
+          console.error(response, 'Klaviyo subscribe failed');
+        });
+    }
+
+    const handleSignupFormSubmit = () => {
+      let userCountry = "";
+      let footerKlavSource = "{{settings.footer_klav_source_us}}";
+      let teaserKlavSource = "{{settings.teaser_klav_source_us}}";
+      let signupKlavSource = "{{settings.signup_klav_source_us}}";
+      const countryIsoCode = "{{localization.country.iso_code}}";
+
+      if (countryIsoCode === 'GB') {
+        userCountry = 'GB';
+        footerKlavSource = "{{settings.footer_klav_source_uk}}";
+        teaserKlavSource = "{{settings.teaser_klav_source_uk}}";
+        signupKlavSource = "{{settings.signup_klav_source_uk}}";
+      }
+
+      // footer signup
+      document.querySelector('.footer .footer__signup-form .btn.subscribe') && document.querySelector('.footer .footer__signup-form .btn.subscribe').addEventListener('click', () => {
+        const form = document.querySelector('.footer .footer__signup-form');
+        const emailInputFooter = document.querySelector('.footer .footer__signup-form input.signup#email') && document.querySelector('.footer .footer__signup-form input.signup#email').value.trim();
+        const phoneInputFooter = document.querySelector('.footer .footer__signup-form input.signup#phone_number') && document.querySelector('.footer .footer__signup-form input.signup#phone_number').value.trim();
+        postDataToKlaviyo(form, emailInputFooter, phoneInputFooter, userCountry, footerKlavSource);
+      });
+
+      // teaser page signup
+      document.querySelector('#teaser_signup .btn.subscribe') && document.querySelector('#teaser_signup .btn.subscribe').addEventListener('click', () => {
+        const form = document.getElementById('teaser_signup');
+        const emailInputTeaser = document.querySelector('#teaser_signup input.signup#email') && document.querySelector('#teaser_signup input.signup#email').value.trim();
+        const phoneInputTeaser = document.querySelector('#teaser_signup input.signup#phone_number') && document.querySelector('#teaser_signup input.signup#phone_number').value.trim();
+        postDataToKlaviyo(form, emailInputTeaser, phoneInputTeaser, userCountry, teaserKlavSource);
+      });
+
+      // sign up page
+      document.querySelector('#signup_modal .btn.subscribe') && document.querySelector('#signup_modal .btn.subscribe').addEventListener('click', () => {
+        const form = document.getElementById('signup_modal');
+        const emailInputSignup = document.querySelector('#signup_modal input.signup#email') && document.querySelector('#signup_modal input.signup#email').value.trim();
+        const phoneInputSignup = document.querySelector('#signup_modal input.signup#phone_number') && document.querySelector('#signup_modal input.signup#phone_number').value.trim();
+        postDataToKlaviyo(form, emailInputSignup, phoneInputSignup, userCountry, signupKlavSource);
+      });
+    }
+
+    handleSignupFormSubmit();
+
+    const submitButton = $('.footer .footer__signup-form .btn.subscribe');
+    submitButton.prop('disabled', true);
+
+    $('.footer .footer__signup-form input.signup').keyup(function() {
+      const inputId = $(this).attr('id');
+      const emailInput = $('.footer .footer__signup-form input.signup#email');
+      const phoneInput = $('.footer .footer__signup-form input.signup#phone_number');
+      const emailPattern = /^.+@.+\..+$/;
+      const phonePattern = /^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/gm;
+      if (emailPattern.test(emailInput.val())) {
+        emailInput.addClass('valid').removeClass('invalid');
+      } else {
+        emailInput.addClass('invalid').removeClass('valid');
+      }
+
+      if ((phoneInput.val() == '') || (phonePattern.test(phoneInput.val().replace(/\s/g, '')))) {
+        phoneInput.addClass('valid').removeClass('invalid');
+      } else {
+        phoneInput.addClass('invalid').removeClass('valid');
+      }
+      const messageId = 'klaviyo_error_' + inputId;
+      const messageEl = document.getElementById(messageId);
+      if ($(this).hasClass('invalid') && (messageEl == null)) {
+        const inputName = $(this).attr('aria-label');
+        const message = inputName + ' is invalid';
+        p = document.createElement('p');
+        p.innerHTML = message;
+        p.setAttribute('id', messageId);
+        $('.footer div.error_message').append(p);
+      } else if ($(this).hasClass('valid') && messageEl) {
+        messageEl.parentNode.removeChild(messageEl);
+      }
+
+      if ($('.footer .footer__signup-form input.signup').hasClass('valid') == true && $('.footer .footer__signup-form input.signup').hasClass('invalid') == false) {
+        submitButton.prop('disabled') && submitButton.prop('disabled', false);
+      } else {
+        submitButton.prop('disabled') == false && submitButton.prop('disabled', true);
+      }
+	  });
+  });
+</script>

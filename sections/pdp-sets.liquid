@@ -1,0 +1,239 @@
+{{ 'slick.js'  | asset_url | script_tag }}
+<section class="section__container sets pdp___sets-wrap">
+  <div class="container section__item section_spacing">
+      <h2 class="section__title">{{ section.settings.title }}</h2>
+      <hr class="section__divider" />
+    
+      <div class="swap-x" role="region" aria-label="carousel">
+        <div class="multiple-items collection__items"
+          data-slick='{
+              "slidesToShow": 3,
+              "slidesToScroll": 3,
+              "dots": {{ section.settings.dots }},
+              "infinite": false,
+              "arrows": {{ section.settings.arrows }},
+              "autoplay": false,
+              "adaptiveHeight": false,
+              "speed": 500,
+              "centerMode": false,
+                "centerPadding": "1px",
+              "responsive": [
+                  {
+                     "breakpoint": 768,
+                     "settings": "unslick"
+                   },
+                   {
+                     "breakpoint": 1024,
+                     "settings":{
+                         "slidesToShow": 2,
+                         "slidesToScroll": 2
+                     }
+                   }
+              ]
+         }'>
+         {% for _product in collections['sets'].products %}
+           {% if _product.type == 'Sets Product' %}
+             {%- include 'product-item-sets' with _product -%}
+           {% else %}
+             {%- include 'product-item' with _product -%}
+           {% endif %}
+         {% endfor %}
+        </div>
+   	  </div>
+    
+    </div>
+</section>
+
+<style>
+  .multiple-items.collection__items a.buy_now:not(.buy_btn) {
+    text-decoration:none;
+  }
+  .collection__items{
+    display: block;
+    width: auto;
+  }
+  .multiple-items.collection__items .product__item {
+    flex-basis: unset;
+    max-width: unset;
+    margin: 0;
+  }
+  .multiple-items.collection__items .product__item-image img:not(.badge-img) {
+    height: 500px;
+  }
+  .multiple-items.collection__items .product__item hr.divider--start {
+    display: none;
+  }
+  .multiple-items.collection__items .shutter {
+    bottom: 90px;
+  }
+  .section__container.sets .section__flex-item {
+    margin: 0;
+    max-height: 500px;
+    padding: 0 0px 2px 0;
+    bottom: 0;
+  }
+  .section__container.sets .product_item--container {
+    max-height: calc(100% - 52px);
+  }
+
+
+  .pdp___sets-wrap .multiple-items .product__item {
+    margin-top: 2px;
+  }
+
+  .pdp___sets-wrap .collection__items .product_item figure img.bundle-img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .pdp___sets-wrap .collection__items  .product_item figure {
+    min-width: 80px;
+    min-height: 80px;
+  }
+
+  .pdp___sets-wrap .collection__items .section__flex-item h3, .pdp___sets-wrap .collection__items .section__flex-item p {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+
+  .pdp___sets-wrap  .collection__items  .choose_shades {
+
+    padding-left: 1rem;
+    padding-right: 0;
+    flex-wrap: wrap;
+
+  }
+
+  .pdp___sets-wrap  .collection__items .choose_shades .c_btn {
+
+    font-size: 12px;
+    margin-right: 7px;
+
+  }
+
+  .pdp___sets-wrap  .collection__items .choose_shades .main_color {
+    margin-left: 0;
+    margin-right: 10px;
+  }
+  
+  
+  /*  Hot Fixes PDP  */
+  .pdp___sets-wrap .multiple-items.collection__items .shutter{
+    bottom:0;
+  }
+  .pdp___sets-wrap  .collection__items .product_item{
+    flex-flow: wrap;
+  }
+  .pdp___sets-wrap .multiple-items.collection__items .product_set .shutter{
+    position:static;
+    margin-top: 10px;
+    z-index:3;
+  }
+  .pdp___sets-wrap .section__flex-item.product_set{
+    padding-bottom:0;
+  }
+  .pdp___sets-wrap .collection__items .price_btn--wrapper{
+    bottom:0;
+  }
+  
+  
+
+  @media (max-width: 767px) {
+
+    .multiple-items.collection__items .product__item-image img {
+      height: 100%
+    }
+    .multiple-items.collection__items .shutter {
+      bottom: 0;
+      margin: 0;
+      width: 102vw;
+    }
+
+    body .swap-x{
+      margin: 0;
+    }
+
+    body .swap-x .collection__items .inner_content, 
+    body .swap-x .product__item .outer_content{
+      z-index:0;
+    }
+    
+    
+   /*  Hot Fixes PDP  */
+    .pdp___sets-wrap .multiple-items.collection__items .shutter{
+      width: 100vw;
+      margin-left: 0px;
+      z-index:3;
+    }
+    
+    .pdp___sets-wrap .multiple-items.collection__items .product_set .shutter{
+      margin-top:0;
+      margin-left: 0px !important;
+    }
+
+
+  }
+</style>
+
+<script>
+
+    var slider = $('.multiple-items').slick();
+
+    var hold = false;
+    $(".rangeSlider").hover(function() {
+        slider.slick("slickSetOption", "draggable", hold);
+        slider.slick("slickSetOption", "swipe", hold);
+        slider.slick("slickSetOption", "touchMove", hold);
+
+        hold = !hold;
+        console.log('hover');
+    });
+
+</script>
+
+{% schema %}
+    {
+    "name": "More Sets",
+    "settings": [
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Heading",
+    "default": "More Sets"
+    },
+    {
+    "type": "text",
+    "id": "product_link_label",
+    "label": "Product Link Label",
+    "default": "Buy Now"
+    },
+    {
+    "type": "header",
+    "content": "Grid"
+    },
+    {
+    "type": "header",
+    "content": "Slider options"
+    },
+    {
+    "type": "checkbox",
+    "id": "dots",
+    "label": "Show dots",
+    "default": false
+    },
+    {
+    "type": "checkbox",
+    "id": "arrows",
+    "label": "Show arrows",
+    "default": true
+    }
+    ],
+    "presets": [{
+    "name": "More Sets",
+    "category": "Collection"
+    }]
+  }
+{% endschema %}

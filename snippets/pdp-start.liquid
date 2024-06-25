@@ -1,0 +1,39 @@
+{%- liquid
+  assign active_variant = product.selected_variant
+  unless active_variant
+    if product.metafields.product.default_variant
+      assign variant_id = product.metafields.product.default_variant | split: ':' | last | plus: 0
+      assign active_variant = product.variants | where: "id", variant_id | first
+      if product.available
+        unless active_variant.available or active_variant.metafields.visibility.hide != 'true'
+          assign active_variant = false
+        endunless
+      endif
+    endif
+  endunless
+  unless active_variant
+    for variant in product.variants
+      unless variant.metafields.visibility.hide or variant.available == false
+        assign active_variant = variant
+        break
+      endunless
+    endfor
+  endunless
+  comment
+    This final section just ensures at least something is selected if everything is out of stock (unlikely in prod)
+  endcomment
+  unless active_variant
+    for variant in product.variants
+      unless variant.metafields.visibility.hide
+        assign active_variant = variant
+        break
+      endunless
+    endfor
+  endunless
+-%}
+
+{{ 'product-shared.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'variant-styles.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'size-select-styles.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'bootstrap.min.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'react-product-only.css' | asset_url | stylesheet_tag: preload: true }}

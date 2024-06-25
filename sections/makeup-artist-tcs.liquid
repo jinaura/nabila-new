@@ -1,0 +1,61 @@
+{% assign _section = section.settings %}
+
+<section class="ma-tcs">
+  <hr class="divider--start">
+  <h2>{{_section.title}}</h2>
+  <hr class="section__divider">
+  {{_section.description}}
+</section>
+
+<style>
+  section.ma-tcs {
+    padding-top: 85px;
+    padding-bottom: 20px;
+  }
+  .ma-tcs h2 {
+    line-height: 42px;
+  }
+  .ma-tcs hr.divider--start {
+    padding-bottom: 16px;
+  }
+  .ma-tcs hr.section__divider {
+    margin-top: 8px;
+    padding-bottom: 54px;
+  }
+  @media (max-width: 767px) {
+    section.ma-tcs {
+      padding-bottom: 0;
+      padding-top: 100px;
+    }
+    .ma-tcs hr.section__divider {
+      padding-bottom: 20px;
+    }
+    .ma-tcs hr.divider--start {
+      padding-bottom: 10px;
+    }
+    .ma-tcs p {
+      font-size: 12px;
+      line-height: 20px;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Makeup Artists Terms & Cs",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Terms & conditions"
+      },
+      {
+        "type": "richtext",
+        "id": "description",
+        "label": "Description",
+        "default": "<p>By contacting Rose Inc Clean Beauty Stylists, you expressly agree that your Beauty Consultation will be subject to the Rose Inc Privacy Policy, Terms of Service and the following: Rose Inc Clean Beauty Stylists are provided for the exclusive purpose of recommending the best Rose Inc products for your skincare routine and are not intended to diagnose, treat, prevent or cure any disease or condition or to be a substitute for dermatology or other medical advice, diagnosis or treatment in any way. Reliance on any information provided by Rose Inc Clean Beauty Stylists is solely at your own risk.</p>"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,520 @@
+{% assign scroll_id = section.settings.scroll_id | downcase %}
+{% assign scroll_id = scroll_id | replace: ' ', '-'  %}
+
+<section class="abt-sect9" id="{{ scroll_id }}">
+
+    <div class="container">
+
+        <div class="top_desc">
+            <div class="desc">
+                <h3>{{ section.settings.top_title }}</h3>
+                {{ section.settings.top_description }}
+            </div>
+            <a href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+        </div>
+
+        <hr class="divider--start" />
+      
+        <div class="s9-row-wrap-desktop">
+        <div class="s9-row-wrap">
+          
+            {% for block in section.blocks %}
+
+            {% assign image = block.settings.image %}
+            {% assign video = block.settings.video %}
+            {% assign percentage = block.settings.percentage %}
+            {% assign title_text = block.settings.title_text %}
+            {% assign description = block.settings.description %}
+            {% assign button_label = block.settings.button_label %}
+            {% assign button_link = block.settings.button_link %}
+            {% assign remainingMod = forloop.index | modulo:2 %}
+            {% if remainingMod != 0%}
+           
+          <div class="s9-col s9-col-left">
+            
+            <div class="c-wrap">
+              <div class="c-media fade-scroll">
+
+                {% if image%}
+        {%- include 'lazyload-image' _image: image, original_width: '300' -%}
+        {% else %}
+        <div class="video-sect1">
+        <video
+        loop
+        muted
+        preload="auto"
+        width="100%"
+        height="100%"
+        playsinline="true" webkit-playsinline="true"
+        data-setup='{"width": 300, "height": 250}' class="responsive-video">
+    <source src="{{ video }}" type='video/mp4' /></video>
+   </div>
+        {% endif %}
+            
+              </div>
+
+              <div class="c-content fade-scroll ad2">
+                
+                    <h2>{{ percentage }}</h2>
+                    <h3>{{ title_text }}</h3>
+                    <div>{{ description }}</div>
+               
+               
+
+                <div class="s-link">
+                    <a href="{{ button_link }}">{{ button_label }}</a>
+                </div>
+            </div>
+            </div>
+          </div>
+           {% else %}
+           <div class="s9-col s9-col-right">
+             <div class="c-wrap">
+                <div class="c-content fade-scroll">
+                   
+                    <h2>{{ percentage }}</h2>
+                    <h3>{{ title_text }}</h3>
+                    <div>{{ description }}</div>
+      
+                    <div class="s-link">
+                        <a href="{{ button_link }}">{{ button_label }}</a>
+                    </div>
+  
+ 
+            </div>
+             <div class="c-media fade-scroll ad2">
+  
+                        {% if image%}
+                {%- include 'lazyload-image' _image: image, original_width: '300' -%}
+                {% else %}
+                <div class="video-sect2">
+                <video
+                loop
+                muted
+                preload="auto"
+                width="100%"
+                height="100%"
+                playsinline="true" webkit-playsinline="true"
+                data-setup='{"width": 300, "height": 250}' class="responsive-video">
+            <source src="{{ video }}" type='video/mp4' /></video>
+           </div>
+                {% endif %}
+              </div>
+          </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+  
+         </div>
+        </div>
+
+        <div class="s9-row-wrap-mobile">
+          <div class="s9-row-mobile ">
+         <div class="s9-row-wrap ">
+          
+            {% for block in section.blocks %}
+
+            {% assign image = block.settings.image %}
+            {% assign video = block.settings.video %}
+            {% assign percentage = block.settings.percentage %}
+            {% assign title_text = block.settings.title_text %}
+            {% assign description = block.settings.description %}
+            {% assign button_label = block.settings.button_label %}
+            {% assign button_link = block.settings.button_link %}
+         
+          <div class="s9-col s9-col-left">
+            
+            <div class="c-wrap">
+                <div class="c-media">
+  
+                  {% if image%}
+          {%- include 'lazyload-image' _image: image, original_width: '300' -%}
+          {% else %}
+          <div class="video-sect1">
+          <video
+          loop
+          muted
+          preload="auto"
+          width="100%"
+          height="100%"
+          playsinline="true" webkit-playsinline="true"
+          data-setup='{"width": 300, "height": 250}' class="responsive-video">
+      <source src="{{ video }}" type='video/mp4' /></video>
+     </div>
+          {% endif %}
+              
+                </div>
+  
+                <div class="c-content">
+                  
+                      <h2>{{ percentage }}</h2>
+                      <h3>{{ title_text }}</h3>
+                      <div>{{ description }}</div>
+                 
+                 
+  
+                  <div class="s-link">
+                      <a href="{{ button_link }}">{{ button_label }}</a>
+                  </div>
+              </div>
+              </div>
+          </div>
+          
+         
+          {% endfor %}
+          
+        
+  
+         </div>
+        </div>
+  </div>
+ 
+    </div>
+
+</section>
+
+<style>
+    .abt-sect9 {
+  padding:30px 0 0 0;
+  margin-bottom: 70px;
+    }
+
+    .top_desc{
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 30px;
+    }
+    .top_desc .desc{
+        width:70%;
+      	max-width: 660px;
+    }
+    .top_desc h3{
+        margin-bottom:6px;
+    }
+    .top_desc p{
+        margin-bottom:0px;
+    }
+
+    .abt-sect9 .s9-row-wrap-desktop {
+        border-bottom: 1px solid  #919191;
+    padding-bottom: 1.7rem;
+    margin-top: 30px;
+
+    }
+    .abt-sect9 .s9-row-wrap-mobile {display: none;}
+    
+    
+    .abt-sect9 .s9-row-wrap {
+      max-width: 1160px;
+          padding-right: 15px;
+      padding-left: 15px;
+      margin: 0 auto;
+    
+    }
+    
+    .abt-sect9 .s9-row-wrap {
+    display: flex;
+    padding-bottom: 45px;
+    
+      margin-bottom: 0;
+    }
+    
+  
+    .abt-sect9 .s9-row-wrap .video-sect1 {
+  height:350px;
+  width: 100%;
+    }
+    .abt-sect9 .s9-row-wrap .video-sect2 {
+  height:550px;
+  width: 100%;
+    }
+    .abt-sect9 .responsive-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  
+    }
+  
+    .abt-sect9 .s9-row-wrap .s9-col-left {
+        width: 46.8%;
+        
+        padding-right:130px;
+      
+      
+    
+    }
+  
+    .abt-sect9 .s9-row-wrap .s9-col-left .c-wrap{
+  
+  
+    }
+  
+    .abt-sect9 .s9-row-wrap .s9-col-left .c-wrap .c-media {
+  width:100%;
+  position: relative;
+  
+  }
+  
+  .abt-sect9 .s9-row-wrap .s9-col-left .c-wrap .c-media  img{
+  max-width:100%;
+  height: auto;
+  }
+    .abt-sect9 .s9-row-wrap .s9-col-left .c-wrap .c-content{
+  
+  padding-bottom: 120px;
+  padding-top: 115px;
+  }
+  
+  .abt-sect9 .s9-row-wrap .s9-col .c-wrap .c-content h2 {
+    font-size: 128px;
+    line-height: 1;
+    margin-bottom: 30px;
+  }
+  
+  .abt-sect9 .s9-row-wrap .s9-col-left .c-wrap .c-content h4 {
+    font-size: 21px;
+    line-height: 1;
+    margin-bottom: 0;
+    color: #545353;
+    text-transform: uppercase;
+    font-family: var(--font-heading);
+  }
+  
+    
+     .abt-sect9 .s9-row-wrap .s9-col-right {
+        width:53.2%;
+    }
+  
+    .abt-sect9 .s9-row-wrap .s9-col-right .c-wrap{
+  
+  
+  }
+  
+  .abt-sect9 .s9-row-wrap .s9-col-right .c-wrap .c-media {
+  width:100%;
+  position: relative;
+  
+  }
+  
+  .abt-sect9 .s9-row-wrap .s9-col-right .c-wrap .c-media  img{
+  max-width:100%;
+  height: auto;
+  }
+  .abt-sect9 .s9-row-wrap .s9-col-right .c-wrap .c-content{
+    padding-right: 15%;
+  padding-top: 35px;
+  }
+    
+  .abt-sect9 .s9-row-wrap  .c-wrap .c-content .s-link {
+  margin-top: 16px;
+  margin-bottom: 50px;
+  
+  }
+  .abt-sect9 .s9-row-wrap  .c-wrap .c-content .s-link a {
+    color: #545353;
+    text-decoration:underline ;
+  
+  }
+  
+  @media (max-width:1300px){
+    .abt-sect9 .s9-row-wrap .s9-col-left {
+        padding-right: 11%;
+  }
+    }
+    @media (max-width:992px){
+    .abt-sect9 .s9-row-wrap .s9-col-left {
+        padding-right: 5%;
+  }
+    }
+  @media (max-width:767px){
+    .abt-sect9 .s9-row-wrap-desktop {display: none;}
+    .abt-sect9 .s9-row-wrap-mobile {display: block;}
+    .abt-sect9 {
+  margin-bottom: 0;
+  padding-top: 2px;
+    }
+
+
+    .abt-sect9 .s9-row-wrap .video-sect1 {
+  height:419px;
+  width: 100%;
+    }
+    .abt-sect9 .s9-row-wrap .video-sect2 {
+  height:419px;
+  width: 100%;
+    }
+  
+    .abt-sect9 .s9-row-wrap .s9-col-left .c-wrap .c-content {
+      padding-bottom: 0;
+      padding-top: 30px;
+      padding-left: 20px;
+      padding-right: 20px
+  }
+  .abt-sect9 .s9-row-wrap .s9-col-right .c-wrap .c-content {
+      padding-top: 30px;
+      padding-left: 20px;
+      padding-right: 20px
+  }
+  
+  .abt-sect9 .s9-row-wrap .s9-col .c-wrap .c-content h2 {
+      font-size: 128px;
+      line-height: 1;
+      margin-bottom: 25px;
+  }
+  
+  .abt-sect9 .s9-row-wrap .s9-col-left {
+    padding-right: 5px;
+      padding-left: 5px;
+      width: 80%;
+  }
+  
+  .abt-sect9 .s9-row-wrap .s9-col-right {
+    padding-right: 5px;
+      padding-left: 5px;
+      width: 80%;
+  }
+  
+  .abt-sect9 .s9-row-mobile {
+  overflow: auto;
+  margin-right: -25px;
+      margin-left: -25px;
+  
+  }
+  .abt-sect9 .s9-row-wrap {
+      display: flex;
+      padding-bottom: 30px;
+      margin-bottom: 0;
+      padding-right: 0;
+      padding-left: 0;
+      width: 690px;
+      margin: 0 auto;  
+  }
+  .abt-sect9 .top_desc {
+    flex-wrap: wrap;
+}
+  .abt-sect9 .top_desc .desc {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.abt-sect9 .s9-row-wrap .c-wrap .c-content .s-link {
+    margin-bottom: 25px;
+}
+.abt-sect9 .s9-row-wrap .c-wrap .c-media img {
+   width: 100%;
+}
+    }
+
+
+    @media (max-width:500px){
+
+.abt-sect9 .s9-row-wrap {
+width: 760px;
+}
+.abt-sect9 .s9-row-wrap .video-sect2 {
+height: 463px;
+}
+}
+@media (max-width:399px){
+.abt-sect9 .s9-row-wrap {
+width: 690px;
+}
+.abt-sect9 .s9-row-wrap .video-sect2 {
+height: 419px;
+}
+}
+@media (max-width:320px){
+.abt-sect9 .s9-row-wrap {
+width: 590px;
+}
+.abt-sect9 .s9-row-wrap .video-sect2 {
+height: 358px;
+}
+}
+
+  </style>
+
+{% schema %}
+    {
+    "name": "Section 9",
+    "class": "about-section9",
+    "max_blocks": 2,
+    "settings": [
+    {
+      "type": "text",
+      "id": "scroll_id",
+      "label": "Section ID",
+      "info": "Use this field to insert the ID to link with the nav items and enable scroll to this section."
+    },
+    {
+    "type": "text",
+    "id": "top_title",
+    "label": "Top Title",
+    "default": "SENSUAL AND SUSTAINABLE"
+    },
+    {
+    "type": "richtext",
+    "id": "top_description",
+    "label": "Top Description",
+    "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>"
+    },
+    {
+    "type": "text",
+    "id": "button_label",
+    "label": "Button Label",
+    "default": "Recycling and Sustainability Guide"
+    },
+    {
+    "type": "url",
+    "id": "button_link",
+    "label": "Button link"
+    }
+    ],
+    "blocks": [
+    {
+    "type": "slide",
+    "name": "Block",
+    "settings": [
+    {
+    "type": "image_picker",
+    "id": "image",
+    "label": "Image"
+    },
+    {
+    "type": "text",
+    "id": "video",
+    "label": "Video"
+    },
+    {
+    "type": "text",
+    "id": "percentage",
+    "label": "Percentage",
+    "default": "90%"
+    },
+    {
+    "type": "text",
+    "id": "title_text",
+    "label": "Title",
+    "default": "Beauty in being."
+    },
+    {
+    "type": "richtext",
+    "id": "description",
+    "label": "Description",
+    "default": "<p>Beauty in being</p>"
+    },
+    {
+    "type": "text",
+    "id": "button_label",
+    "label": "Button Label",
+    "default": "Shop all products"
+    },
+    {
+    "type": "url",
+    "id": "button_link",
+    "label": "Button link"
+    }
+    ]}]
+
+    }
+{% endschema %}

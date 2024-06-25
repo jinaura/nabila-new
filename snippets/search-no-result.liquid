@@ -1,0 +1,77 @@
+<div id="search-bottom-noresult" class="search-bottom-noresult">
+
+    <div class="search-category">
+        <h3 class="predictive-search__heading">We found 0 Result</h3>
+        <div class="cat-heading no-result-cat-h">
+            <h3>Try Popular Searches</h3>
+        </div>
+        <div class="category-list">
+            {% assign popular_search_noresult = settings.popular_search_noresult %}
+            <ul>
+                {% for link in linklists[popular_search_noresult].links %}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+    <!-- search-category -->
+
+    <div class="popular-product">
+        <div class="cat-heading">
+          <div class="flex-Box">
+            <div class="side-box">
+            <h3>BEST SELLERS</h3>
+            </div>
+            <div class="side-box">
+             <a href="{{ collections[settings.best_seller_noresult].url }}" class="viewall">View All</a>
+               </div>
+          </div>
+        </div>
+
+        <div class="popular-product-search-wrap">
+
+
+            {% for bestSellerNoResult in collections[settings.best_seller_noresult].products limit: 3 %}
+                <div class="popular-product-item">
+                    <div class="p-image">
+                        <a href="{{ bestSellerNoResult.url }}"><img src="{{bestSellerNoResult.featured_image | img_url: '600x'}}" alt="{{ bestSellerNoResult.featured_image.alt }}"></a>
+                    </div>
+
+                    <div class="p-title">
+                        <a href="{{ bestSellerNoResult.url }}"><h3>{{ bestSellerNoResult.title }}</h3></a>
+                    </div>
+
+
+                    <div class="p-price">
+                        <h3>{{ bestSellerNoResult.price | money_without_trailing_zeros }}</h3>
+                    </div>
+                </div>
+                <!-- popular-product-item -->
+            {% endfor %}
+
+        </div>
+        <!-- popular-product-search-wrap -->
+
+    </div>
+    <!-- popular-product -->
+
+
+</div>
+
+<style>
+  .flex-Box {display:flex;flex-direction: row; justify-content: space-between;   align-items: center; margin-top: 10px;margin-bottom: 15px;}
+  .side-box {}
+ .side-box a.viewall {font-size: 14px;line-height: 32px;letter-spacing: 1px;font-family: var(--font-medium);text-transform: uppercase;border-bottom: 2px solid;
+     padding-bottom: 1px;text-decoration: none;}
+
+  .search-bottom-noresult { width: 100%;    margin-top: 40px!important;}
+  .predictive-search__heading {margin-bottom:50px;}
+  .no-result-cat-h {margin-bottom:25px; margin-top: 45px;}
+
+  #search-bottom-noresult .category-list ul li {width:100%;}
+
+  #search-bottom-noresult  .predictive-search__heading { color: #545353;line-height: 32px;letter-spacing: 1px}
+
+  
+</style>

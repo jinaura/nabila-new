@@ -1,0 +1,65 @@
+{% assign s = section.settings %}
+<section class="parallelImageModule" id="section-{{section.id}}">
+    {% if s.left_image != blank %}
+        {% if s.link_left == blank %}
+          <div class="ratio_wrapper res-1320x800">
+            {{s.left_image | image_url: width: 1200 | image_tag: width: 600, height: 800, class: 'animate', alt: s.left_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+        {% else %}
+          <a href="{{ s.link_left }}" target="_blank" class="ratio_wrapper res-1320x800">
+            {{s.left_image | image_url: width: 1200 | image_tag: width: 600, height: 800, class: 'animate', alt: s.left_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+          </a>
+        {% endif %}
+    {% else %}
+    	<div>{{ 'image' | placeholder_svg_tag: 'placeholder' }}</div>
+    {% endif %}
+
+    {% if s.right_image != blank %}
+      {% if s.link_right == blank %}
+    	  <div class="ratio_wrapper res-1320x800">
+          {{s.right_image | image_url: width: 1200 | image_tag: width: 600, height: 800, class: 'animate', alt: s.right_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+        </div>
+      {% else %}
+        <a href="{{ s.link_right }}" target="_blank" class="ratio_wrapper res-1320x800">
+          {{s.right_image | image_url: width: 1200 | image_tag: width: 600, height: 800, class: 'animate', alt: s.right_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+        </a>
+      {% endif %}
+    {% else %}
+  		<div>{{ 'image' | placeholder_svg_tag: 'placeholder' }}</div>
+    {% endif %}
+</section>
+
+{% schema %}
+  {
+    "name": "2 Col Large Image",
+	"tag":"section",
+	"class": "container",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "left_image",
+        "label": "Left Image"
+      },
+      {
+        "type": "url",
+        "id": "link_left",
+        "label": "Left Image Link"
+      },      
+      {
+        "type": "image_picker",
+        "id": "right_image",
+        "label": "Right Image"
+      },
+      {
+        "type": "url",
+        "id": "link_right",
+        "label": "Right Image Link"
+      }
+    ],
+    "presets": [
+      {
+        "name": "2 Col Large Image - Article"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,638 @@
+{% assign _section = section.settings %}
+
+<section class="bambuserHero" style="background-color: {{_section.bg_color}}">
+  <div class="tv-overlay"></div>
+  <div class="container" id="section-{{- section.id -}}">
+    <div class="comp-two-col">
+       {% if _section.hero_video_url != blank %}
+          <div class="video">
+              <div class="ratio_wrapper res-660x660">
+                  <video muted loop autoplay preload="auto" width="100%" height="100%" playsinline="true" webkit-playsinline="true">
+                      <source src="{{_section.hero_video_url}}" type='video/mp4' />
+                  </video>
+              </div>
+          </div>
+        {% else %}
+          <div class="image">
+            <img src="{{_section.hero_image | image_url }}" alt="{{_section.hero_image.alt}}" />
+          </div>
+        {% endif %}
+        <div class="content">
+          {% if _section.show_state == 'pre_show' %}
+            <div class="content--inner">
+              {% unless _section.hide_event_box %}
+                <div class="event-date--box">
+                  <div class="inner">
+                    <h3>
+                      {% if _section.preshow_event_box_title != blank %}
+                        {{- _section.preshow_event_box_title -}}
+                      {% else %}
+                        Next live event: 
+                      {% endif %}
+                      {% if _section.event_box_date != blank %}
+                        {{- _section.event_box_date -}}
+                      {% endif %}
+                    </h3>
+                    <button id="attentive-signup-secondary">
+                      Signup
+                    </button>
+                </div>
+                </div>
+              {% endunless %}
+              {% if _section.preshow_title != blank %}
+                <h2>{{- _section.preshow_title -}}</h2>
+              {% endif %}
+              {% if _section.preshow_desc != blank %}
+                <div class="desc">{{ _section.preshow_desc }}</div>
+              {% endif %}
+              {% unless _section.hide_countdown %}
+                <div class="countdown">
+                  <div></div>
+                </div>
+              {% endunless %}
+            </div>
+            <div class="sn-btn">
+              <button class="btn" id="attentive-signup">
+                {% if _section.preshow_cta_text != blank %}
+                  {{- _section.preshow_cta_text -}}
+                {% else %}
+                  Signup For reminders
+                {% endif %}
+              </button>
+            </div>
+            <section class="teaserSubscribe">
+              <div class="newsletter-form closed" id="newsletter-form">
+                  <a href="#" class="teaser-close">Close</a>
+                  <div class="subscribe-contained">
+                      <h3>A SPECIAL LIVE EVENT BEGINS FEBRUARY 23</h3>
+                      <div class="desc">Be the first to know about it.</div>
+                      <form id="teaser_signup" class="footer__signup-form klaviyo_styling klaviyo_gdpr_embed_TvzYRz"
+                            action="//manage.kmail-lists.com/subscriptions/subscribe"
+                            data-ajax-submit="//manage.kmail-lists.com/ajax/subscriptions/subscribe"
+                            method="GET" target="_blank" novalidate="novalidate">
+                          <input type="hidden" name="g" value="TvzYRz">
+                          <input type="hidden" name="$fields" value="email"/>
+                          <input class="signup klaviyo-input" type="email" value="" name="email" id="email" placeholder="Your email" aria-label="Email Address" />
+                          <div class="klaviyo_messages">
+                              <div class="success_message" style="display:none;">
+                                  <p class="thank_you" >Your email was received! Welcome to Rose Inc.</p>
+                              </div>
+                              <div class="error_message"></div>
+                          </div>
+                          <div class="klaviyo_form_actions">
+                              <button class="btn subscribe teaser-signup">Subscribe for early access</button>
+                          </div>
+                      </form>
+                      <p class="newsletter-disclaimer">By signing up for emails, you accept the
+                          <span><a href="/pages/privacy-policy" target="_blank">Privacy Policy</a></span> and the
+                          <span><a href="/pages/terms-conditions" target="_blank">Terms of Service</a></span>.
+                      </p>
+                  </div>
+              </div>
+          </section>
+          {% elsif _section.show_state == 'live_show' %}
+            <div class="content--inner">
+              {% unless _section.hide_event_box %}
+                <div class="event-date--box">
+                  <div class="inner">
+                    <h3>
+                      {% if _section.liveshow_event_box_title != blank %}
+                        {{- _section.liveshow_event_box_title -}}
+                      {% else %}
+                        Live now: 
+                      {% endif %}
+                      {% if _section.event_box_date != blank %}
+                        {{- _section.event_box_date -}}
+                      {% endif %}
+                    </h3>
+                  </div>
+                </div>
+              {% endunless %}
+              {% if _section.liveshow_title != blank %}
+                <h2>{{- _section.liveshow_title -}}</h2>
+              {% endif %}
+            {% if _section.liveshow_desc != blank %}
+              <div class="desc">{{ _section.liveshow_desc }}</div>
+            {% endif %}
+            </div>
+            <div class="sn-btn">
+              <button class="btn" id="liveshopping-{{- _section.liveshow_id -}}">
+                {% if _section.liveshow_cta_text != blank %}
+                  {{- _section.liveshow_cta_text -}}
+                {% else %}
+                  Join show now
+                {% endif %}
+              </button>
+            </div>
+            <script>
+              const liveShowId = "{{section.settings.liveshow_id}}";
+              (function() {
+                if (liveShowId) {
+                  if (!window.initBambuserLiveShopping){
+                    window.initBambuserLiveShopping = function(item) { window.initBambuserLiveShopping.queue.push(item) }; window.initBambuserLiveShopping.queue = [];
+                    var scriptNode = document.createElement('script');
+                    scriptNode['src'] = 'https://lcx-embed.bambuser.com/amyris/embed.js';
+                    document.body.appendChild(scriptNode);
+                  }
+                
+                  window.initBambuserLiveShopping({
+                    showId: liveShowId,
+                    node: document.getElementById(`liveshopping-${liveShowId}`),
+                    type: "overlay",
+                  });
+                }
+              })();
+              if ('www.roseinc.com' === document.location.hostname && window.location.href.indexOf('autoplayLiveShopping') == -1 && liveShowId) {
+                window.location.href = window.location.href + '?autoplayLiveShopping=' + liveShowId;
+              }
+            </script>
+          {% elsif _section.show_state == 'post_show' %}
+            <div class="content--inner">
+              {% unless _section.hide_event_box %}
+                <div class="event-date--box">
+                  <div class="inner">
+                    <h3>
+                      {% if _section.postshow_event_box_title != blank %}
+                        {{- _section.postshow_event_box_title -}}
+                      {% else %}
+                        Latest event: 
+                      {% endif %}
+                      {% if _section.event_box_date != blank %}
+                        {{- _section.event_box_date -}}
+                      {% endif %}
+                    </h3>
+                  </div>
+                </div>
+              {% endunless %}
+              {% if _section.postshow_title != blank %}
+                <h2>{{- _section.postshow_title -}}</h2>
+              {% endif %}
+              {% if _section.postshow_desc != blank %}
+                <div class="desc">{{ _section.postshow_desc }}</div>
+              {% endif %}
+              </div>
+              <div class="sn-btn">
+                <button class="btn" id="liveshopping-{{- _section.postshow_id -}}">
+                  {% if _section.postshow_cta_text != blank %}
+                    {{- _section.postshow_cta_text -}}
+                  {% else %}
+                    Watch now
+                  {% endif %}
+                </button>
+              </div>
+              <script>
+                const postShowId = "{{section.settings.postshow_id}}";
+                (function() {
+                  if (postShowId) {
+                    if (!window.initBambuserLiveShopping){
+                      window.initBambuserLiveShopping = function(item) { window.initBambuserLiveShopping.queue.push(item) }; window.initBambuserLiveShopping.queue = [];
+                      var scriptNode = document.createElement('script');
+                      scriptNode['src'] = 'https://lcx-embed.bambuser.com/amyris/embed.js';
+                      document.body.appendChild(scriptNode);
+                    }
+                  
+                    window.initBambuserLiveShopping({
+                      showId: postShowId,
+                      node: document.getElementById(`liveshopping-${postShowId}`),
+                      type: "overlay",
+                    });
+                  }
+                })();
+              </script>
+          {% endif %}
+        </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  body.template-page.template-page--bambuser #launcher {
+    display: none !important;
+  }
+  .tv-overlay {
+    background-color: transparent;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3;
+    display: none;
+  }
+  .teaser-close {
+    font-family: var(--font-medium);
+    position: absolute;
+    color: #545353;
+    font-size: 12px;
+    text-transform: uppercase;
+    z-index: 4;
+    top: 80px;
+    right: 30px;
+  }
+  .teaserSubscribe .newsletter-form {
+    position: fixed;
+    right: 0;
+    top: 80px;
+    z-index: 5;
+    background: #fafafa;
+    max-width: 43%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(.32, .24, .15, 1);
+  }
+  .teaserSubscribe .newsletter-form.open {
+    transform: translateX(0%);
+  }
+  .teaserSubscribe .newsletter-form.closed {
+    transform: translateX(100%);
+  }
+  .subscribe-contained {
+    max-width: 400px;
+  }
+  .subscribe-contained .signup.klaviyo-input {
+    background-color: transparent;
+    margin-top: 10px;
+  }
+  .subscribe-contained .newsletter-disclaimer {
+    font-size: 12px;
+  }
+  .subscribe-contained .desc {
+    padding: 15px 0;
+  }
+  #newsletter_signup {
+    margin-bottom: 0;
+  }
+  .success_message, .error_message {
+    padding: 15px 0 0;
+  }
+  .success_message {
+    color: green;
+  }
+  @media (min-width:768px) and (max-width:1024px) {
+    .teaserSubscribe .newsletter-form {
+      max-width: 55%;
+      padding: 0 60px;
+      top: 60px;
+      overflow-y: auto;
+      padding-top: 18vh;
+      padding-bottom: 75px;
+      align-items: self-start;
+    }
+  }
+
+  @media (max-width:767px) {
+    .teaserSubscribe .newsletter-form {
+      max-width: 100%;
+      padding: 0px 20px 25px 20px;
+      height: auto;
+      bottom: 0;
+      top: auto;
+    }
+    .subscribe-contained .desc { 
+      display: none;
+    }
+    .teaser-close {
+      top: 15px;
+      right: 20px;
+    }
+    .teaserSubscribe .newsletter-form.open {
+      transform: translateY(calc(0% + 50px));
+      max-height: 100%;
+      overflow-y: auto;
+      padding-bottom: 80px;
+      align-items: flex-start;
+    }
+    .subscribe-contained {
+      max-width: 100%;
+    }
+    .subscribe-contained h3 { 
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 40px;
+      padding-bottom: 5px;
+    }
+  }
+  .bambuserHero .comp-two-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+  }
+  .bambuserHero .comp-two-col > div {
+    width: 50%;
+  }
+  .bambuserHero .comp-two-col .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+  }
+  .bambuserHero .comp-two-col .content .content--inner, .bambuserHero .comp-two-col .sn-btn {
+    max-width: 390px;
+    width: 100%;
+  }
+  .bambuserHero .comp-two-col .content .content--inner .event-date--box {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    font-family: var(--font-medium);
+    color: #fafafa;
+    padding-bottom: 14px;
+  }
+  .bambuserHero .comp-two-col .content .content--inner .event-date--box .inner {
+    background-color: {{section.settings.event_box_bg_color}};
+    padding: 6px 10px 7px;
+    display: flex;
+  }
+  .bambuserHero .comp-two-col .content .content--inner .event-date--box h3 {
+    color: #fafafa;
+    font-size: 12px;
+  }
+  .bambuserHero .comp-two-col .content .content--inner .event-date--box button {
+    border: none;
+    background-color: transparent;
+    text-transform: uppercase;
+    text-decoration: underline;
+    padding-left: 5px;
+  }
+  .bambuserHero .comp-two-col .content .content--inner h2 {
+    font-family: var(--font-medium);
+    font-size: 20px;
+    color: var(--primary-color);
+    padding-bottom: 12px;
+    line-height: normal;
+  }
+  .bambuserHero .comp-two-col .content .content--inner .desc {
+    padding-bottom: 30px;
+  }
+  .bambuserHero .comp-two-col .content .content--inner .countdown {
+    font-family: var(--font-medium);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+  .bambuserHero .comp-two-col .content .content--inner .countdown div {
+    max-width: 260px;
+  }
+
+  @media (max-width: 767px) {
+    .bambuserHero .container {
+      padding: 0;
+    }
+    .bambuserHero .comp-two-col {
+      flex-flow: column;
+      padding: 0 0 10px;
+    }
+    .bambuserHero .comp-two-col > div {
+      width: 100%;
+    }
+    .bambuserHero .comp-two-col .content {
+      padding: unset;
+    }
+    .bambuserHero .comp-two-col .content .content--inner h2, .bambuserHero .comp-two-col .content .content--inner .desc, .bambuserHero .comp-two-col .sn-btn {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .bambuserHero .comp-two-col .content .content--inner .event-date--box .inner {
+      width: 100%;
+      justify-content: center;
+      padding: 11px 10px 12px;
+    }
+    .bambuserHero .comp-two-col .content .content--inner h2 {
+      padding-top: 8px;
+      font-size: 16px;
+    }
+    .bambuserHero .comp-two-col .content .content--inner .desc {
+      padding-bottom: 40px;
+    }
+    .bambuserHero .comp-two-col .content .content--inner {
+      max-width: unset;
+    }
+  }
+</style>
+
+<script src="https://cdn.liveshopping.bambuser.com/metrics/bambuser.min.js"></script>
+
+<script>
+  {% if section.settings.show_state == 'pre_show' %}
+    $('.bambuserHero #attentive-signup, .bambuserHero #attentive-signup-secondary').click(() => {
+      $.get("https://reallyfreegeoip.org/json/", function(response) {
+        if (response.country_code === 'US') {
+          if (window.innerWidth >= 760){
+            console.log('US desktop');
+            window.__attentive.trigger(null,null,null, "213402");
+          } else {
+            console.log('US mobile');
+            window.__attentive.trigger(null,null,null, "213395");
+          }
+        } else if (response.country_code === 'CA') {
+          if (window.innerWidth >= 760){
+            console.log('CA desktop');
+            window.__attentive.trigger(null,null,null, "213411");
+          } else {
+            console.log('CA mobile');
+            window.__attentive.trigger(null,null,null, "213408");
+          }
+        } else if (response.country_code === 'GB') {
+          if (window.innerWidth >= 760){
+            console.log('GB desktop');
+            window.__attentive.trigger(null,null,null, "213415");
+          } else {
+            console.log('GB mobile');
+            window.__attentive.trigger(null,null,null, "213413");
+          }
+        } else {
+          console.log('Not Attentive region, show Klaviyo instead');
+          $('#newsletter-form').addClass('open').removeClass('closed');
+          $('html, body').addClass('overflow-hidden');
+          $('.tv-overlay').show();
+        }
+      }, "jsonp");
+    });
+
+    const dateString = "{{section.settings.countdown_date}}";
+    const countdownDate = new Date(`${dateString} GMT-0800`);
+    const countdownDateUTC = new Date(countdownDate.getUTCFullYear(), countdownDate.getUTCMonth(), countdownDate.getUTCDate(), countdownDate.getUTCHours(), countdownDate.getUTCMinutes(), countdownDate.getUTCSeconds()).getTime();
+
+    const intervalFunc = setInterval(function() {
+      const now = new Date();
+      const nowUTC = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds()).getTime();
+      const timeDiff = countdownDateUTC - nowUTC;
+
+      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+      const daysStr = days > 0 ? days + " days, " : '';
+      const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const hoursStr = hours > 0 ? hours + " hours, " : '';
+      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const minutesStr = minutes > 0 ? minutes + " minutes, " : '';
+      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+      const secondsStr = (days < 0 && hours < 0 && minutes < 0) ? seconds + " seconds" : "and " + seconds + " seconds";
+
+      if (document.querySelector('.bambuserHero .comp-two-col .content--inner .countdown div')) {
+        document.querySelector('.bambuserHero .comp-two-col .content--inner .countdown div').innerHTML =
+        daysStr + hoursStr + minutesStr + secondsStr + " until next event";
+      }
+    }, 1000);
+
+    $(document).on('click', '.teaser-close, .tv-overlay',  function(e){
+      $('#newsletter-form').addClass('closed').removeClass('open');
+      $('html, body').removeClass('overflow-hidden');
+      $('.tv-overlay').hide();
+    });
+  {% endif %}
+</script>
+
+{% schema %}
+  {
+    "name":"Bambuser Hero",
+    "settings":[
+      {
+        "type": "radio",
+        "id": "show_state",
+        "label": "Show State",
+        "options": [
+          {
+            "value": "pre_show",
+            "label": "Pre-show"
+          },
+          {
+            "value": "live_show",
+            "label": "Live Show"
+          },
+          {
+            "value": "post_show",
+            "label": "Post Show"
+          }
+        ],
+        "default": "pre_show"
+      },
+      {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Hero Bg Color",
+        "default": "#f6f3f0"
+      },
+      {
+        "type":"text",
+        "id":"hero_video_url",
+        "label":"Hero Video Url"
+      },
+      {
+        "type":"image_picker",
+        "id":"hero_image",
+        "label":"Hero Image"
+      },
+      {
+        "type":"checkbox",
+        "id":"hide_event_box",
+        "label":"Hide Event Date Box",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "event_box_bg_color",
+        "label": "Event Box Bg Color",
+        "default": "#bda6a1"
+      },
+      {
+        "type":"text",
+        "id":"preshow_event_box_title",
+        "label":"Pre-Show Event Box Title (if not default)"
+      },
+      {
+        "type":"text",
+        "id":"liveshow_event_box_title",
+        "label":"Live Show Event Box Title (if not default)"
+      },
+      {
+        "type":"text",
+        "id":"postshow_event_box_title",
+        "label":"Post-Show Event Box Title (if not default)"
+      },
+      {
+        "type":"text",
+        "id":"event_box_date",
+        "label":"Event Box Date"
+      },
+      {
+        "type":"text",
+        "id":"preshow_title",
+        "label":"Pre-Show Title"
+      },
+      {
+        "type":"text",
+        "id":"liveshow_title",
+        "label":"Live Show Title"
+      },
+      {
+        "type":"text",
+        "id":"postshow_title",
+        "label":"Post-Show Title"
+      },
+      {
+        "type":"richtext",
+        "id":"preshow_desc",
+        "label":"Pre-Show Description"
+      },
+      {
+        "type":"richtext",
+        "id":"liveshow_desc",
+        "label":"Live Show Description"
+      },
+      {
+        "type":"richtext",
+        "id":"postshow_desc",
+        "label":"Post-Show Description"
+      },
+      {
+        "type":"checkbox",
+        "id":"hide_countdown",
+        "label":"Hide Countdown",
+        "default": false
+      },
+      {
+        "type":"text",
+        "id":"countdown_date",
+        "label":"Countdown Date in Pacific Time (format: Feb 23, 2022 14:00:00)",
+        "default": "Feb 23, 2022 14:00:00"
+      },
+      {
+        "type":"text",
+        "id":"preshow_cta_text",
+        "label":"Pre-Show CTA Text (if not default)"
+      },
+      {
+        "type":"text",
+        "id":"liveshow_cta_text",
+        "label":"Live Show CTA Text (if not default)"
+      },
+      {
+        "type":"text",
+        "id":"postshow_cta_text",
+        "label":"Post-Show CTA Text (if not default)"
+      },
+      {
+        "type":"text",
+        "id":"liveshow_id",
+        "label":"Live Show ID"
+      },
+      {
+        "type":"text",
+        "id":"postshow_id",
+        "label":"Post-Show ID"
+      }
+    ],
+    "blocks":[],
+    "presets":[
+      {
+       "name":"Bambuser Hero"
+      }
+    ]
+  }
+{% endschema %}

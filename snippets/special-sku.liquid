@@ -1,0 +1,21 @@
+{% assign enable_special_sku = false %}
+
+{% if settings.enable_special_sku %}
+    {% assign enable_special_sku = true %}
+    {% assign special_sku = settings.special_sku_variant_id  | plus:0 %}
+    <script>
+        console.log('special sku, {{ special_sku }}')
+    </script>
+
+    <input type="hidden" id="special_sku" value="{{special_sku}}">
+{% endif %}
+
+<input type="hidden" id="enable_special_sku" value ="{{enable_special_sku}}">
+
+<script>
+var enable_special_sku = JSON.parse(document.querySelector("#enable_special_sku").value);
+
+if (enable_special_sku) {
+    var special_sku = parseInt(document.querySelector("#special_sku").value);
+}
+</script>

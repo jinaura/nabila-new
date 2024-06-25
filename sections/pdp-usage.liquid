@@ -1,0 +1,458 @@
+{% if product.metafields.tutorial.tutorial_video %}
+  {{ 'tutorial-video-js.min.css' | asset_url | stylesheet_tag: preload: true }}
+  {{ 'tutorial-videojs.markers.min.css' | asset_url | stylesheet_tag: preload: true }}
+
+  {{ 'tutorial-video.min.js'  | asset_url | script_tag     }}
+  {{ 'tutorial-videojs-markers.min.js'  | asset_url | script_tag     }}
+
+
+  {{ 'slick.css' | asset_url | stylesheet_tag: preload: true }}
+  {{ 'slick-theme.css' | asset_url | stylesheet_tag: preload: true }}
+  {{ 'slick.js'  | asset_url | script_tag     }}
+
+  <h2 class="section__title">Usage and Tutorials</h2>
+  <hr class="section__divider">
+
+  <section class="usageVideo">
+
+    <div class="content">
+      {% assign durationString = "" %}
+      {% assign descriptionString = "" %}
+      <ul>
+        {% if product.metafields.product.intro_text  %}
+        	<li class="active">{{ product.metafields.product.intro_text }}</li>
+        {% endif %}
+
+        {% for i in (1..product.metafields.tutorial.no_of_break_points) %}
+          {% assign breakPointDescription = "break_point_description_" | append: i %}
+          {% assign breakPointDescription = product.metafields.tutorial[breakPointDescription] %}
+
+          {% assign breakPointDuration = "break_point_duration_" | append: i %}
+          {% assign breakPointDuration = product.metafields.tutorial[breakPointDuration] %}
+
+          <li id="para_{{ breakPointDuration | remove: ":"}}">
+              {{ breakPointDescription }}
+          </li>
+
+
+          {% assign durationString = durationString | append: breakPointDuration | append: ',' |  replace: '"', '\"' %}
+          {% assign descriptionString = descriptionString | append: breakPointDescription | append: '^' |  replace: '"', '\"' %}
+
+      {% endfor %}
+      </ul>
+    </div>
+
+    <div class="vid">
+    	{% assign tutorialVideo = product.metafields.tutorial.tutorial_video %}
+      {% for tutorial_video in tutorialVideo %}
+        {% if tutorial_video.media_type == 'video' %}
+          <video
+                 id="tutorial_video"
+                 class="video-js vjs-fluid vjs-default-skin"
+                 muted
+                 controls
+                 preload="auto"
+                 playsinline="true"
+                 webkit-playsinline="true"
+                 width="100%"
+                 height="100%"
+                 title="{{ tutorial_video.alt }}"
+                 data-setup='{"width": 640, "height": 360}'>
+            <source src="{{ tutorial_video.src }}" type='video/mp4' />
+          </video>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="usageVideoMobile">
+
+    	{% if product.metafields.product.intro_text  %}
+    		<p class="intro-text">{{ product.metafields.product.intro_text }}</p>
+    	{% endif %}
+      <div class="vidMobile multiple-mobile-videos">
+
+          {% for i in (1..product.metafields.product.no_of_videos) %}
+          <div>
+              {% assign mobileVideo = "video_" | append: i %}
+              {% assign mobileVideo = product.metafields.product[mobileVideo] %}
+
+              {% assign mobileVideoDescription = "video_description_" | append: i %}
+              {% assign mobileVideoDescription = product.metafields.product[mobileVideoDescription] %}
+
+              {% for mobile_video in mobileVideo %}
+                  {% if mobile_video.media_type == 'video' %}
+                      <video
+                              id="tutorial_video_mobile_{{ i }}"
+                              class="vjs-default-skin video-js vjs-4-3" 
+                              muted
+                              preload="auto"
+                              playsinline="true"
+                              webkit-playsinline="true"
+                              width="100%"
+                              height="100%"
+                              data-setup='{"width": 640, "height": 360, "controls": true, "customControlsOnMobile": true, "nativeControlsForTouch": false}'>
+                          <source src="{{ mobile_video.src }}" type='video/mp4' />
+                      </video>
+                  {% endif %}
+              {% endfor %}
+
+              <p>{{ mobileVideoDescription }}</p>
+          </div>
+          {% endfor %}
+      </div>
+  </section>
+
+  <hr class="section__divider">
+
+  <script type="text/javascript">
+      // load video object
+    	var video = '';
+    	var isMobile = window.matchMedia("(max-width: 767px)");
+
+    	var videoSettings = {
+      controlBar: {
+            children: [
+                "playToggle",
+                "durationDisplay",
+                "timeDivider",
+                "currentTimeDisplay",
+                "progressControl",
+                "volumeMenuButton",
+                //"remainingTimeDisplay"
+            ]
+        }
+      };
+    
+      if (isMobile.matches) { // If media query matches
+
+        var getAllVideos = $('.usageVideoMobile video');
+        getAllVideos.each(function(i, val){
+          var getVideoId = val.getAttribute('id');
+          video = videojs(getVideoId, videoSettings);
+        });
+
+      } else {
+
+        video = videojs('tutorial_video', videoSettings);
+
+      }
+
+
+
+      var durationString = ("{{ durationString }}");
+      var durationArray = durationString.slice(0,-1).split(',');
+
+      var descriptionString = (`{{ descriptionString }}`);
+      var descriptionArray = descriptionString.slice(0,-1).split('^');
+
+    
+      video.on('timeupdate', function() {
+          var cTime = Math.round(this.currentTime());
+          cTime = convertHMS(cTime);
+
+          var counter = "0:00";
+          var statusArray = [];
+          statusArray['status'] = false;
+          for(var c = 0; c <= durationArray.length; c++)
+          {
+              if(c > 0)
+              {
+                  counter  = durationArray[c-1];
+              }
+              if(counter <= cTime && durationArray[c] <= cTime)
+              {
+                  statusArray['status'] = true;
+                  statusArray['bk_value'] = durationArray[c];
+              }
+              if(durationArray[c] >= cTime && counter >= cTime )
+              {
+                  $('.usageVideo ul li:first-child').addClass('active');
+              }
+
+          }
+
+
+          //if(jQuery.inArray(cTime, durationArray) >= 0 )
+          if(statusArray['status'])
+          {
+            $('.usageVideo ul li').removeClass('active');
+            //$('.usageVideo ul li:not(:first-child)').removeClass('active');
+            //$("#para_"+cTime.replace(":",'')).addClass('active');
+            $("#para_"+statusArray['bk_value'].replace(":",'')).addClass('active');
+          }else{
+              $('.usageVideo ul li:not(:first-child)').removeClass('active');
+          }
+      });
+
+      var myObj = [];
+      for(var j=0; j< durationArray.length ;j++){
+          myObj.push({
+              time: convertSecond(durationArray[j]),
+              text: descriptionArray[j]
+          });
+      }
+
+      video.markers({
+          markers: (myObj)
+      });
+
+      function convertHMS(value) {
+          const sec = parseInt(value, 10); // convert value to number if it's string
+          let hours   = Math.floor(sec / 3600); // get hours
+          let minutes = Math.floor((sec - (hours * 3600)) / 60); // get minutes
+          let seconds = sec - (hours * 3600) - (minutes * 60); //  get seconds
+          // add 0 if value < 10; Example: 2 => 02
+          if (hours   < 10) {hours   = hours;}
+          if (minutes < 10) {minutes = minutes;}
+          if (seconds < 10) {seconds = "0"+seconds;}
+          return minutes+':'+seconds; // Return is HH : MM : SS
+      }
+
+      function convertSecond(value)
+      {
+          var seconds = '';
+          var a = value.split(':'); // split it at the colons
+          // minutes are worth 60 seconds. Hours are worth 60 minutes.
+          seconds = (+a[0]) * 60 + (+a[1]);
+          return seconds
+
+
+      }
+
+      var checkPlay = true;
+      $(document).ready(function() {
+          // Get media - with autoplay disabled (audio or video)
+          if(isMobile){
+            var media = $('.vidMobile');
+          }else{
+            var media = $('#tutorial_video video').not("[autoplay='autoplay']");
+          }
+
+          var tolerancePixel = 40;
+
+          function checkMedia(){
+              // Get current browser top and bottom
+              var scrollTop = $(window).scrollTop() + tolerancePixel;
+              var scrollBottom = $(window).scrollTop() + $(window).height() - tolerancePixel;
+
+              media.each(function(index, el) {
+                  var $this = $(this);
+                  var yTopMedia = $(this).offset().top;
+                  var yBottomMedia = $(this).height() + yTopMedia;
+                  if(scrollTop < yBottomMedia && scrollBottom > yTopMedia){ //view explaination in `In brief` section above
+                      if(isMobile) {
+                        setTimeout(function() {
+                          $this.find('.slick-slide.slick-current.slick-active video').get(0).play();
+                        },50)
+                      } else {
+                        $(this).prop("muted", true);
+                        if (checkPlay == false) {
+                            $(this).get(0).pause();
+                        } else {
+                            $(this).get(0).play();
+                        }
+                      }
+
+                  } else {
+
+                    if (isMobile) {
+                        $(this).find('.slick-slide.slick-current.slick-active video').get(0).pause();
+                      } else {
+                        $(this).get(0).pause();
+                        $(this).prop("muted", true);
+                      }
+                  }
+              });
+          }
+
+
+          $("video").click(function() {
+              var media1 = $('#tutorial_video video');
+              media1.each(function(index, el) {
+
+                  if ($(this).get(0).paused) {
+                      checkPlay = false;
+                  } else {
+                      checkPlay = true;
+                  }
+              });
+          });
+
+          $(".vjs-play-control").on("click", function(){
+              if($(this).hasClass("vjs-paused")){
+                  checkPlay = true;
+              }
+              else{
+                  checkPlay = false;
+              }
+          });
+
+        $(document).on('scroll', checkMedia);
+      });
+
+
+
+  </script>
+
+  <style>
+    .usageVideo{
+      display:flex;
+      padding-top:25px;
+      padding-bottom:60px;
+    }
+    .usageVideo .content{
+      width:25%;
+    }
+    .usageVideo .vid{
+      width:75%;
+      padding-left:60px;
+    }
+    .usageVideo ul{
+      list-style:none;
+      margin:0px;
+    }
+    .usageVideo ul li{
+      display:block;
+      border-bottom:1px solid #e6e3e0;
+      padding:30px 0;
+      transition:all 0.5s;
+      color:#919191;
+    }
+    .usageVideo ul li.active{
+      border-bottom:1px solid #919191;
+      color:#545353;
+    }
+    .usageVideo ul li:first-child{
+      padding-top:0px;
+    }
+    .usageVideo ul li:last-child{
+      border-bottom:0px;
+    }
+    .video-js .vjs-control-bar{
+      background:none;
+      width: 95%;
+      margin:auto;
+      bottom: 18px;
+    }
+    .video-js .vjs-slider{
+      height:0.2em;
+      background-color: #d8d8d8;
+    }
+    .video-js .vjs-load-progress{
+      background-color: #666666;
+    }
+    .video-js .vjs-play-progress{
+      background-color: #e6e3e0;
+    }
+    .video-js .vjs-progress-holder .vjs-load-progress, .video-js .vjs-progress-holder .vjs-play-progress{
+      height:0.2em;
+    }
+    .video-js .vjs-control:before{
+      color: #545353;
+    }
+    .vjs-marker{
+      width: 10px !important;
+      height: 10px !important;
+      bottom: 10px;
+      border-radius: 100% !important;
+      background: #e6e3e0 !important;
+    }
+    .video-js .vjs-play-progress:before{
+      font-size: 1.5em;
+      top: -0.5em;
+      color: #545353;
+      background: #545353;
+      border: 1px solid #fff;
+      border-radius: 100px;
+    }
+    .video-js .vjs-control:before{
+      font-size: 3em;
+      line-height: 1;
+      text-align: left;
+    }
+    .video-js .vjs-menu-button-inline:hover{
+      width:9em
+    }
+    .video-js .vjs-big-play-button{
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    .usageVideoMobile {
+      display:none;
+    }
+    .vidMobile {
+      width: 100vw;
+    }
+    .vidMobile p {
+      width: 100%;
+      margin: 1.5rem;
+    }
+    .vidMobile .slick-slide:not(.slick-current) p {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+    .intro-text{
+      margin: 0 1.5rem;
+      padding-bottom:30px;
+    }
+
+    .slick-slide{
+      margin-right: 5px;
+    }
+    .vidMobile.multiple-mobile-videos .slick-list{padding:0 0px 0 0;}
+
+    @media (max-width:767px){
+      .usageVideo{flex-flow: column-reverse; padding-left:15px; padding-right:15px; display:none;}
+      .usageVideo .vid, .usageVideo .content{width:100%; padding:0px;}
+      .usageVideo .content{padding-top:30px;}
+
+      .usageVideoMobile{display:block;}
+
+      .vidMobile .video-js.vjs-4-3{padding-top: 125%;}
+
+      .vidMobile.multiple-mobile-videos .slick-slide{margin-right:10px;}
+      .vidMobile.multiple-mobile-videos .slick-list{padding:0 50px 0 0;}
+
+    }
+  </style>
+
+  <script>
+
+     var $slider = $('.multiple-mobile-videos').slick({
+         slidesToShow: 1,
+         dots: false,
+         slidesToScroll: 1,
+         arrows: false,
+         fade: false,
+         autoplay: false
+     });
+
+     $(document).ready(function() {
+
+         $slider.on('afterChange', function (event, slick, currentSlide, nextSlide) {
+
+             var htmlPlayer = document.getElementsByTagName('video');
+             for(var i = 0; i < htmlPlayer.length; i++){
+                htmlPlayer[i].pause();
+             }
+
+             var vid = $(slick.$slides[currentSlide]).find('video');
+
+             if (vid.length > 0) {
+                 $slider.slick('slickPause');
+                 $(vid).get(0).load();
+                 $(vid).get(0).play();
+             }
+         });
+
+         $('video').on('ended', function () {
+             $slider.slick('slickPlay');
+         });
+     });
+
+  </script>
+{% endif %}

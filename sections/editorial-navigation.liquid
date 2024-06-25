@@ -1,0 +1,56 @@
+<section id="editioral-subnavigation" class="editioral-nav"> 
+    <div class="container">
+    <ul>
+        {% for block in section.blocks %}
+            <li>
+                <a href="">{{ block.settings.blog_category }}</a>
+                <div class="cat-info">{{ block.settings.blog_info }}</div>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="latest-article-link">
+       <ul>
+           <li><a href="">Latest Articles</a></li>
+       </ul> 
+    </div>
+</div>
+
+</section>
+<script>
+    $(window).scroll(function() {
+      
+        var windowTop = $(window).scrollTop();
+           if (windowTop > 0) {
+              $('#editioral-subnavigation').addClass('fixed');
+            } else {
+                 $('#editioral-subnavigation').removeClass('fixed');
+                 }
+  }); 
+</script>
+
+
+{% schema %}
+    {
+    "name": "Editorial Navigation",
+    "class": "editorial-navigation",
+    "max_blocks": 4,
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "Blog",
+    "settings": [
+    {
+    "type": "blog",
+    "id": "blog_category",
+    "label": "Blog Category"
+    },
+    {
+    "type": "text",
+    "id": "blog_info",
+    "label": "Blog Info"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

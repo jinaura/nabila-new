@@ -1,0 +1,39 @@
+<script type="text/javascript">
+    window.shopData = {
+        globalComingSoon: Boolean("{{ shop.metafields.globals.coming_soon }}"),
+        globalHash: "{{ shop.metafields.globals.hash }}",
+        soldOutText: "{{- "products.product.sold_out" | t -}}",
+        comingSoonText: "{{- "products.product.coming_soon" | t -}}",
+        comingSoonUkText: "{{- "products.product.not_available_in_region" | t -}}",
+
+        productDetails: [
+            {%- if collection -%}
+                {%- capture collection_string -%}
+                {%- for each in collection.products -%}
+                    {{- each.handle -}} {%- if forloop.last == false -%}, {%- endif -%}
+                {%- endfor -%}
+                {%- endcapture -%}
+                {%- assign collection_handles = collection_string | split: "," -%}
+                {%- liquid
+                    for handle in collection_handles
+                        render 'pdp-end-json.liquid', prod: all_products[handle], size_option: size_option
+                    endfor
+                -%}
+            {%- elsif product -%}
+                {%- render 'pdp-end-json.liquid', prod: product, size_option: size_option -%}
+            {%- endif -%}
+        ],
+        shadeGuideConfig: {{ 'shade-guide-config.json' | asset_url | json }},
+        handleColorOnClick: function(element) {
+            window.shopData.pendingColorOnClick = element
+        },
+        handleSizeOnOpen: function(element) {
+            window.shopData.pendingSizeOnOpen = element
+        },
+        handleSizeOptionOnClick: function() {},
+        handleOpenShadeChooser: function() {
+            window.shopData.pendingOpenShadeChooser = true
+        },
+        handleColorInShadeChooserOnClick: function() {},
+    }
+</script>

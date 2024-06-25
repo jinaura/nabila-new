@@ -1,0 +1,71 @@
+<div id="mobile-search-botttom-noresult" class="mobile-search-botttom-noresult">
+
+    <div class="search-category">
+        <h3 class="predictive-search__heading">We found 0 Result</h3>
+        <div class="cat-heading">
+            <h3>Try Popular Searches</h3>
+        </div>
+        <div class="category-list">
+            {% assign popular_search_noresult = settings.popular_search_noresult %}
+            <ul>
+                {% for link in linklists[popular_search_noresult].links %}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+    <!-- search-category-mobile -->
+
+    <div class="popular-product">
+        <div class="cat-heading">
+            <h3>Popular Searches</h3>
+        </div>
+
+        <div class="popular-product-search-wrap heightAuto">
+
+            {% if settings.search_blogPost != blank %}
+                {% assign collectionLimt = 3 %}
+            {% else %}
+                {% assign collectionLimt = 4 %}
+            {% endif %}
+
+            <div class="search__items customMargin40"> 
+                {% for bestSellerNoResult in collections[settings.best_seller_noresult].products limit: collectionLimt %}
+                    {% if bestSellerNoResult.object_type == 'product' %}
+                        {% if bestSellerNoResult.price != 0 and  bestSellerNoResult.type != 'Gift Box' %}
+                            {% if bestSellerNoResult.type == 'Sets Product' %}
+                                {%- include 'product-item-sets' with bestSellerNoResult , coll_type: 'sets' -%}
+                            {% else %}
+                                {%- include 'product-item' with bestSellerNoResult, coll_type: 'best-sellers' -%}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if settings.search_blogPost != blank %}
+                    <div class="popular-product-item product__item ">
+                        <div class="p-image">
+                            <a href="{{ settings.search_blogPost.url }}"><img src="{{settings.search_blogPost.image | img_url: '600x'}}" alt="{{ settings.search_blogPost.image.alt }}"></a>
+                        </div>
+                        <div class="inner_content">
+                            <a href="{{ settings.search_blogPost.url }}" class="buy_btn">Read Now</a>
+                        </div>
+                        <div class="p-title">
+                            <a href="{{ settings.search_blogPost.url }}"><h3>{{ settings.search_blogPost.title }}</h3></a>
+                        </div>
+
+
+                    </div>
+                {% endif %}
+            </div>
+
+
+
+        </div>
+        <!-- popular-product-search-wrap -->
+
+    </div>
+    <!-- popular-product-mobile -->
+
+</div>

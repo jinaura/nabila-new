@@ -1,0 +1,272 @@
+{% unless section.settings.enable_widget_global == 'disable_globally' %}
+  {% liquid
+    assign allowed_templates = ""
+    if section.settings.show_on_homepage
+      assign allowed_templates = allowed_templates | append: 'index,'
+    endif
+
+    if section.settings.show_on_collection
+      assign allowed_templates = allowed_templates | append: 'collection,'
+    endif
+
+    if section.settings.show_on_pdp
+      assign allowed_templates = allowed_templates | append: 'product,'
+    endif
+
+    if section.settings.show_on_pages
+      assign allowed_templates = allowed_templates | append: 'page,'
+    endif
+
+    if section.settings.show_on_checkout
+      assign allowed_templates = allowed_templates | append: 'checkout,'
+    endif
+
+    if section.settings.show_on_blog
+      assign allowed_templates = allowed_templates | append: 'blog'
+    endif
+    assign allowed_templates = allowed_templates | split: ','
+
+    assign current_template = template | split:'.' | first
+    if checkout
+      assign current_template = 'checkout'
+    endif
+  %}
+  <div class="advisory-widget-active">
+    {%- if allowed_templates contains current_template -%}
+      {% include 'ada-chatbot-answer-ids', entry_point: 'cc_chat' %}
+      <div class="beauty-advisor-wrapper BA-CC-chatbubble {{ section.settings.enable_widget_global }} live-advisory_link" data-greetingdesktop="{{- answer_id_desktop -}}" data-greetingmobile="{{- answer_id_mobile -}}">
+        <div class="live-advisor-wrap">
+          <a href="javascript:" tabindex="0" role="button" class="BA-CC-chatbubble-extended" aria-label="Beauty Advisor Chat Window">
+            {%- include 'svg-icons' with 'chat-widget' -%}
+          </a>
+        </div>
+      </div>
+
+    {%- endif -%}<!-- allowd templates END -->
+  </div>
+{% endunless %}<!-- enable_widget_global END -->
+
+{% schema %}
+  {
+    "name": "Beauty Advisor Widget",
+    "class": "beauty-advisor-widget",
+    "settings": [
+      {
+        "type": "select",
+        "id": "enable_widget_global",
+        "label": "Enable / Disable (Globally)",
+        "options": [
+          {
+            "group": "global",
+            "value": "show_advisory__both",
+            "label": "Enbale on Both"
+          },
+          {
+            "group": "global",
+            "value": "show_advisory__mobile",
+            "label": "Enable on Mobile"
+          },
+          {
+            "group": "global",
+            "value": "show_advisory__desktop",
+            "label": "Enable on Desktop"
+          },
+          {
+            "group": "global",
+            "value": "disable_advisory_globally",
+            "label": "Disable on Both"
+          }
+        ],
+        "default": "show_advisory__both",
+        "info": "Select option to display widget on specific device"
+      },
+      {
+        "type": "header",
+        "content": "Turn on/off banner by Page"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_on_homepage",
+        "label": "Show on Homepage",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_on_collection",
+        "label": "Show on Collection Pages",
+        "default": true,
+        "info": "Applicable on all collection pages"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_on_pages",
+        "label": "Show on Pages",
+        "default": true,
+        "info": "Applicable on all pages"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_on_pdp",
+        "label": "Show on PDP",
+        "default": true,
+        "info": "Applicable on all PDPs"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_on_checkout",
+        "label": "Show on Checkout",
+        "default": false,
+        "info": "Applicable on checkout page"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_on_blog",
+        "label": "Show on Blogs",
+        "default": true,
+        "info": "Applicable on blog pages"
+      },
+      {
+        "type": "header",
+        "content": "Banner Settings"
+      },
+      {
+        "type": "image_picker",
+        "id": "advisor_image",
+        "label": "Advisor Image"
+      },
+      {
+        "type": "textarea",
+        "id": "banner_text",
+        "label": "Headline"
+      },
+      {
+        "type": "header",
+        "content": "Customer Care - Settings"
+      },
+      {
+        "type": "image_picker",
+        "id": "item_icon__1",
+        "label": "Customer Care - Icon"
+      },
+      {
+        "type": "text",
+        "id": "item_heading__1",
+        "label": "Customer Care - Item Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "item_copy__1",
+        "label": "Customer Care - Copy"
+      },
+      {
+        "type": "header",
+        "content": "Clean Beauty Advisor - Settings"
+      },
+      {
+        "type": "textarea",
+        "id": "item_healine__2",
+        "label": "Clean Beauty Advisor - Headline"
+      },
+      {
+        "type": "image_picker",
+        "id": "item_icon__2",
+        "label": "Clean Beauty Advisor - Icon"
+      },
+      {
+        "type": "text",
+        "id": "item_heading__2",
+        "label": "Clean Beauty Advisor - Item Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "item_copy__2",
+        "label": "Clean Beauty Advisor - Copy"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "live-chat",
+        "name": "Live Chat",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "opt_parent",
+            "label": "Parent Item",
+            "info": "Label of the parent item (e.g: Customer Care)"
+          },
+          {
+            "type": "image_picker",
+            "id": "opt_icon",
+            "label":"Icon"
+          },
+          {
+            "type": "text",
+            "id": "opt_title",
+            "label": "Title"
+          },
+          {
+            "type": "header",
+            "content": "Answer IDs"
+          },
+          {
+            "type": "text",
+            "id": "id_desktop_on",
+            "label": "ID Desktop (On Hours)",
+            "info": "If this will be blank, default desktop ID will be used instead"
+          },
+          {
+            "type": "text",
+            "id": "id_mobile_on",
+            "label": "ID Mobile (On Hours)",
+            "info": "If this will be blank, default mobile ID will be used instead"
+          },
+          {
+            "type": "text",
+            "id": "id_desktop_off",
+            "label": "ID Desktop (Off Hours)",
+            "info": "If this will be blank, default desktop ID will be used instead"
+          },
+          {
+            "type": "text",
+            "id": "id_mobile_off",
+            "label": "ID Mobile (Off Hours)",
+            "info": "If this will be blank, default mobile ID will be used instead"
+          }
+        ]
+      },
+      {
+        "type": "voice",
+        "name": "Voice",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "opt_parent",
+            "label": "Parent Item",
+            "info": "Label of the parent item (e.g: Customer Care)"
+          },
+          {
+            "type": "image_picker",
+            "id": "opt_icon",
+            "label":"Icon"
+          },
+          {
+            "type": "text",
+            "id": "opt_title",
+            "label": "Title"
+          },
+          {
+            "type": "header",
+            "content": "Phone Number"
+          },
+          {
+            "type": "text",
+            "id": "phone_number",
+            "label": "Phone Number"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

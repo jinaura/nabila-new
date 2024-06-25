@@ -1,0 +1,230 @@
+<section class="signupVideo">
+  <a href="#" id="signup-action" class="signup-modal">Sign Up</a>
+  <div class="tv-overlay"></div>
+
+  {{ 'tutorial-video-js.min.css' | asset_url | stylesheet_tag: preload: true }}
+  {{ 'tutorial-video.min.js'  | asset_url | script_tag     }}
+
+    <!-- Desktop Variables -->
+    {% assign image = section.settings.desktop_image_signup %}
+    {% assign video = section.settings.desktop_video_url_signup %}
+    {% assign customDesktopVideoUrl = section.settings.custom_desktop_video_url_signup %}
+
+    <!-- Mobile Variables -->
+    {% assign image_mobile = section.settings.mobile_image_signup %}
+    {% assign video_mobile = section.settings.mobile_video_url_signup %}
+    {% assign customMobileVideoUrl = section.settings.custom_mobile_video_url_signup %}
+
+    <!--    Desktop Info    -->
+    {% capture desktopImage %}
+      {{image | image_url: width: 2600 | image_tag: width: 1920, height: 650, alt: image.alt, preload: true, fetchpriority: 'high' }}
+    {% endcapture %}
+    {% capture desktopYoutube %}<iframe width="560" height="315" src="https://www.youtube.com/embed/{{video.id}}?playlist={{video.id}}&loop=1&autoplay=1&mute=1" title="{{title}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+    {% capture desktopVimeo %}<iframe width="560" height="315" src="https://player.vimeo.com/video/{{video.id}}" title="{{title}}" frameborder="0" allow="loop;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+    {% capture desktopCustomVideo %}
+      <video
+        id="tutorial_video"
+        class="video-js vjs-fluid vjs-default-skin"
+        controls
+        loop
+        muted
+        playsinline="true"
+        webkit-playsinline="true"
+        width="100%"
+        height="100%"
+        data-setup='{"width": 640, "height": 360}'>
+        <source src="{{ customDesktopVideoUrl }}" type='video/mp4' />
+      </video>
+    {% endcapture %}
+
+    <!--    Mobile Info    -->
+    {% capture mobileImage %}
+      {{image_mobile | image_url: width: 1400 | image_tag: width: 760, height: 950, alt: image_mobile.alt, preload: true, fetchpriority: 'high' }}
+    {% endcapture %}
+    {% capture mobileYoutube %}<iframe width="560" height="315" src="https://www.youtube.com/embed/{{video_mobile.id}}?playlist={{video_mobile.id}}&loop=1&autoplay=1&mute=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+    {% capture mobileVimeo %}<iframe width="560" height="315" src="https://player.vimeo.com/video/{{video_mobile.id}}" frameborder="0" allow="loop;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+    {% capture mobileCustomVideo %}
+      <video
+        id="tutorial_video_mobile"
+        class="video-js vjs-fluid vjs-default-skin"
+        controls
+        loop
+        muted
+        playsinline="true"
+        webkit-playsinline="true"
+        width="100%"
+        height="100%"
+        data-setup='{"width": 640, "height": 360}'>
+        <source src="{{ customMobileVideoUrl }}" type='video/mp4' />
+      </video>
+    {% endcapture %}
+
+    <!-- Desktop Media -->
+    <div class="media minus-width" id="block-desktop">
+      <div {% unless image == blank %}class="img-media"{% endunless %}>
+
+        {% if customDesktopVideoUrl != '' %}
+          {{ desktopCustomVideo }}
+        {% else %}
+          {% if image != '' %} {{ desktopImage }} {% endif %}
+        {% endif %}
+        {% if video.type == 'youtube' %} {{desktopYoutube}} {% endif %}
+        {% if video.type == 'vimeo' %} {{desktopVimeo}} {% endif %}
+
+      </div>
+    </div>
+
+    <!-- Mobile Media -->
+    <div class="media" id="block-mobile">
+      <div {% unless image_mobile == blank %}class="img-media"{% endunless %}>
+
+        {% if customMobileVideoUrl != '' %}
+          {{ mobileCustomVideo }}
+        {% else %}
+          {% if image_mobile != '' %} {{ mobileImage }} {% endif %}
+        {% endif %}
+        {% if video_mobile.type == 'youtube' %} {{ mobileYoutube }} {% endif %}
+        {% if video_mobile.type == 'vimeo' %} {{ mobileVimeo }} {% endif %}
+
+      </div>
+    </div>
+
+</section>
+
+<style>
+  .video-js .vjs-control-bar{
+    background:none;
+    width: 65%;
+    margin:auto;
+    bottom: 25px;
+  }
+  .video-js .vjs-slider{
+    height:0.1em;
+    background-color: #d8d8d8;
+  }
+  .video-js .vjs-load-progress{
+    background-color: #666666;
+  }
+  .video-js .vjs-play-progress{
+    background-color: #e6e3e0;
+  }
+  .video-js .vjs-progress-holder .vjs-load-progress, .video-js .vjs-progress-holder .vjs-play-progress{
+    height:0.2em;
+  }
+  .video-js .vjs-control:before{
+    color: #545353;
+  }
+  .vjs-marker{
+    width: 10px !important;
+    height: 10px !important;
+    bottom: 10px;
+    border-radius: 100% !important;
+    background: #e6e3e0 !important;
+  }
+  .video-js .vjs-play-progress:before{
+    font-size: 1.2em;
+    top: -0.5em;
+    color: #545353;
+    background: #545353;
+    border: 1px solid #fff;
+    border-radius: 100px;
+  }
+
+  .video-js .vjs-control:before{
+    font-size: 2.5em;
+    line-height: 1.2;
+    text-align: left;
+  }
+  .video-js .vjs-menu-button-inline:hover{
+    width:9em
+  }
+  .video-js .vjs-big-play-button{
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+  }
+
+  
+
+</style>
+
+<script>
+var videoSettings = {
+  controlBar: {
+    children: [
+      "playToggle",
+      "durationDisplay",
+      "timeDivider",
+      "currentTimeDisplay",
+      "progressControl",
+      "volumeMenuButton"
+    ]
+  }
+};    
+videojs('tutorial_video', videoSettings);
+videojs('tutorial_video_mobile', videoSettings);
+</script>
+
+{% schema %}
+{
+  "name": "Signup Video UK",
+  "class": "signup-video",
+  "settings": [
+    {
+      "type":"header",
+      "content":"Desktop Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image_signup",
+      "label": "Desktop Image"
+    },
+    {
+      "id": "desktop_video_url_signup",
+      "type": "video_url",
+      "label": "Desktop Video URL",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ]
+    },
+    {
+      "type": "text",
+      "id": "custom_desktop_video_url_signup",
+      "label": "Desktop Custom  Video Url"
+    },
+    {
+      "type":"header",
+      "content":"Mobile Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_signup",
+      "label": "Mobile Image"
+    },
+    {
+      "id": "mobile_video_url_signup",
+      "type": "video_url",
+      "label": "Mobile Video URL",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ]
+    },
+    {
+      "type": "text",
+      "id": "custom_mobile_video_url_signup",
+      "label": "Mobile Custom  Video Url"
+    }      
+  ],
+  "presets": [
+    {
+      "name": "Signup Video UK",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

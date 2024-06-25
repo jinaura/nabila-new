@@ -1,0 +1,363 @@
+{{ 'slick.js'  | asset_url | script_tag     }}
+
+<section class="complexion-shades-sect">
+    <div class="container">
+<div class="tpl__wrap">
+<div class="complexion-shades-sect__row">
+    <div class="complexion-shades-sect__col css-col-left">
+        <div class="regular slider">
+            {% for variant in _product.variants %}
+                {%- assign before_after_image = variant.metafields.color.beforeafter[0].src -%}
+                <div>
+                    <img style="max-width:100%;" src="{{ before_after_image }}" alt="{{variant.metafields.color.beforeafter[0].alt}}"
+                        srcset="
+                        {{ variant.metafields.color.beforeafter[0].src | append: '&transform=resize=200' }} 200w,
+                        {{ variant.metafields.color.beforeafter[0].src | append: '&transform=resize=400' }} 400w,
+                        {{ variant.metafields.color.beforeafter[0].src | append: '&transform=resize=600' }} 600w
+                        "
+                        fetchpriority="low" loading="lazy"
+                    >
+                </div>
+            {% endfor %}
+            </div>
+
+            <div class="sn-btn showmobile">
+                <a href="#_" class="btn be-af-shade"  id="be-af-shade">Shop Now</a>
+            </div>
+    </div>
+    <div class="complexion-shades-sect__col css-col-right">
+        
+        <div class="css__c-top">
+        <h3>{{ num }} Flexible Shades </h3>
+        <p>{{ block.settings.shade_sub_heading }}</p>
+        <a href="{{ block.settings.shade_finder_link }}">Try Shade Finder</a>
+        </div>
+      
+
+        <div class="css__c_shades_wrap">
+        <div class="color_info " >
+
+
+            {% assign colorName = '' %}
+            {% assign colorHex = '' %}
+            {% assign colorFlag = '' %}
+            {% assign colorDescription = '' %}
+            {% assign maxVariant = 0 %}
+            {% assign selectedColorName = '' %}
+            {% assign selectedColorDescription = '' %}
+            {%- assign background_image = '' -%}
+            {%- assign before_after_image = '' -%}
+            {% assign checkSelectedOption = 0 %}
+        
+        
+            {% for product_option in _product.variants %}
+                {% if product_option.inventory_quantity >= 1 %}
+                    {% assign checkSelectedOption = forloop.index %}
+                    {% break %}
+                {% endif %}
+            {% endfor %}
+        
+        
+            {% if checkSelectedOption == 0 %}
+                {% assign checkSelectedOption = 0%}
+            {% else %}
+                {% assign checkSelectedOption = checkSelectedOption | minus: 1 %}
+            {% endif %}
+        
+            {% for product_option in _product.options_with_values %}
+                {% for value in product_option.values %}
+        
+                    {% if product_option.name == 'Color'%}
+                        <div class="opt {% unless __product.variants[forloop.index0].available %}opt--available{% endunless %} {% if forloop.index  == 1 %} shown {% endif %}">
+                            {% assign maxVariant = product_option.values.size %}
+                            {% for variant in _product.variants %}
+                                {% if variant.metafields.color.name == value %}
+                                    {% assign colorHex = variant.metafields.color.hex %}
+                                    {% assign colorFlag = variant.metafields.flag.title %}
+                                    {% assign colorName = variant.metafields.color.name %}
+                                    {% assign colorDescription = variant.metafields.description.value %}
+                                    {% assign variantId = variant.id %}
+        
+                                    {%- if variant.metafields.color.texture %}
+                                        {%- assign background_image = "url('"| append:variant.metafields.color.texture[0].src|append:"')"-%}
+                                    {% else %}
+                                        {%- assign background_image = "none"-%}
+                                    {%- endif -%}
+        
+                                    <span style="display: none;" id="color-{{ colorName | replace: ' ','-' }}-{{ _product.id }}-{{ random_number }}">
+                                            <p class="color__name">{{ colorName }}</p>
+                                            <p class="color__description">{{ colorDescription }}</p>
+                                        </span>
+        
+                                    <!--- get available variant information  --->
+                                    {% if _product.variants[checkSelectedOption].option1 == value %}
+                                        {% assign selectedColorName = colorName %}
+                                        {% assign selectedColorDescription = colorDescription %}
+                                    {% endif %}
+                                    <!--- end get available variant information  --->
+                                {% endif %}
+                            {% endfor %}
+        
+                            <div class="color_radio productOptionShade special_txt">
+                                <input type="radio" style="display: none;" name="{{ product_option.name }}-{{ _product.id }}-{{ random_number }}"
+                                       value="{{ value }}"
+                                        {% if _product.variants[checkSelectedOption].option1 == value %} checked  {% endif %}
+                                       data-pid="{{ _product.id }}-{{ random_number }}"
+                                       data-type="{{ product_option.name }}"
+                                       data-cno="{{ forloop.index }}"
+                                       data-vId="{{ variantId }}"
+                                       id="{{ value | replace: ' ','-' }}-{{ _product.id }}-{{ random_number }}"
+                                       class="{{ product_option.name }}-{{ _product.id }}-{{ random_number }}">
+        
+                                <label for="{{ value | replace: ' ','-' }}-{{ _product.id }}-{{ random_number }}" style="background-color:{{colorHex}}; background-image:{{background_image}}">
+                                    {% assign getVariantIndex = forloop.index | minus: 1 %}
+                                    {% unless _product.variants[getVariantIndex].metafields.visibility.coming_soon %}
+                                        {% if _product.variants[getVariantIndex].inventory_quantity < 1 %}
+                                            <svg class="variant-notavailable-strike" viewBox="0 0 100 100">
+                                                <line x1="0" y1="100" x2="100" y2="0"></line>
+                                            </svg>
+                                        {% endif %}
+                                    {% endunless %}
+        
+                                    <span>{{ colorFlag }}</span>
+                                </label>
+        
+                            </div>
+        
+                        </div>
+                    {% endif %}
+        
+                {% endfor %}
+        
+            {% endfor %}
+        </div>
+
+        <div class="css__c_shades_content">
+            <div class="variant_info" id="variant_info_{{ _product.id }}-{{ random_number }}">
+                <p class="color__name">{{ selectedColorName }}</p>
+                <p class="color__description">{{ selectedColorDescription }}</p>
+            </div>
+        </div>
+        <div class="sn-btn showdesktop">
+            <a href="#_" class="btn be-af-shade"  id="be-af-shade">Shop Now</a>
+        </div>
+        </div>
+
+       
+    </div>
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</section>
+
+<style>
+    .complexion-shades-sect {
+        margin-top: 60px;
+        margin-bottom: 60px;
+    }
+    .complexion-shades-sect__row {
+        display: flex;
+        align-items: center;
+    }
+    .complexion-shades-sect__row .complexion-shades-sect__col {
+        width: 50%;
+    }
+    .complexion-shades-sect__row .complexion-shades-sect__col.css-col-left  .slick-prev{
+        left: 10px;
+    z-index: 25;
+}
+.complexion-shades-sect__row .complexion-shades-sect__col.css-col-left  .slick-next {
+    right: 0;
+}
+    .complexion-shades-sect__row .complexion-shades-sect__col.css-col-left  .slick-arrow.slick-prev:before {
+    content: '' !important;
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-right: 10px solid #545353;
+    border-radius: 1px;
+    display: block;
+}
+
+.complexion-shades-sect__row .complexion-shades-sect__col.css-col-left  .slick-arrow.slick-prev.slick-disabled:after {
+    content: '' !important;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 7px solid #fafafa;
+    border-radius: 1px;
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 2px;
+}
+
+.complexion-shades-sect__row .complexion-shades-sect__col.css-col-left  .slick-arrow.slick-next:before {
+    content: '' !important;
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 10px solid #545353;
+    border-radius: 1px;
+    display: block;
+}
+
+.complexion-shades-sect__row .complexion-shades-sect__col.css-col-left .slick-arrow.slick-next.slick-disabled:after {
+    content: '' !important;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 7px solid #fafafa;
+    border-radius: 1px;
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 1px;
+}
+    .complexion-shades-sect__row .css-col-right {
+        padding-left: 12.122%;
+        padding-right: 12.122%;
+        padding-top: 80px;
+    }
+    .complexion-shades-sect__row  .css__c_shades_wrap {
+        width: 100%;
+    }
+    .complexion-shades-sect__row .css__c_shades_content {
+        width: 100%;
+        clear: both;
+    }
+
+    .complexion-shades-sect__row .css-col-right .css__c-top h3 {
+       margin-bottom: 10px;
+
+    }
+    .complexion-shades-sect__row .css-col-right .css__c-top  p {
+       margin-bottom: 15px;
+
+    }
+    .complexion-shades-sect__row .css-col-right .css__c-top  a {
+        text-transform: uppercase;
+        font-size: 14px;
+
+    }
+    .complexion-shades-sect__row .css-col-right .css__c_shades_wrap .color_info {
+
+        padding: 0;
+        flex-wrap: wrap;
+        margin-top: 35px;
+        scroll-behavior: smooth;
+
+    }
+    .complexion-shades-sect__row .css-col-right .css__c_shades_wrap .color_info .color_radio{
+       padding-bottom: 10px;
+       padding-left: 0;
+    padding-right: 5px;
+    }
+    .complexion-shades-sect__row .css-col-right .css__c_shades_wrap .css__c_shades_content{
+       padding-top: 5px;
+    }
+    .complexion-shades-sect__row .sn-btn .btn{
+       background: #545353;
+       color:#fff;
+       margin-top: 0;
+    }
+
+    @media (max-width:1024px){
+        .complexion-shades-sect__row .css-col-right {
+            padding-left: 5%;
+            padding-right: 5%;
+            padding-top: 40px;
+        }
+    }
+    @media (max-width:767px){
+
+        .complexion-shades-sect__row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .complexion-shades-sect__row .complexion-shades-sect__col {
+        width: 100%;
+    }
+    .complexion-shades-sect__row .complexion-shades-sect__col.css-col-right {
+        order: 0;
+    }
+    .complexion-shades-sect__row .complexion-shades-sect__col.css-col-left {
+        order: 1;
+    }
+        .complexion-shades-sect__row .css-col-right {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+    }
+    .complexion-shades-sect__row .css-col-right .css__c_shades_wrap .color_info {
+    padding: 0;
+    flex-wrap: nowrap;
+    margin-top: 35px;
+}
+.complexion-shades-sect__row .complexion-shades-sect__col.css-col-left .slick-slider {
+margin-left: -20px;
+margin-right: -20px;
+}
+.complexion-shades-sect__row .complexion-shades-sect__col.css-col-left .slick-list {
+    padding-right: 0 !important;
+    padding-left: 0!important;
+}
+.complexion-shades-sect__row .sn-btn .btn{
+       margin-top: 25px;
+    }
+    }
+    
+</style>
+<script>
+
+    $('.be-af-shade').click(function(e){
+        e.preventDefault();
+        $(".productOptionShade input[type=radio]:checked").each(function() {
+            window.location = "/products/" + "{{ _product.handle}}?variant="+$(this).attr("data-vid");
+        });
+    });
+
+    $( ".productOptionShade input" ).click(function(e) {
+
+        var variant_cno     =  ($(this).find(':checked').attr('data-cno')) ? $(this).find(':checked').attr('data-cno') : $(this).attr('data-cno');
+        var variant_id      =  ($(this).find(':checked').attr('id')) ? $(this).find(':checked').attr('id') : $(this).attr('id');
+        var product_id      =  ($(this).find(':checked').attr('data-pid')) ? $(this).find(':checked').attr('data-pid') : $(this).attr('data-pid');
+
+        $('#variant_info_'+product_id).html($('#color-'+variant_id).html());
+        var variant_cno = variant_cno - 1;
+        if(variant_cno  >= 0){
+            $('.regular').slick('slickGoTo', variant_cno);
+        }
+
+    });
+
+    $('.regular').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+
+        var $element = $('.productOptionShade :radio');
+        $element.filter(':eq('+nextSlide+')').focus().trigger('click');
+        document.querySelector(".color_info").scrollLeft = document.querySelectorAll(".opt")[nextSlide].offsetLeft - 150;
+    });
+
+    $(".regular").slick({
+        dots: false,
+        infinite: false,
+        slidesToShow: 1,
+        slidesToScroll: 1
+    });
+
+</script>

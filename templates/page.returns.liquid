@@ -1,0 +1,11 @@
+
+{% if page.handle == "returns" and localization.country.iso_code == 'GB' and request.design_mode == false %}
+  <script type="text/javascript">
+      if (!window.location.hostname.includes('roseinc.co.uk')) {
+            window.location = "https://roseinc.co.uk/pages/returns";
+      }
+  </script>
+{% endif %}
+
+{% section 'returns' %}
+{% section 'returns-uk' %}

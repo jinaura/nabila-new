@@ -1,0 +1,174 @@
+{% if request.host ==  "www.roseinc.com" %}
+  <!-- OneTrust Cookies Consent Notice start for roseinc.com -->
+  <script type="text/javascript" src="https://cdn.cookielaw.org/consent/ab4bde49-3193-40b2-9dca-a431ef1d6d98/OtAutoBlock.js" ></script>
+  <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="ab4bde49-3193-40b2-9dca-a431ef1d6d98" ></script>
+  <!-- OneTrust Cookies Consent Notice start for roseinc.com -->
+  <script type="text/javascript">
+      function OptanonWrapper() {
+        window.dataLayer.push({event:'OneTrustGroupsUpdated'});
+      }
+  </script>
+  <!-- OneTrust Cookies Consent Notice end for roseinc.com -->
+{% elsif request.host ==  'www.roseinc.co.uk' %}
+  <!-- OneTrust Cookies Consent Notice start for roseinc.co.uk -->
+  <script type="text/javascript" src="https://cdn.cookielaw.org/consent/77e22c9b-4c5b-4959-b74a-a57ff866964e/OtAutoBlock.js" ></script>
+  <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="77e22c9b-4c5b-4959-b74a-a57ff866964e" ></script>
+    <script type="text/javascript">
+        function OptanonWrapper() {
+            window.dataLayer.push({event:'OneTrustGroupsUpdated'});
+        }
+        const targetingCookieCategory = 'C0004,';
+        function waitForOneTrust() {
+            hasOneTrustLoaded();
+            let attempts = 0;
+            const interval = setInterval(function () {
+                if (hasOneTrustLoaded() || attempts > 100) {
+                    clearInterval(interval);
+                }
+                attempts++;
+            }, 100);
+        }
+        function hasOneTrustLoaded() {
+            if (typeof window.OnetrustActiveGroups === 'string') {
+                //check now
+                optanonWrapper();
+                // and wrap and trigger after cookie opt-in
+                window.OptanonWrapper = optanonWrapper;
+                return true;
+            }
+            return false;
+        }
+        function sendConsent(trackingConsent) {
+            window.Shopify.customerPrivacy.setTrackingConsent(trackingConsent, () => {});
+        }
+        function optanonWrapper() {
+            const trackingConsent = !!window.OnetrustActiveGroups.includes(targetingCookieCategory);
+            var url = window.location.href;
+            if (url.includes('checkout')) {
+            } else {
+                window.Shopify.loadFeatures([
+                    {
+                        name: 'consent-tracking-api',
+                        version: '0.1',
+                    },
+                    ],
+                    error => {
+                        if (error) {
+                            //throw error;
+                        }
+                        sendConsent(trackingConsent);
+                    },
+                );  
+            }  
+        }
+        (function () {
+            waitForOneTrust();
+        })();
+    </script>
+  <!-- OneTrust Cookies Consent Notice end for roseinc.co.uk -->
+{% else %}
+<!-- OneTrust Cookies Consent Notice start for rose-inc-dev.myshopify.com -->
+  <script type="text/javascript" src="https://cdn.cookielaw.org/consent/b12c4a9b-eda9-4967-b728-bd7bb8686f44/OtAutoBlock.js" ></script>
+  <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="b12c4a9b-eda9-4967-b728-bd7bb8686f44" ></script>
+  <script type="text/javascript">
+      function OptanonWrapper() {
+        window.dataLayer.push({event:'OneTrustGroupsUpdated'});
+      }
+  </script>
+  <!-- OneTrust Cookies Consent Notice end for rose-inc-dev.myshopify.com -->
+{% endif %}
+
+<style>
+    body #onetrust-banner-sdk {
+        box-shadow: none;
+    }
+    body #onetrust-consent-sdk #onetrust-banner-sdk{
+        background: #f6f3f0;
+    }
+    body #onetrust-consent-sdk #onetrust-accept-btn-handler, 
+    body #onetrust-consent-sdk .save-preference-btn-handler{
+        background-color: #545353 !important;
+        border-color: #545353 !important;
+        border-radius: 0;
+        text-transform: uppercase;
+        font-weight: normal;
+        font-family: var(--font-medium);
+        letter-spacing: 1px;
+    }
+    body #onetrust-consent-sdk #onetrust-pc-btn-handler.cookie-setting-link{
+        background: none;
+        color: #545353;
+        font-weight: normal;
+    }
+    body #onetrust-consent-sdk .ot-sdk-container .ot-sdk-row:not(#cookie-preferences){
+        display: flex;
+        flex-flow: row-reverse;
+        align-items: center;
+    }
+    body #onetrust-banner-sdk.vertical-align-content #onetrust-button-group-parent{
+        transform: translateY(-50%);
+    }
+    body #onetrust-banner-sdk:not(.ot-iab-2).vertical-align-content #onetrust-button-group-parent{
+        position: static;
+        transform: translateY(0);
+        text-align: left;
+        padding-left: 0;
+    }
+    body #onetrust-banner-sdk:not(.ot-iab-2) #onetrust-group-container {
+        width: 86%;
+    }
+    body #onetrust-banner-sdk #onetrust-policy {
+        width: 85%;
+        margin-left: 0; 
+    }
+    body #onetrust-banner-sdk #onetrust-button-group{
+        display: flex;
+        flex-flow: row-reverse;
+        justify-content: flex-end;
+    }
+
+    body #onetrust-banner-sdk .onetrust-close-btn-ui{
+        background: none;
+    }
+    body #onetrust-banner-sdk .onetrust-close-btn-ui::before{
+        content: 'Close';
+        text-decoration: underline;
+    }
+    body #onetrust-banner-sdk .ot-sdk-container{
+        max-width: 1350px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    body #onetrust-banner-sdk #onetrust-close-btn-container button{
+        right: 0;
+    }
+
+    body #onetrust-banner-sdk.ot-buttons-fw:not(.ot-iab-2) #onetrust-button-group-parent{
+        padding-right: 0%;
+    }
+
+    body #onetrust-pc-sdk .ot-always-active{
+        color: #545353;
+    }
+    body #onetrust-pc-sdk .ot-tgl input:checked+.ot-switch .ot-switch-nob {
+        background-color: rgba(163, 214, 144, .50);
+        border: 1px solid #3C6C28;
+    }
+    body #onetrust-pc-sdk .ot-tgl input:checked+.ot-switch .ot-switch-nob:before{
+        background-color: #545353;
+    }
+
+    @media (max-width:767px){
+        body #onetrust-consent-sdk .ot-sdk-container .ot-sdk-row:not(#cookie-preferences){
+            flex-flow: column;
+            padding: 50px 0 0px 0;
+        }
+        body #onetrust-banner-sdk #onetrust-button-group{
+            flex-flow: column-reverse;
+        }
+        body #onetrust-banner-sdk:not(.ot-iab-2) #onetrust-group-container, 
+        body #onetrust-banner-sdk #onetrust-policy{
+            width: 100%;
+        }
+    } 
+</style>

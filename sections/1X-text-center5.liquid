@@ -1,0 +1,143 @@
+<section class="dropcapTextModule">
+
+    {% for block in section.blocks %}
+
+        {% if article.handle == articles[block.settings.text-center5-article].handle %}
+            <div class="content-info">
+              <ul>
+                <li><b>{{ block.settings.dropcap_1 }}</b>{{ block.settings.dropcap_description_1  }}</li>
+                <li><b>{{ block.settings.dropcap_2  }}</b>{{ block.settings.dropcap_description_2  }}</li>
+                <li><b>{{ block.settings.dropcap_3  }}</b>{{ block.settings.dropcap_description_3  }}</li>
+                <li><b>{{ block.settings.dropcap_4  }}</b>{{ block.settings.dropcap_description_4  }}</li>
+                <li><b>{{ block.settings.dropcap_5 }}</b>{{ block.settings.dropcap_description_5  }}</li>
+                <li><b>{{ block.settings.dropcap_6  }}</b>{{ block.settings.dropcap_description_6  }}</li>
+                <li><b>{{ block.settings.dropcap_7  }}</b>{{ block.settings.dropcap_description_7  }}</li>
+                <li><b>{{ block.settings.dropcap_8  }}</b>{{ block.settings.dropcap_description_8  }}</li>
+              </ul>
+            </div>
+
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+.dropcapTextModule{
+  display: flex;
+  justify-content: center;
+  text-align: left;
+  padding-bottom:120px;
+}
+.dropcapTextModule .content-info{
+  max-width:720px;
+  width:100%;
+}
+.dropcapTextModule .content-info ul li{
+  padding-bottom:20px;
+  display: flex;
+}
+.dropcapTextModule .content-info ul li b{
+  min-width:60px;
+  display:inline-block;
+}
+</style>
+
+{% schema %}
+    {
+    "name": "1X Text Center5",
+    "class": "text-center",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "1X Text Center5",
+    "settings": [
+    {
+    "type": "article",
+    "id": "text-center5-article",
+    "label": "Article"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_1",
+    "label": "Dropcap 1"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_1",
+    "label": "Dropcap Description 1"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_2",
+    "label": "Dropcap 2"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_2",
+    "label": "Dropcap Description 2"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_3",
+    "label": "Dropcap 3"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_3",
+    "label": "Dropcap Description 3"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_4",
+    "label": "Dropcap 4"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_4",
+    "label": "Dropcap Description 4"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_5",
+    "label": "Dropcap 5"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_5",
+    "label": "Dropcap Description 5"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_6",
+    "label": "Dropcap 6"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_6",
+    "label": "Dropcap Description 6"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_7",
+    "label": "Dropcap 7"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_7",
+    "label": "Dropcap Description 7"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_8",
+    "label": "Dropcap 8"
+    },
+    {
+    "type": "text",
+    "id": "dropcap_description_8",
+    "label": "Dropcap Description 8"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

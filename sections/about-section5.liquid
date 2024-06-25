@@ -1,0 +1,572 @@
+{% assign scroll_id = section.settings.scroll_id | downcase %}
+{% assign scroll_id = scroll_id | replace: ' ', '-'  %}
+
+<section class="abt-sect5" id="{{ scroll_id }}">
+
+    <div class="container">
+
+        <div class="top_desc">
+            <div class="desc">
+                <h3>{{ section.settings.top_title }}</h3>
+                {{ section.settings.top_description }}
+            </div>
+            <a href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+        </div>
+
+        <hr class="divider--start" />
+      
+      <div class="s5-row-wrap-desktop">
+      <div class="s5-row-wrap">
+
+        <div class="s5-col s5-col-left ">
+          
+          <div class="c-wrap">
+            <div class="c-content fade-scroll">
+              <h2>
+                {{ section.settings.title_text }}
+          
+              </h2>
+            
+            <h4>
+              {{ section.settings.surname }}
+        
+            </h4>
+            
+          </div>
+            
+            <div class="c-media fade-scroll">
+              {% if section.settings.image1 %}
+               {%- include 'lazyload-image' _image: section.settings.image1, original_width: '400' -%}
+               {% elsif section.settings.video_url1.type == 'youtube' %}
+               <div class="video-sect1 iframe-video-sect1">
+               <iframe  class="responsive-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{section.settings.video_url1.id}}?playlist={{section.settings.video_url1.id}}&loop=1&autoplay=1&mute=1" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+               
+               {% elsif section.settings.video_url1.type == 'vimeo' %}
+               <div class="video-sect1 iframe-video-sect1">
+               <iframe  class="responsive-iframe" width="560" height="315" src="https://player.vimeo.com/video/{{section.settings.video_url1.id}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+               {% elsif section.settings.custom_video_url1 %}
+               <div class="video-sect1">
+               <video
+               loop
+               muted
+               preload="auto"
+               width="100%"
+               height="100%"
+               playsinline="true" webkit-playsinline="true"
+               data-setup='{"width": 300, "height": 250}' class="responsive-video">
+           <source src="{{ section.settings.custom_video_url1 }}" type='video/mp4' /></video>
+          </div>
+          {% endif %}
+            </div>
+          </div>
+        </div>
+        
+         <div class="s5-col s5-col-right ">
+           <div class="c-wrap">
+
+            
+            <div class="c-media fade-scroll">
+
+              {% if section.settings.image2 %}
+                {%- include 'lazyload-image' _image: section.settings.image2, original_width: '600' -%}
+              {% elsif section.settings.video_url2.type == 'youtube' %}
+              <div class="video-sect2 iframe-video-sect2">
+              <iframe  class="responsive-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{section.settings.video_url2.id}}?playlist={{section.settings.video_url2.id}}&loop=1&autoplay=1&mute=1"  frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+             </div>
+              
+              {% elsif section.settings.video_url2.type == 'vimeo' %}
+              <div class="video-sect2 iframe-video-sect2">
+              <iframe  class="responsive-iframe" width="560" height="315" src="https://player.vimeo.com/video/{{section.settings.video_url2.id}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+             </div>
+              {% elsif section.settings.custom_video_url2 %}
+              <div class="video-sect2">
+              <video
+              loop
+              muted
+              preload="auto"
+              width="100%"
+              height="100%"
+              playsinline="true" webkit-playsinline="true"
+              data-setup='{"width": 300, "height": 250}' class="responsive-video">
+          <source src="{{ section.settings.custom_video_url2 }}" type='video/mp4' /></video>
+         </div>
+         {% endif %}
+
+
+          
+            </div>
+                         <div class="c-content fade-scroll">
+              <div>
+                {{ section.settings.descripton }}
+  
+              </div>
+            
+              <div class="s-link">
+                <a href="">
+                    <a href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+                </a>
+              </div>
+            
+          </div>
+          </div>
+          
+        </div>
+        
+      
+
+       </div>
+      </div>
+      <div class="s5-row-wrap-mobile">
+        <div class="s5-row-mobile ">
+       <div class="s5-row-wrap ">
+        
+        
+        <div class="s5-col s5-col-left">
+          
+          <div class="c-wrap">
+            <div class="c-media">
+              {% if section.settings.image2 %}
+                {%- include 'lazyload-image' _image: section.settings.image2, original_width: '167' -%}
+              {% elsif section.settings.video_url2.type == 'youtube' %}
+              <div class="video-sect2 iframe-video-sect2">
+              <iframe  class="responsive-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{section.settings.video_url2.id}}?playlist={{section.settings.video_url2.id}}&loop=1&autoplay=1&mute=1" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+             </div>
+              
+              {% elsif section.settings.video_url2.type == 'vimeo' %}
+              <div class="video-sect2 iframe-video-sect2">
+              <iframe  class="responsive-iframe" width="560" height="315" src="https://player.vimeo.com/video/{{section.settings.video_url2.id}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+             </div>
+              {% elsif section.settings.custom_video_url2 %}
+               
+              <div class="video-sect2">
+               <video
+               loop
+               muted
+               preload="auto"
+               width="100%"
+               height="100%"
+               playsinline="true" webkit-playsinline="true"
+               data-setup='{"width": 300, "height": 250}' class="responsive-video">
+           <source src="{{ section.settings.custom_video_url2}}" type='video/mp4' /></video>
+              </div>
+          {% endif %}
+           </div>
+
+            <div class="c-content">
+              <h2>
+                {{ section.settings.title_text }}
+          
+              </h2>
+            
+            <h4>
+              {{ section.settings.surname }}
+        
+            </h4>
+            
+          </div>
+            
+           
+          </div>
+        </div>
+        
+         <div class="s5-col s5-col-right">
+           <div class="c-wrap">
+
+            <div class="c-media">
+              {% if section.settings.image1 %}
+                {%- include 'lazyload-image' _image: section.settings.image1, original_width: '167' -%}
+              {% elsif section.settings.video_url1.type == 'youtube' %}
+              <div class="video-sect1 iframe-video-sect1">
+              <iframe  class="responsive-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{section.settings.video_url1.id}}?playlist={{section.settings.video_url1.id}}&loop=1&autoplay=1&mute=1" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+             </div>
+              
+              {% elsif section.settings.video_url1.type == 'vimeo' %}
+              <div class="video-sect1 iframe-video-sect1">
+              <iframe  class="responsive-iframe" width="560" height="315" src="https://player.vimeo.com/video/{{section.settings.video_url1.id}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+             </div>
+              {% elsif section.settings.custom_video_url1 %}
+              <div class="abt-sect1">
+                <video
+                loop
+                muted
+                preload="auto"
+                width="100%"
+                height="100%"
+                playsinline="true" webkit-playsinline="true"
+                data-setup='{"width": 300, "height": 250}' class="responsive-video">
+            <source src="{{ section.settings.custom_video_url1 }}" type='video/mp4' /></video>
+          </div>
+            {% endif %}
+           </div>
+           
+            
+                         <div class="c-content">
+            <div>
+              {{ section.settings.descripton }}
+              </div>
+            
+              <div class="s-link">
+                <a href="">
+                  Shop all products
+                </a>
+              </div>
+            
+          </div>
+          </div>
+        </div>
+        </div>
+
+
+
+       </div>
+      </div>
+</div>
+
+  
+</section>
+
+<style>
+    .top_desc{
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 30px;
+    }
+    .top_desc .desc{
+        width:70%;
+      	max-width: 660px;
+    }
+    .top_desc h3{
+        margin-bottom:6px;
+    }
+    .top_desc p{
+        margin-bottom:0px;
+    }
+  
+  .abt-sect5 .s5-row-wrap-mobile {display: none;}
+  
+  
+  .abt-sect5 .s5-row-wrap {
+    max-width: 1160px;
+        padding-right: 15px;
+    padding-left: 15px;
+    margin: 0 auto;
+  
+  }
+  
+  .abt-sect5 .s5-row-wrap {
+  display: flex;
+  padding-bottom: 45px;
+  padding-top: 30px;
+    margin-bottom: 0;
+  }
+  .abt-sect5 .s5-row-wrap iframe {
+    pointer-events: none;
+  }
+
+  .abt-sect5 .s5-row-wrap .video-sect1 {
+height:501px;
+width: 100%;
+position: relative;
+  }
+  .abt-sect5 .s5-row-wrap .video-sect2 {
+height:750px;
+width: 100%;
+position: relative;
+  }
+
+  .abt-sect5 .s5-row-wrap .video-sect1.iframe-video-sect1 {
+
+
+  }
+  .abt-sect5 .s5-row-wrap .video-sect2.iframe-video-sect2 {
+
+  }
+
+
+  .abt-sect5 .responsive-video {
+width: 100%;
+height: 100%;
+object-fit: cover;
+
+  }
+
+  .abt-sect5 .s5-row-wrap .s5-col-left {
+    
+    width: 46.8%;
+    padding-right:130px;
+  
+  }
+
+  .abt-sect5 .s5-row-wrap .s5-col-left .c-wrap{
+
+
+  }
+
+  .abt-sect5 .s5-row-wrap .s5-col-left .c-wrap .c-media {
+width:100%;
+position: relative;
+
+}
+
+.abt-sect5 .s5-row-wrap .s5-col-left .c-wrap .c-media  img{
+max-width:100%;
+height: auto;
+}
+  .abt-sect5 .s5-row-wrap .s5-col-left .c-wrap .c-content{
+
+padding-bottom: 120px;
+padding-top: 115px;
+}
+
+.abt-sect5 .s5-row-wrap .s5-col-left .c-wrap .c-content h2 {
+  font-size: 42px;
+  line-height: 1;
+  margin-bottom: 20px;
+  text-transform: none;
+}
+
+.abt-sect5 .s5-row-wrap .s5-col-left .c-wrap .c-content h4 {
+  font-size: 21px;
+  line-height: 1;
+  margin-bottom: 0;
+  color: #545353;
+  text-transform: none;
+  font-family: var(--font-heading);
+}
+
+  
+   .abt-sect5 .s5-row-wrap .s5-col-right {
+   width:53.2%;
+  }
+
+  .abt-sect5 .s5-row-wrap .s5-col-right .c-wrap{
+
+
+}
+
+.abt-sect5 .s5-row-wrap .s5-col-right .c-wrap .c-media {
+width:100%;
+position: relative;
+
+}
+
+.abt-sect5 .s5-row-wrap .s5-col-right .c-wrap .c-media  img{
+max-width:100%;
+height: auto;
+}
+.abt-sect5 .s5-row-wrap .s5-col-right .c-wrap .c-content{
+  padding-right: 15%;
+padding-top: 120px;
+}
+  
+.abt-sect5 .s5-row-wrap .s5-col-right .c-wrap .c-content .s-link {
+margin-top: 25px;
+
+}
+.abt-sect5 .s5-row-wrap .s5-col-right .c-wrap .c-content .s-link a {
+  color: #545353;
+  text-decoration:underline ;
+
+}
+
+@media (max-width:1300px){
+  .abt-sect5 .s5-row-wrap .s5-col-left {
+    padding-right: 15px;
+}
+  }
+@media (max-width:1024px){
+  .abt-sect5 .s5-row-wrap iframe {
+    pointer-events:all;
+  }
+}
+@media (max-width:767px){
+
+  .abt-sect5 .top_desc {
+   
+   flex-wrap: wrap;
+}
+.abt-sect5 .top_desc .desc {
+   width: 100%;
+   margin-bottom: 20px;
+}
+  .abt-sect5 .s5-row-wrap-desktop {display: none;}
+  .abt-sect5 .s5-row-wrap-mobile {display: block;}
+
+  .abt-sect5 .s5-row-wrap .video-sect1 {
+height:419px;
+width: 100%;
+  }
+  .abt-sect5 .s5-row-wrap .video-sect2 {
+height:419px;
+width: 100%;
+  }
+
+  .abt-sect5 .s5-row-wrap .s5-col-left .c-wrap .c-content {
+    padding-bottom: 0;
+    padding-top: 30px;
+    padding-left: 20px;
+    padding-right: 20px
+}
+.abt-sect5 .s5-row-wrap .s5-col-right .c-wrap .c-content {
+    padding-top: 30px;
+    padding-left: 20px;
+    padding-right: 20px
+}
+
+.abt-sect5 .s5-row-wrap .s5-col-left .c-wrap .c-content h2 {
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 25px;
+}
+
+.abt-sect5 .s5-row-wrap .s5-col-left {
+  padding-right: 5px;
+    padding-left: 5px;
+    width: 80%;
+}
+
+.abt-sect5 .s5-row-wrap .s5-col-right {
+  padding-right: 5px;
+    padding-left: 5px;
+    width: 80%;
+}
+
+.abt-sect5 .s5-row-mobile {
+overflow: auto;
+margin-right: -25px;
+    margin-left: -25px;
+
+}
+.abt-sect5 .s5-row-wrap {
+    display: flex;
+    padding-bottom: 45px;
+    margin-bottom: 0;
+    padding-right: 0;
+    padding-left: 0;
+    width: 690px;
+    margin: 0 auto;  
+    padding-top: 5px;
+}
+
+.abt-sect5 .s5-row-wrap .c-wrap .c-media img {
+   width: 100%;
+}
+  }
+
+  @media (max-width:500px){
+
+    .abt-sect5 .s5-row-wrap {
+    width: 760px;
+}
+.abt-sect5 .s5-row-wrap .video-sect2 {
+    height: 463px;
+}
+  }
+  @media (max-width:399px){
+    .abt-sect5 .s5-row-wrap {
+    width: 690px;
+}
+.abt-sect5 .s5-row-wrap .video-sect2 {
+    height: 419px;
+}
+  }
+  @media (max-width:320px){
+    .abt-sect5 .s5-row-wrap {
+    width: 590px;
+}
+.abt-sect5 .s5-row-wrap .video-sect2 {
+    height: 358px;
+}
+  }
+</style>
+
+
+{% schema %}
+    {
+    "name": "Section 5",
+    "class": "about-section5",
+    "settings": [
+    {
+      "type": "text",
+      "id": "scroll_id",
+      "label": "Section ID",
+      "info": "Use this field to insert the ID to link with the nav items and enable scroll to this section."
+    },
+    {
+    "type": "text",
+    "id": "top_title",
+    "label": "Top Title",
+    "default": "EFFORTLESS AND EFFECTIVE"
+    },
+    {
+    "type": "richtext",
+    "id": "top_description",
+    "label": "Top Description",
+    "default": "<p>Brand Pillars</p>"
+    },
+    {
+    "type": "text",
+    "id": "button_label",
+    "label": "Button Label",
+    "default": "Learn more"
+    },
+    {
+    "type": "url",
+    "id": "button_link",
+    "label": "Button link"
+    },
+    {
+    "type": "text",
+    "id": "title_text",
+    "label": "Title"
+    },
+    {
+    "type": "text",
+    "id": "surname",
+    "label": "Surname"
+    },
+    {
+    "type": "richtext",
+    "id": "descripton",
+    "label": "Description",
+    "default": "<p>Description</p>"
+    },
+    {
+    "type": "image_picker",
+    "id": "image1",
+    "label": "Image Left"
+    },
+    {
+      "id": "video_url1",
+      "type": "video_url",
+      "label": "Video URL Left",
+      "accept": ["youtube", "vimeo"]
+      },
+      {
+      "type": "text",
+      "id": "custom_video_url1",
+      "label": "Custom Video Url left"
+      },
+    {
+    "type": "image_picker",
+    "id": "image2",
+    "label": "Image Right"
+    },
+    
+    {
+      "id": "video_url2",
+      "type": "video_url",
+      "label": "Video URL Right",
+      "accept": ["youtube", "vimeo"]
+      },
+      {
+      "type": "text",
+      "id": "custom_video_url2",
+      "label": "Custom Video Url Right"
+      }
+    ]
+    }
+{% endschema %}

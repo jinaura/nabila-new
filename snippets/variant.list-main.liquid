@@ -1,0 +1,402 @@
+{% comment %}
+  hide_shade_chooser: hide the expandable shade chooser popup
+{% endcomment %}
+{%- if product.options_by_name['Color'].values.size > 0 -%}
+<div class="form__body main">
+  <div class="variant_selector_container variant_selector_container--main xyz" id="variant_selector_container">
+    <div id="variant_selector_wrapper" class="variant_selector_wrapper--main">
+      <div class="variant_wrapper variant_wrapper--main" id="variant_wrapper">
+        <div class="variant_scroll_wrapper variant_scroll_wrapper--main" id="variant_scroll_wrapper">
+          {%- for color in product.options_by_name['Color'].values %}
+            {%- assign color_variants = product.variants | where: color_option, color -%}
+            {%- if color_variants.size > 0 -%}
+              {%- assign variant = color_variants | first -%}
+              {% unless variant.metafields.visibility.hide %}
+                {%- assign color_selected = false -%}
+                {%- for color_variant in color_variants -%}
+                  {%- if color_variant == active_variant %}
+                    {%- assign color_selected = true -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                <div class="variant_list_item_wrapper all aaa {{variant.metafields.shade_picker.category_filters | split: "|" | join: " "}}" id="variant_list_item_wrapper" data-variant-id="{{variant.id}}" src={{ variant.metafields.shade_finder.featured_image | image_url }}>
+                  {%- if variant.metafields.color.texture %}
+                    {%- assign background_image = "url('"| append:variant.metafields.color.texture[0].src|append:"')"-%}
+                  {% else %}
+                    {%- assign background_image = "none"-%}
+                  {%- endif -%}
+                  {% if color_selected %}
+                    <div data-colorName="{{ variant.metafields.color.name }}" data-selected="true" data-bestMatch="false" onclick="window.shopData.handleColorOnClick(this, false)" class="variant_list_item_selected" style="background-color: {{ variant.metafields.color.hex }}; background-image: {{ background_image }}" data-variant-id="{{variant.id}}">
+                  {% else %}
+                    <div data-colorName="{{ variant.metafields.color.name }}" data-selected="false" data-bestMatch="false" onclick="window.shopData.handleColorOnClick(this, false)" class="variant_list_item" style="background-color: {{ variant.metafields.color.hex }}; background-image: {{ background_image }}" data-variant-id="{{variant.id}}">
+                  {% endif %}
+                  {% unless variant.metafields.visibility.coming_soon %}
+                    {% if variant.inventory_quantity < 1 and variant.inventory_management == 'shopify' %}
+                      <svg viewBox="0 0 100 100">
+                        <line x1="0" y1="100" x2="100" y2="0"></line>
+                      </svg>
+                    {% endif %}
+                  {% endunless %}
+                  </div>
+                </div>
+              {% endunless %}
+            {%- endif -%}
+          {%- endfor -%}
+        </div> <!-- /#variant_scroll_wrapper -->
+      </div> <!-- /#variant_wrapper -->
+
+    </div> <!-- /#variant_selector_wrapper -->
+    
+    <div class="variant_detail_wrapper">   
+      <div class="variant_detail subtitle__wrapper variant_detail--main" {% unless hide_shade_chooser == true %} id="variant_open_shade_chooser" onclick="window.shopData.handleOpenShadeChooser()"{% endunless %}>
+        <div class="section__subtitle">
+          <div class="variant_shade_chooser_item_wrapper">
+              {%- if active_variant.metafields.color.texture %}
+                  {%- assign background_image = "url('"| append:active_variant.metafields.color.texture[0].src|append:"')"-%}
+              {% else %}
+                  {%- assign background_image = "none"-%}
+              {%- endif -%}
+              <div class="variant_shade_chooser_item" id="variant_shade_chooser_item_dropdown" style="background-color: {{ active_variant.metafields.color.hex }}; background-image: {{ background_image }}"></div>
+              <div class="variant_shade_chooser_right_wrapper">
+                  <h3 class="variant_title" id="variant_title">
+                    {{ active_variant.metafields.color.name }}
+                  </h3>
+                  {% if active_variant.metafields.description != empty %}
+                    <p class="variant_description" id="variant_description">
+                      {{active_variant.metafields.description.value}}
+                    </p>
+                  {% endif %}
+                  </p>
+              </div>
+          </div>
+        </div>
+        {% unless hide_shade_chooser == true %}
+          <span class="arrow-down">{% include 'svg-icons' with 'arrow-down'%}</span>
+          <span class="arrow-up hidden">{% include 'svg-icons' with 'arrow-up'%}</span>
+        {% endunless %}
+      </div>
+      {% unless hide_shade_chooser == true %}
+        <div id="variant_shade_chooser" class="variant_shade_chooser--main">
+          <div id="variant_shade_chooser_items_wrapper">
+            {%- for color in product.options_by_name['Color'].values %}
+              {%- assign color_variants = product.variants | where: color_option, color -%}
+              {%- if color_variants.size > 0 -%}
+                {%- assign variant = color_variants |  first -%}
+                {% unless variant.metafields.visibility.hide %}
+                  {%- assign color_selected = false -%}
+                  {%- for color_variant in color_variants -%}
+                    {%- if color_variant == active_variant %}
+                      {%- assign color_selected = true -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {% if color_selected %}
+                    <div class="variant_shade_chooser_item_wrapper" data-colorName="{{ variant.metafields.color.name }}" data-selected="true" data-variant-id="{{ variant.id }}" onclick="window.shopData.handleColorInShadeChooserOnClick(this)">
+                  {% else %}
+                    <div class="variant_shade_chooser_item_wrapper" data-colorName="{{ variant.metafields.color.name }}" data-selected="false" data-variant-id="{{ variant.id }}" onclick="window.shopData.handleColorInShadeChooserOnClick(this)">
+                  {% endif %}
+                      {%- if variant.metafields.color.texture %}
+                        {%- assign background_image = "url('"| append:variant.metafields.color.texture[0].src|append:"')"-%}
+                      {% else %}
+                        {%- assign background_image = "none"-%}
+                      {%- endif -%}
+                    {% if color_selected %}
+                      <div class="variant_shade_chooser_item_selected" data-variant-id="{{ variant.id }}" style="background-color: {{ variant.metafields.color.hex }}; background-image: {{ background_image }}">
+                      </div>
+                    {% else %}
+                      <div class="variant_shade_chooser_item" data-variant-id="{{ variant.id }}" style="background-color: {{ variant.metafields.color.hex }}; background-image: {{ background_image }}">
+                      </div>
+                    {% endif %}
+                    <div class="variant_shade_chooser_right_wrapper">
+                        <span class="variant_shade_chooser_title">{{variant.metafields.color.name}}</span>
+                        {% if active_variant.metafields.description != empty %}
+                          <span class="variant_shade_chooser_subtitle">{{variant.metafields.description.value}}</span>
+                        {% endif %}
+                    </div>
+                  </div> <!-- /.variant_shade_chooser_item_wrapper -->
+                {% endunless %}
+              {%- endif -%}
+            {%- endfor -%}
+          </div> <!-- /.variant_shade_chooser_items_wrapper -->
+          <div id='variant_shade_chooser_slider_wrapper'>
+            <input id="variant_shade_chooser_slider" type="range" value="0" />
+          </div>
+        </div> <!-- /#variant_shade_chooser -->
+      {% endunless %}
+    </div>
+    {% for variant in product.variants %}
+      {% if variant.metafields.shade_picker.category_filters %}
+          {% assign categories = categories | append: variant.metafields.shade_picker.category_filters | append: "|" %}
+      {% endif %}
+    {% endfor %}
+    {% if categories %}
+      <div class="variant_category_container" id="variant_category_container">
+        <div class="variant_category_wrapper">
+          <ul class="variant_category_slider">
+            {% assign splitCategories = categories | split: "|" | uniq %}
+            <li class="all active"><button type="button">all</button></li>
+            {% if splitCategories contains 'rosies_shade' %}
+              <li class="rosies_shade"><button type="button">rosies shade</button></li>
+            {% elsif splitCategories contains 'rosies_fav' %}
+              <li class="rosies_fav"><button type="button">rosies fav</button></li>
+            {% endif %}
+            {% for cat in splitCategories %}
+              {% if cat == 'rosies_shade' or cat == 'rosies_fav' %}
+                {% continue %}
+              {% endif %}
+              <li class="{{cat}}"><button type="button">{{cat | split: "_" | join: " " }}</button></li>
+            {% endfor %}
+            <div class="slider-underline"></div>
+          </ul>
+          <hr class="divider--end light">
+          <div class="slider-btn_wrapper left-side">
+            <button type="button" class="slider-btn">
+              {% include 'svg-icons' with 'arrow-left'%}
+            </button>
+          </div>
+          <div class="slider-btn_wrapper right-side">
+            <button type="button" class="slider-btn">
+              {% include 'svg-icons' with 'arrow-right'%}
+            </button>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div> <!-- /#variant_selector_container -->
+
+    {%- assign shadeGuideCollection = collections["pdp-shade-guide"] -%}
+    <div class="cta--container">
+        {% if product.metafields.product.show_shade_finder_link %}
+            <div class="cta--wrapper find">
+                {% include 'svg-icons' with 'find-shade'%}
+                <a href="/pages/shade-finder/" class="cta-underline">Find my shade</a>
+            </div>
+        {% else %}
+          {%- for tag in product.tags -%}
+            {%- if tag == 'virtual_try' -%}
+              <div class="cta--wrapper find">
+                {% include 'svg-icons' with 'try-on'%}
+                <button type="button" class="cta-underline try_on_cta">Try on</button>
+                <div class="product_options_modal product_options_modal_source_prompt product_options_modal_plp"
+                data-url="{{prod.url}}">
+                  <button class="product_options_modal_button">
+                    Camera
+                  </button>
+                  <label class="product_options_modal_button hide-input text-center">
+                    <input type="file" accept="image/png, image/jpeg" />
+                    Photo
+                  </label>
+                  <div class="product_options_modal_button text-left">
+                    <button type="button" class="close-btn small">close</button>
+                    <small class="ri-x-small">
+                      By selecting camera or image you are providing
+                      this website camera and photo access pursuant
+                      and opt-in to the Rose, Inc.
+                      <a href="/pages/privacy-policy" target={'_blank'}>
+                        Privacy Policy
+                      </a>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        {% endif %}
+        {% assign shadeComparisonProduct = false %}
+        {%- for each in shadeGuideCollection.products -%}
+          {% if each.handle == product.handle %}
+            <div class="cta--wrapper compare">
+              {% include 'svg-icons' with 'compare-shade'%}
+              <button type="button" class="button-action cta-underline" data-micromodal-trigger="modal-shade-guide">Compare shades</button>
+            </div>
+            {% assign shadeComparisonProduct = true %}
+            {% break %}
+          {% endif %}
+        {%- endfor -%}
+        {% if shadeComparisonProduct == false %}
+          <div class="cta--wrapper see-all">
+            <button type="button" class="cta-underline">See all shades</button>
+          </div>
+        {% endif %}
+    </div>
+</div><!-- /.form__body -->
+{% endif %}
+<input id="variant_id_input" type="hidden" name="id" value="{{active_variant.id}}" data-productid="{{product.id}}" />
+
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const observeUrlChange = () => {
+      const body = document.querySelector("body");
+      const shadeGuideNav = localStorage.getItem('shadeguide');
+      const observer = new MutationObserver((mutations, me) => {
+        mutations.forEach(() => {
+          if (shadeGuideNav && shadeGuideNav.includes('shadeguide=true') && !document.location.href.includes('shadeguide=true')) {
+            const shadeGuideModal = document.getElementById('modal-shade-guide');
+            const shadeGuideTrigger = document.querySelector('[data-micromodal-trigger="modal-shade-guide"].button-action');
+            if (shadeGuideModal && shadeGuideTrigger) {
+              shadeGuideTrigger.click();
+              localStorage.removeItem('shadeguide');
+              me.disconnect(); // stop observing
+              return;
+            }
+          }
+        });
+      });
+      observer.observe(body, { childList: true, subtree: true });
+    };
+    
+    window.onload = observeUrlChange;
+
+    const variantCategorySelectButtons = document.querySelectorAll('#variant_category_container .variant_category_slider li button');
+    if (variantCategorySelectButtons.length) {
+      function navMaxWidth() {
+        $('#variant_category_container ul.variant_category_slider').css('maxWidth', $('div.variant_category_wrapper').width());
+      }
+      navMaxWidth();
+      $(window).resize(function(){
+        navMaxWidth();
+      });
+  
+      const underlineEl = document.querySelector('.variant_category_container .slider-underline');
+      let currentWidth = document.querySelector('#variant_category_container .variant_category_slider li.active button').offsetWidth;
+      underlineEl.style.width = `${currentWidth}px`;
+      underlineEl.style.transform = `translateX(0px)`;
+      setTimeout(() => {
+        underlineEl.style.opacity = '1';
+      }, 200);
+
+      const seeAllCTAEl = document.querySelector('.cta--container .cta--wrapper.see-all');
+      console.log('BTN -- '+seeAllCTAEl);
+      seeAllCTAEl && seeAllCTAEl.addEventListener('click', () => {
+        document.querySelector('#variant_category_container .variant_category_slider li.all button').click();
+      });
+
+      variantCategorySelectButtons.forEach((catBtn, index) => {
+        catBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (!e.target) return;
+          const categoryListItem = e.target.parentNode;
+          if (!categoryListItem.classList.contains('active')) {
+            if (categoryListItem.classList.contains('all')) {
+              seeAllCTAEl && seeAllCTAEl.style.display !== 'none' && (seeAllCTAEl.style.display = 'none');
+            } else {
+              seeAllCTAEl && seeAllCTAEl.style.display !== 'flex' && (seeAllCTAEl.style.display = 'flex');
+            }
+            const variantCategorySelectItems = document.querySelectorAll('#variant_category_container .variant_category_slider li');
+            variantCategorySelectItems && variantCategorySelectItems.forEach((listItem) => {
+              listItem.classList.remove('active');
+            });
+            const selectedCatFilter = categoryListItem.classList[0];
+            categoryListItem.classList.add('active');
+            const variantShadeSwatches= document.querySelectorAll('.variant_scroll_wrapper--main .variant_list_item_wrapper');
+            let shadeIsSelected = false;
+            let firstElementAssigned = false;
+            let firstShadeSwatch;
+            variantShadeSwatches && variantShadeSwatches.forEach((shadeSwatch) => {
+              if (shadeSwatch.classList.contains(selectedCatFilter)) {
+                shadeSwatch.style.display !== 'flex' && (shadeSwatch.style.display = 'flex');
+                currentWidth = catBtn.offsetWidth;
+                if (!firstElementAssigned && !categoryListItem.classList.contains('all')) {
+                  firstShadeSwatch = shadeSwatch.children[0];
+                  firstShadeSwatch.classList.contains('variant_list_item_selected') && (shadeIsSelected = true);
+                  firstElementAssigned = true;
+                }
+              } else {
+                shadeSwatch.style.display !== 'none' && (shadeSwatch.style.display = 'none');
+              }
+            });
+            if (!shadeIsSelected && firstShadeSwatch) {
+              firstShadeSwatch.click();
+            }
+            let widthAdd = 0;
+            index > 0 && (widthAdd = 15);
+            let lengthPreItems = $('#variant_category_container .variant_category_slider li.active').prevAll().length;
+            for (i=0; i<lengthPreItems; i++) {
+              widthAdd = widthAdd+$('#variant_category_container .variant_category_slider li.active').siblings().eq(i).outerWidth();
+            }
+            let activeLink = document.querySelector('#variant_category_container .variant_category_slider li.active button');
+            setTimeout(() => {
+              activeLink.parentNode.parentNode.scrollTo({left: (activeLink.offsetLeft - activeLink.parentNode.parentNode.parentNode.clientWidth/2 + activeLink.clientWidth/2), behavior: 'smooth'});
+            }, 500);
+            underlineEl.style.width = `${currentWidth}px`;
+            underlineEl.style.transform = `translateX(${widthAdd}px)`;
+            setTimeout(() => {
+              underlineEl.style.opacity = '1';
+            }, 200);
+          }
+        });
+      });
+
+      const categoryslider = document.querySelector('.variant_category_wrapper .variant_category_slider');
+      const sliderBtnLeft = document.querySelector('.variant_category_wrapper .slider-btn_wrapper.left-side button.slider-btn');
+      const sliderBtnRight = document.querySelector('.variant_category_wrapper .slider-btn_wrapper.right-side button.slider-btn');
+      sliderBtnRight && sliderBtnRight.addEventListener('click', (e) => {
+        e.preventDefault();
+        categoryslider.scrollBy({
+          left: 150,
+          behavior: "smooth",
+        });
+      });
+      sliderBtnLeft && sliderBtnLeft.addEventListener('click', (e) => {
+        e.preventDefault();
+        categoryslider.scrollBy({
+          left: -150,
+          behavior: "smooth",
+        });
+      });
+
+      categoryslider.onscroll = () => {
+        const sliderScrollLeft = categoryslider.scrollLeft;
+        const sliderScrollWidth = categoryslider.scrollWidth;
+        const categoryWrapperWidth = document.querySelector('div.variant_category_wrapper').offsetWidth;
+        const sliderRightBtnEl = document.querySelector('.variant_category_wrapper .slider-btn_wrapper.right-side');
+        const sliderLeftBtnEl = document.querySelector('.variant_category_wrapper .slider-btn_wrapper.left-side');
+
+        if ((sliderScrollLeft + categoryWrapperWidth) > (sliderScrollWidth * 0.95)) {
+          sliderRightBtnEl.style.display !== 'none' && (sliderRightBtnEl.style.display = 'none');
+        } else {
+          sliderRightBtnEl.style.display !== 'flex' && (sliderRightBtnEl.style.display = 'flex');
+        }
+
+        if ((sliderScrollLeft) > 20) {
+          sliderLeftBtnEl.style.display !== 'flex' && (sliderLeftBtnEl.style.display = 'flex');
+        } else {
+          sliderLeftBtnEl.style.display !== 'none' && (sliderLeftBtnEl.style.display = 'none');
+        }
+      }
+    }
+
+    const VTOPopupCloseBtn = document.querySelector('.cta--container .product_options_modal .product_options_modal_button button.close-btn');
+    VTOPopupCloseBtn && VTOPopupCloseBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const VTOPopupEl = document.querySelector('.cta--container .product_options_modal.d-flex');
+      VTOPopupEl.classList.remove('d-flex');
+    });
+  });
+  
+</script>
+<script>
+   // document.addEventListener('click', function() {
+    // document.getElementsByClassName("variant_list_item_wrapper").addEventListener('click', function(){
+  // document.addEventListener('click', function() {
+  //           var variantListItem = document.querySelectorAll('.variant_list_item_wrapper');
+  //   console.log(variantListItem,'variantListItem')
+  //       });
+
+  const variantImages = document.querySelectorAll(".variant_list_item_wrapper");
+  const mainContainer = document.querySelector("#placeholder_image");
+  variantImages.forEach((item)=>{
+    item.addEventListener("click",()=>{
+      const imageSrc = item.getAttribute("src");
+      mainContainer.srcset = imageSrc;
+      
+    })
+  })
+
+
+  // $('.variant_list_item_wrapper').click(function(){
+  //   var img = $(this).attr('src');
+  //   $("#placeholder_image").attr('src',img);
+  //   $('.variant_list_item_wrapper div').removeClass('variant_list_item_selected');
+  //   $(this).find('div').addClass('variant_list_item_selected');
+    
+  // })
+</script>

@@ -1,0 +1,101 @@
+// cookie functions
+function setCookie(name, value, days) {
+    let expires = '';
+    if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i=0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function deleteCookie(name) {
+    document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+/// Get theme setting values ////
+const breakUrl = window.location.href.slice(window.location.href.indexOf('/') + 1).split('/');
+let countryIso = $('body').data('country-iso');
+
+if (breakUrl[3] === 'checkouts') {
+    const [html] = document.getElementsByTagName("html")
+    const checkoutLang = html.getAttribute("lang");
+    if (checkoutLang == 'en-GB') {
+        countryIso = 'GB'
+    } else {
+        countryIso = 'US'
+    }
+}
+
+const activeCodlessGWP = (countryIso == 'GB') ? "{{settings.enable_codeless_uk}}" : "{{settings.enable_codeless_us}}";
+const codlessGWP = (countryIso == 'GB') ? "{{settings.codeless_product_uk}}" : "{{settings.codeless_product_us}}";
+const codlessThresh = (countryIso == 'GB') ? "{{settings.codeless_thresh_uk}}" : "{{settings.codeless_thresh_us}}";
+const codlessChildProduct = (countryIso == 'GB') ? "{{settings.is_child_product_uk}}": "{{settings.is_child_product_us}}";
+const codlessChildProduct1 = (countryIso == 'GB') ? "{{settings.child_product1_uk}}" : "{{settings.child_product1_us}}";
+const codlessChildProductVariant1 = (countryIso == 'GB') ? "{{settings.child_product_variant1_uk}}" : "{{settings.child_product_variant1_us}}";
+const codlessChildProduct2 = (countryIso == 'GB') ? "{{settings.child_product2_uk}}" : "{{settings.child_product2_us}}";
+const codlessChildProductVariant2 = (countryIso == 'GB') ? "{{settings.child_product_variant2_uk}}" : "{{settings.child_product_variant2_us}}";
+const codlessChildProduct3 = (countryIso == 'GB') ? "{{settings.child_product3_uk}}" : "{{settings.child_product3_us}}";
+const codlessChildProductVariant3 = (countryIso == 'GB') ? "{{settings.child_product_variant3_uk}}" : "{{settings.child_product_variant3_us}}";
+const codlessChildProduct4 = (countryIso == 'GB') ? "{{settings.child_product4_uk}}" : "{{settings.child_product4_us}}";
+const codlessChildProductVariant4 = (countryIso == 'GB') ? "{{settings.child_product_variant4_uk}}" : "{{settings.child_product_variant4_us}}";
+const codlessChildProduct5 = (countryIso == 'GB') ? "{{settings.child_product5_uk}}" : "{{settings.child_product5_us}}";
+const codlessChildProductVariant5 = (countryIso == 'GB') ? "{{settings.child_product_variant5_uk}}" : "{{settings.child_product_variant5_us}}";
+
+const enableGWPAutoBuyXGetYGwp = (countryIso == 'GB') ? "{{settings.enable_gwp_autodiscount_uk}}" : "{{settings.enable_gwp_autodiscount_us}}";
+const autoBuyXGetYGwp = (countryIso == 'GB') ? "{{settings.gwp_autodiscount_free_product_id_uk}}" : "{{settings.gwp_autodiscount_free_product_id_us}}";
+const autoBuyXGetYGwpHandle = (countryIso == 'GB') ? "{{settings.gwp_autodiscount_free_product_uk}}" : "{{settings.gwp_autodiscount_free_product_us}}";
+const autoBuyXGetYGwpPurchaseProduct = (countryIso == 'GB') ? "{{settings.gwp_autodiscount_purchase_product_uk}}" : "{{settings.gwp_autodiscount_purchase_product_us}}";
+
+const freeGiftIds = getCookie('setting_updates');
+const makeCookiesString = `${activeCodlessGWP}${codlessGWP}${codlessThresh}${codlessChildProduct}${codlessChildProduct1}${codlessChildProductVariant1}${codlessChildProduct2}${codlessChildProductVariant2}${codlessChildProduct3}${codlessChildProductVariant3}${codlessChildProduct4}${codlessChildProductVariant4}${codlessChildProduct5}${codlessChildProductVariant5}${enableGWPAutoBuyXGetYGwp}${autoBuyXGetYGwp}${autoBuyXGetYGwpHandle}${autoBuyXGetYGwpPurchaseProduct}`;
+// if free sample / GWP settings change, empty the cart
+
+if (freeGiftIds !== makeCookiesString) {
+    setCookie('setting_updates', makeCookiesString, 14);
+
+    var updates_obj = {};
+    /// get and remove free product from cart ///
+    $.ajax({
+        url: '/cart.js',
+        dataType: 'json',
+        async: false,
+        type: 'get',
+        success: function(new_cart) {
+            $.each( new_cart.items, function( key, value ) {
+                if (value.price == 0 && value.product_type != "Sample Product") {
+                    updates_obj[value.id] = 0;
+                }
+            });
+        }
+    });
+
+    $.ajax({
+        url: '/cart/update.js',
+        dataType: 'json',
+        async: false,
+        type: 'post',
+        data: {updates: updates_obj},
+        success: function(updatedCartObject) {
+            // updateGWP(updatedCartObject, true, true, undefined , true);
+
+            /// if any chnages in cookies redirection on checkout page ///
+            if (breakUrl[3] == 'checkouts') {
+                setTimeout(function() {
+                    window.location.reload();
+                }, 800)
+            }
+        }
+    });
+}

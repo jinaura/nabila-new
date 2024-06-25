@@ -1,0 +1,164 @@
+{% assign css_class = section.settings.section_title | replace: ' ', '_' | downcase %}
+
+  <section class="{{css_class}} h_shop__bundles__mainWrap shop_bundles">
+    <article class="container section__item section_spacing">
+        <h2 class="heading-with-link">{{ section.settings.section_title }} <a href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a></h2>
+        <hr class="section__divider" />
+        <div class="hidden-xs">{{ section.settings.description }}</div>
+        <hr class="divider--start hidden-xs">
+
+      <div class="swap-x" role="region" aria-label="carousel">
+        <div class="commonSlider collection__items"
+          data-slick='{
+            "slidesToShow": 2,
+            "slidesToScroll": 2,
+            "dots": {{ section.settings.dots }},
+            "infinite": false,
+            "speed": 500,
+            "arrows": {{ section.settings.arrows }},
+            "autoplay": false,
+            "adaptiveHeight": false,
+            "centerMode": false,
+          "centerPadding": "1px",
+            "responsive": [
+                {
+              "breakpoint": 768,
+                  "settings": "unslick"
+                  },
+                  {
+              "breakpoint": 1024,
+                    "settings":{
+                        "slidesToShow": 2,
+                        "slidesToScroll": 2
+                    }
+            }
+            ]
+        }'>
+        {% for _product in collections[section.settings.set_collection].products %}
+          {% if _product.type == 'Sets Product' %}
+            {%- include 'product-item-sets' with _product -%}
+          {% else %}
+            {%- include 'product-item' with _product -%}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+      
+      
+    <style>
+      
+      .{{css_class}} .commonSlider.collection__items .product__item {
+        flex-basis: unset;
+        max-width: unset;
+        margin: 0;
+      }
+      .{{css_class}} .product__item-image .badge-img__wrapper {
+        right: 8%;
+      }
+      .{{css_class}} .product__item .outer_content {
+        padding-bottom: 20px;
+      } 
+      .{{css_class}} .collection__items .inner_content {
+        top: auto;
+        bottom: 0;
+      }
+      .{{css_class}} .collection__items .product_set{
+        bottom:0;
+      }
+      .{{css_class}} .collection__items .product_set .product_item{
+        flex-flow: wrap;
+      }
+      .{{css_class}} .collection__items .product__item hr.divider--start {
+        display: none;
+      }
+      .{{css_class}} .collection__items .product_set .shutter {
+        z-index: 3;
+        position: static;
+        margin-top: 20px;
+      }
+      .{{css_class}} .collection__items .product_set .price_btn--wrapper{
+        bottom:0
+      }
+      .{{css_class}} .collection__items .collection__item-image img, 
+      .{{css_class}} .collection__items .product__item-image img{
+        height: 100%;
+      }
+      @media (max-width: 767px) {
+        .{{css_class}} .commonSlider.collection__items .product__item{
+          margin: 0;
+        }
+        .{{css_class}} .product__item .outer_content {
+          padding-bottom: 0px;
+        } 
+        .{{css_class}} .slick-dots{
+          margin-bottom: 20px;
+        }
+        
+        .shop_sets .collection__items .product_set .shutter{
+          margin-top:0;
+        }
+
+    }
+    </style>
+      
+    </article>
+  </section>
+
+{% schema %}
+  {
+  "name": "Shop Bundles",
+  "class": "shop-bundles",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Shop Bundles"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Shop Bundles</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "collection",
+      "id": "set_collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "header",
+      "content": "Slider options"
+    },
+    {
+      "type": "checkbox",
+      "id": "dots",
+      "label": "Show dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "arrows",
+      "label": "Show arrows",
+      "default": true
+    }
+  ],
+  "presets": [
+      {
+        "name": "Shop Bundles",
+        "category": "Text"
+      }
+    ]
+}
+{% endschema %}

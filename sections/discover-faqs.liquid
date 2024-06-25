@@ -1,0 +1,67 @@
+<section>
+    <div class="container discover-faqs">
+        <h2 class="section__title">FAQs</h2>
+        <hr class="section__divider" />
+
+        <div > <!-- Wrapper -->
+
+            <div class="accordions" id="mnsry_container"> <!-- Accordions -->
+
+                {% for faqs in product.metafields.discovery.title %}
+                    <div class="item">
+                        <header>
+                            <h3>{{ product.metafields.discovery.title[forloop.index0] }}</h3>
+                            {% if product.metafields.discovery.category[forloop.index0] != '' %}
+                                <p>{{ product.metafields.discovery.category[forloop.index0] }}</p>
+                            {% endif %}
+                        </header>
+                        <section class="body">
+                            <div>
+                                <div class="acc_col">
+                                    {{ product.metafields.discovery.description[forloop.index0] }}
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                {% endfor %}
+
+            </div> <!-- Accordions // -->
+
+        </div><!-- Wrapper // -->
+
+    </div>
+</section>
+
+
+<style>
+  .discover-faqs .accordions .item section.body .acc_col{
+    width: 42.5%;
+  }
+  .accordions .item header>h3{
+    transition:0.3s all;
+      width:100%;
+  }
+  .accordions .item header>h3:hover{
+    opacity:0.5
+  }
+  @media (max-width:767px){
+    .discover-faqs .accordions .item section.body .acc_col{
+      width:100%;
+    }
+    .discover-faqs .accordions{
+      padding: 0 25px;
+    }
+    
+    .rosies-top-5 .section_spacing h2.heading-with-link{
+      padding-bottom: 10px;
+    }
+
+    .accordions .item header {
+          background-position: right 33px;
+    }
+    .accordions .item header.active {
+        background-position: right 33px;
+    }
+  }
+</style>

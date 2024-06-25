@@ -1,0 +1,65 @@
+{% assign _section = section.settings %}
+
+<section class="centered-title {{ section.id }}" style="background-color:{{_section.centered_background}}">
+  <div class="container">
+    <h2>{{_section.centered_title}}</h2>
+  </div>
+</section>
+
+<style>
+  .centered-title .container {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .centered-title .container h2 {
+    max-width: 940px;
+    font-weight: 400;
+    font-size: 60px;
+    line-height: 80px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.7px;
+    color: #1D1D1D;
+    font-family: var(--font-regular);
+    margin: 0 auto;
+    text-transform: none;
+  }
+
+  @media (max-width: 767px) {
+    .centered-title .container {
+      padding: 0 20px;
+    }
+    .centered-title .container h2 {
+      font-size: 22px;
+      line-height: 33px;
+      letter-spacing: 0.4px;
+    }
+  }
+</style>
+
+{% schema %}
+    {
+      "name": "Centered Title",
+      "settings": [
+        {
+          "type": "color",
+          "id": "centered_background",
+          "label": "Block Background",
+          "default": "#ffffff"
+        },
+        {
+          "type": "text",
+          "id": "centered_title",
+          "label": "Title",
+          "default": "A lifestyle inspired by paradise — wherever you are."
+        }
+      ],
+      "presets": [
+        {
+          "name": "Centered Title",
+          "category": "Text"
+        }
+      ]
+    }
+{% endschema %}

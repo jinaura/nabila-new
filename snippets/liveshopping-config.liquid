@@ -1,0 +1,18 @@
+{%- comment -%}
+  collection: the collection of products to embed data for (if false, embed current product only)
+{%- endcomment -%}
+
+<script>
+    document.data = document.data || {}
+    document.data.currency = {
+        symbol: {{ cart.currency.symbol | json }},
+        isoCode: {{ cart.currency.iso_code | json }},
+    }
+    document.data.excludeProductTags = [
+        '{% if localization.country.iso_code == 'GB' -%}
+            do_not_sell_to_UK
+        {%- else -%}
+            do_not_sell_to_global
+        {%- endif %}',
+    ]
+</script>

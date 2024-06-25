@@ -1,0 +1,633 @@
+{%- assign benefit_tags = collection.metafields.collection.filter_by_benefit -%}
+{%- assign finish_tags = collection.metafields.collection.filter_by_finish -%}
+{%- assign concern_tags = collection.metafields.collection.filter_by_concern -%}
+{% assign current_sort = collection.sort_by | default: collection.default_sort_by %}
+
+{%- capture sort_options -%}
+  manual|{{ 'collections.sorting.manual' | t }}\
+  price-ascending|{{ 'collections.sorting.price_ascending' | t }}\
+  price-descending|{{ 'collections.sorting.price_descending' | t }}\
+  created-descending|{{ 'collections.sorting.created_descending' | t }}\
+  created-ascending|{{ 'collections.sorting.created_ascending' | t }}\
+{%- endcapture -%}
+{%- assign sort_options = sort_options | strip_newlines | split: "'\'" -%}
+
+{% if benefit_tags.size != blank or finish_tags.size != blank or concern_tags.size != blank  %}
+
+  <div class="collection__filter">
+
+    <button class="see-more filter" data-micromodal-trigger="modal-filterby">
+      Filter by
+    </button>
+
+    <div class="modal micromodal-slide filter" id="modal-filterby" aria-hidden="true">
+      <div class="modal__overlay" tabindex="-1">
+        <div class="modal__wrapper">
+          <div class="modal__container" role="dialog" aria-modal="true">
+            <div class="modal__top__mob">
+              <header class="modal__header">
+                <h2 class="section__title hidden-xs">Filter by</h2>
+                <a href="/collections/{{collection.handle}}" class="see-more clear-filter hidden-xs" aria-label="Clear filters">Clear filters</a>
+                <button class="modal__close close" aria-label="Close modal" data-micromodal-close>Close</button>
+              </header>
+              <hr class="divider--start">
+              <main class="modal__content" id="modal-sort-content">
+                <ul class="tag-list">
+                  <div class="subtitle__wrapper hidden-sm hidden-md hidden-lg">
+                    <h3 class="section__subtitle">Sort By</h3>
+                    <svg class="icon-plus" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+                      <g fill="none" fill-rule="evenodd">
+                          <g fill-rule="nonzero" stroke="#919191">
+                              <path d="M345 631c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm-.052 4.278c.136-.015.272.03.374.122.1.093.157.225.154.362v4.762h4.762c.172-.003.332.088.418.236.087.148.087.332 0 .48-.086.148-.246.239-.418.236h-4.762v4.762c.003.172-.088.332-.236.418-.148.087-.332.087-.48 0-.148-.086-.239-.246-.236-.418v-4.762h-4.762c-.17.008-.332-.075-.424-.219-.092-.143-.1-.324-.022-.476.078-.151.231-.25.401-.257H344.524v-4.762c-.005-.247.179-.457.424-.484z" transform="translate(-334 -630)"/>
+                          </g>
+                      </g>
+                    </svg>
+                  </div>
+                  <div class="accordion__content not-shown sort_mobile hidden-sm hidden-md hidden-lg">
+
+                    {%- for sortOption in sort_options -%}
+                      {%- assign sort_option_array = sortOption | strip | split: '|' -%}
+          
+                      <li
+                        data-value="{{ sort_option_array.first }}"
+                        class="sort__option{% if current_sort == sort_option_array.first %} selected{% endif %}"
+                      >
+                        <input class="sort-tag" id="{{sort_option_array.first}}" type="checkbox" title="{{sort_option_array.last}}">
+                        <labeL for="{{sort_option_array.first}}" class="tag__label">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+                            <g fill="none" fill-rule="evenodd">
+                                <g fill-rule="nonzero" stroke="#919191">
+                                    <path d="M1052.5 401c-4.142 0-7.5 3.358-7.5 7.5 0 4.142 3.358 7.5 7.5 7.5 4.142 0 7.5-3.358 7.5-7.5 0-4.142-3.358-7.5-7.5-7.5z" transform="translate(-1044 -400)"/>
+                                </g>
+                            </g>
+                          </svg>
+                          <span>{{sort_option_array.last}}</span>
+                        </labeL>
+                      </li>
+                    {%- endfor -%}
+
+
+                  </div>
+                  <hr class="divider--start hidden-sm hidden-md hidden-lg">
+                  {% if benefit_tags.size != blank %}
+                    {%- assign benefit_tags_arr = benefit_tags | split: '|' -%}
+                    <div class="subtitle__wrapper">
+                      <h3 class="section__subtitle">Benefit</h3>
+                      <svg class="icon-plus" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+                        <g fill="none" fill-rule="evenodd">
+                            <g fill-rule="nonzero" stroke="#919191">
+                                <path d="M345 631c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm-.052 4.278c.136-.015.272.03.374.122.1.093.157.225.154.362v4.762h4.762c.172-.003.332.088.418.236.087.148.087.332 0 .48-.086.148-.246.239-.418.236h-4.762v4.762c.003.172-.088.332-.236.418-.148.087-.332.087-.48 0-.148-.086-.239-.246-.236-.418v-4.762h-4.762c-.17.008-.332-.075-.424-.219-.092-.143-.1-.324-.022-.476.078-.151.231-.25.401-.257H344.524v-4.762c-.005-.247.179-.457.424-.484z" transform="translate(-334 -630)"/>
+                            </g>
+                        </g>
+                      </svg>
+                    </div>
+                    <div class="accordion__content not-shown">
+                      {%- for tag in benefit_tags_arr -%}
+                        <li data-tag="{{tag | handle}}">
+                          <input class="filter-tag" type="checkbox" id="{{tag | handle}}" title="{{tag}}">
+                          <labeL for="{{tag | handle}}" class="tag__label">
+                            <svg class="hidden-xs" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+                              <g fill="none" fill-rule="evenodd">
+                                  <g fill-rule="nonzero" stroke="#919191">
+                                      <path d="M1052.5 401c-4.142 0-7.5 3.358-7.5 7.5 0 4.142 3.358 7.5 7.5 7.5 4.142 0 7.5-3.358 7.5-7.5 0-4.142-3.358-7.5-7.5-7.5z" transform="translate(-1044 -400)"/>
+                                  </g>
+                              </g>
+                            </svg>
+                            <svg class="hidden-sm hidden-md hidden-lg" width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                              <title>Rectangle Copy 5</title>
+                              <g id="PLP----JM-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="Filter-Mobile-Open---Benefit-" transform="translate(-20.000000, -365.000000)" stroke="#919191">
+                                  <rect id="Rectangle-Copy-5" x="20.5" y="365.5" width="14" height="14"></rect>
+                                </g>
+                              </g>
+                            </svg>
+                            <span>{{tag}}</span>
+                          </labeL>
+                        </li>
+                      {%- endfor -%}
+                    </div>
+                    <hr class="divider--start">
+                  {% endif %}
+                  {% if finish_tags.size != blank %}
+                    {%- assign finish_tags_arr = finish_tags | split: '|' -%}
+                    <div class="subtitle__wrapper">
+                      <h3 class="section__subtitle">Finish</h3>
+                      <svg class="icon-plus" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+                        <g fill="none" fill-rule="evenodd">
+                            <g fill-rule="nonzero" stroke="#919191">
+                                <path d="M345 631c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm-.052 4.278c.136-.015.272.03.374.122.1.093.157.225.154.362v4.762h4.762c.172-.003.332.088.418.236.087.148.087.332 0 .48-.086.148-.246.239-.418.236h-4.762v4.762c.003.172-.088.332-.236.418-.148.087-.332.087-.48 0-.148-.086-.239-.246-.236-.418v-4.762h-4.762c-.17.008-.332-.075-.424-.219-.092-.143-.1-.324-.022-.476.078-.151.231-.25.401-.257H344.524v-4.762c-.005-.247.179-.457.424-.484z" transform="translate(-334 -630)"/>
+                            </g>
+                        </g>
+                      </svg>
+                    </div>
+                    <div class="accordion__content not-shown">
+                      {%- for tag in finish_tags_arr -%}
+                        <li data-tag="{{tag | handle}}">
+                          <input class="filter-tag" type="checkbox" id="{{tag | handle}}" title="{{tag}}">
+                          <labeL for="{{tag | handle}}" class="tag__label">
+                            <svg class="hidden-xs" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+                              <g fill="none" fill-rule="evenodd">
+                                  <g fill-rule="nonzero" stroke="#919191">
+                                      <path d="M1052.5 401c-4.142 0-7.5 3.358-7.5 7.5 0 4.142 3.358 7.5 7.5 7.5 4.142 0 7.5-3.358 7.5-7.5 0-4.142-3.358-7.5-7.5-7.5z" transform="translate(-1044 -400)"/>
+                                  </g>
+                              </g>
+                            </svg>
+                            <svg class="hidden-sm hidden-md hidden-lg" width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                              <title>Rectangle Copy 5</title>
+                              <g id="PLP----JM-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="Filter-Mobile-Open---Benefit-" transform="translate(-20.000000, -365.000000)" stroke="#919191">
+                                  <rect id="Rectangle-Copy-5" x="20.5" y="365.5" width="14" height="14"></rect>
+                                </g>
+                              </g>
+                            </svg>
+                            <span>{{tag}}</span>
+                          </labeL>
+                        </li>
+                      {%- endfor -%}
+                    </div>
+                    <hr class="divider--start">
+                  {% endif %}
+                  {% if concern_tags.size != blank %}
+                  {%- assign concern_tags_arr = concern_tags | split: '|' -%}
+                    <div class="subtitle__wrapper">
+                      <h3 class="section__subtitle">Concern</h3>
+                      <svg class="icon-plus" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+                        <g fill="none" fill-rule="evenodd">
+                            <g fill-rule="nonzero" stroke="#919191">
+                                <path d="M345 631c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm-.052 4.278c.136-.015.272.03.374.122.1.093.157.225.154.362v4.762h4.762c.172-.003.332.088.418.236.087.148.087.332 0 .48-.086.148-.246.239-.418.236h-4.762v4.762c.003.172-.088.332-.236.418-.148.087-.332.087-.48 0-.148-.086-.239-.246-.236-.418v-4.762h-4.762c-.17.008-.332-.075-.424-.219-.092-.143-.1-.324-.022-.476.078-.151.231-.25.401-.257H344.524v-4.762c-.005-.247.179-.457.424-.484z" transform="translate(-334 -630)"/>
+                            </g>
+                        </g>
+                      </svg>
+                    </div>
+                    <div class="accordion__content not-shown">
+                      {%- for tag in concern_tags_arr -%}
+                        <li data-tag="{{tag | handle}}">
+                          <input class="filter-tag" type="checkbox" id="{{tag | handle}}" title="{{tag}}">
+                          <labeL for="{{tag | handle}}" class="tag__label">
+                            <svg class="hidden-xs" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+                              <g fill="none" fill-rule="evenodd">
+                                  <g fill-rule="nonzero" stroke="#919191">
+                                      <path d="M1052.5 401c-4.142 0-7.5 3.358-7.5 7.5 0 4.142 3.358 7.5 7.5 7.5 4.142 0 7.5-3.358 7.5-7.5 0-4.142-3.358-7.5-7.5-7.5z" transform="translate(-1044 -400)"/>
+                                  </g>
+                              </g>
+                            </svg>
+                            <svg class="hidden-sm hidden-md hidden-lg" width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                              <title>Rectangle Copy 5</title>
+                              <g id="PLP----JM-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <g id="Filter-Mobile-Open---Benefit-" transform="translate(-20.000000, -365.000000)" stroke="#919191">
+                                  <rect id="Rectangle-Copy-5" x="20.5" y="365.5" width="14" height="14"></rect>
+                                </g>
+                              </g>
+                            </svg>
+                            <span>{{tag}}</span>
+                          </labeL>
+                        </li>
+                      {%- endfor -%}
+                    </div>
+                    <hr class="divider--start">
+                  {% endif %}
+                </ul>
+              </main>
+            </div>
+            <div class="modal__bottom__mob hidden-sm hidden-md hidden-lg">
+              <button class="modal__apply-filters">Apply Filters</button>
+              <a href="/collections/{{collection.handle}}" class="clear-filter" aria-label="Clear filters">Clear All</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.collection__filter -->
+{% else %}
+  <div class="collection__filter hidden-sm hidden-md hidden-lg">
+
+    <button class="see-more filter" data-micromodal-trigger="modal-filterby">
+      Sort by
+    </button>
+
+    <div class="modal micromodal-slide filter" id="modal-filterby" aria-hidden="true">
+      <div class="modal__overlay" tabindex="-1">
+        <div class="modal__wrapper">
+          <div class="modal__container" role="dialog" aria-modal="true">
+            <div class="modal__top__mob">
+              <header class="modal__header">
+                <button class="modal__close close" aria-label="Close modal" data-micromodal-close>Close</button>
+              </header>
+              <hr class="divider--start">
+              <main class="modal__content" id="modal-sort-content">
+                <ul class="tag-list">
+                  <div class="subtitle__wrapper">
+                    <h3 class="section__subtitle">Sort By</h3>
+                    <svg class="icon-plus" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+                      <g fill="none" fill-rule="evenodd">
+                          <g fill-rule="nonzero" stroke="#919191">
+                              <path d="M345 631c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm-.052 4.278c.136-.015.272.03.374.122.1.093.157.225.154.362v4.762h4.762c.172-.003.332.088.418.236.087.148.087.332 0 .48-.086.148-.246.239-.418.236h-4.762v4.762c.003.172-.088.332-.236.418-.148.087-.332.087-.48 0-.148-.086-.239-.246-.236-.418v-4.762h-4.762c-.17.008-.332-.075-.424-.219-.092-.143-.1-.324-.022-.476.078-.151.231-.25.401-.257H344.524v-4.762c-.005-.247.179-.457.424-.484z" transform="translate(-334 -630)"/>
+                          </g>
+                      </g>
+                    </svg>
+                  </div>
+                  <div class="accordion__content not-shown sort_mobile">
+
+                    {%- for sortOption in sort_options -%}
+                      {%- assign sort_option_array = sortOption | strip | split: '|' -%}
+          
+                      <li
+                        data-value="{{ sort_option_array.first }}"
+                        class="sort__option{% if current_sort == sort_option_array.first %} selected{% endif %}"
+                      >
+                        <input class="sort-tag" id="{{sort_option_array.first}}" type="checkbox" title="{{sort_option_array.last}}">
+                        <labeL for="{{sort_option_array.first}}" class="tag__label">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+                            <g fill="none" fill-rule="evenodd">
+                                <g fill-rule="nonzero" stroke="#919191">
+                                    <path d="M1052.5 401c-4.142 0-7.5 3.358-7.5 7.5 0 4.142 3.358 7.5 7.5 7.5 4.142 0 7.5-3.358 7.5-7.5 0-4.142-3.358-7.5-7.5-7.5z" transform="translate(-1044 -400)"/>
+                                </g>
+                            </g>
+                          </svg>
+                          <span>{{sort_option_array.last}}</span>
+                        </labeL>
+                      </li>
+                    {%- endfor -%}
+
+
+                  </div>
+                  <hr class="divider--start">
+                </ul>
+              </main>
+            </div>
+            <div class="modal__bottom__mob hidden-sm hidden-md hidden-lg">
+              <button class="modal__apply-filters">Apply Filters</button>
+              <a href="/collections/{{collection.handle}}" class="clear-filter" aria-label="Clear filters">Clear All</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.collection__filter -->
+{% endif %}
+
+<style>
+  .modal.filter .modal__wrapper {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .modal.filter .modal__overlay {
+    align-items: flex-start;
+    top: 130px;
+  }
+  .modal.filter .modal__overlay .modal__container {
+    margin-right: 0;
+    width: 450px;
+  }
+  .modal.filter .modal__header {
+    padding-bottom: 2.5rem;
+  }
+  .modal.filter h2.section__title {
+    font-family: var(--font-medium);
+    font-size: var(--body-copy);
+    color: var(--primary-color);
+    letter-spacing: 1px;
+  }
+  .modal.filter h3.section__subtitle {
+    letter-spacing: 1px;
+  }
+  .modal.filter hr.divider--start {
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+  .modal.filter hr.divider--start:last-child {
+    margin-bottom: 0;
+  }
+  .modal.filter .subtitle__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1.5rem;
+    padding-top: 1.5rem;
+    cursor: pointer;
+  }
+  .modal.filter .accordion__content.not-shown {
+    display: none;
+  }
+  .modal.filter .accordion__content.collapsed {
+    display: block;
+  }
+  .modal.filter input.filter-tag,
+  .modal.filter input.sort-tag {
+    display: none;
+  }
+  .modal.filter .accordion__content .tag__label {
+    display: flex;
+    align-items: center;
+    padding-bottom: 14px;
+  }
+  .modal.filter .accordion__content .tag__label span {
+    padding-left: 0.5rem;
+  }
+  .modal.filter .modal__overlay {
+    z-index: 99;
+  }
+  @media (max-width: 767px) {
+    .modal.filter .modal__wrapper {
+      position: absolute;
+      bottom: 0;
+      max-width: 100%;
+      height: calc(100% - 40px);
+    }
+    .modal.filter .modal__overlay {
+      background: unset;
+    }
+    .modal.filter .modal__overlay .modal__container {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      overflow-y: scroll;
+      max-height: calc(100vh - 0rem);
+      margin: 0;
+      padding: 0;
+      max-width: 100%;
+    }
+    .modal.filter .subtitle__wrapper {
+      padding: 20px;
+    }
+    .modal.filter .modal__header {
+      justify-content: flex-end;
+      padding: 10px 20px;
+    }
+    .collection__filters .filter--count {
+      line-height: 1;
+    }
+    .collection__filters .filter--count span {
+      font-size: 10px;
+      color: var(--border-color);
+    }
+    .collection__filters .accordion__content.collapsed {
+      padding: 0 20px;
+    }
+    .collection__filters .modal__bottom__mob {
+      padding: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .collection__filters .modal__bottom__mob .modal__apply-filters {
+      font-family: var(--font-medium);
+      text-decoration: none;
+      text-align: center;
+      height: 60px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--secondary-color);
+      color: #fff;
+      border: unset;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .collection__filters .modal__bottom__mob a.clear-filter {
+      position: unset;
+    }
+  }
+</style>
+  
+  <script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    MicroModal.init({
+      onClose: () => {
+        $('.collection__filters .collection__sort button.close-btn').remove();
+        $('.collection__filters .collection__sort button.sort').removeClass('hidden');
+      },
+    });
+    let currentURL = location.href;
+    let sortByParams;
+    let newURL;
+    let mobNewURL;
+    let isSelected = false;
+    if (currentURL.includes('sort_by')) {
+      currentURL = location.href.split('?sort_by')[0];
+      sortByParams = '?sort_by' + location.href.split('?sort_by')[1];
+    }
+    let filterCount = 0;
+
+    $('.modal.filter ul.tag-list li input.filter-tag').each(function() {
+      if (currentURL.includes($(this).prop('id'))) {
+        $(this).prop('checked', true);
+        $('.collections--default .selected__filters').css('display', 'flex');
+        $('.collections--default .selected__filters').prepend(`<span>x  ${$(this).attr('title')}</span>`);
+        $('.collections--default .clear-filter').removeClass('hidden');
+        if($(window).width() > 767) {
+          $(this).next('label').html(`<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17'><g fill='none' fill-rule='evenodd'><g><g transform='translate(-1044.000000, -430.000000) translate(1045.000000, 431.000000)'>
+          <path fill-rule='nonzero' stroke='#919191' d='M7.5 0C3.358 0 0 3.358 0 7.5 0 11.642 3.358 15 7.5 15c4.142 0 7.5-3.358 7.5-7.5C15 3.358 11.642 0 7.5 0z'/><circle cx='7.5' cy='7.5' r='5' fill='#919191'/></g></g></g></svg><span>${$(this).attr('title')}</span>`);
+          $('.collection__header').next('hr.section__divider').css('paddingBottom', 0);
+        } else {
+          $(this).next('label').html(`<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Group 9</title>
+          <g id="PLP----JM-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Filter-Mobile-Open---Benefit-" transform="translate(-20.000000, -330.000000)"><g id="Group-9" transform="translate(20.000000, 330.000000)"><rect id="Rectangle-Copy-5" stroke="#919191" x="0.5" y="0.5" width="14" height="14"></rect><path d="M2.5,2.5 L12.5,12.5 M12.5,2.5 L2.5,12.5" id="Combined-Shape-Copy" stroke="#979797" stroke-linecap="square"></path></g></g></g></svg><span>${$(this).attr('title')}</span>`);
+        }
+
+        filterCount += 1;
+        $('.collection__filters .filter--count span').text(`${filterCount} filters active`);
+        $('.collection__filters').css('paddingBottom', '11px');
+      }
+    });
+
+    $('.modal.filter ul.tag-list li input.sort-tag').each(function() {
+      if (sortByParams != undefined && sortByParams.includes($(this).prop('id'))) {
+        $(this).prop('checked', true);
+        $(this).next('label').html(`<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17'><g fill='none' fill-rule='evenodd'><g><g transform='translate(-1044.000000, -430.000000) translate(1045.000000, 431.000000)'>
+        <path fill-rule='nonzero' stroke='#919191' d='M7.5 0C3.358 0 0 3.358 0 7.5 0 11.642 3.358 15 7.5 15c4.142 0 7.5-3.358 7.5-7.5C15 3.358 11.642 0 7.5 0z'/><circle cx='7.5' cy='7.5' r='5' fill='#919191'/></g></g></g></svg><span>${$(this).attr('title')}</span>`);
+      }
+    });
+
+    $('.collections--default .selected__filters span').on('click', function(e) {
+      const filterHandle = $(this).text().split('x  ')[1].replace(' ', '-').toLowerCase();
+      let newHref;
+
+      if(filterHandle == 'gift' ){
+        newHref = currentURL;
+      }else if (sortByParams != undefined) {
+        if ((currentURL.charAt(currentURL.indexOf(filterHandle) - 1)) == '+') {
+          newHref = currentURL.replace(`+${filterHandle}`, '') + sortByParams;
+        } else {
+          newHref = currentURL.replace(filterHandle, '') + sortByParams;
+        }
+      } else {
+        if ((currentURL.charAt(currentURL.indexOf(filterHandle) - 1)) == '+') {
+          newHref = currentURL.replace(`+${filterHandle}`, '');
+        } else {
+          newHref = currentURL.replace(filterHandle, '');
+        }
+      }
+      location.href = newHref;
+    });
+
+    $('.collection__filters .collection__filter button').on('click', function() {
+      if ($('#modal-filterby').hasClass('is-open')) {
+        $('.collection__filters .collection__sort button.sort').addClass('hidden');
+        $('.collection__filters .collection__sort').prepend(`<button class="close close-btn" aria-label="Close modal" data-micromodal-close>Close</button>`);
+      }
+    });
+
+    $('.modal.filter ul.tag-list li input.filter-tag').on('change', function(e) {
+
+      const filterId = $(this).prop('id');
+      const siblings = $('div.accordion__content li input.filter-tag').not(this);
+      
+      if ($(this).prop('checked') == true) {
+        
+        if($(window).width() > 767) {
+          $(this).next('label').html(`<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17'><g fill='none' fill-rule='evenodd'><g><g transform='translate(-1044.000000, -430.000000) translate(1045.000000, 431.000000)'>
+          <path fill-rule='nonzero' stroke='#919191' d='M7.5 0C3.358 0 0 3.358 0 7.5 0 11.642 3.358 15 7.5 15c4.142 0 7.5-3.358 7.5-7.5C15 3.358 11.642 0 7.5 0z'/><circle cx='7.5' cy='7.5' r='5' fill='#919191'/></g></g></g></svg><span>${$(this).attr('title')}</span>`);
+          
+        } else {
+          $(this).next('label').html(`<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Group 9</title>
+          <g id="PLP----JM-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Filter-Mobile-Open---Benefit-" transform="translate(-20.000000, -330.000000)"><g id="Group-9" transform="translate(20.000000, 330.000000)"><rect id="Rectangle-Copy-5" stroke="#919191" x="0.5" y="0.5" width="14" height="14"></rect><path d="M2.5,2.5 L12.5,12.5 M12.5,2.5 L2.5,12.5" id="Combined-Shape-Copy" stroke="#979797" stroke-linecap="square"></path></g></g></g></svg><span>${$(this).attr('title')}</span>`);
+        }
+
+        $(siblings).each(function(ind) {
+          if ($(this).prop('checked') == true) {
+            isSelected = true;
+
+            if($(window).width() > 767 || ($(window).width() <= 767 && newURL == undefined)) {
+
+              if(window.location.pathname == '/collections/gifts')
+              {
+                newURL = currentURL + '/' + filterId;
+              }else{
+                newURL = currentURL + '+' + filterId;
+              }
+            } else {
+              if(window.location.pathname == '/collections/gifts')
+              {
+                newURL = newURL + '/' + filterId;
+              }else{
+                newURL = newURL + '+' + filterId;
+              }
+            }
+            return false;
+
+          } else if(isSelected == false && ind == $(siblings).length - 1 && newURL == undefined) {
+            newURL = currentURL + '/' + filterId;
+          } else if(isSelected == false && ind == $(siblings).length - 1 && newURL != undefined) {
+            newURL = newURL + '/' + filterId;
+          }
+        });
+        isSelected = false;
+      } else {
+        if($(window).width() > 767) {
+          $(this).next('label').html(`<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17'><g fill='none' fill-rule='evenodd'><g fill-rule="nonzero" stroke="#919191">
+          <path d="M1052.5 401c-4.142 0-7.5 3.358-7.5 7.5 0 4.142 3.358 7.5 7.5 7.5 4.142 0 7.5-3.358 7.5-7.5 0-4.142-3.358-7.5-7.5-7.5z" transform="translate(-1044 -400)"/></g></g></svg><span>${$(this).attr('title')}</span>`);
+          
+        } else {
+          $(this).next('label').html(`<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Rectangle Copy 5</title>
+          <g id="PLP----JM-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Filter-Mobile-Open---Benefit-" transform="translate(-20.000000, -365.000000)" stroke="#919191"><rect id="Rectangle-Copy-5" x="20.5" y="365.5" width="14" height="14"></rect></g></g></svg><span>${$(this).attr('title')}</span>`);
+        }
+        
+        if($(window).width() > 767 || ($(window).width() <= 767 && newURL == undefined)) {
+          if ((currentURL.charAt(currentURL.indexOf(filterId) - 1)) == '+') {
+            newURL = currentURL.replace(`+${filterId}`, '');
+          } else if((currentURL.charAt(currentURL.lastIndexOf(filterId) + filterId.length)) == '+') {
+            newURL = currentURL.replace(`${filterId}+`, '');
+          } else {
+            newURL = currentURL.replace(filterId, '');
+          }
+        } else {
+          if ((newURL.charAt(newURL.indexOf(filterId) - 1)) == '+') {
+            newURL = newURL.replace(`+${filterId}`, '');
+          } else if((newURL.charAt(newURL.lastIndexOf(filterId) + filterId.length)) == '+') {
+            newURL = newURL.replace(`${filterId}+`, '');
+          } else {
+            newURL = newURL.replace(filterId, '');
+          }
+        }
+      }
+
+      if (newURL != undefined) {
+        if (sortByParams != undefined) {
+          if($(window).width() > 767) {
+            location.href = newURL + sortByParams;
+          }
+          mobNewURL = newURL + sortByParams;
+        } else {
+          if($(window).width() > 767) {
+            location.href = newURL;
+          }
+          mobNewURL = newURL;
+        }
+      }
+    });
+
+    $('.collection__filters .collection__filter .modal__apply-filters').on('click', function() {
+      if (mobNewURL != undefined) {
+        location.href = mobNewURL;
+      }
+    });
+
+    $(".sort_mobile .sort__option").on("click", function () {
+      let myThis = $(this);
+      Shopify.queryParams = {};
+      const thisVal = $(this).attr('data-value');
+      $(this).siblings().removeClass('selected');
+      $('.modal.filter ul.tag-list li input.sort-tag').each(function(el) {
+        if (el != myThis) {
+          $(this).next('label').html(`<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17'><g fill='none' fill-rule='evenodd'><g fill-rule="nonzero" stroke="#919191">
+          <path d="M1052.5 401c-4.142 0-7.5 3.358-7.5 7.5 0 4.142 3.358 7.5 7.5 7.5 4.142 0 7.5-3.358 7.5-7.5 0-4.142-3.358-7.5-7.5-7.5z" transform="translate(-1044 -400)"/></g></g></svg><span>${$(this).attr('title')}</span>`);
+        }
+      });
+      $(this).addClass('selected');
+      $(this).find('label').html(`<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17'><g fill='none' fill-rule='evenodd'><g><g transform='translate(-1044.000000, -430.000000) translate(1045.000000, 431.000000)'>
+      <path fill-rule='nonzero' stroke='#919191' d='M7.5 0C3.358 0 0 3.358 0 7.5 0 11.642 3.358 15 7.5 15c4.142 0 7.5-3.358 7.5-7.5C15 3.358 11.642 0 7.5 0z'/><circle cx='7.5' cy='7.5' r='5' fill='#919191'/></g></g></g></svg><span>${$(this).find('input').attr('title')}</span>`);
+
+      if (location.search) {
+        const getArgumentsArray = location.search.substr(1).split("&");
+        getArgumentsArray.map(function (ele) {
+          const eleArray = ele.split("=");
+          Shopify.queryParams[decodeURIComponent(eleArray[0])] = decodeURIComponent(eleArray[1]);
+        });
+      }
+
+      Shopify.queryParams.sort_by = thisVal;
+      sortByParams = '?' + jQuery.param(Shopify.queryParams);
+
+      if (mobNewURL != undefined) {
+        if (mobNewURL.includes('sort_by')) {
+          mobNewURL = mobNewURL.split('?sort_by')[0];
+        }
+        mobNewURL = mobNewURL + sortByParams;
+      } else {
+        mobNewURL = currentURL + sortByParams;
+      }
+    });
+
+    $('.modal.filter .subtitle__wrapper').on('click', function () {
+      const accordionContent = $(this).next('.accordion__content');
+      if (accordionContent.hasClass('not-shown')) {
+        accordionContent.removeClass('not-shown').addClass('collapsed');
+        $(this).children('svg.icon-plus').replaceWith("<svg class='icon-minus' xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><g fill='none' fill-rule='evenodd'><g fill-rule='nonzero' stroke='#919191'><g><path d='M325 0c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm.476 9.524h4.762c.172-.003.332.088.418.236.087.148.087.332 0 .48-.086.148-.246.239-.418.236H319.762c-.17.008-.332-.075-.424-.219-.092-.143-.1-.324-.022-.476.078-.151.231-.25.401-.257H325.476z' transform='translate(-334 -1649) translate(20 1650)'/></g></g></g></svg>");
+      } else {
+        accordionContent.removeClass('collapsed').addClass('not-shown');
+        $(this).children('svg.icon-minus').replaceWith("<svg class='icon-plus' xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><g fill='none' fill-rule='evenodd'><g fill-rule='nonzero' stroke='#919191'><path d='M345 631c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm-.052 4.278c.136-.015.272.03.374.122.1.093.157.225.154.362v4.762h4.762c.172-.003.332.088.418.236.087.148.087.332 0 .48-.086.148-.246.239-.418.236h-4.762v4.762c.003.172-.088.332-.236.418-.148.087-.332.087-.48 0-.148-.086-.239-.246-.236-.418v-4.762h-4.762c-.17.008-.332-.075-.424-.219-.092-.143-.1-.324-.022-.476.078-.151.231-.25.401-.257H344.524v-4.762c-.005-.247.179-.457.424-.484z' transform='translate(-334 -630)'/></g></g></svg>");
+      }
+    });
+
+    $( window ).resize(function() {
+      $('.modal.filter ul.tag-list li input.filter-tag').each(function() {
+        if (currentURL.includes($(this).prop('id')) && $(window).width() > 767) {
+          $(this).next('label').html(`<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17'><g fill='none' fill-rule='evenodd'><g><g transform='translate(-1044.000000, -430.000000) translate(1045.000000, 431.000000)'>
+          <path fill-rule='nonzero' stroke='#919191' d='M7.5 0C3.358 0 0 3.358 0 7.5 0 11.642 3.358 15 7.5 15c4.142 0 7.5-3.358 7.5-7.5C15 3.358 11.642 0 7.5 0z'/><circle cx='7.5' cy='7.5' r='5' fill='#919191'/></g></g></g></svg><span>${$(this).attr('title')}</span>`);
+        } else if(currentURL.includes($(this).prop('id')) && $(window).width() <= 767) {
+          $(this).next('label').html(`<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Group 9</title>
+          <g id="PLP----JM-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Filter-Mobile-Open---Benefit-" transform="translate(-20.000000, -330.000000)"><g id="Group-9" transform="translate(20.000000, 330.000000)"><rect id="Rectangle-Copy-5" stroke="#919191" x="0.5" y="0.5" width="14" height="14"></rect><path d="M2.5,2.5 L12.5,12.5 M12.5,2.5 L2.5,12.5" id="Combined-Shape-Copy" stroke="#979797" stroke-linecap="square"></path></g></g></g></svg><span>${$(this).attr('title')}</span>`);
+        } else if(!currentURL.includes($(this).prop('id')) && $(window).width() > 767) {
+          $(this).next('label').html(`<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17'><g fill='none' fill-rule='evenodd'><g fill-rule="nonzero" stroke="#919191">
+          <path d="M1052.5 401c-4.142 0-7.5 3.358-7.5 7.5 0 4.142 3.358 7.5 7.5 7.5 4.142 0 7.5-3.358 7.5-7.5 0-4.142-3.358-7.5-7.5-7.5z" transform="translate(-1044 -400)"/></g></g></svg><span>${$(this).attr('title')}</span>`);
+        } else if(!currentURL.includes($(this).prop('id')) && $(window).width() <= 767) {
+          $(this).next('label').html(`<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Rectangle Copy 5</title>
+          <g id="PLP----JM-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Filter-Mobile-Open---Benefit-" transform="translate(-20.000000, -365.000000)" stroke="#919191"><rect id="Rectangle-Copy-5" x="20.5" y="365.5" width="14" height="14"></rect></g></g></svg><span>${$(this).attr('title')}</span>`);
+        }
+      });
+    });
+  });
+  </script>

@@ -1,0 +1,620 @@
+{% assign promo = section.settings %}
+<!-- Custom content for Rose Inc UK -->
+{% unless localization.country.iso_code == 'GB' and promo.locale == 'us' and request.design_mode == false %}
+  {% unless localization.country.iso_code != 'GB' and promo.locale == 'uk' and request.design_mode == false %}
+
+    <section class="promoModule">
+      {% assign checkBlockCount = 0 %}
+      {% for block in section.blocks %}
+        {% assign checkBlockCount = checkBlockCount | plus : forloop.index %}
+      {% endfor %}
+
+      <div class="container {% if checkBlockCount == 1 %} no-slider{% else %} promoSlider {% endif %}" data-slick='{
+
+                  "responsive": [
+                    {
+                      "breakpoint": 5000,
+                      "settings": "unslick"
+                    },
+                    {
+                      "breakpoint": 768,
+                      "settings":{
+                        "slidesToShow": 1,
+                        "slidesToScroll": 1,
+                        "infinite": false,
+                        "dots": true,
+                        "arrows": false
+                      }
+                    }
+                  ]
+                }'>
+        {% for block in section.blocks %}
+
+          {% assign videoDesktop = block.settings.desktop_video_url %}
+          {% assign videoMobile = block.settings.mobile_video_url %}
+          {% assign customDesktopVideoUrl = block.settings.custom_desktop_video_url %}
+          {% assign customMobileVideoUrl = block.settings.custom_mobile_video_url %}
+          {% assign titleDesktop = block.settings.custom_desktop_video_description %}
+          {% assign titleMobile = block.settings.custom_mobile_video_description %}
+
+          {% if forloop.length == 2 %}{% assign blockNumber = 'twocol' %}{% endif %}
+          {% if forloop.length == 1 %}{% assign blockNumber = 'onecol' %}{% endif %}
+
+          <div id="promoLabel-{{ block.id }}" class="promo-wrapper {{ blockNumber }}
+            {% if blockNumber == 'twocol' and forloop.index == 1  %}
+                  margin-class-{{ forloop.index }}
+            {% endif %}
+            {% if blockNumber == 'twocol' and forloop.index == 2  %}
+                  margin-class-{{ forloop.index }}
+            {% endif %}
+            {% if block.settings.background_color != '' %}
+                background-color-class-{{ block.id }}
+            {% endif %}">
+
+            <div class="image-desktop imageBoxHeight">
+
+              {% if block.settings.enable_video_control and customDesktopVideoUrl != '' %}
+                <div class="player-controls ">
+                  <button class="play">{% render 'svg-icons' with 'play' %}</button>
+                  <button class="pause">{% render 'svg-icons' with 'pause' %}</button>
+                </div>
+              {% endif %}
+
+              {% if customDesktopVideoUrl != '' %}
+                <video id="video-{{ block.id }}-desk" muted loop autoplay preload="auto" playsinline="true" webkit-playsinline="true" width="100%" height="100%">
+                  <source src="{{ customDesktopVideoUrl }}" type='video/mp4' />
+                </video>
+              {% else %}
+                {% assign promoImageUrl =  block.settings.image | img_url %}
+                {% unless promoImageUrl contains 'no-image' %}
+                  {{block.settings.image | image_url: width: 1920 | image_tag: width: nil, height: nil, alt: block.settings.image.alt, preload: true, fetchpriority: 'high' }}
+                {% endunless %}
+              {% endif %}
+
+
+              <div class="content">
+                <h3>{{ block.settings.title }}</h3>
+                <p>{{ block.settings.desc }}</p>
+                <a href="{{ block.settings.link }}" class="btn-custom-class">{{ block.settings.link_txt }}</a>
+              </div>
+            </div>
+
+            <div class="image-mobile imageBoxHeight">
+
+              {% if block.settings.enable_video_control and customMobileVideoUrl != '' %}
+                <div class="player-controls {% if block.settings.control_alignment  == 'left' %} controlLeft {% else %} controlRight {% endif %}">
+                  <button class="play">{% render 'svg-icons' with 'play' %}</button>
+                  <button class="pause">{% render 'svg-icons' with 'pause' %}</button>
+                </div>
+              {% endif %}
+
+              {% if customMobileVideoUrl != '' %}
+                <video id="video-{{ block.id }}-mob" muted loop autoplay preload="auto" playsinline="true" webkit-playsinline="true" width="100%" height="100%">
+                  <source src="{{ customMobileVideoUrl }}" type='video/mp4' />
+                </video>
+              {% else %}
+                {% assign promoImageMobUrl =  block.settings.image_m | img_url %}
+                {% unless promoImageMobUrl contains 'no-image' %}
+                  {{block.settings.image_m | image_url: width: 832 | image_tag: width: nil, height: nil, alt: block.settings.image_m.alt, preload: true, fetchpriority: 'high' }}
+                {% endunless %}
+              {% endif %}
+
+              <div class="content">
+                <h3>{{ block.settings.title }}</h3>
+                <p>{{ block.settings.desc }}</p>
+                <a href="{{ block.settings.link }}" class="btn-custom-class">{{ block.settings.link_txt }}</a>
+              </div>
+            </div>
+
+            {% if block.settings.enable_video_control == true %}
+              <script>
+
+
+                $('#promoLabel-{{ block.id }} .player-controls .play').on('click', function(){
+                  var isMobile = window.matchMedia("(max-width: 767px)");
+                  if(isMobile.matches)
+                  {
+                    document.getElementById("video-{{ block.id }}-mob").play();
+                  }else{
+                    document.getElementById("video-{{ block.id }}-desk").play();
+                  }
+
+                  //document.getElementById("video-{{ block.id }}-desk").play();
+                  {% if block.settings.enable_video_control and customMobileVideoUrl != '' %}
+                  //document.getElementById("video-{{ block.id }}-mob").play();
+                  {% endif %}
+
+                  $(this).hide();
+                  $('#promoLabel-{{ block.id }} .player-controls .pause').show();
+                });
+
+                $('#promoLabel-{{ block.id }} .player-controls .pause').on('click', function(){
+                  var isMobile = window.matchMedia("(max-width: 767px)");
+                  if(isMobile.matches)
+                  {
+                    document.getElementById("video-{{ block.id }}-mob").pause();
+                  }else{
+                    document.getElementById("video-{{ block.id }}-desk").pause();
+                  }
+
+                  $(this).hide();
+                  $('#promoLabel-{{ block.id }} .player-controls .play').show();
+                });
+              </script>
+            {% endif %}
+
+            <style>
+              .promoModule #promoLabel-{{ block.id }} .content h3 {
+                text-transform: uppercase;
+                font-size: 18px;
+                color: {{block.settings.text_background_color}};
+                font-weight: normal;
+              }
+              .background-color-class-{{ block.id }}{
+                background-color: {{block.settings.background_color}};
+              }
+              #promoLabel-{{ block.id }} .content {
+                padding: 47px 50px 53px 50px;
+                background-color:#e6e3e0;
+                display: flex;
+                align-items: {{ block.settings.text_alignment }};
+                justify-content: center;
+                flex-flow: column;
+                max-width:460px;
+                letter-spacing: 0.6px;
+              }
+
+              #promoLabel-{{ block.id }} .image-desktop .content h3,
+              #promoLabel-{{ block.id }} .image-desktop .content p {
+              {% if block.settings.text_alignment == 'flex-start' %}
+                text-align: left;
+              {% elsif block.settings.text_alignment == 'flex-end' %}
+                text-align: right;
+              {% else %}
+                text-align: {{ block.settings.text_alignment }};
+              {% endif %}
+              }
+
+              #promoLabel-{{ block.id }}   .image-desktop {
+                display:flex;
+                justify-content: {{ block.settings.content_alignment }};
+                align-items: center;
+              }
+
+              #promoLabel-{{ block.id }}   .image-mobile {
+                display:flex !important;
+                justify-content: {{ block.settings.content_alignment_mobile }};
+                align-items: center;
+              }
+
+              #promoLabel-{{ block.id }}   .image-mobile .content {
+                display:flex;
+                align-items: {{ block.settings.text_alignment_mobile }};
+              }
+
+              #promoLabel-{{ block.id }} .image-mobile .content h3,
+              #promoLabel-{{ block.id }} .image-mobile .content p {
+              {% if block.settings.text_alignment_mobile == 'flex-start' %}
+                text-align: left;
+              {% elsif block.settings.text_alignment_mobile == 'flex-end' %}
+                text-align: right;
+              {% else %}
+                text-align: {{ block.settings.text_alignment_mobile }};
+              {% endif %}
+              }
+
+              #promoLabel-{{ block.id }} .player-controls {
+                position: absolute;
+                z-index: 3;
+              {{ block.settings.control_alignment }}: 0px;
+                bottom: 12px;
+                display: flex;
+                justify-content: flex-start;
+              }
+              #promoLabel-{{ block.id }} .player-controls.left {
+                left: 15px;
+                right: auto;
+              }
+              #promoLabel-{{ block.id }} .player-controls button {
+                padding: 0;
+                border: 0;
+                background: none;
+                width: 20px;
+                height: 12px;
+                margin: 0 8px;
+              }
+              #promoLabel-{{ block.id }} .player-controls button.play {
+                display:none;
+              }
+              #promoLabel-{{ block.id }} .player-controls button svg {
+                width: 100%;
+                height: 100%;
+                filter: invert(1);
+              }
+              #promoLabel-{{ block.id }} .content p{
+                color: {{block.settings.text_background_color}};
+              }
+
+              .promoModule #promoLabel-{{ block.id }} .content a.btn-custom-class {display:inline-block; font-size: 18px ;color: {{block.settings.text_background_color}};letter-spacing: 0.6px;}
+
+              .promoModule #promoLabel-{{ block.id }} .content a {
+                border-bottom: 2px solid {{block.settings.text_background_color}};
+              }
+
+              @media (max-width:767px) {
+                #promoLabel-{{ block.id }} .content {  padding:24px 15px 9px 15px; max-width:350px;letter-spacing: 0.5px  }
+                #promoLabel-{{ block.id }} .player-controls.controlLeft {
+                  left: 0px;
+                  width: unset;
+                  right: unset;
+                }
+                #promoLabel-{{ block.id }} .player-controls.controlRight {
+                  right: 0px;
+                  width: unset;
+                  left: unset;
+                }
+                .promoModule #promoLabel-{{ block.id }} .content h3 {
+                  font-size: 14px;
+                }
+                .promoModule #promoLabel-{{ block.id }} .content a.btn-custom-class {font-size: 14px}
+              }
+
+            </style>
+          </div>
+
+        {% endfor %}
+      </div>
+    </section>
+
+
+    <script>
+      var isMobile = window.matchMedia("(max-width: 767px)");
+      if(isMobile.matches)
+      {
+        $('.image-desktop').remove();
+      }else{
+        $('.image-mobile').remove();
+      }
+    </script>
+
+    <style>
+
+      .promoModule .slick-dots{
+        margin: 0 0 -15px 0;
+        position: absolute;
+        }
+        .margin-class-1
+        {
+          margin: 0 10px 0 0;
+        }
+        .margin-class-2
+        {
+          margin: 0 0 0 10px;
+        }
+
+        .promoModule {
+          padding-top: 20px;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+        .promoModule img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .promoModule .container {
+          display: flex;
+          position: relative;
+        }
+
+        .promo-wrapper.onecol {width:100%}
+        .promo-wrapper.twocol {width:50%}
+
+        .imageBoxHeight {overflow: hidden; height: 280px; position: relative;}
+        .imageBoxHeight .content {position: absolute; background: transparent!important;width: 100%;}
+
+
+        .promoModule .content a {
+          text-transform: uppercase;
+          border: none;
+          background: none;
+          letter-spacing: 1px;
+          border-bottom: 2px solid var(--secondary-color);
+          padding-bottom: 1px;
+          font-family: var(--font-medium);
+          text-decoration: none;
+        }
+
+        .promoModule .image-desktop img,
+        .promoModule .image-desktop video,
+        .promoModule .image-mobile img,
+        .promoModule .image-mobile video {
+          display: block;
+          object-fit: cover;
+          object-position: center;
+        }
+        .promoModule .image-desktop {
+          margin-right: -1px;
+        }
+
+        .promoModule .image-desktop iframe {
+          min-height: 300px;
+        }
+
+        .promoModule .image-mobile {
+          display:none !important;
+        }
+
+        @media (max-width:767px) {
+
+          .promoModule {
+            padding-top: 20px;
+            padding-left: 0px;
+            padding-right: 0px;
+          }
+          .promoModule .container {
+            padding: 0;
+          }
+          .promoModule .image-mobile {
+            display: block !important;
+          }
+          .promoModule .image-desktop {
+            display: none!important;
+          }
+
+          .promoModule .content {
+            padding: 25px 15px;
+            text-align: left;
+            align-items: self-start;
+          }
+
+          .promoModule .content a {
+            margin-top: 0px;
+            margin-bottom: 20px;
+          }
+
+          .promoModule .player-controls button {
+            width: 16px;
+            height: 16px;
+          }
+          .imageBoxHeight {height: 200px; }
+          .margin-div-1{margin: 0px;}
+          .margin-div-2{margin: 0px}
+          .promoModule .slick-list{padding-left: 10px!important;padding-right: 30px !important;}
+          .promoModule .slick-dots li button{height: 6px ;width:6px;padding: 0px;background-color: #fff;border:1px solid #545353}
+          .promoModule .slick-dots li.slick-active button{background-color: #545353; border:1px solid #545353;}
+          .promoModule .no-slider { padding:0 10px}
+        }
+</style>
+  {% endunless %}
+{% endunless %}
+
+{% schema %}
+  {
+  "name": "Promo Module",
+  "max_blocks": 2,
+  "settings": [
+  {
+  "type": "radio",
+  "id": "locale",
+  "label": "Localization Visibility",
+  "options": [
+  {
+  "value": "us",
+  "label": "Only US"
+  },
+  {
+  "value": "uk",
+  "label": "Only UK"
+  },
+  {
+  "value": "us_uk",
+  "label": "US & UK"
+  }
+  ],
+  "default": "us"
+  }
+  ],
+  "blocks" : [
+  {
+  "type": "slide",
+  "name": "Panel",
+  "settings": [
+  {
+  "type": "header",
+  "content": "IMAGE, VIDEO or BACKGROUND COLOR"
+  },
+  {
+  "type": "image_picker",
+  "id": "image",
+  "label": "Image Desktop"
+  },
+  {
+  "type": "text",
+  "id": "custom_desktop_video_url",
+  "label": "Desktop Custom Video Url"
+  },
+  {
+  "type": "textarea",
+  "id": "custom_desktop_video_description",
+  "label": "ADA - Desktop Custom Video Summary"
+  },
+  {
+  "type": "image_picker",
+  "id": "image_m",
+  "label": "Image Mobile"
+  },
+  {
+  "type": "text",
+  "id": "custom_mobile_video_url",
+  "label": "Mobile Custom Video Url"
+  },
+  {
+  "type": "textarea",
+  "id": "custom_mobile_video_description",
+  "label": "ADA - Mobile Custom Video Summary"
+  },
+  {
+  "type": "header",
+  "content": "TEXT - Add text and its position"
+  },
+  {
+  "type": "text",
+  "id": "title",
+  "label": "Title",
+  "default": "Free Flush of Color Brush Set"
+  },
+  {
+  "type": "textarea",
+  "id": "desc",
+  "label": "Description",
+  "default": "with any $75+ purchase."
+  },
+  {
+  "type": "text",
+  "id": "link_txt",
+  "label": "Link Label",
+  "default": "Shop Now"
+  },
+  {
+  "type": "url",
+  "id": "link",
+  "label": "Link URL"
+  },
+  {
+  "type": "header",
+  "content": "Desktop Text Alignment"
+  },
+  {
+  "type": "select",
+  "id": "content_alignment",
+  "label": "Content Alignment Desktop",
+  "default": "center",
+  "options": [
+  {
+  "label": "Left",
+  "value": "flex-start"
+  },
+  {
+  "label": "Center",
+  "value": "center"
+  },
+  {
+  "label": "Right",
+  "value": "flex-end"
+  }
+  ]
+  },
+  {
+  "type": "select",
+  "id": "text_alignment",
+  "label": "Text Alignment Desktop",
+  "default": "flex-start",
+  "options": [
+  {
+  "label": "Left Align",
+  "value": "flex-start"
+  },
+  {
+  "label": "Center Align",
+  "value": "center"
+  },
+  {
+  "label": "Right Align",
+  "value": "flex-end"
+  }
+  ]
+  },
+  {
+  "type": "header",
+  "content": "Mobile Text Alignment"
+  },
+  {
+  "type": "select",
+  "id": "content_alignment_mobile",
+  "label": "Content Alignment Mobile",
+  "default": "center",
+  "options": [
+  {
+  "label": "Left",
+  "value": "flex-start"
+  },
+  {
+  "label": "Center",
+  "value": "center"
+  },
+  {
+  "label": "Right",
+  "value": "flex-end"
+  }
+  ]
+  },
+  {
+  "type": "select",
+  "id": "text_alignment_mobile",
+  "label": "Text Alignment Mobile",
+  "default": "flex-start",
+  "options": [
+  {
+  "label": "Left Align",
+  "value": "flex-start"
+  },
+  {
+  "label": "Center Align",
+  "value": "center"
+  },
+  {
+  "label": "Right Align",
+  "value": "flex-end"
+  }
+  ]
+  },
+  {
+  "id": "enable_video_control",
+  "type": "checkbox",
+  "label": "Enable Video Controls",
+  "default": false
+  },
+  {
+  "type": "select",
+  "id": "control_alignment",
+  "label": "Video Controls Alignment",
+  "default": "right",
+  "options": [
+  {
+  "label": "Left",
+  "value": "left"
+  },
+  {
+  "label": "Right",
+  "value": "right"
+  }
+  ]
+  },
+  {
+  "type": "color",
+  "id": "text_background_color",
+  "label": "Text Color",
+  "default" : "#545353"
+  },
+  {
+  "type": "color",
+  "id": "background_color",
+  "label": "Background Color"
+  }
+  ]
+  }
+  ],
+  "presets": [
+  {
+  "name": "Promo Module",
+  "category": "Custom",
+  "blocks": [
+  {
+  "type": "slide"
+  }
+  ]
+  }
+  ]
+  }
+{% endschema %}

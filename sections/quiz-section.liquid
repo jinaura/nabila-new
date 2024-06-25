@@ -1,0 +1,541 @@
+{% assign product = section.settings.product %}
+{% if product %}
+    <div class="quiz-section__container">
+        <div class="quiz-section_go-back" style="display: none;" onclick="goBack()">Go Back</div>
+        <div class="quiz-section__intro">
+            <div class="quiz-section__intro-text">I'm feeling</div>
+            <div class="quiz-section__intro-dropdown" onclick="toggleDropdown()"><span></span></div>
+            
+        </div>
+        <div class="quiz-section__options-step-1" style="display: none;">
+            {% for variant in product.variants %}
+                <div class="option" onclick="viewShades()" data-colorHex="{{ variant.metafields.color.hex }}">{{ variant.title }}</div>
+            {% endfor %}
+        </div>
+        <div class="shades-modal-section" style="opacity: 0; height: 0;">
+            <div class="swiper shades-modal-container">
+                <div class="quiz-section__options-step-2 swiper-wrapper">
+                    {% for block in section.blocks %}
+                        <div id="{{ block.settings.shade }}" class="step-2-container swiper-slide">
+                            <div class="step-2-image">
+                                <img src="{{ block.settings.shade-image | img_url: 'master' }}" alt="" fetchpriority="low" loading="lazy">
+                            </div>
+                            <div class="step-2-entry ">
+                                <div class="step-2-heading">{{ block.settings.shade }}</div>
+                                <div class="step-2-desc">{{ block.settings.shade-desc }}</div>
+                                <div class="step-2-image-mobile">
+                                    <img src="{{ block.settings.shade-image | img_url: 'master' }}" alt="" fetchpriority="low" loading="lazy">
+                                </div>
+                                <div class="step-2-add-to-bag-container">
+                                    <div class="step-2-add-to-bag-image"><img src="{{ block.settings.shade-image-2 | img_url: 'master' }}" alt="" fetchpriority="low" loading="lazy"></div>
+                                    <div class="step-2-add-to-bag-info">
+                                        {% for variant in product.variants %}
+                                            {% if variant.title == block.settings.shade %}
+                                                <div class="step-2-add-to-bag-info_heading" data-colorHex = "{{ variant.metafields.color.hex }}">{{ variant.title }}</div>
+                                                <div class="">{{ variant.metafields.description.value }}</div>
+                                                <form method="post" action="/cart/add" onsubmit="return false;" class="product_form impulse_item {% if variant.inventory_quantity == 0 %}unavailable{% endif %}">
+                                                    <input type="hidden" name="id" id="mini_variant_id_{{ product.id }}" value="{{ variant.id }}" />
+                                                    <input type="hidden" value="{{ product.options.size }}" id="mini_p_t_v_{{ product.id }}">
+
+                                                    {% assign coming_soon_uk = false %}
+                                                    {% if product.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+                                                      {% assign coming_soon_uk = true %}
+                                                    {% endif %}
+                                    
+                                                    <input type="submit" id="mini_sub_{{ product.id }}" 
+                                                    {% if product.metafields.product.coming_soon or variant.metafields.visibility.coming_soon or coming_soon_uk %}
+                                                        value="Coming Soon" disabled 
+                                                    {% elsif variant.inventory_quantity <= 0 %} 
+                                                        value="Out Of Stock" disabled 
+                                                    {% else %} 
+                                                        value="Add to Bag {{ variant.price | money_without_trailing_zeros }}"
+                                                        
+                                                    {% endif %} 
+                                                      class="shade_selector_add_btn add_btn impulse-mini" 
+                                                      onclick="pintrk('track', 'addtocart', {
+                                                        value: {{ variant.price | money_without_currency }},
+                                                        product_name: '{{ product.title }}',
+                                                        product_id: '{{ product.id }}',
+                                                        product_price: {{ variant.price | money_without_currency }},
+                                                        currency: 'USD'
+                                                      }); openMiniCart();"
+                                                    />
+                                                </form>
+                                            {% endif %}
+                                        {% endfor %}
+
+
+
+
+                                         
+
+ 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+    
+    
+                </div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </div>
+
+
+    </div>
+{% endif %}
+
+
+<script>
+    function toggleDropdown() {
+        let options = document.querySelector(".quiz-section__options-step-1");
+        let intro = document.querySelector(".quiz-section__intro")
+        let stepTwo = document.querySelector(".shades-modal-container")
+        let goBack = document.querySelector(".quiz-section_go-back")
+        if (options.style.display === "none") {
+            options.style.display = "flex";
+            options.style.opacity = "1"
+        } else {
+            options.style.display = "none";
+            options.style.opacity = "0"
+        }
+        
+    }
+    function viewShades(){
+        let options = document.querySelector(".quiz-section__options-step-1");
+        let intro = document.querySelector(".quiz-section__intro")
+        let stepTwo = document.querySelector(".shades-modal-section")
+        let goBack = document.querySelector(".quiz-section_go-back")
+        let quizContainer = document.querySelector(".quiz-section__container")
+        options.style.display = 'none';
+        intro.style.display = 'none';
+        goBack.style.display = 'block';
+        if (stepTwo.style.opacity === "0"){
+            stepTwo.style.opacity = '1';
+            stepTwo.style.height = 'auto';
+            quizContainer.style.display = 'block'
+
+        }else{
+            stepTwo.style.opacity = "0";
+            stepTwo.style.height = "0"
+        }
+    }
+    function goBack(){
+        let options = document.querySelector(".quiz-section__options-step-1");
+        let intro = document.querySelector(".quiz-section__intro")
+        let stepTwo = document.querySelector(".shades-modal-section")
+        let goBack = document.querySelector(".quiz-section_go-back")
+        let quizContainer = document.querySelector(".quiz-section__container")
+        if (options.style.display === "none" && stepTwo.style.opacity === "1" && intro.style.display === "none" ) {
+            quizContainer.style.display = 'flex';
+            options.style.display = "flex";
+            stepTwo.style.opacity = "0";
+            stepTwo.style.height = "0";
+            intro.style.display = "flex";
+            goBack.style.display = "none";
+
+            document.querySelector(".vanta-canvas").style.opacity = "1"
+            document.querySelector(".quiz-section__container").style.background = '#ac5653'
+        }
+
+    }
+
+</script>
+
+<!-- Swiper JS -->
+{{ '//unpkg.com/swiper/swiper-bundle.min.css' | stylesheet_tag }}
+{{ '//unpkg.com/swiper/swiper-bundle.min.js' | script_tag }}
+
+<!-- change background color upon shade selection  -->
+<!-- {%- assign shade-color =  section.settings.shade-color -%} --> 
+<script>
+  const swiper = new Swiper(".shades-modal-container", {
+
+    breakpoints:{
+        0: {
+            slidesPerView: '1.2',
+        },
+        850: {
+            slidesPerView: '1.5'
+        },
+        1380: {
+            slidesPerView: '1.5'
+        },
+        1600: {
+            slidesPerview: '1.6'
+        },
+        2400: {
+            slidesPerView: '1.8'
+        }
+    },
+    centeredSlides: true,
+    watchOverflow: true,
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+  });
+    const options = document.querySelectorAll(".option");
+    var i;
+    for (let i = 0; i < options.length; i++) {
+        options[i].addEventListener("click", function() {
+            let shade = this.innerText;
+            let shade_element = document.getElementById(`${shade}`);
+            let shade_color = this.getAttribute("data-colorhex")
+            if(shade_element){
+                let label = shade_element.getAttribute("aria-label");
+                let index = label.slice(0, 2);
+                swiper.slideTo(index-1);
+
+                document.querySelector(".vanta-canvas").style.opacity = "0"
+                document.querySelector(".quiz-section__container").style.background = `${shade_color}`
+
+
+            }
+
+
+        })
+    }
+    swiper.on("activeIndexChange", (e) => {
+        const index_currentSlide = swiper.realIndex;
+        const currentSlide = swiper.slides[index_currentSlide]
+        let currentShadeColor = currentSlide.querySelector(".step-2-add-to-bag-info_heading").getAttribute("data-colorhex");
+        document.querySelector(".quiz-section__container").style.background = `${currentShadeColor}`
+    });
+
+    // Open MiniCart on add to bag button in this section
+    function openMiniCart() {
+        let state = document
+                    .querySelector('#pageWrapper')
+                    ?.classList.contains('open')
+                    ? 'open'
+                    : 'closed'
+
+          window.cartToggle(state)
+    }
+
+</script>
+
+<style>
+    .quiz-section__options-step-2 .step-2-container{
+        display: flex;
+        font-size: 18px;
+        width: 900px;
+    }
+    .quiz-section__options-step-2 img{
+        object-fit: cover;
+        height: 100%;
+    }
+    .step-2-image{
+        width: 380px;
+        height: 380px;
+    }
+    .step-2-entry{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        max-width: 475px;
+        color: #fff;
+    }
+
+
+    .quiz-section__options-step-2{
+        display: flex;
+    }
+    @media (min-width:850px){
+        .step-2-entry{
+            padding: 0 80px;
+        }
+    }
+    @media (min-width:767px){
+        .quiz-section__options-step-2 .step-2-container{
+            justify-content: center;
+        }
+        .shades-modal-container{
+            padding: 140px 0;
+        }
+    }
+
+    .step-2-heading{
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 13px;
+        letter-spacing: 1.36px;
+    }
+
+    .step-2-add-to-bag-container{
+        display: flex;
+        margin-top: 50px;
+    }
+    .step-2-add-to-bag-image {
+        width: 100px;
+        height: 100px;
+        background: pink;
+    }
+    .step-2-add-to-bag-info{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 0 30px;
+    }
+    .step-2-add-to-bag-info form{
+        margin-top: auto;
+    }
+    .step-2-add-to-bag-info_heading{
+        text-transform: uppercase;
+    }
+    .shade_selector_add_btn{
+        border: none;
+        background: none;
+        font-size: 14px;
+        text-transform: uppercase;
+        text-decoration: underline;
+        letter-spacing: 0.6px;
+        text-underline-offset: 2px;
+    }
+
+
+
+    .quiz-section__container{
+        position: relative;
+        height: 660px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #ac5653;
+        transition: all 0.5s ease-in-out;
+
+    }
+    .vanta-canvas{
+        transition: all 0.5s ease-in-out;
+    }
+    .quiz-section__intro{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        letter-spacing: 1px;
+        color: #fff;
+
+        transition: all 0.5s ease-in-out;
+    }
+
+    .quiz-section__options-step-1{
+        display: flex;
+        max-width: 500px;
+        flex-wrap: wrap;
+        text-align: center;
+        color: #fff;
+        font-size: 25px;
+        margin-top: 40px;
+
+        transition: all 0.5s ease-in-out;
+    }
+    .quiz-section__options-step-1 .option{
+        flex: 0 1 50%;
+        margin-bottom: 15px;
+
+    }
+    .quiz-section__options-step-1 .option:hover{
+        cursor: pointer;
+        text-decoration: underline;
+        
+    }
+
+    .quiz-section__intro-text{
+        margin-right: 15px;
+    }
+
+
+    .quiz-section__intro-dropdown{
+        width: 220px;
+        border-bottom: 2px solid #fff;
+        display: flex;
+        justify-content: flex-end;
+        cursor: pointer;
+    }
+    .quiz-section__intro-dropdown span{
+        background: url({{ 'dropdown-arrow.png' | asset_url }}) center center;
+        width: 18px;
+        height: 18px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        margin-bottom: 6px;
+        margin-right: 5px;
+    }
+    .shades-modal-section{
+        transition: all 0.5s ease-in-out;
+    }
+    .quiz-section_go-back{
+        position: absolute;
+        top: 55px;
+        right: 60px;
+        color: #fff;
+        text-decoration: underline;
+        font-size: 14px;
+        cursor: pointer;
+        z-index: 10;
+        
+    }
+
+    .step-2-image-mobile{
+        display: none;
+    }
+    @media (max-width:850px){
+        .shades-modal-container{
+            padding: 75px 0 55px 0; 
+        }
+        .quiz-section__container{
+            height: 500px;
+            margin-bottom: 40px;
+        }
+        .quiz-section__options-step-2 .step-2-container{
+            width: 100%;
+        }
+        .quiz-section__options-step-1{
+            font-size: 20px;
+        }
+        .step-2-image-mobile{
+            display: block;
+            margin-top: 10px;
+            width: 250px;
+            height: 170px;
+
+        }
+        .step-2-heading{
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .step-2-desc{
+            font-size: 14px;
+            min-height: 80px;
+        }
+        .step-2-add-to-bag-info{
+            font-size: 14px;
+        }
+        .step-2-add-to-bag-image {
+            width: 70px;
+            height: 70px;
+        }
+        .quiz-section__intro{
+            flex-direction: column;
+            align-items: flex-start;
+            font-size: 25px;
+        }
+        .quiz-section__intro-dropdown{
+            width: 275px;
+        }
+        .quiz-section_go-back{
+            top: 23px;
+            right: 29px;
+        }
+
+        .step-2-image{
+            display: none !important;
+        }
+        .step-2-add-to-bag-cta{
+            white-space: nowrap;
+        }
+        .step-2-entry{
+            max-width: 250px;
+        }
+        .step-2-add-to-bag-container{
+            margin-top: 25px;
+        }
+    }
+    /* swiper specific styles */
+    .swiper-button-next:after, .swiper-button-prev:after {
+        color: white !important;
+    }
+    @media (max-width:767px){
+        .swiper-button-next:after, .swiper-button-prev:after {
+            font-size: 26px !important;
+        }
+        .swiper-button-next{
+            right: 13vw !important;
+            top: 53% !important;
+        }
+    }
+
+    @media (min-width:767px){
+        .swiper-button-next {
+            right: 15vw !important;
+        }
+
+    }
+
+
+</style>
+
+
+<!-- Vanta.js Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+<script>
+VANTA.FOG({
+  el: ".quiz-section__container",
+  mouseControls: true,
+  touchControls: true,
+  gyroControls: false,
+  minHeight: 200.00,
+  minWidth: 200.00,
+  highlightColor: 0xe17e9f,
+  midtoneColor: 0xb64463,
+  lowlightColor: 0xaf5656,
+  baseColor: 0xd48190,
+  blurFactor: 0.82,
+  speed: 1.70,
+  zoom: 0.40
+})
+</script>
+
+{% schema %}
+{
+    "name":"Shade Selector",
+    "settings": [
+
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+    ],
+        "blocks":[
+        {
+        "type":"image",
+        "name":"Shades",
+        "settings":[
+            {
+                "type":"text",
+                "id": "shade",
+                "label": "Shade Name"
+            },
+            {
+                "type":"html",
+                "id": "shade-desc",
+                "label": "Shade Description"
+            },
+            {
+                "type": "image_picker",
+                "id": "shade-image",
+                "label": "Image"
+            },
+            {
+                "type": "image_picker",
+                "id": "shade-image-2",
+                "label": "Image"
+            },
+            {
+                "type": "color",
+                "id": "shade-color",
+                "label": "Shade Color"
+            }
+        ]
+        }
+    ]
+ }
+{% endschema %}

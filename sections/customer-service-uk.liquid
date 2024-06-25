@@ -1,0 +1,57 @@
+{% assign _section = section.settings %}
+
+{% if localization.country.iso_code == 'GB' or request.design_mode == true %}
+  <div class="container customer-service lp">
+    <div class="container--inner">
+        <aside>
+            <h1>{{_section.title}}</h1>
+            <a href = "mailto: {{_section.email}}">{{_section.email}}</a>
+            <p>{{_section.phone}}</p>
+            <article>
+                {{_section.info_text}}
+            </article>
+        </aside>
+        <div class="nav-links">
+          {%- if _section.links_menu != blank -%}
+            {%- include 'menu' handle: _section.links_menu -%}
+          {% endif %}
+        </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+    {
+    "name": "Customer Service UK",
+    "settings": [
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Heading",
+    "default": "Customer Service"
+    },
+    {
+    "type": "text",
+    "id": "email",
+    "label": "Email Address",
+    "default": "support@roseinc.com"
+    },
+    {
+    "type": "text",
+    "id": "phone",
+    "label": "Phone Number",
+    "default": "1-800-ROSE-INC"
+    },
+    {
+    "type": "text",
+    "id": "info_text",
+    "label": "Info Text"
+    },
+    {
+      "type": "link_list",
+      "id": "links_menu",
+      "label": "Nav Links Menu"
+    }
+    ]
+  }
+{% endschema %}

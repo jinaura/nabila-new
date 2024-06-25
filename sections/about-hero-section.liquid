@@ -1,0 +1,271 @@
+{% assign _settings = section.settings %}
+
+<section class="evergreen-video">
+  <div class="section__item section_spacing">
+    <div class="text-container">
+      <h3>{{_settings.title}}</h3>
+      <p>{{_settings.description}}</p>
+      <div class="about-hero-section__btn">
+          {% for block in section.blocks %}
+            {% if block.settings.button_url != blank %}
+              <div class="about-hero-link">
+            	  <a href="{{block.settings.button_url}}">{{block.settings.button_label}}</a>
+            </div>
+            {% endif %}
+          {% endfor %}
+      </div>
+    </div>
+
+    {% if _settings.section_link %}<a href="{{ _settings.section_link }}">{% endif %}
+      <div class="iframe-container animate hidden-xs">
+        {% if _settings.video_url.type == 'youtube' %}
+          <iframe  class="responsive-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{_settings.video_url.id}}?playlist={{_settings.video_url.id}}&loop=1&autoplay=1&mute=1" title="{{_settings.title}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        {% elsif _settings.video_url.type == 'vimeo' %}
+          <iframe  class="responsive-iframe" width="560" height="315" src="https://player.vimeo.com/video/{{_settings.video_url.id}}" title="{{_settings.title}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        {% elsif _settings.custom_video_url %}
+          <video
+            muted
+            loop
+            autoplay
+            preload="auto"
+            width="100%"
+            height="100%"
+            playsinline="true" webkit-playsinline="true"
+            data-setup='{"width": 300, "height": 250}' class="responsive-iframe">
+            <source src="{{ _settings.custom_video_url }}" type='video/mp4' />
+          </video>
+        {% endif %}
+      </div>
+      <div class="iframe-container animate hidden-sm hidden-md hidden-lg">
+        {% if _settings.m_video_url.type == 'youtube' %}
+          <iframe  class="responsive-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{_settings.m_video_url.id}}?playlist={{_settings.m_video_url.id}}&loop=1&autoplay=1&mute=1" title="{{_settings.title}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        {% elsif _settings.m_video_url.type == 'vimeo' %}
+          <iframe  class="responsive-iframe" width="560" height="315" src="https://player.vimeo.com/video/{{_settings.m_video_url.id}}" title="{{_settings.title}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        {% elsif _settings.m_custom_video_url %}
+          <video
+            muted
+            loop
+            autoplay
+            preload="auto"
+            width="100%"
+            height="100%"
+            playsinline="true" webkit-playsinline="true"
+            data-setup='{"width": 300, "height": 250}' class="responsive-iframe">
+            <source src="{{ _settings.m_custom_video_url }}" type='video/mp4' />
+          </video>
+        {% endif %}
+      </div>
+    {% if _settings.section_link %}</a>{% endif %}
+  </div>
+</section>
+
+<style>
+  #shopify-section-about-hero-section .evergreen-video .section_spacing {
+    padding-top: 0px;
+  }
+  .about-hero-section__btn a {
+    margin: 0 20px;
+  }
+  .about-hero-section__btn a:first-child {
+    margin-right: 20px !important;
+  }
+  #shopify-section-about-hero-section .evergreen-video .iframe-container {
+    padding-top: 26.2%;
+  }
+  
+  .evergreen-video .section_spacing {
+    padding-top: 40px;
+    position: relative;
+  }
+  .evergreen-video .section_spacing .text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    right: 0;
+    z-index: 1;
+    padding: 10px 30px;
+  }
+  .evergreen-video .section_spacing .text-container h3 {
+    color: {{section.settings.title_color}};
+    font-size: 26px;
+    letter-spacing: 1.86px;
+    line-height: 30px;
+  }
+  .evergreen-video .section_spacing .text-container p {
+    color: {{section.settings.description_color}};
+    font-size: 22px;
+    letter-spacing: 1.57px;
+    line-height: 1.2;
+    max-width: 1102px;
+    margin: 10px auto 40px auto;
+  }
+  .evergreen-video .section_spacing .text-container a {
+    color: {{section.settings.button_links_color}};
+    font-family: var(--font-medium);
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border-bottom: 2px solid;
+    text-transform: uppercase;
+  }
+  .evergreen-video .section_spacing .text-container a:first-child {
+    margin-right: 30px;
+  }
+  .evergreen-video .iframe-container {
+    padding-top: 15.2%;
+  }
+  .evergreen-video .responsive-iframe {
+    object-fit: cover;
+    object-position: center;
+  } 
+  .about-hero-section__btn {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+}
+  @media (max-width: 1100px) {
+    .evergreen-video .iframe-container {
+      padding-top: 20%;
+    }
+  }
+  @media (max-width: 900px) {
+    .evergreen-video .iframe-container {
+      padding-top: 30%;
+    }
+  }
+  @media (max-width: 767px) {
+    .evergreen-video .section_spacing {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .evergreen-video .section_spacing .text-container {
+      padding: 10px 15px;
+    }
+    .evergreen-video .section_spacing .text-container h3, .evergreen-video .section_spacing .text-container p {
+      font-size: 16px;
+      letter-spacing: 1.14px;
+      line-height: 20px;
+    }
+    .evergreen-video .section_spacing .text-container p {
+      margin-top: 0;
+      margin-bottom: 22px;
+    }
+    .evergreen-video .iframe-container {
+      margin-bottom: 0;
+      padding-top: 48%;
+    }
+    #shopify-section-about-hero-section .evergreen-video  .iframe-container.hidden-sm.hidden-md.hidden-lg {
+    padding-top: 100%;
+    }
+
+    .evergreen-video .section_spacing .text-container {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .about-hero-link a {
+    margin: 0 !important;
+    }
+
+    .about-hero-link {
+        flex: 0 0 50%;
+        margin-bottom: 29px;
+        text-align: center;
+    }
+
+    .about-hero-section__btn a:first-child {
+        margin-right: 0 !important;
+    }
+    .evergreen-video .section_spacing .text-container h3 {
+        margin-top: 29px;
+        margin-bottom: 15px;
+    }
+  }
+</style>
+
+{% schema %}
+    {
+    "name": "About Hero section",
+    "settings": [
+      {
+        "type": "url",
+        "id": "section_link",
+        "label": "Section link url"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "color",
+        "id": "title_color",
+        "label": "Title color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "text",
+        "id": "description",
+        "label": "Description"
+      },
+      {
+        "type": "color",
+        "id": "description_color",
+        "label": "Description color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "button_links_color",
+        "label": "Button links color",
+        "default": "#ffffff"
+      },
+      {
+        "id": "video_url",
+        "type": "video_url",
+        "label": "Video URL",
+        "accept": ["youtube", "vimeo"]
+      },
+      {
+        "type": "text",
+        "id": "custom_video_url",
+        "label": "Custom Video Url"
+      },
+      {
+        "id": "m_video_url",
+        "type": "video_url",
+        "label": "Mobile Video URL",
+        "accept": ["youtube", "vimeo"]
+      },
+      {
+        "type": "text",
+        "id": "m_custom_video_url",
+        "label": "Mobile Custom Video Url"
+      }
+    ],
+    "blocks" : [
+      {
+          "type": "links",
+          "name": "Links",
+          "settings": [
+            {
+                "type": "text",
+                "id": "button_label",
+                "label": "Button Label"
+            },
+            {
+                "type": "url",
+                "id": "button_url",
+                "label": "Button Link"
+            }
+          ]
+      }
+    ]
+    }
+{% endschema %}

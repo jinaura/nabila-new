@@ -1,0 +1,79 @@
+<section class="signupSubscribe">
+  <div class="signup-form open" id="signup-form">
+    <a href="#" class="signup-close">Close</a>
+    <div class="subscribe-contained">
+      <h1>{{ section.settings.title_signup }} <a href="#">Subscribe</a></h1>
+      <div class="desc"> {{section.settings.description_signup }}</div>
+      <form id="signup_modal" class="footer__signup-form klaviyo_styling" onsubmit="return false;" novalidate="novalidate">
+        <input class="signup klaviyo-input" type="email" value="" name="email" id="email" placeholder="Your email" aria-label="Email Address" />
+        <input class="signup klaviyo-input" type="tel" value="" name="$phone_number" id="phone_number" placeholder="Your mobile # (optional - to sign up for texts)" aria-label="Phone number" />
+        <div class="klaviyo_messages">
+          <div class="success_message" style="display:none;">
+            <p class="thank_you" >Your email was received! Welcome to Rose Inc.</p>
+          </div>
+          <div class="error_message"></div>
+        </div>
+        <p class="newsletter-disclaimer">By signing up for emails and/or texts, you accept the 
+          <span><a href="/pages/privacy-policy" target="_blank">Privacy Policy</a></span> and the
+          <span><a href="/pages/terms-conditions" target="_blank">Terms of Service</a></span>.
+          By submitting this form with your email address and/or mobile number, you agree to receive recurring automated promotional and personalized marketing messages (e.g. cart reminders) from Rose Inc. at the submitted email address and/or cell number. Consent is not a condition of any purchase. You can withdraw your consent at any time by following the unsubscribe instructions in any email we send you or replying STOP to any text message. Reply HELP for text message help. Msg frequency varies. Std text msg & data rates may apply.
+        </p>
+        <div class="klaviyo_form_actions">
+          <button type="submit" class="btn subscribe signup-modal">Sign Up</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  body.no-scroll {
+    position: fixed;
+    width: 100%;
+  }
+</style>
+
+<script>
+  $(document).ready(function() {
+    if($('#signup-form').length && $('.signup-form').hasClass('open')) {
+      $('body').addClass('no-scroll');
+    }
+
+    $( ".signup-close" ).click(function(event) {
+      event.preventDefault();
+      $('body').removeClass('no-scroll');
+    });
+
+    $( "#signup-action" ).click(function(event) {
+      event.preventDefault();
+      $('body').addClass('no-scroll');
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Signup Subscriber",
+  "class": "Subscriber",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title_signup",
+      "label": "Title",
+      "default": "Join the community"
+    },
+    {
+      "type": "richtext",
+      "id": "description_signup",
+      "label": "Description",
+      "default": "<p>We're in the habit of celebrating our community. Sign up for exclusive previews, event perks and early shopping access.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Signup Subscriber",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}

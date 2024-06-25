@@ -1,0 +1,15 @@
+{% comment %}
+  mobile: whether to display only for mobile instead of only for non-mobile
+  see_more: whether to display the 'See more' button
+  show_reviews: whether to display the product reviews
+{% endcomment %}
+<div class="product__head{% if mobile %} mobile{% endif %}">
+    {% if section.settings.up-sub-heading != blank %}<div class="product__upper-sub-heading">{{ section.settings.up-sub-heading }}</div>{% endif %}
+    <h1 class="product__title{% if mobile %} mobile{% endif %}" itemprop="name">{{- product.title -}}</h1>
+    <div class="product__body{% if mobile %} mobile{% endif %}">
+      {{- product.content -}}
+      {% if see_more %}<a href="#details-section" class="see-more">See&nbsp;more</a>{% endif %}
+    </div><!-- /.product__body -->
+
+</div><!-- /.product__head -->
+  

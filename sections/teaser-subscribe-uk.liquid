@@ -1,0 +1,55 @@
+<section class="teaserSubscribe">
+  <div class="newsletter-form closed" id="newsletter-form">
+      <a href="#" class="teaser-close">Close</a>
+      <div class="subscribe-contained">
+          <h1>{{ section.settings.title }} <a href="#">Subscribe</a></h1>
+          <div class="desc"> {{section.settings.description }}</div>
+          <form id="teaser_signup" class="footer__signup-form klaviyo_styling" onsubmit="return false;" novalidate="novalidate">
+              <input class="signup klaviyo-input" type="email" value="" name="email" id="email" placeholder="Your email" aria-label="Email Address" />
+              <input class="signup klaviyo-input" type="tel" value="" name="$phone_number" id="phone_number" placeholder="Your mobile # (optional - to sign up for texts)" aria-label="Phone number" />
+              <div class="klaviyo_messages">
+                  <div class="success_message" style="display:none;">
+                      <p class="thank_you" >Your email was received! Welcome to Rose Inc.</p>
+                  </div>
+                  <div class="error_message"></div>
+              </div>
+              <p class="newsletter-disclaimer">By signing up for emails and/or texts, you accept the
+                <span><a href="/pages/privacy-policy" target="_blank">Privacy Policy</a></span> and the
+                <span><a href="/pages/terms-conditions" target="_blank">Terms of Service</a></span>.
+                By submitting this form with your email address and/or mobile number, you agree to receive recurring automated promotional and personalized marketing messages (e.g. cart reminders) from Rose Inc. at the submitted email address and/or cell number. Consent is not a condition of any purchase. You can withdraw your consent at any time by following the unsubscribe instructions in any email we send you or replying STOP to any text message. Reply HELP for text message help. Msg frequency varies. Std text msg & data rates may apply.
+              </p>
+              <div class="klaviyo_form_actions">
+                <button type="submit" class="btn subscribe teaser-signup">Subscribe</button>
+              </div>
+          </form>
+      </div>
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Teaser Subscriber UK",
+  "class": "Subscriber",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Something exceptional arrives JANUARY 25. "
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Join the community to see it first. </p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Teaser Subscriber UK",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}

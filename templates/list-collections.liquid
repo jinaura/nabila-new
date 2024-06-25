@@ -1,0 +1,54 @@
+<div class="collections--default">
+	<div class="collection__items">
+		<div class="collection__links">
+		{% for link in linklists.collections.links %}
+			{% assign collection = link.object %}
+				{%- assign collection_image = collection.image | default: collection.products.first.featured_image -%}
+				<button class="see-more {% if forloop.first == true %} selected{% endif %}" id="{{collection.handle}}">{{collection.title}}</button>
+			{%- endfor -%}
+		</div>
+	</div>
+  <hr class="section__divider">
+</div>
+
+<style>
+	.collections--default {
+    max-width: 1350px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0 auto;
+	}
+  .collections--default .collection__items {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .collections--default .collection__head {
+    padding: 0;
+    padding-top: 3rem;
+  }
+  .collections--default .collection__links {
+    flex: 1;
+    flex-basis: 75%;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .collection__items button.see-more {
+    border: none;
+    background: none;
+    text-decoration: underline;
+    font-weight: 400;
+    padding-left: 1rem;
+  }
+  .collection__items button.see-more:first-child {
+    padding-left: 0;
+  }
+  .collection__items button.see-more:hover {
+    font-family:var(--font-medium);
+  }
+  .collections--default hr.section__divider {
+    border: none;
+    border-top: solid 1px #919191;
+    padding-bottom: 1.7rem;
+  }
+</style>

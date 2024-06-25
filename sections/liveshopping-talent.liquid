@@ -1,0 +1,272 @@
+{{ 'slick.js'  | asset_url | script_tag     }}
+
+{%- assign _section = section.settings -%}
+{%- liquid
+  if handle == 'watch'
+    assign path_parts = request.path |  split: '/'
+    assign show_short_id_and_referral_code = path_parts[3]
+    assign show_id_parts = show_short_id_and_referral_code |  split: '!'
+    assign show_short_id = show_id_parts[0] | slice: 0, 22
+  else
+    assign show_short_id = pages['live-shopping'].metafields.liveshopping.featured_show
+  endif
+  assign show_talent = pages['live-shopping'].metafields.liveshopping.talent[show_short_id]
+-%}
+<section class="liveshopping-talent liveshopping-talent-hidden">
+  <div class="container" id="section-{{- section.id -}}">
+    <h2 class="heading-with-link">{{ _section.title }}</h2>
+    <hr class="section__divider">
+    {% if _section.description != blank %}
+      <div class="desc">{{ _section.description }}</div>
+      <hr class="divider--start">
+    {% endif %}
+    <div class="multiple-items"
+         data-slick='{
+           "slidesToShow": 3,
+           "slidesToScroll": 3,
+           "dots": {{ _section.dots }},
+           "infinite": false,
+           "speed": 500,
+           "arrows": {{ _section.arrows }},
+           "autoplay": false,
+           "adaptiveHeight": false,
+           "centerMode": false,
+           "nextSlidesToPreload": 5,
+           "lazyLoad": "ondemand",
+  		     "centerPadding": "1px",
+           "responsive": [
+            {
+      			"breakpoint": 500,
+                "settings":{
+                    "slidesToShow": 1,
+                    "slidesToScroll": 1
+                  }
+                },
+                {
+      			"breakpoint": 1024,
+                  "settings":{
+                      "slidesToShow": 2,
+                      "slidesToScroll": 2
+                  }
+    			  }
+          ]
+      }'>
+      {%-liquid
+        if request.design_mode
+          for block in section.blocks
+            assign _block = block.settings
+            render 'liveshopping-talent-block', _block: _block, link_text: section.link_text
+          endfor
+        else
+          for talent in show_talent
+            for block in section.blocks
+              assign _block = block.settings
+              if talent == _block.talent_id
+                render 'liveshopping-talent-block', _block: _block, link_text: section.link_text
+                break
+              endif
+            endfor
+          endfor
+        endif
+      -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .liveshopping-talent-hidden {
+    display: none;
+  }
+
+  .liveshopping-talent {
+    padding-top: 90px;
+  }
+  .liveshopping-talent hr.section__divider {
+    padding-bottom: 25px;
+    margin-top: 14px;
+  }
+  .liveshopping-talent hr.divider--start {
+    padding-bottom: 30px;
+  }
+  .liveshopping-talent .desc {
+    padding-bottom: 25px;
+    max-width: 640px;
+  }
+  .liveshopping-talent .multiple-items {
+    margin: 0 15px;
+  }
+  .liveshopping-talent .multiple-items .slick-slide>div {
+    padding: 0 15px;
+  }
+  .liveshopping-talent .multiple-items .profile-info {
+    padding-top: 20px;
+  }
+  .liveshopping-talent .multiple-items .profile-info a {
+    text-decoration: none;
+  }
+  .liveshopping-talent .multiple-items .profile-info span {
+    font-size: 12px;
+    line-height: 22px;
+    text-transform: uppercase;
+  }
+  .liveshopping-talent .multiple-items .profile-info h3 {
+    padding-top: 8px;
+    padding-bottom: 18px;
+    letter-spacing: 1px;
+  }
+  .liveshopping-talent .profile-info .desc {
+    padding-bottom: 20px;
+    max-width: unset;
+  }
+  .liveshopping-talent .profile-info a.profile-url {
+    text-transform: uppercase;
+    text-decoration: underline;
+  }
+  .liveshopping-talent .multiple-items .slick-next {
+    right: -50px;
+  }
+  @media (min-width: 768px) and (max-width: 1300px) {
+    .liveshopping-talent .container {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+    .liveshopping-talent .multiple-items .slick-prev {
+      left: -40px;
+    }
+    .liveshopping-talent .multiple-items .slick-next {
+      right: -50px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .liveshopping-talent {
+      padding-top: 50px;
+    }
+    .liveshopping-talent .multiple-items .slick-list {
+      padding: 0;
+    }
+    .liveshopping-talent .multiple-items .slick-prev {
+      display: none !important;
+    }
+    .liveshopping-talent .multiple-items .slick-next {
+      right: -10px;
+    }
+  }
+  @media (max-width: 500px) {
+    .liveshopping-talent .multiple-items .slick-next {
+      display: none !important;
+    }
+    .liveshopping-talent .multiple-items .slick-list {
+      padding: 0 30px 0 0;
+    }
+    .liveshopping-talent hr.section__divider {
+      padding-bottom: 16px;
+    }
+    .liveshopping-talent hr.divider--start {
+      padding-bottom: 25px;
+    }
+    .liveshopping-talent .multiple-items {
+      margin: 0;
+    }
+    .liveshopping-talent .multiple-items .slick-slide>div {
+      padding: 0;
+    }
+    .liveshopping-talent .multiple-items {
+      margin: 0 -20px;
+    }
+    .liveshopping-talent .multiple-items .profile-info {
+      padding-left: 20px;
+      padding-right: 5px;
+    }
+  }
+</style>
+
+<script>
+  function initTalentSlick() {
+    $('.liveshopping-talent .multiple-items').slick();
+  }
+</script>
+
+{% schema %}
+  {
+    "name": "Live Shopping Talent",
+    "settings": [
+    {
+      "type":"text",
+      "id":"title",
+      "label":"Title",
+      "default": "Meet the talent"
+    },
+    {
+      "type":"richtext",
+      "id":"description",
+      "label":"Description"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "Learn more"
+    },
+    {
+      "type": "header",
+      "content": "Slider options"
+    },
+    {
+      "type": "checkbox",
+      "id": "dots",
+      "label": "Show dots",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "arrows",
+      "label": "Show arrows",
+      "default": true
+    }
+    ],
+    "blocks": [
+      {
+        "type":"text",
+        "name":"Talent Profile",
+        "settings": [
+        {
+          "type": "text",
+          "id": "talent_id",
+          "label": "Unique ID"
+        },
+        {
+          "type":"image_picker",
+          "id":"image",
+          "label":"Image"
+        },
+        {
+          "type":"text",
+          "id":"role",
+          "label":"Role"
+        },
+        {
+          "type":"text",
+          "id":"name",
+          "label":"Name"
+        },
+        {
+          "type":"richtext",
+          "id":"desc",
+          "label":"Description"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Profile Link"
+        }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Live Shopping Talent"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,144 @@
+<section class="editioral-cat-posts">
+    <div class="container">
+        <div class="ed-cat-post-head">
+            <div class="h-wrap"><h2>{{ section.settings.title }}</h2></div>
+        </div>
+        <div class="ed-cat-post-desc">
+            <div class="ed-cat-post-desc-wrap">{{ section.settings.description }}</div>
+        </div>
+                {% assign hero-article = articles[section.settings.single-article] %}
+
+                    <article class="ed-cat-article">
+                        <div class="ed-cat-article-info">
+                            <div class="type hidden-sm hidden-md hidden-lg">
+                                <a href="/blogs/{{hero-article.handle | split: '/' | first }}">{{hero-article.handle | split: '/' | first }}</a>
+                            </div>
+                            <h3><a href="{{ hero-article.url }}">{{ hero-article.title |truncate: 62 }}</a></h3>
+                            {% assign checkTagAuthor = '' %}
+                            {% for tag in hero-article.tags %}
+                                {% assign words = tag | split: '-'   %}
+                                {% assign first_word =  words[0] | downcase %}
+                                {% assign blog_title = blog.title | downcase %}
+                                {% if first_word == 'author' %}
+                                    <span class="auther hidden-xs">By {{ words[1] | capitalize }}</span>
+                                    {% assign checkTagAuthor = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if checkTagAuthor == '' %}
+                                <span class="auther hidden-xs">By {{ hero-article.author | capitalize}}</span>
+                            {% endif %}
+                            <a href="{{ hero-article.url }}" class="rn-link hidden-sm hidden-md hidden-lg">Read Now</a>
+                        </div>
+                        {% if hero-article.image %}
+                            <figure class="animate img-wrap">
+                                <a href="{{ hero-article.url }}">
+                                    {{hero-article.image | image_url: width: 2600 | image_tag: width: 1350, alt: hero-article.image.title, fetchpriority: 'low', loading: 'lazy' }}
+                                </a>
+                            </figure>
+                        {% else %}
+                            {{ ifNofeaturedImg }}
+                        {% endif %}
+                    </article>
+
+    </div>
+</section>
+
+<style>
+    .editioral-cat-posts {
+        padding-bottom: 1.7rem;
+        padding-top: 3.8rem;
+    }
+    .editioral-cat-posts .ed-cat-article .ed-cat-article-info {
+        background-image: linear-gradient(to bottom, transparent, rgba(0,0,0,0.2));
+    }
+    .editioral-cat-posts .ed-cat-post-desc {
+        margin-bottom: 40px;
+    }
+    .editioral-cat-posts .ed-cat-article .ed-cat-article-info h3 {
+        text-shadow: none;
+    }
+    .editioral-cat-posts .ed-cat-article .ed-cat-article-info .auther {
+        text-transform: uppercase;
+        text-shadow: none;
+    }
+    .editioral-cat-posts .ed-cat-article .img-wrap a img {
+        max-height: 600px;
+    }
+
+    @media (max-width:767px){
+        .single-article .editioral-cat-posts{
+            padding-top: 1.8rem;
+        }
+        .editioral-cat-posts .ed-cat-post-head .h-wrap h2 {
+            text-overflow: unset; 
+            white-space: unset; 
+            padding-bottom: 25px;
+        }
+
+        .editioral-cat-posts .ed-cat-article {
+            display: flex; 
+            flex-flow: row-reverse;
+        }   
+        .editioral-cat-posts .ed-cat-article .ed-cat-article-info {
+            position: relative; 
+            padding: 0; 
+            text-align: left; 
+            background: none;
+        }
+        .editioral-cat-posts .ed-cat-article .ed-cat-article-info h3 {
+            font-size: 14px; 
+            text-transform: uppercase; 
+            color: #1d1d1d; 
+            line-height: 20px; 
+            text-align: left; 
+            margin: 10px 0;
+        }
+        .ed-cat-article .img-wrap {
+            max-width: 120px; 
+            margin-right: 20px;
+        }
+        .editioral-cat-posts .ed-cat-article .img-wrap a {
+            height: 100%;
+        }
+        .editioral-cat-posts .ed-cat-article .img-wrap a img {
+            width: 100%; 
+            height: 100%;
+        }
+        .editioral-cat-posts .ed-cat-article .ed-cat-article-info a {
+            text-transform: uppercase;
+        }
+        .editioral-cat-posts .ed-cat-article .ed-cat-article-info a.rn-link {
+            text-decoration: underline; 
+            font-family: var(--font-medium);
+        }
+    }
+</style>
+
+{% schema %}
+    {
+    "name": "Article",
+    "class": "single-article",
+    "settings": [
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Title "
+    },
+    {
+    "type": "richtext",
+    "id": "description",
+    "label": "Description "
+    },
+    {
+    "type": "article",
+    "id": "single-article",
+    "label": "Article "
+    }
+    ],
+    "presets": [
+    {
+    "name": "Single Center - Article"
+    }
+    ]
+    }
+{% endschema %}

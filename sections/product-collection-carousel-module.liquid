@@ -1,0 +1,166 @@
+{% assign s = section.settings %}
+<section class="textImageModule carousel-product {{ s.carousel_type }}" id="section-{{section.id}}">
+  {% assign sectionId = section.id %}
+  {% assign imageRatio = 'res-400x500' %}
+  {% assign slidesToShow = 1 %}
+
+  {% unless s.carousel_type == 'grid_carousel' %}
+    <div class="content-info">
+      <h2 class="heading">{{ s.title }}</h2>
+      <p>{{ s.desc }}</p>
+    </div>
+  {% endunless %}
+
+  {% if s.carousel_type == 'grid_carousel'%}
+    {% assign slidesToShow = 3 %}
+  {% endif %}
+
+  {% capture sliderSettings_sectionId %}
+  data-slick='{
+  "slidesToShow": {{ slidesToShow }}, 
+  "slidesToScroll": {{ slidesToShow }},
+  "dots": {{ s.dots }},
+  "infinite": true,
+  "arrows": {{ s.arrows }},
+  "autoplay": false,
+  "adaptiveHeight": false,
+  "speed": 500,
+  "centerMode": false,
+  "centerPadding": "1px",
+    "responsive": [
+      {
+      "breakpoint": 768,
+        "settings":{
+        "slidesToShow": 1,
+        "slidesToScroll": 1
+        }
+      },
+      {
+      "breakpoint": 1024,
+        "settings":{
+        "slidesToShow": 2,
+        "slidesToScroll": 2
+        }
+      }
+    ]
+  }'
+  {% endcapture %}        
+
+  <div class="image text-left">
+    <div class="commonSlider collection__items" {{ sliderSettings_sectionId }}>
+      {% if s.collection == blank %}
+        {% for block in section.blocks %}
+            {% if block.type == 'product' %}
+              <div {{ block.shopify_attributes }}>
+                {% if block.settings.product != blank %}
+                  {% if all_products[block.settings.product].type == 'Sets Product'%}
+                    {%- include 'product-item-sets' with all_products[block.settings.product] -%}
+                  {% else %}
+                    {%- include 'product-item' with all_products[block.settings.product] -%}
+                  {% endif %}
+                {% else %}
+                	{{ 'product-1' | placeholder_svg_tag: 'placeholder' }}
+                {% endif %}
+              </div>
+            {% endif %}
+        {% endfor %}
+      {% else %}
+        {% for _product in collections[s.collection].products %}
+            {% if _product.type == 'Sets Product'%}
+            	{%- include 'product-item-sets' with _product -%}
+            {% else %}
+            	{%- include 'product-item' with _product -%}
+            {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+</section>   
+
+{% schema %}
+  {
+    "name": "Pro/Coll Carousel",
+	"tag":"section",
+	"class": "container",
+	"max_blocks": 10,
+    "settings": [
+      {
+        "type": "select",
+        "id": "carousel_type",
+        "label": "Placement",
+        "options": [
+          {
+            "value": "carousel_left",
+            "label": "Carousel Left Text Right"
+          },
+          {
+            "value": "carousel_right",
+            "label": "Text Left Carousel Right"
+          },
+          {
+            "value": "grid_carousel",
+            "label": "3x Grid Carousel"
+          }
+        ],
+      "default": "carousel_left"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "desc",
+        "label": "Description",
+        "default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>"
+      },
+      {
+        "type": "header",
+        "content": "Make it Collection Carousel",
+		"info": "If this collection field is selected then priority will be collection otherwise products carousel will continue."
+      },
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "Select Collection"
+      },
+      {
+        "type": "header",
+        "content": "Slider options"
+      },
+      {
+        "type": "checkbox",
+        "id": "dots",
+        "label": "Show dots",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "arrows",
+        "label": "Show arrows",
+        "default": true
+      }
+	],
+	"blocks": [
+      {
+        "type": "product",
+        "name": "Product",
+        "settings": [
+          {
+            "type": "product",
+            "id": "product",
+            "label": "Select Product"
+          }
+        ]
+      }
+	],
+    "presets": [
+     {
+       "name": "Product or Collection Carousel - Article"
+     }
+   ]
+  }
+{% endschema %}

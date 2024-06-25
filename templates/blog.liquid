@@ -1,0 +1,263 @@
+<div class="edt-category-page">
+	{% comment %}{%- section 'editorial-navigation' -%}{% endcomment %}
+	{%- include 'editorial-subnavigation' -%}
+
+	<div class="default--holder">
+	{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+	{%- assign page_url = contentForQuerystring | split:'"pageurl":"' | last | split:'"' | first | split:'.myshopify.com' | last |   replace:'\/','/' |    replace:'%20',' ' |    replace:'\u0026','&'  -%}
+	{%- assign param_page = '' -%}
+	{%- for i in (1..1) -%}
+		{%- unless page_url contains "?" -%}{% break %}{%- endunless -%}
+		{%- assign query_string = page_url | split:'?' | last -%}
+		{%- assign qry_parts= query_string | split:'&' -%}
+		{%- for part in qry_parts -%}
+			{%- assign key_and_value = part | split:'=' -%}
+			{%- if key_and_value.size > 1 -%}
+				{% if key_and_value[0] == 'sub_cat' %}
+					{%- assign param_page = key_and_value[1] -%}
+				{% endif%}
+			{%- endif -%}
+		{%- endfor -%}
+	{%- endfor -%}
+
+	{% if param_page != '' %}
+		<div class="container">
+
+			<div class="ed-cat-post-head">
+				<div class="h-wrap">
+					<h1>{{- param_page -}}</h1>
+				</div>
+			</div>
+			<div class="ed-cat-post-desc">
+
+				<div class="ed-cat-post-desc-wrap">{{ blog.metafields.blog.description }}</div>
+			</div>
+			<div class="blog__listing">
+				<div class="blog__inner">
+					{%- for article in blog.articles -%}
+						{% assign abc = '-' | append:param_page %}
+						{% assign sub_category = blog.title | append:abc %}
+						{% assign asd = sub_category | downcase %}
+						{% if article.tags contains asd %}
+							<article class="article">
+								<header class="article__head">
+									{%- if article.image -%}
+										{% if article.metafields.article.tile_image[0].src  %}
+										<a href="{{ article.url }}">
+											{%- include 'lazyload-image' _image: article.metafields.article.tile_image[0].src, metafield_image -%}
+										</a>
+										{%- else -%}
+										<a href="{{ article.url }}">
+											{%- include 'lazyload-image' _image: article.image, original_width: '500' -%}
+										</a>
+										{%- endif -%}
+
+									{%- else -%}
+
+										{% assign hero_image = '' %}
+										{% assign html_tags = featured_article1.excerpt_or_content | split: '<' %}
+										{% for html_tag in html_tags %}
+											{% assign img_check = html_tag | slice: 0,3 %}
+											{% if img_check == 'img' %}
+												{% assign img_tag = html_tag | split: '>' %}
+												{% assign hero_image = '<' | append: img_tag.first | append: '>' %}
+												{% break %}
+											{% endif %}
+										{% endfor %}
+
+										{% if hero_image.size > 0 %}
+											<div class="hero-image-new"><a href="{{ article.url }}">{{ hero_image }}</a></div>
+										{% else %}
+											<a href="{{ article.url }}">
+												{%- include 'lazyload-image' _image: 'no-image.gif', original_width: '500' -%}
+											</a>
+										{% endif %}
+									{%- endif -%}
+
+								</header><!-- /.article__head -->
+
+								<div class="article__body ed-cat-slide-info">
+									{% assign article_category = blog.title %}
+									{% for tag in article.tags %}
+										{% assign words = tag | split: '-'   %}
+										{% assign first_word =  words[0] | downcase %}
+										{% assign blog_title = blog.title | downcase %}
+										{% if first_word == blog_title %}
+											{% assign article_category= words[1] %}
+										{% endif %}
+									{% endfor %}
+									<div class="type">
+										{{ article_category }}
+									</div>
+
+
+									<h4 class="article__title">
+										<a href="{{- article.url -}}">
+											{{- article.title -}}
+										</a>
+									</h4><!-- /.article__title -->
+
+									<div class="article__meta">
+										{%- assign date_format = 'date_formats.short' | t -%}
+										{%- assign published_at = article.published_at | date: date_format -%}
+
+										{{- 'blogs.article.posted_on_date' | t: date: published_at -}}
+									</div><!-- /.article_-meta -->
+									<p class="desc">{{- article.excerpt_or_content | strip_html | truncatewords: 20 -}}</p>
+								</div><!-- /.article__body -->
+
+							</article><!-- /.article -->
+						{% endif %}
+					{%- endfor -%}
+				</div><!-- /.blog__inner -->
+			</div><!-- /.blog__listing -->
+		</div>
+	{% else %}
+		<div class="container">
+
+			<div class="ed-cat-post-head">
+				<div class="h-wrap">
+					<h1>{{- blog.title -}}</h1>
+				</div>
+			</div>
+			<div class="ed-cat-post-desc">
+
+				<div class="ed-cat-post-desc-wrap">{{ blog.metafields.blog.description }}</div>
+			</div>
+			<div class="blog__listing">
+
+				{% assign counter = 9 %}
+				{%- for article in blog.articles -%}
+					{% if current_page == 1 %}
+						{% for tag in article.tags %}
+							{% if tag == 'hide_for_user' %}
+								{% if counter >= 9 %}
+									{% assign counter = counter | plus:1 %}
+								{% else %}
+									{% assign counter = counter %}
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+
+					{% if current_page > 1 %}
+					{% assign subValue = counter | minue:current_page %}
+					{% if forloop.index > subValue %}
+						{% for tag in article.tags %}
+							{% if tag == 'hide_for_user' %}
+								{% if counter <= subValue %}
+									{% assign counter = counter | plus:1 %}
+								{% else %}
+									{% assign counter = counter %}
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+					{% endif %}
+
+
+				{% endfor %}
+
+				{%- paginate blog.articles by counter -%}
+					<div class="blog__inner">
+						{%- for article in blog.articles -%}
+
+							{% assign chechHideArticle = true %}
+							{% for tag in article.tags %}
+								{% if tag == 'hide_for_user' %}
+									{% assign chechHideArticle = false %}
+								{% endif %}
+							{% endfor %}
+
+							{% if chechHideArticle == true  %}
+							<article class="article">
+								<header class="article__head apex">
+									{%- if article.image -%}
+										{% if article.metafields.article.tile_image[0].src  %}
+										<a href="{{ article.url }}" data-apex="">
+											{%- include 'lazyload-image' _image: article.metafields.article.tile_image[0].src, metafield_image -%}
+										</a>
+										{% else %}
+											<a href="{{ article.url }}" data-apex="">
+												{%- include 'lazyload-image' _image: article.image, original_width: '500' -%}
+											</a>
+										{% endif %}
+
+									{%- else -%}
+
+										{% assign hero_image = '' %}
+										{% assign html_tags = featured_article1.excerpt_or_content | split: '<' %}
+										{% for html_tag in html_tags %}
+											{% assign img_check = html_tag | slice: 0,3 %}
+											{% if img_check == 'img' %}
+												{% assign img_tag = html_tag | split: '>' %}
+												{% assign hero_image = '<' | append: img_tag.first | append: '>' %}
+												{% break %}
+											{% endif %}
+										{% endfor %}
+
+										{% if hero_image.size > 0 %}
+											<div class="hero-image-new"><a href="{{ article.url }}">{{ hero_image }}</a></div>
+										{% else %}
+											<a href="{{ article.url }}">
+												{%- include 'lazyload-image' _image: 'no-image.gif', original_width: '500' -%}
+											</a>
+										{% endif %}
+									{%- endif -%}
+
+								</header><!-- /.article__head -->
+
+								<div class="article__body ed-cat-slide-info">
+									{% assign article_category = blog.title %}
+									{% assign is_sub_category = false %}
+									{% for tag in article.tags %}
+										{% assign words = tag | split: '-'   %}
+										{% assign first_word =  words[0] | downcase %}
+										{% assign blog_title = blog.title | downcase %}
+										{% if first_word == blog_title %}
+											{% assign article_category= words[1] %}
+											{% assign is_sub_category = true %}
+										{% endif %}
+									{% endfor %}
+
+									<div class="type">
+										{% if is_sub_category %}
+										<a href="{{blog.title}}?sub_cat={{ article_category }}">{{ article_category }}</a>
+										{% else %}
+											<a href="{{blog.title}}">{{ article_category }}</a>
+										{% endif %}
+									</div>
+
+
+									<h4 class="article__title">
+										<a href="{{- article.url -}}">
+											{{- article.title -}}
+										</a>
+									</h4><!-- /.article__title -->
+
+									<p class="desc">{{- article.excerpt_or_content | strip_html | truncatewords: 20 -}}</p>
+								</div><!-- /.article__body -->
+
+							</article><!-- /.article -->
+							{% endif %}
+						{%- endfor -%}
+					</div><!-- /.blog__inner -->
+
+					{%- include 'pagination' -%}
+				{%- endpaginate -%}
+			</div><!-- /.blog__listing -->
+		</div>
+	{% endif %}
+	</div>
+</div>
+
+<style>
+	.template-blog .edt-category-page .ed-cat-post-head h1 {
+		flex: 1;
+    font-size: 32px;
+    font-weight: 400;
+    text-transform: capitalize;
+    line-height: 1;
+    padding-bottom: 10px;
+	}
+</style>

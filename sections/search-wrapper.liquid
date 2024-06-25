@@ -1,0 +1,255 @@
+<div class="search-left-column" >
+    <div id="SearchSidebar" class="not-sticky">
+        {%- include 'form-search' -%}
+
+        {% assign only_hidden_results = true %}
+
+        {% assign productCount = 0 %}
+        {% assign articleCount = 0 %}
+
+        {%- paginate search.results by 9999 -%}
+            {%- for _item in search.results -%}
+
+                {% if _item.object_type == 'product' %}
+                    {% if _item.price != 0 and  _item.type != 'Gift Box' %}
+                        {% assign productCount = productCount | plus: 1 %}
+                    {% endif %}
+                {% endif %}
+
+                {% if _item.object_type == 'article' %}
+
+                    {% if articleCount < 30 %}
+                        {% assign articleCount = articleCount | plus: 1 %}
+                    {% endif %}
+
+                    {% if _item.price == blank %}
+                        {%unless _item.tags contains 'hide_for_user'%}
+                        {% assign only_hidden_results = false %}
+                        {%endunless%}
+                    {% endif %}
+
+                {% endif %}
+
+            {%- endfor -%}
+        {%- endpaginate -%}
+
+    </div>
+</div>
+
+<div class="search-right-column">
+    <div id="SearchContent">
+        <div class="search-tabs-box">
+            <ul class="search-tabs">
+                <li class="clickme"><a href="javascript:;" data-tag="TopProducts" class="activelink">Products ({{ productCount }})</a></li>
+                <li class="clickme"><a href="javascript:;" data-tag="TopArticles">Articles ({{ articleCount }})</a></li>
+               <li class='lamp'><span></span></li>
+            </ul>
+        </div>
+
+        <div class="search-info">
+            <div class="search-result-for">
+                {% if search.results_count == 0 %}
+                    <h3>NO PRODUCTS FOUND: <span>SEE TOP SELLERS</span></h3>
+                {% else %}
+                    <h3>RESULTS FOR: <span>{{ search.terms | upcase  }}</span></h3>
+                {% endif %}
+            </div>
+
+            <div class="search-result-viewall" style="display: none">
+                <a href="/pages/editorial">View All</a>
+            </div>
+        </div>
+        <!-- search-info -->
+
+        <div id="container">
+            <div class="list" id="TopProducts">
+                <div class="search__results">
+
+                        {% if search.results_count > 0 %}
+                            {%- paginate search.results by 9999 -%}
+                                <div class="search__results-inner">
+                                    <div class="collection__items">
+
+                                        {%- for _item_product in search.results -%}
+                                            {% if _item_product.object_type == 'product' %}
+                                                {% if _item_product.price != 0 and  _item_product.type != 'Gift Box' %}
+                                                    {% if _item_product.type == 'Sets Product' %}
+                                                        {%- include 'product-item-sets' with _item_product, coll_type: 'sets' -%}
+                                                    {% else %}
+                                                        {%- include 'product-item' with _item_product , coll_type: 'best-sellers'-%}
+                                                    {% endif %}
+                                                    {% assign count = count | plus: 1 %}
+
+                                                {% endif %}
+                                            {% endif %}
+                                        {%- endfor -%}
+                                    </div><!-- /.search__items -->
+
+                                </div>
+                            {%- endpaginate -%}
+                        {%- else -%} <!--- No result found product --->
+                            {% assign productDCount = 0 %}
+                            <div class="search__results-inner">
+                                <div class="collection__items">
+
+                                    {%- for _item_product in collections['best-sellers'].products -%}
+                                        {% if _item_product.object_type == 'product' %}
+                                            {% if _item_product.price != 0 and  _item_product.type != 'Gift Box' %}
+                                                {% if _item_product.type == 'Sets Product' %}
+                                                    {%- include 'product-item-sets' with _item_product -%}
+                                                {% else %}
+                                                    {%- include 'product-item' with _item_product -%}
+                                                {% endif %}
+                                                {% assign count = count | plus: 1 %}
+
+                                                {% assign productDCount = productDCount | plus: 1 %}
+                                                {% if productDCount >= 6 %}
+                                                    {% break %}
+                                                {% endif %}
+
+                                            {% endif %}
+                                        {% endif %}
+                                    {%- endfor -%}
+                                </div><!-- /.search__items -->
+                            </div>
+                        {% endif %}
+
+                </div><!-- /.search__results -->
+            </div>
+            <div class="list" style="display: none;" id="TopArticles">
+                <div class="search__results">
+
+                        {% if search.results_count > 0 %}
+                            {% assign articleIncr = 0 %}
+                            {%- paginate search.results by 9999 -%}
+                                <div class="search__results-inner">
+
+                                    <div class="collection__items articles-collections">
+                                        {%- for _item in search.results -%}
+                                            {% if _item.object_type == 'article' %}
+                                                    {% if _item.price == blank %}
+                                                        {%unless _item.tags contains 'hide_for_user'%}
+                                                            {% if  articleIncr < 30 %}
+                                                            {%- include 'search-result-item' with _item -%}
+                                                            {% else %}
+                                                                {% break %}
+                                                            {% endif %}
+
+                                                        {% assign articleIncr = articleIncr | plus: 1 %}
+                                                        {%endunless%}
+                                                    {% endif %}
+                                            {% endif %}
+                                        {%- endfor -%}
+                                    </div><!-- /.search__items -->
+
+                                </div>
+                            {%- endpaginate -%}
+                        {% else %} <!--- No result found article --->
+                            {% assign articleDCount = 0 %}
+                            <div class="search__results-inner">
+
+                                {% if section.settings.enable_manual_article %}
+
+                                    <div class="collection__items articles-collections">
+
+                                        {% for i in (1..6) %}
+                                            {% assign getBlogPost = "search_blogPost_" | append: i %}
+                                            {% assign getBlogPost = section.settings[getBlogPost] %}
+
+                                            {%unless getBlogPost.tags contains 'hide_for_user'%}
+                                                {%- include 'search-result-item' with getBlogPost -%}
+                                            {%endunless%}
+                                        {% endfor %}
+
+                                    </div>
+
+                                {% else %}
+
+                                <div class="collection__items articles-collections">
+                                    {% for link in linklists.blogs.links  %}
+                                        {% assign blog = link.object %}
+
+                                        {% for article in blog.articles %}
+
+                                            {%unless article.tags contains 'hide_for_user'%}
+                                                {%- include 'search-result-item' with article -%}
+                                            {% assign articleDCount = articleDCount | plus: 1 %}
+                                                {% if articleDCount >= 6 %}
+                                                    {% break %}
+                                                {% endif %}
+                                            {%endunless%}
+
+                                        {% endfor %}
+
+                                        {% if articleDCount >= 6 %}
+                                            {% break %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                            </div>
+                        {%- endif -%}
+
+                </div><!-- /.search__results -->
+
+              <a href="/pages/editorial" class="showalllink">View Editorial</a>
+              
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% schema %}
+    {
+    "name": "No Result - Search",
+    "settings": [
+    {
+    "type": "header",
+    "content": "Article - No Result"
+    },
+    {
+    "type": "checkbox",
+    "id": "enable_manual_article",
+    "label": "Enable Manual Article",
+    "default": true
+    },
+    {
+    "type": "article",
+    "id": "search_blogPost_1",
+    "label": "Article 1"
+    },
+    {
+    "type": "article",
+    "id": "search_blogPost_2",
+    "label": "Article 2"
+    },
+    {
+    "type": "article",
+    "id": "search_blogPost_3",
+    "label": "Article 3"
+    },
+    {
+    "type": "article",
+    "id": "search_blogPost_4",
+    "label": "Article 4"
+    },
+    {
+    "type": "article",
+    "id": "search_blogPost_5",
+    "label": "Article 5"
+    },
+    {
+    "type": "article",
+    "id": "search_blogPost_6",
+    "label": "Article 6"
+    }
+    ],
+    "presets": [{
+    "name": "No Result",
+    "category": "Collection"
+    }]
+    }
+{% endschema %}

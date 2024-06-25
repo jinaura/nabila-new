@@ -1,0 +1,552 @@
+{% assign css_class = section.settings.title | replace: ' ', '_' | downcase %}
+{% assign desktop_article1 = articles[section.settings.desktop_article_1] %}
+{% assign desktop_article2 = articles[section.settings.desktop_article_2] %}
+{% assign desktop_article3 = articles[section.settings.desktop_article_3] %}
+{% assign desktop_article4 = articles[section.settings.desktop_article_4] %}
+
+{% assign mobile_article1 = articles[section.settings.mobile_article_1] %}
+{% assign mobile_article2 = articles[section.settings.mobile_article_2] %}
+{% assign mobile_article3 = articles[section.settings.mobile_article_3] %}
+{% assign mobile_article4 = articles[section.settings.mobile_article_4] %}
+
+{% capture ifNofeaturedImg %}
+  {% assign hero_image = '' %}
+  {% assign html_tags = desktop_article1.excerpt_or_content | split: '<' %}
+  {% for html_tag in html_tags %}
+    {% assign img_check = html_tag | slice: 0,3 %}
+    {% if img_check == 'img' %}
+    	{% assign img_tag = html_tag | split: '>' %}
+    	{% assign hero_image = '<' | append: img_tag.first | append: '>' %}
+    {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if hero_image.size > 0 %}
+  	<div class="hero-image-new">{{ hero_image }}</div>
+  {% endif %}
+{% endcapture %}
+
+<section class="{{css_class |  escape}}">
+  <div class="container section__item section_spacing">
+      <h2 class="heading-with-link">{{ section.settings.title }} <a href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a></h2>
+      <hr class="section__divider" />
+      <div class="desc">{{ section.settings.description }}</div>
+      <hr class="divider--start">
+	  
+	  <!--    Desktop Layout    -->
+      <div class="articlesDesktop hidden-xs hidden-sm">
+	  <!--    Left Column     -->
+       <div class="row-1">
+         
+         <article class="item">
+           {% if desktop_article1.image %}
+           	  <figure class="animate">
+                <a href="{{ desktop_article1.url }}">
+                  {{desktop_article1.image | image_url: width: 850 | image_tag: width: 320, height: 185, alt: desktop_article1.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                </a>
+              </figure>
+           {% else %}
+           		{{ ifNofeaturedImg }}
+           {% endif %}
+           <span class="type"><a href="/blogs/{{desktop_article1.handle | split: '/' | first }}">{{desktop_article1.handle | split: '/' | first }}</a></span>
+           <h3><a href="{{ desktop_article1.url }}">{{ desktop_article1.title |truncate: 62 }}</a></h3>
+             {% assign checkTagAuthor = '' %}
+             {% for tag in  desktop_article1.tags %}
+                 {% assign words = tag | split: '-'   %}
+                 {% assign first_word =  words[0] | downcase %}
+                 {% if first_word == 'author' %}
+                     <span class="auther">By {{ words[1] | capitalize  }}</span>
+                     {% assign checkTagAuthor = true %}
+                 {% endif %}
+             {% endfor %}
+             {% if checkTagAuthor == '' %}
+                 <span class="auther">By {{ desktop_article1.author | capitalize  }}</span>
+             {% endif %}
+         </article>
+         
+         <article class="item">
+           {% if desktop_article2.image %}
+           	  <figure class="animate">
+                <a href="{{ desktop_article2.url }}">
+                  {{desktop_article2.image | image_url: width: 850 | image_tag: width: 320, height: 185, alt: desktop_article2.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                </a>
+              </figure>
+           {% else %}
+           		{{ ifNofeaturedImg }}
+           {% endif %}
+           <span class="type"><a href="/blogs/{{desktop_article2.handle | split: '/' | first }}">{{desktop_article2.handle | split: '/' | first }}</a></span>
+           <h3><a href="{{ desktop_article2.url }}">{{ desktop_article2.title |truncate: 62 }}</a></h3>
+             {% assign checkTagAuthor = '' %}
+             {% for tag in  desktop_article2.tags %}
+                 {% assign words = tag | split: '-'   %}
+                 {% assign first_word =  words[0] | downcase %}
+                 {% if first_word == 'author' %}
+                     <span class="auther">By {{ words[1] | capitalize  }}</span>
+                     {% assign checkTagAuthor = true %}
+                 {% endif %}
+             {% endfor %}
+             {% if checkTagAuthor == '' %}
+                 <span class="auther">By {{ desktop_article2.author | capitalize  }}</span>
+             {% endif %}
+         </article>
+         
+       </div>
+        
+       <!--    Mid Column     -->
+       <div class="row-2">
+        
+          <article class="item">
+            {% if desktop_article3.image %}
+              {% if desktop_article3.metafields.article.tile_image[0].src %}
+                <figure class="animate">
+                  <a href="{{ desktop_article3.url }}">
+                    <img src="{{ desktop_article3.metafields.article.tile_image[0].src }}"
+                      srcset="
+                      {{ desktop_article3.metafields.article.tile_image[0].src | append: '&transform=resize=600' }} 600w,
+                      {{ desktop_article3.metafields.article.tile_image[0].src | append: '&transform=resize=900' }} 900w,
+                      {{ desktop_article3.metafields.article.tile_image[0].src | append: '&transform=resize=1200' }} 1200w
+                      "
+                      alt="{{desktop_article3.metafields.article.tile_image[0].alt}}"
+                      fetchpriority="low" loading="lazy"
+                    >
+                  </a>
+                </figure>
+             {% else %}
+           	  <figure class="animate">
+                <a href="{{ desktop_article3.url }}">
+                  {{desktop_article3.image | image_url: width: 1200 | image_tag: width: 600, height: 615, alt: desktop_article3.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                </a>
+              </figure>
+             {% endif %}
+           {% else %}
+           		{{ ifNofeaturedImg }}
+           {% endif %}
+           <span class="type"><a href="/blogs/{{desktop_article3.handle | split: '/' | first }}">{{desktop_article3.handle | split: '/' | first }}</a></span>
+           <h3><a href="{{ desktop_article3.url }}">{{ desktop_article3.title |truncate: 100}}</a></h3>
+             {% assign checkTagAuthor = '' %}
+             {% for tag in  desktop_article3.tags %}
+                 {% assign words = tag | split: '-'   %}
+                 {% assign first_word =  words[0] | downcase %}
+                 {% if first_word == 'author' %}
+                     <span class="auther">By {{ words[1] | capitalize  }}</span>
+                     {% assign checkTagAuthor = true %}
+                 {% endif %}
+             {% endfor %}
+             {% if checkTagAuthor == '' %}
+                 <span class="auther">By {{ desktop_article3.author | capitalize  }}</span>
+             {% endif %}
+         </article>
+         
+       </div>
+        
+       <!--    Right Column     -->
+       <div class="row-3">
+          <article class="item">
+           {% if desktop_article4.image %}
+           	  <figure class="animate">
+                <a href="{{ desktop_article4.url }}">
+                  {{desktop_article4.image | image_url: width: 850 | image_tag: width: 320, height: 185, alt: desktop_article4.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                </a>
+              </figure>
+           {% else %}
+           		{{ ifNofeaturedImg }}
+           {% endif %}
+           <span class="type"><a href="/blogs/{{desktop_article4.handle | split: '/' | first }}">{{desktop_article4.handle | split: '/' | first }}</a></span>
+           <h3><a href="{{ desktop_article4.url }}">{{ desktop_article4.title |truncate: 62 }}</a></h3>
+              {% assign checkTagAuthor = '' %}
+              {% for tag in  desktop_article4.tags %}
+                  {% assign words = tag | split: '-'   %}
+                  {% assign first_word =  words[0] | downcase %}
+                  {% if first_word == 'author' %}
+                      <span class="auther">By {{ words[1] | capitalize  }}</span>
+                      {% assign checkTagAuthor = true %}
+                  {% endif %}
+              {% endfor %}
+              {% if checkTagAuthor == '' %}
+                  <span class="auther">By {{ desktop_article4.author | capitalize  }}</span>
+              {% endif %}
+         </article>
+         
+        <a class="seeAllarticle" href="{{  section.settings.button_link }}">
+          {{section.settings.last_article_image | image_url: width: 960, height: 960 | image_tag: class: 'animate', alt: section.settings.last_article_image.alt, fetchpriority: 'low', loading: 'lazy', style: 'object-fit: cover; height: 100%;' }}
+          <span>{{ section.settings.button_label }}</span>
+        </a>
+         
+       </div>
+        
+     </div>
+    
+    <!--    Mobile Layout    -->
+    <div class="articlesMobile hidden-md hidden-lg">
+      <div class="featuredArticle">
+      	<article class="item">
+           {% if mobile_article1.image %}
+           	  <figure class="animate">
+                <a href="{{ mobile_article1.url }}">
+                  {{mobile_article1.image | image_url: width: 900 | image_tag: width: 600, height: 615, alt: mobile_article1.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                </a>
+            </figure>
+           {% else %}
+           		{{ ifNofeaturedImg }}
+           {% endif %}
+           <span class="type"><a href="/blogs/{{mobile_article1.handle | split: '/' | first }}">{{mobile_article1.handle | split: '/' | first }}</a></span>
+           <h3><a href="{{ mobile_article1.url }}">{{ mobile_article1.title |truncate: 62 }}</a></h3>
+
+            {% assign checkTagAuthor = '' %}
+            {% for tag in  mobile_article1.tags %}
+                {% assign words = tag | split: '-'   %}
+                {% assign first_word =  words[0] | downcase %}
+                {% if first_word == 'author' %}
+                    <span class="auther">By {{ words[1] | capitalize  }}</span>
+                    {% assign checkTagAuthor = true %}
+                {% endif %}
+            {% endfor %}
+            {% if checkTagAuthor == '' %}
+                <span class="auther">By {{ mobile_article1.author | capitalize  }}</span>
+            {% endif %}
+         </article>
+      </div>
+      
+      <div class="swap-x" role="region" aria-label="carousel">
+        <div class="articleScroll">
+
+          <article class="item">
+            {% if mobile_article2.image %}
+              <figure class="animate">
+                <a href="{{ mobile_article2.url }}">
+                  {{mobile_article2.image | image_url: width: 900 | image_tag: width: 700, height: 400, alt: mobile_article2.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                </a>
+              </figure>
+            {% else %}
+            {{ ifNofeaturedImg }}
+            {% endif %}
+            <span class="type"><a href="/blogs/{{mobile_article2.handle | split: '/' | first }}">{{mobile_article2.handle | split: '/' | first }}</a></span>
+            <h3><a href="{{ mobile_article2.url }}">{{ mobile_article2.title |truncate: 50 }}</a></h3>
+              {% assign checkTagAuthor = '' %}
+              {% for tag in  mobile_article2.tags %}
+                  {% assign words = tag | split: '-'   %}
+                  {% assign first_word =  words[0] | downcase %}
+                  {% if first_word == 'author' %}
+                      <span class="auther">By {{ words[1] | capitalize  }}</span>
+                      {% assign checkTagAuthor = true %}
+                  {% endif %}
+              {% endfor %}
+              {% if checkTagAuthor == '' %}
+                  <span class="auther">By {{ mobile_article2.author | capitalize  }}</span>
+              {% endif %}
+          </article>
+          
+          <article class="item">
+            {% if mobile_article3.image %}
+              <figure class="animate">
+                <a href="{{ mobile_article3.url }}">
+                  {{mobile_article3.image | image_url: width: 900 | image_tag: width: 700, height: 400, alt: mobile_article3.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                </a>
+              </figure>
+            {% else %}
+            {{ ifNofeaturedImg }}
+            {% endif %}
+            <span class="type"><a href="/blogs/{{mobile_article3.handle | split: '/' | first }}">{{mobile_article3.handle | split: '/' | first }}</a></span>
+            <h3><a href="{{ mobile_article3.url }}">{{ mobile_article3.title |truncate: 50 }}</a></h3>
+              {% assign checkTagAuthor = '' %}
+              {% for tag in  mobile_article3.tags %}
+                  {% assign words = tag | split: '-'   %}
+                  {% assign first_word =  words[0] | downcase %}
+                  {% if first_word == 'author' %}
+                      <span class="auther">By {{ words[1] | capitalize  }}</span>
+                      {% assign checkTagAuthor = true %}
+                  {% endif %}
+              {% endfor %}
+              {% if checkTagAuthor == '' %}
+                  <span class="auther">By {{ mobile_article3.author | capitalize  }}</span>
+              {% endif %}
+          </article>
+          
+          <article class="item">
+            {% if mobile_article4.image %}
+              <figure class="animate">
+                <a href="{{ mobile_article4.url }}">
+                  {{mobile_article4.image | image_url: width: 900 | image_tag: width: 700, height: 400, alt: mobile_article4.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                </a>
+              </figure>
+            {% else %}
+            {{ ifNofeaturedImg }}
+            {% endif %}
+            <span class="type"><a href="/blogs/{{mobile_article4.handle | split: '/' | first }}">{{mobile_article4.handle | split: '/' | first }}</a></span>
+            <h3><a href="{{ mobile_article4.url }}">{{ mobile_article4.title |truncate: 50 }}</a></h3>
+              {% assign checkTagAuthor = '' %}
+              {% for tag in  mobile_article4.tags %}
+                  {% assign words = tag | split: '-'   %}
+                  {% assign first_word =  words[0] | downcase %}
+                  {% if first_word == 'author' %}
+                      <span class="auther">By {{ words[1] | capitalize  }}</span>
+                      {% assign checkTagAuthor = true %}
+                  {% endif %}
+              {% endfor %}
+              {% if checkTagAuthor == '' %}
+                  <span class="auther">By {{ mobile_article4.author | capitalize  }}</span>
+              {% endif %}
+          </article>
+          
+          <div>
+            <a class="seeAllarticle" href="{{  section.settings.button_link }}">
+              {{section.settings.last_article_image | image_url: width: 960, height: 960 | image_tag: class: 'animate', alt: section.settings.last_article_image.alt, fetchpriority: 'low', loading: 'lazy', style: 'object-fit: cover; width: 91vw; height: 91vw;' }}
+              <span>{{ section.settings.button_label }}</span>
+            </a>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    
+    <hr class="section__divider" />
+  </div>
+</section>
+
+
+<style>
+  .{{css_class |  escape}} .desc{
+    max-width:660px;
+  }
+  
+  .articlesDesktop{
+    display: flex;
+  }
+  .articlesDesktop > .row-1, 
+  .articlesDesktop > .row-3{
+    width: 100%;
+    max-width: 320px;
+  }
+  .articlesDesktop > .row-1 article.item:last-child, 
+  .articlesDesktop > .row-2 article.item:last-child{
+    border-bottom:0px;
+    margin-bottom:0px;
+  }
+
+  .articlesDesktop > .row-2{
+    width: 100%;
+    max-width: 680px;
+    padding: 0 40px;
+  }
+  article.item{
+    border-bottom:1px solid #e6e3e0;
+    padding-bottom:35px;
+    margin-bottom:40px;
+  }
+  article.item figure{
+    margin-bottom:25px;
+  }
+  article.item h3{
+    margin:15px 0;
+  }
+  article.item h3 a{
+    text-decoration:none;
+    letter-spacing:1px;
+    line-height: 20px;
+  }
+  article.item span{
+    font-size:12px;
+    text-transform:uppercase;
+  }
+  article.item span a{
+    letter-spacing:normal;
+    text-decoration:none;
+  }
+  article.item span.auther{
+    text-transform:capitalize;
+  }
+  
+  article.item figure a{
+    display: block;
+    position: relative;
+    padding-top: 58%;
+    overflow: hidden;
+  }
+  article.item figure a img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: auto;
+    object-fit: cover;
+    width: 100%;
+    object-position: center;
+    height: 100%;
+  }
+  .articlesDesktop > .row-2 article.item figure a{
+    padding-top: 97%;
+  }
+  
+  .seeAllarticle {
+    position: relative;
+    text-align: center;
+    display: flex;
+    text-decoration: none;
+  }
+  .seeAllarticle span {
+    color: #fafafa;
+    font-size: 14px;
+    letter-spacing: 1px;
+    border-bottom: 2px solid;
+    text-transform: uppercase;
+    font-family: var(--font-medium);
+    position: absolute;
+    top: 46%;
+    left: 42%
+  }
+
+  .articlesMobile .swap-x {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+  }
+  
+  .articleScroll{
+    margin: 0 -20px;
+    width: max-content;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+
+  .articleScroll .item {
+    flex-basis: unset;
+    max-width: unset;
+    margin: 0 10px 0 0;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    flex-flow: column;
+    height: auto;
+    width: 91vw;
+  }
+
+  .articleScroll .slick-list{
+    padding: 0 30px 0 0;
+  }
+  .articleScroll .slick-slide{
+    margin-right:10px;
+  }
+  .articleScroll .slick-prev{
+    display:none;
+  }
+  .articleScroll .slick-next:before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 10px solid #545353;
+    border-radius: 1px;
+    display: block;
+  }
+  .articleScroll .slick-next{
+    right: 0;
+    top: 30%;
+    height: 64%;
+  }
+  
+  @media (max-width: 1023px){
+    article.item{padding-bottom:25px; margin-bottom: 30px;}
+    .articleScroll article.item{margin-bottom:0px; border-bottom:0px; padding-bottom: 15px;}
+    .articleScroll article.item span, .articleScroll article.item h3{padding: 0 20px}
+    .articlesMobile .featuredArticle article.item figure a{padding-top: 100%;}
+    .articlesMobile .seeAllarticle {
+      flex-basis: unset;
+      max-width: unset;
+      margin: 0 10px 0 0;
+      scroll-snap-align: start;
+      width: 91vw;
+    }
+  }
+
+</style>
+
+<script>
+
+</script>
+
+
+{% schema %}
+    {
+    "name": "Article",
+    "class": "article",
+    "settings": [
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Title",
+    "default": "Beauty In Being"
+    },
+    {
+    "type": "richtext",
+    "id": "description",
+    "label": "Description",
+    "default": "<p>Article</p>"
+    },
+    {
+    "type": "article",
+    "id": "desktop_article_1",
+    "label": "Desktop Article 1"
+    },
+    {
+    "type": "article",
+    "id": "mobile_article_1",
+    "label": "Mobile Article 1"
+    },
+    {
+    "type": "article",
+    "id": "desktop_article_2",
+    "label": "Desktop Article 2"
+    },
+    {
+    "type": "article",
+    "id": "mobile_article_2",
+    "label": "Mobile Article 2"
+    },
+    {
+    "type": "article",
+    "id": "desktop_article_3",
+    "label": "Desktop Article 3"
+    },
+    {
+    "type": "article",
+    "id": "mobile_article_3",
+    "label": "Mobile Article 3"
+    },
+    {
+    "type": "article",
+    "id": "desktop_article_4",
+    "label": "Desktop Article 4"
+    },
+    {
+    "type": "article",
+    "id": "mobile_article_4",
+    "label": "Mobile Article 4"
+    },
+    {
+    "type": "image_picker",
+    "id": "last_article_image",
+    "label": "Last Article Image"
+    },
+    {
+    "type": "text",
+    "id": "button_label",
+    "label": "Button Label",
+    "default": "Learn more"
+    },
+    {
+    "type": "url",
+    "id": "button_link",
+    "label": "Button link"
+    }
+    ],
+    "presets": [
+    {
+    "name": "Article",
+    "category": "Text"
+    }
+    ]
+    }
+{% endschema %}

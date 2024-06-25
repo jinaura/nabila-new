@@ -1,0 +1,11 @@
+{% assign api = shop.metafields.zipifyoneclickupsell | size %}}{%- unless api == 0 -%}
+<script>((o,c,u)=>{o[c]=o[c]||{},o[u]=o[u]||{},o[c].OCU=o[c].OCU||{api:o[u]}})(window,'Zipify','OCUApi');</script>
+{%- if template.name == 'product' -%}
+<script>
+  Zipify.OCU.api.customAddToCartButton=".buy-button.add-to-cart-button",Zipify.OCU.api.getCustomAddToCartData=t=>{try{let a='form[action="/cart/add"]',r=t?.target?.closest(a)??document.querySelector(a),o=Object.fromEntries(new FormData(r));return{...o,quantity:o.quantity??1}}catch(e){return console.log(e.message),{}}};
+</script>
+{%- endif -%}
+<script>
+  Zipify.OCU.api.customCheckoutButton='[type="submit"].mini-cart__button.action_button',Zipify.OCU.api.customAddToCartEventHandler=t=>{t&&(t.disabled=!1,t.click())};
+</script>
+{%- endunless -%}

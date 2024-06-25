@@ -1,0 +1,217 @@
+<section class="rcy-sect2">
+
+    <div class="container">
+     <div class="rcy-sect2-wrap"> 
+<h2 class="section__title">Super/Natural Sustainability</h2>
+<hr class="section__divider">
+<div class="sus-tabs-desktop">
+
+     <div class="rcy-sect2-tabs-wrap">  
+<ul class="sustainability-tabs">
+    {% for i in (1..page.metafields.sustainability.no_of_items) %}
+        {% assign sustainabilityTitle = "sustainability_title_" | append: i %}
+        {% assign sustainabilityTitle = page.metafields.sustainability[sustainabilityTitle] %}
+        <li><a href="#_" class="content_link" data-id="{{ i }}">{{  sustainabilityTitle }}</a></li>
+    {% endfor %}
+</ul>
+       </div>
+<hr class="divider--start">
+</div>
+{% for i in (1..page.metafields.sustainability.no_of_items) %}
+    {% assign sustainabilityDescription = "sustainability_description_" | append: i %}
+    {% assign sustainabilityDescription = page.metafields.sustainability[sustainabilityDescription] %}
+    <div id="content_div{{ i }}" class="content_div {% if i != 1 %} hideDiv {% endif %}" >
+
+        <div class=" leftDiv"> {{  sustainabilityDescription }}</div>
+        <div class="sus-tabs-mobile">
+            <div class="rcy-sect2-tabs-wrap">  
+       <ul class="sustainability-tabs">
+           {% for i in (1..page.metafields.sustainability.no_of_items) %}
+               {% assign sustainabilityTitle = "sustainability_title_" | append: i %}
+               {% assign sustainabilityTitle = page.metafields.sustainability[sustainabilityTitle] %}
+               <li><a href="#_" class="content_link" data-id="{{ i }}">{{  sustainabilityTitle }}</a></li>
+           {% endfor %}
+       </ul>
+              </div>
+       
+            </div>
+
+        {% assign sustainabilityMedia = "sustainability_media_" | append: i %}
+        {% assign sustainabilityMedia = page.metafields.sustainability[sustainabilityMedia] %}
+        {% for sustainability_image in sustainabilityMedia %}
+            {% if sustainability_image.media_type == 'image' %}
+                <div class=" rightDiv" >
+                    <img 
+                        src="{{ sustainability_image.src }}" 
+                        alt="{{ sustainability_image.alt }}" 
+                        class="rosie--quote lazyload"
+                        srcset="
+                        {{ sustainability_image.src | append: '&transform=resize=600' }} 600w,
+                        {{ sustainability_image.src | append: '&transform=resize=900' }} 900w,
+                        {{ sustainability_image.src | append: '&transform=resize=1200' }} 1200w
+                        "
+                        fetchpriority="low"
+                        loading="lazy"
+                    />
+                  
+                  
+      
+      
+      </div>
+            {% else if sustainability_image.media_type == 'video' %}
+            <div class=" rightDiv" >
+              <div class="rightDiv-video-wrap" >
+                <video
+                        loop
+                        muted
+                        loop
+                        autoplay
+                        preload="auto"
+                        width="50%"
+                        height="50%"
+                        playsinline="true" webkit-playsinline="true"
+                        data-setup='{"width": 300, "height": 250}' class="responsive-video">
+                    <source src="{{ sustainability_image.src }}" type='video/mp4' /></video>
+                </div>
+      </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endfor %}
+
+      </div>
+      <hr class="section__divider clear">
+  </div>
+</section>
+
+
+<style>
+    .rcy-sect2 {
+    padding-top:90px;
+    }
+  
+    .rcy-sect2   .sus-tabs-mobile {
+display: none;
+
+    }
+  .rcy-sect2-wrap {
+  padding-bottom:30px;
+    display: inline-block;
+    width: 100%;
+  }
+    .sustainability-tabs{
+        margin:0;
+        padding:0;
+        padding-bottom: 1.7rem;
+        list-style:none;
+    }
+    .sustainability-tabs li{
+        display:inline-block;
+        padding-right:20px;
+    }
+    .sustainability-tabs li a.active{
+        font-family: var(--font-medium);
+    }
+    .hideDiv{
+        display: none !important;
+    }
+    .showDiv{
+        visibility: visible;
+        opacity: 1;
+        transition: visibility 0s linear 0s, opacity 300ms;
+    }
+    .leftDiv{
+        width: 30%;
+        float: left;
+    }
+    .rightDiv{
+        padding: 0 0 60px 60px;
+        width: 70%;
+        float: right;
+    }
+    #shopify-section-pdp-sustainability .content_div  h4{
+        padding-bottom:5px;
+        margin:0;
+    }
+    #shopify-section-pdp-sustainability p{
+        padding-bottom:0.5rem;
+    }
+    #shopify-section-pdp-sustainability img{
+        width:100%;
+    }
+    .clear {clear:both}
+  
+  .rcy-sect2 .rightDiv .rightDiv-video-wrap {
+    
+    width:100%;
+/*     height:540px */
+  
+  }
+  
+  .rcy-sect2 .rightDiv .rightDiv-video-wrap video {
+  width:100%;
+  }
+  
+ 
+
+    @media (max-width:767px){
+        .rcy-sect2 {
+    padding-top: 50px;
+}
+
+.rcy-sect1 .rcy-row3 .content-col .cont-info .sub-content {
+    padding-bottom: 30px;
+}
+
+.rcy-sect1 .rcy-s1-wrap {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+       .rcy-sect2-wrap {
+  padding-bottom:10px;
+
+  }
+
+  .rcy-sect2   .sus-tabs-desktop {
+display: none;
+
+    }
+  .rcy-sect2   .sus-tabs-mobile {
+    padding-top: 30px;
+    display: block;
+    padding-bottom: 3px;
+    border-bottom: solid 1px #e6e3e0;
+    border-top: solid 1px #e6e3e0;
+    margin-top: 30px;
+
+    }
+      .rcy-sect2-tabs-wrap {
+        overflow: auto;
+    width: 100%;
+      }
+      
+        
+        .rcy-sect2-tabs-wrap ul {
+    display: flex;
+    width: max-content;
+}
+        .content_div{display: flex; flex-flow: column-reverse;  padding-bottom: 50px;}
+      
+        .leftDiv, .rightDiv{width:100%; padding:0px;}
+        .leftDiv{padding-top:30px;}
+
+    }
+</style>
+
+<script>
+    $( document ).ready(function() {
+        $( ".sustainability-tabs li:first-child .content_link" ).addClass('active');
+        $( ".content_link" ).on( "click", function(e) {
+            e.preventDefault();
+            $( ".content_link" ).removeClass('active');
+            $(this).addClass('active');
+            $('.content_div').addClass('hideDiv');
+            $( '#content_div'+$(this).attr('data-id') ).removeClass('hideDiv');
+        });
+    });
+</script>

@@ -1,0 +1,198 @@
+<section>
+
+    {% for block in section.blocks %}
+
+    {% if article.handle == articles[block.settings.article].handle %}
+    <div style="float: left;width:50%;">
+        <table>
+            <tr>
+                <td><b>{{ block.settings.left_dropcap_1  }}</b></td>
+                <td>{{ block.settings.left_dropcap_description_1  }}</td>
+            </tr>
+            <tr>
+                <td><b>{{ block.settings.left_dropcap_2  }}</b></td>
+                <td>{{ block.settings.left_dropcap_description_2  }}</td>
+            </tr>
+            <tr>
+                <td><b>{{ block.settings.left_dropcap_3  }}</b></td>
+                <td>{{ block.settings.left_dropcap_description_3  }}</td>
+            </tr>
+            <tr>
+                <td><b>{{ block.settings.left_dropcap_4  }}</b></td>
+                <td>{{ block.settings.left_dropcap_description_4  }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="float: right;width:50%;">
+        <img src="{{ block.settings.right_image | img_url: '285x620' ,scale:2 }}" fetchpriority="low" loading="lazy">
+    </div>
+
+    <div>
+        <table>
+            <tr>
+                <td><b>{{ block.settings.center_dropcap_1  }}</b></td>
+                <td>{{ block.settings.center_dropcap_description_1  }}</td>
+            </tr>
+            <tr>
+                <td><b>{{ block.settings.center_dropcap_2  }}</b></td>
+                <td>{{ block.settings.center_dropcap_description_2  }}</td>
+            </tr>
+            <tr>
+                <td><b>{{ block.settings.center_dropcap_3  }}</b></td>
+                <td>{{ block.settings.center_dropcap_description_3  }}</td>
+            </tr>
+            <tr>
+                <td><b>{{ block.settings.center_dropcap_4  }}</b></td>
+                <td>{{ block.settings.center_dropcap_description_4  }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="float: left;width:50%;">
+        <img src="{{ block.settings.center_image_1 | img_url: '185x420' }}" fetchpriority="low" loading="lazy">
+    </div>
+
+    <div style="float: right;width:50%;">
+        <img src="{{ block.settings.center_image_2 | img_url: '285x620' ,scale:2 }}" fetchpriority="low" loading="lazy">
+    </div>
+    <br clear="all"><br clear="all">
+    <div style="font-size: 25px;font-weight: bolder;text-align: center">
+        {{ block.settings.bottom_quotes  }}
+    </div>
+
+        {% break %}
+    {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 50px 0;
+    }
+
+    td {
+        padding: 10px 0;
+    }
+</style>
+
+{% schema %}
+    {
+    "name": "Additional Description",
+    "class": "additional-description",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "Description",
+    "settings": [
+    {
+    "type": "article",
+    "id": "article",
+    "label": "Article"
+    },
+    {
+    "type": "text",
+    "id": "left_dropcap_1",
+    "label": "Left Dropcap 1"
+    },
+    {
+    "type": "text",
+    "id": "left_dropcap_description_1",
+    "label": "Left Dropcap Description 1"
+    },
+    {
+    "type": "text",
+    "id": "left_dropcap_2",
+    "label": "Left Dropcap 2"
+    },
+    {
+    "type": "text",
+    "id": "left_dropcap_description_2",
+    "label": "Left Dropcap Description 2"
+    },
+    {
+    "type": "text",
+    "id": "left_dropcap_3",
+    "label": "Left Dropcap 3"
+    },
+    {
+    "type": "text",
+    "id": "left_dropcap_description_3",
+    "label": "Left Dropcap Description 3"
+    },
+    {
+    "type": "text",
+    "id": "left_dropcap_4",
+    "label": "Left Dropcap 4"
+    },
+    {
+    "type": "text",
+    "id": "left_dropcap_description_4",
+    "label": "Left Dropcap Description 4"
+    },
+    {
+    "type": "image_picker",
+    "id": "right_image",
+    "label": "Right Image"
+    },
+    {
+    "type": "text",
+    "id": "center_dropcap_1",
+    "label": "Center Dropcap 1"
+    },
+    {
+    "type": "text",
+    "id": "center_dropcap_description_1",
+    "label": "Center Dropcap Description 1"
+    },
+    {
+    "type": "text",
+    "id": "center_dropcap_2",
+    "label": "Center Dropcap 2"
+    },
+    {
+    "type": "text",
+    "id": "center_dropcap_description_2",
+    "label": "Center Dropcap Description 2"
+    },
+    {
+    "type": "text",
+    "id": "center_dropcap_3",
+    "label": "Center Dropcap 3"
+    },
+    {
+    "type": "text",
+    "id": "center_dropcap_description_3",
+    "label": "Center Dropcap Description 3"
+    },
+    {
+    "type": "text",
+    "id": "center_dropcap_4",
+    "label": "Center Dropcap 4"
+    },
+    {
+    "type": "text",
+    "id": "center_dropcap_description_4",
+    "label": "Center Dropcap Description 4"
+    },
+    {
+    "type": "image_picker",
+    "id": "center_image_1",
+    "label": "Center Image 1"
+    },
+    {
+    "type": "image_picker",
+    "id": "center_image_2",
+    "label": "Center Image 2"
+    },
+    {
+    "type": "text",
+    "id": "bottom_quotes",
+    "label": "Bottom Quotes"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

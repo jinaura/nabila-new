@@ -1,0 +1,389 @@
+<script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+<!---- Search Mobile---->
+<div class="mobile-search-wrap s">
+    <div class="searchBox">
+        <div class="form-search">
+            <predictive-search-mobile>
+                <form action="{{ routes.search_url }}" method="get" role="search">
+                    <!--<a id="clearMobileInput" href="javascript:;"  class="cleartxt mobileClear">
+                      <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M0.184504 16.7697C0.073696 16.6809 0.00656618 16.5485 0.000307098 16.4065C-0.00595199 16.2645 0.0492673 16.1267 0.151824 16.0284L7.29796 8.87693L0.151824 1.72543C0.024331 1.6014 -0.0265532 1.41828 0.0186564 1.24619C0.0638661 1.0741 0.198164 0.939703 0.370126 0.894459C0.542087 0.849216 0.725071 0.900139 0.849008 1.02773L7.99515 8.17922L15.1413 1.02773C15.2652 0.90014 15.4482 0.849219 15.6202 0.894463C15.7921 0.939706 15.9264 1.0741 15.9716 1.2462C16.0168 1.41829 15.966 1.60141 15.8385 1.72544L8.69233 8.87693L15.8385 16.0284C15.9689 16.1472 16.0261 16.3266 15.9885 16.499C15.9509 16.6714 15.8242 16.8107 15.6562 16.8643C15.4882 16.9179 11.6441 13.2147 11.5137 13.0959C11.5023 13.0855 15.1517 16.7375 15.1413 16.7261L7.99515 9.57463L0.849008 16.7261C0.672261 16.9108 0.383833 16.9297 0.184504 16.7697Z" fill="#545353"/>
+                      </svg>
+                     </a>-->
+
+                    <input
+                            id="Search"
+                            type="search"
+                            name="q"
+                            placeholder="What are you looking for?"
+                            class="field"
+                            size="4"
+                            value="{{ search.terms | escape }}"
+                            {%- if settings.predictive_search_enabled -%}
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-owns="predictive-search-results-list"
+                                aria-controls="predictive-search-results-list"
+                                aria-haspopup="listbox"
+                                aria-autocomplete="list"
+                                autocorrect="off"
+                                autocomplete="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                            {%- endif -%}
+                    >
+                    <input name="options[prefix]" type="hidden" value="last">
+
+                    {%- if settings.predictive_search_enabled -%}
+                        <div id="predictive-search-mobile" tabindex="-1"></div>
+                    {%- endif -%}
+                </form>
+            </predictive-search-mobile>
+        </div><!-- /.form__search -->
+
+        <div id="mobile-default-sPanel" class="search-bottom">
+
+            <div class="search-category">
+                <div class="cat-heading">
+                    <h3>{{ settings.search_categ_text }}</h3>
+                </div>
+                <div class="category-list">
+                    {% assign search_category = settings.search_category %}
+                    <ul>
+                        {% for link in linklists[search_category].links %}
+                            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </div>
+            <!-- search-category-mobile -->
+
+            <div class="popular-product">
+                <div class="cat-heading">
+                    <h3>Popular Searches</h3>
+                </div>
+
+                <div class="popular-product-search-wrap">
+
+                    {% if settings.search_blogPost != blank %}
+                        {% assign collectionLimt = 3 %}
+                    {% else %}
+                        {% assign collectionLimt = 4 %}
+                    {% endif %}
+
+                    <div class="search__items">
+                        {% for popularProducts in collections[settings.search_popular_collection].products limit: collectionLimt %}
+                            {% if popularProducts.object_type == 'product' %}
+                                {% if popularProducts.price != 0 and  popularProducts.type != 'Gift Box' %}
+                                    {% if popularProducts.type == 'Sets Product' %}
+                                        {%- include 'product-item-sets' with popularProducts , coll_type: 'sets' -%}
+                                    {% else %}
+                                        {%- include 'product-item' with popularProducts, coll_type: 'best-sellers' -%}
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if settings.search_blogPost != blank %}
+                            <div class="popular-product-item product__item ">
+                                <div class="p-image">
+                                    <a href="{{ settings.search_blogPost.url }}"><img src="{{settings.search_blogPost.image | img_url: '600x'}}" alt="{{ settings.search_blogPost.image.alt }}"></a>
+                                </div>
+                                <div class="inner_content">
+                                    <a href="{{ settings.search_blogPost.url }}" class="buy_btn">Read Now</a>
+                                </div>
+                                <div class="p-title">
+                                    <a href="{{ settings.search_blogPost.url }}"><h3>{{ settings.search_blogPost.title }}</h3></a>
+                                </div>
+
+
+                            </div>
+                        {% endif %}
+                    </div>
+
+
+
+                </div>
+                <!-- popular-product-search-wrap -->
+
+            </div>
+            <!-- popular-product-mobile -->
+
+        </div>
+        <!-- search-bottom -->
+    </div>
+</div>
+
+
+<div class="overlayBgSearch hidden-sm hidden-md hidden-lg"></div>
+<!---- Search Desktop---->
+<div data-search-panel="" class="hideSearch">
+    <div class="overlayBgSearch hidden-xs"></div>
+    <!-- layer 1 -->
+    <div class="navPanel search-panel s " search-panel-1>
+        <div class="searchBox">
+            <div class="form-search">
+
+                <predictive-search>
+                    <form action="{{ routes.search_url }}" method="get" role="search">
+                       <!--<a id="clearDesktopInput" href="javascript:;" class="cleartxt desktopClear hide">Clear</a>
+                        <input type="submit" name="submit" value="Submit" class="submit-cleartxt" id="desktopSubmit">-->
+
+                        <input
+                                id="Search"
+                                type="search"
+                                name="q"
+                                placeholder="I'm looking for"
+                                class="field"
+                                size="5"
+                                value="{{ search.terms | escape }}"
+                                {%- if settings.predictive_search_enabled -%}
+                                    role="combobox"
+                                    aria-expanded="false"
+                                    aria-owns="predictive-search-results-list"
+                                    aria-controls="predictive-search-results-list"
+                                    aria-haspopup="listbox"
+                                    aria-autocomplete="list"
+                                    autocorrect="off"
+                                    autocomplete="off"
+                                    autocapitalize="off"
+                                    spellcheck="false"
+                                {%- endif -%}
+                        >
+                        <input name="options[prefix]" type="hidden" value="last">
+                        {%- if settings.predictive_search_enabled -%}
+                            <div id="predictive-search" tabindex="-1"></div>
+                        {%- endif -%}
+                    </form>
+                </predictive-search>
+            </div><!-- /.form__search -->
+
+            <div id="default-sPanel" class="search-bottom">
+
+                <div class="search-category">
+                    <div class="cat-heading">
+                        <h3>{{ settings.search_categ_text }}</h3>
+                    </div>
+                    <div class="category-list">
+                        {% assign search_category = settings.search_category %}
+                        <ul>
+                            {% for link in linklists[search_category].links %}
+                                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+                <!-- search-category -->
+
+                <div class="popular-product">
+                    <div class="cat-heading">
+                        <h3>Popular Products</h3>
+                    </div>
+
+                    <div class="popular-product-search-wrap">
+
+                        {% if settings.search_blogPost != blank %}
+                            {% assign collectionLimt = 2 %}
+                        {% else %}
+                            {% assign collectionLimt = 3 %}
+                        {% endif %}
+
+                        {% for popularProducts in collections[settings.search_popular_collection].products limit: collectionLimt %}
+                            <div class="popular-product-item">
+                                <div class="p-image">
+                                    <a href="{{ popularProducts.url }}"><img src="{{popularProducts.featured_image | img_url: '600x'}}" alt="{{ popularProducts.featured_image.alt }}"></a>
+                                </div>
+
+                                <div class="p-title">
+                                    <a href="{{ popularProducts.url }}"><h3>{{ popularProducts.title }}</h3></a>
+                                </div>
+
+
+                                <div class="p-price">
+                                    <h3>{{ popularProducts.price | money_without_trailing_zeros }}</h3>
+                                </div>
+                            </div>
+                            <!-- popular-product-item -->
+                        {% endfor %}
+
+                        {% if settings.search_blogPost != blank %}
+                            <div class="popular-product-item">
+                                <div class="p-image">
+                                    <a href="{{ settings.search_blogPost.url }}"><img src="{{settings.search_blogPost.image | img_url: '600x'}}" alt="{{ settings.search_blogPost.image.alt }}"></a>
+                                </div>
+
+                                <div class="p-title">
+                                    <a href="{{ settings.search_blogPost.url }}"><h3>{{ settings.search_blogPost.title }}</h3></a>
+                                </div>
+
+                            </div>
+                        {% endif %}
+
+                    </div>
+                    <!-- popular-product-search-wrap -->
+
+                </div>
+                <!-- popular-product -->
+
+
+            </div>
+            <!-- search-bottom -->
+
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    /*.searchBox .form-search {margin-top: 10px;}*/
+    .form-search .field{padding-bottom: 16px;    border-bottom: 1px solid #000000; color: #545353;}
+    .clearsearch {font-size:14px; line-height:32px; letter-spacing:1px; font-family:var(--font-regular); color:#545353; border:none;background:transparent;position: absolute;  right: 0;  text-decoration: underline;  top: 10px;}
+
+
+    .search-bottom {display:flex; margin-top:50px;}
+
+    .search-category {width:40%;}
+
+    .popular-product {width:60%;}
+
+    /* .category-list ul {display:flex;    flex-wrap: wrap; max-width:250px;} hide by jen*/
+    .category-list ul {max-width:250px;}
+    .category-list ul li {width: 50%; display: block;margin: 0 0 10px 0;}
+    .category-list ul li a {font-size:14px; line-height:32px; letter-spacing:1px; font-family:var(--font-regular); color:#545353; text-transform:uppercase;}
+
+
+    .cat-heading h3 {font-size:14px; line-height:32px; letter-spacing:1px; font-family:var(--font-medium); color:#545353;}
+
+
+    .popular-product-search-wrap {display: flex; gap: 20px;}
+    .popular-product-search-wrap .popular-product-item {width:202px;}
+
+    .p-image {margin-bottom:20px;    margin-top: 10px;}
+    .p-image img {width: 100%; display: block;  object-fit: cover;  height: 253px;}
+    .p-title, .p-price { font-size:12px; line-height:15.22px; letter-spacing:0.5px; color:#1D1D1D; font-family:var(--font-medium);margin-bottom:10px;}
+    .p-title a{text-decoration: none;}
+    .p-title h3 {overflow: hidden;  display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;font-size:12px;}
+    .p-type p {padding-bottom:10px;text-transform: uppercase;font-size:12px;}
+    .p-price h3{font-size:12px;}
+
+      .desktopClear {display:block;}
+    .mobileClear {display:none;}
+
+  
+    @media (max-width:767px){
+
+
+      .s .form-search { margin: 0 20px;}
+      #mobile-default-sPanel { padding: 0 20px;}
+      .searchBox { padding: 0;}
+      #predictive-search-mobile {margin: 0 -20px;}
+
+      .desktopClear {display:none;}
+      .cleartxt.mobileClear {right:0;}
+      .mobileClear {display:block;}
+        .p-title h3{color: #1d1d1d;font-size: 12px;-webkit-line-clamp: unset;}
+        .mobile-search-wrap .animate{opacity: 1;}
+        .search-bottom {display:flex; flex-direction: column; margin-top: 10px;}
+        .mobile-search-wrap .cat-heading{margin-bottom: 10px;}
+        .mobile-search-wrap .product__item-subtitle{display: none}
+        .search-category {width:100%;}
+        .category-list ul { display:flex; flex-wrap: wrap;flex-direction: column; overflow-x: auto; max-width:100%;}
+        .collection__items .product__item { flex-basis: 100%;  max-width: 100%;  margin-bottom: 30px;}
+        .mobile-search-wrap  .category-list ul li a {text-decoration:none;}
+
+        #mobile-default-sPanel .category-list ul {flex-direction: column; overflow: hidden; overflow-x: auto;  max-width: 100%;  width: 100%;   height: 40px;}
+        #mobile-default-sPanel{overflow-y: scroll;}
+        #mobile-default-sPanel .popular-product .popular-product-search-wrap{overflow-y: unset;}
+        .category-list ul li { width: auto;display: block; margin: 0 0px 10px 0;  flex-shrink: 0;  height: 30px;}
+        .category-list ul li:first-child {padding:0;}
+        #mobile-default-sPanel .category-list ul li:after {content:"|"; color:#545353; padding: 0 20px;}
+        .category-list ul li:last-child:after {display:none;}
+        .popular-product {width:100%;  margin-top: 20px;}
+
+        .popular-product-search-wrap { display: flex; gap: 20px;   flex-direction: column; height: 50vh;  overflow-y: scroll;}
+
+        .search__items {display: flex; flex-direction: row;  gap: 20px;  width: 100%;  flex-wrap: wrap;justify-content: space-between;padding-bottom: 100px;}
+        .product__item {width:calc(50% - 10px);}
+
+
+        .mobile-search-wrap .search__items .product__item:not(.sets_coll) .inner_content { padding:10px 0 10px;position: unset;}
+        .mobile-search-wrap .search__items .product__item:not(.sets_coll) .inner_content .rating_stars {position: absolute; bottom: 65px;  top: auto; left: 10px;}
+
+        .mobile-search-wrap  .search__items .product__item:not(.sets_coll) .inner_content .buy_btn { font-family: var(--font-medium); font-size: 11px; text-decoration: none; text-align: center; height: 40px; width: 100%; display: flex; align-items: center; justify-content: center; background: var(--secondary-color); color: #fff; border-bottom: unset; padding-bottom: 0;}
+
+        .mobile-search-wrap   .product__item .outer_content { padding: 0;margin-left: 0;}
+
+        .mobile-search-wrap  .product__item:not(.sets_coll) .product__item-title, .mobile-search-wrap
+        .product__item:not(.sets_coll) .product__item-subtitle{ font-size: 12px;color: #545353;}
+
+        .mobile-search-wrap .p-price__tag {font-size:12px;margin-top: 2px;}
+
+        .mobile-search-wrap .product_img_wrapper .shutter {position:fixed;left: 0;padding-bottom: 20px;}
+
+        .mobile-search-wrap  .search__items .product__item:not(.sets_coll) .product_options_modal_plp { position: fixed; bottom: 0;  left: 0;  top: unset; padding: 20px; background: #fafafa;    border-top: 1px solid #919191;  flex-wrap: wrap; height: -webkit-fit-content; height: -moz-fit-content;  height: fit-content; min-height: unset;}
+
+
+        .mobile-search-wrap  .search__items  .product__item:not(.sets_coll) .product_options_modal_plp .product_options_modal_button.coll_mob_btn {border-right: unset!important; }
+        .mobile-search-wrap  .search__items .product__item:not(.sets_coll) .product_options_modal_plp .product_options_modal_button { width: 50%; height: 60px; border: solid 1px #545353; justify-content: center;}
+        .mobile-search-wrap  .search__items  .product__item:not(.sets_coll) .product_options_modal_plp .product_options_modal_button.coll_mob { width: 100%; height: auto;  border: unset;  padding: 10px 0 0;}
+
+        .mobile-search-wrap .popular-product-search-wrap .popular-product-item {width:calc(50% - 10px);}
+        .mobile-search-wrap .p-image {margin-top:0; margin-bottom:0px;}
+
+
+        .mobile-search-wrap .search__items .product__item:not(.sets_coll) .tag_label {left: 10px; top: 10px; padding: 10px 8px;  height: 30px;    font-size: 11px;}
+
+
+        .mobile-search-wrap  .product__item-image img{height: 198px; object-fit: cover;}
+        .mobile-search-wrap  .p-image img { height: 198px; object-fit: cover;}
+
+        .mobile-search-wrap     .product__item-image .badge-img__wrapper {    height: 40px!important; right: 9px!important; top: 9px!important;}
+
+        .mobile-search-wrap .form-search .field { font-size: 16px!important; padding-bottom: 10px;letter-spacing: 1px;margin-bottom: 20px;}
+
+        .mobile-search-wrap .popular-product-item .buy_btn,#predictive-search-mobile .buy_btn_direct{ font-family: var(--font-medium);font-size: 11px;text-decoration: none;text-align: center;
+            height: 40px;width: 100%;display: flex;align-items: center;justify-content: center;background: var(--secondary-color);
+            color: #fff;border-bottom: unset;padding-bottom: 0;text-transform: uppercase;border: none;letter-spacing: 1px;}
+        .mobile-search-wrap  .search__items .feature_tags,.mobile-search-wrap  .search__items .badge-img__wrapper{display: none;}
+        .mobile-search-botttom-noresult .category-list ul{height: 100%;}
+
+    }
+
+  .overflow-hidden {position:relative; touch-action: none;-ms-touch-action: none; }
+  .form-search {position:relative;}
+  .submit-cleartxt {position:absolute; top:18px; right:10px; font-size:14px; color:#545353; text-transform:uppercase;background: none;
+      border: none;padding: 0;cursor: pointer;outline: inherit;text-decoration:underline;}
+  .cleartxt {position:absolute; top:17px; right:10px; font-size:14px; color:#545353; text-transform:uppercase;}
+  .predictive-search__heading {padding-top: 1rem;}
+  .result-details {color:#545353; font-size:14px; margin-top:57px;margin-bottom:20px; display:flex; gap: 40px; text-transform:uppercase; letter-spacing:1px;line-height: 32px;}
+  .result-details a {text-decoration:none; border-bottom:1px solid #545353; font-weight:700;border-bottom: 2px solid;padding-bottom: 2px;}
+  .search-bottom-noresult{display: flex;margin-top: 12px;}
+  .search-bottom-noresult .category-list ul {display: initial;}
+
+  @media (max-width: 767px) {
+  .popular-product-search-wrap.CustomHeight { height: 70vh!important;}
+  #predictive-search-results.popular-product-search-wrap { height: 70vh!important; padding: 0 20px;}
+  .result-details-bottom {text-align:center; margin-bottom:100px;text-transform: uppercase;}
+  .result-details-bottom a {font-size: 12px;font-family: 'Euclid Circular Medium';letter-spacing: 1px;line-height: 32px;text-decoration: none;
+      border-bottom: 2px solid;padding-bottom: 2px;}
+  .predictive-search__heading {margin-bottom:30px!important; padding-top:0!important;}
+  .popular-product-search-wrap.heightAuto {height:auto!important; }
+  .search__items.customMargin40 {margin-top:20px;}
+  .popular-product-search-wrap.heightAuto .search__items.customMargin40 {margin-top:0px;}
+  .search__items.no-resultClass {margin-top:0px;}
+   #predictive-search-results .search__items {padding-bottom: 0px;}
+   .search-tabs a {font-family: var(--font-medium); }
+  }
+</style>
+
+<script>
+    $(".popular-product-search-wrap .buy_btn").on("click",function(){
+        $('#mobile-default-sPanel').css('overflow-y','hidden');
+    });
+    $(".popular-product-search-wrap .shutter .close").on("click",function(){
+        $('#mobile-default-sPanel').css('overflow-y','scroll');
+    });
+</script>

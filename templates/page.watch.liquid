@@ -1,0 +1,30 @@
+{%comment%}Make Shopify translations available to JavaScript{%endcomment%}
+{% render 'react-i18n' translation_key: 'account' %}
+{% render 'react-i18n' translation_key: 'livestream' %}
+{% render 'react-i18n' translation_key: 'shop' %}
+{%- render 'react-i18n' translation_key: 'onboard' -%}
+
+{{ 'liveshopping.css' | asset_url | stylesheet_tag }}
+<style>
+    body {
+    {%- comment -%}
+        If the body has overflow-x: hidden then .bl-core-sticky won't work
+    {%- endcomment -%}
+        overflow-x: unset !important;
+    }
+    .wrapper {
+        min-height: unset !important;
+    }
+</style>
+{%- render 'liveshopping-config' -%}
+{%- section 'liveshopping-links' %}
+
+{%- comment -%}
+    Deliberately avoid wrapping in another div to allow fullscreen content
+{%- endcomment -%}
+{% render 'react-root' %}
+<div id="react-liveshopping-show-card-buttons" class="bl-core-sticky"></div>
+<div id="react-liveshopping-purchase-reminder"></div>
+<div id="react-liveshopping-featured-products"></div>
+{% section 'liveshopping-talent' %}
+<div id="react-liveshopping-account-form"></div>

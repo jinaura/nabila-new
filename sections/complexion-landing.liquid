@@ -1,0 +1,477 @@
+<section class="complexion-landing" id="section-{{section.id}}">
+    <div class="container section__item section_spacing" id="getStarted">
+        <h2 class="heading-with-link">{{ section.settings.title }}</h2>
+        <hr class="section__divider">
+        {{ section.settings.description }}
+        <hr class="divider--start">
+    </div>
+
+    <div class="product-nav container">
+        <ul>
+            {%- for block in section.blocks -%}
+                {%- assign _product = all_products[block.settings.complexion_product] -%}
+                {% unless _product == blank %}
+                    <li>
+                        <a href="#block-{{ block.id }}"><img class="animate" src="{{ _product.featured_media | img_url: '100x100' ,scale:1}}" alt="{{ _product.featured_media.alt }}"></a>
+                        <div>
+                            <h3><a href="#block-{{ block.id }}">{{ _product.title }}</a></h3>
+                            <a href="#block-{{ block.id }}">Learn More</a>
+                        </div>
+                    </li>
+                {% endunless %}
+            {%- endfor-%}
+        </ul>
+
+        <hr class="section__divider">
+    </div>
+    
+    {%- for block in section.blocks -%}
+        {%- assign _product = all_products[block.settings.complexion_product] -%}
+        {% assign checkModulo = forloop.index | modulo:2 %}
+    {% if checkModulo == 1 %}
+
+    {% if _product.title != blank or _product.description != blank %}
+    <div class="product-landing-head" data-heading="heading-{{ forloop.index }}" id="block-{{ block.id }}">
+       <h3>{{ _product.title }}</h3>
+       <div class="desc">{{ block.settings.custom_sub_heading }}</div>
+    </div>
+    {% endif %}
+
+    {% unless block.settings.custom_product_video_url == blank %}
+    <div class="compl-video">
+        <video
+                muted
+                loop
+                autoplay
+                preload="auto"
+                width="100%"
+                height="100%"
+                playsinline="true" webkit-playsinline="true"
+                data-setup='{"width": 300, "height": 250}' >
+            <source src="{{ block.settings.custom_product_video_url }}" type='video/mp4' />
+        </video>
+    </div>
+    {% endunless %}
+
+    <div class="tabsWithVideo" id="mainBlockId-{{ block.id }}">
+        {% if block.settings.navigation_title_1 != blank or block.settings.navigation_title_2 != blank or block.settings.navigation_title_3 != blank %}
+            <ul class="complexion-tabs">
+                <li><a href="#_" class="content_link active" data-id="{{ block.id }}_1">{{ block.settings.navigation_title_1 }}</a></li>
+                <li><a href="#_" class="content_link" data-id="{{ block.id }}_2">{{ block.settings.navigation_title_2 }}</a></li>
+                <li><a href="#_" class="content_link" data-id="{{ block.id }}_3">{{ block.settings.navigation_title_3 }}</a></li>
+            </ul>
+        {% endif %}
+
+        <div class="container">
+            {% if block.settings.navigation_description_1 != blank or block.settings.navigation_description_2 != blank or block.settings.navigation_description_3 != blank %}
+            <div class="tab-content-video">
+                <div id="content_div{{ block.id }}_1" class="content_div">{{  block.settings.navigation_description_1 }}</div>
+                <div id="content_div{{ block.id }}_2" class="content_div hideDiv">{{  block.settings.navigation_description_2 }}</div>
+                <div id="content_div{{ block.id }}_3" class="content_div hideDiv ">{{  block.settings.navigation_description_3 }}</div>
+            
+            {% unless block.settings.custom_product_navigation_video_url == blank %}
+                <video
+                        muted
+                        loop
+                        autoplay
+                        preload="auto"
+                        width="100%"
+                        height="100%"
+                        playsinline="true" webkit-playsinline="true"
+                        data-setup='{"width": 300, "height": 250}' >
+                    <source src="{{ block.settings.custom_product_navigation_video_url }}" type='video/mp4' />
+                </video>
+            {% endunless %}
+           </div>
+           {% endif %}
+
+           <script>
+                $(document).ready(function(){
+                    $( "#mainBlockId-{{ block.id }} .complexion-tabs li:first-child .content_link" ).addClass('active');
+                    $( "#mainBlockId-{{ block.id }} .content_link" ).on( "click", function(e) {
+                        e.preventDefault();
+                        $( "#mainBlockId-{{ block.id }} .content_link" ).removeClass('active');
+                        $(this).addClass('active');
+                        $('#mainBlockId-{{ block.id }} .content_div').addClass('hideDiv');
+                        $( '#mainBlockId-{{ block.id }} #content_div'+$(this).attr('data-id') ).removeClass('hideDiv');
+                    });                    
+                });
+            </script>           
+
+        </div>
+
+    </div>
+
+        {% assign num = 0 %}
+        {% assign temp = 0 %}
+        {% for variant in _product.variants %}
+            {% if variant.available %}
+                {% assign checkSelectedOption = forloop.index %}
+                {% capture temp %}{{ num | plus: 1 }}{% endcapture %}
+            {% endif %}
+            {% assign num = temp %}
+        {% endfor %}
+
+        {% if num > '1' %}
+             {%- include 'before-after-shade.liquid' -%}
+        {% else %}
+
+                {% unless _product.url == blank %}
+                    <div class="sn-btn">
+                        <a href="{{ _product.url }}" class="btn" >Shop Now</a>
+                    </div>
+                {% endunless %}
+
+        {% endif %}
+
+
+    {% else %}
+
+        <div class="container" id="block-{{ block.id }}">
+
+            <div class="comp-two-col">
+                <div class="content">
+                    {% if _product.title != blank or _product.description != blank %}
+                        <div class="product-landing-head" data-heading="heading-{{ forloop.index }}">
+                            <h3>{{ _product.title }}</h3>
+                            <div class="desc">{{ block.settings.custom_sub_heading }}</div>
+                        </div>
+                    {% endif %}
+                    {% unless _product.url == blank %}
+                        <div class="sn-btn">
+                            <a href="{{ _product.url }}" class="btn hidden-xs" >Shop Now</a>
+                        </div>
+                    {% endunless %}
+                </div>
+                <div class="video">
+                    <div class="ratio_wrapper res-660x660">
+                        <video muted loop autoplay preload="auto" width="100%" height="100%" playsinline="true" webkit-playsinline="true">
+                            <source src="{{ block.settings.custom_product_video_url }}" type='video/mp4' />
+                        </video>
+                    </div>
+                    {% unless _product.url == blank %}
+                        <div class="sn-btn">
+                            <a href="{{ _product.url }}" class="btn hidden-sm hidden-md hidden-lg" >Shop Now</a>
+                        </div>
+                    {% endunless %}
+                </div>
+            </div>
+
+        </div>
+
+    {% endif %}
+        {% unless forloop.last %}
+            <div class="container"><hr class="section__divider"></div>
+        {% endunless %}
+    {%- endfor-%}
+
+
+</section>
+
+<style>
+.heroBanner{
+    padding: 0;
+}
+.product-nav ul{
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-around;
+    margin: 0;
+    padding-bottom: 12px;
+    scroll-behavior: smooth;
+}
+.product-nav ul li{
+    display: flex;
+    width: 30%;
+    align-items: center;
+}
+.product-nav ul li h3{
+    max-width: 200px;
+    padding: 0px 0 12px 0;
+}
+.product-nav ul li h3 a{
+    text-decoration: none;
+}
+.product-nav ul li > a{
+    margin-right: 40px;
+    display: block;
+}
+.product-nav ul li a{
+    text-transform: uppercase;
+}
+.product-nav ul li img{
+    max-width: 100%;
+}
+
+.product-landing-head{
+    max-width: 330px;
+    margin: auto;
+    padding: 30px 15px 70px 15px;
+    text-align: center;
+}
+.product-landing-head h3{
+    padding-bottom: 20px;
+    font-size: 20px;
+    color: var(--secondary-color);
+}
+.product-landing-head h3::first-line{
+    font-family: var(--font-regular);
+}
+.complexion-tabs{
+    margin:0;
+    padding:0;
+    list-style:none;
+    display: flex;
+    justify-content: center;
+}
+.complexion-tabs li{
+    display:inline-block;
+    padding: 35px 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.complexion-tabs li a.active{
+    font-family: var(--font-semibold);
+    text-decoration: none;
+}
+.hideDiv{
+    display: none !important;
+}
+
+.compl-video{
+    min-height: 700px;
+    position: relative;
+    max-height: 700px;
+}
+.compl-video video{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #000;
+}
+
+.sn-btn{
+    max-width: 340px;
+    margin: auto;
+}
+.sn-btn a{
+    padding: 20px;
+    background: #545353;
+    margin: 30px 0;
+}
+
+.tab-content-video{
+    min-height: 600px;
+    max-height: 600px;
+    display: flex;
+    position: relative;
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.content_div{
+    position: relative;
+    z-index: 1;
+    font-size: 20px;
+    color: #fff;
+    text-transform: uppercase;
+}
+.content_div p{
+    margin-bottom: 40px;
+}
+.content_div p.small{
+    font-size: 12px;
+    line-height: 18px;
+    text-transform: none;
+    font-family: var(--font-medium);
+}
+.content_div p b, .content_div p strong{
+    font-family: var(--font-medium);
+    font-weight: normal;
+}
+.tab-content-video video{
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+    background: #000;
+}
+
+.comp-two-col{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0 40px 0;
+}
+.comp-two-col > div{
+    width: 50%;
+}
+.comp-two-col > div.content .product-landing-head{
+    padding-bottom: 25px;
+}
+
+@media (max-width:900px){
+    .product-nav ul{flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; margin-right: -20px;}
+    .product-nav ul li{min-width: 48%;}
+    .product-nav ul li h3{padding-top: 0; max-width: 100%;}
+    .product-nav ul li > a{display: block; margin-right: 20px;}
+    .product-nav ul li img{margin-right: 0; max-width: 80px;}
+}
+@media (max-width:767px){
+
+    .section_spacing {padding-top: 50px;}
+
+    .product-nav ul li{min-width: 92%;}
+    
+    .product-landing-head{padding-bottom: 25px;}
+    .product-landing-head h3{font-size: 16px; max-width: 185px; margin: auto;}
+    [data-heading="heading-1"] h3{max-width: 265px;}
+    [data-heading="heading-3"] h3{max-width: 100%;}
+    .compl-video{min-height: 375px; max-height: 375px;}
+
+    .complexion-tabs{justify-content: flex-start; overflow-x: auto;}
+    .complexion-tabs li{padding: 35px 15px;}
+    .complexion-tabs li a{white-space: nowrap;}
+
+    .tab-content-video{width: 100vw; margin-left: -20px; min-height: 375px; max-height: 375px;}
+    .content_div{font-size: 16px;}
+    .content_div p{margin-bottom: 25px;}
+    .content_div p.small{padding: 0 20px;}
+    .content_div p.small br {display: none;}
+
+    .comp-two-col{flex-flow: column; padding-top: 0;}
+    .comp-two-col > div {width: 100%;}
+}
+</style>
+
+<script>
+    $( document ).ready(function() {
+
+        if(window.location.hash == '#get-Started'){
+            setTimeout(function() {
+                $('.cta a').trigger('click');
+            }, 1000);
+        }
+
+        $('.product-nav ul li a, .cta.cat_mobile a, .heroBanner .media a').on('click', function(){
+            let getID = $(this).attr('href');
+            let barHeight = $('.header__announcement-bar').outerHeight() || 0, 
+                navHeight = $('header.custom').outerHeight();
+            $('html, body').animate({
+                scrollTop: $(getID).offset().top - (barHeight+navHeight) + 5
+            }, 1000);
+        });
+
+        $('.heroBanner .media img, .heroBanner .media video, .hero-section-mobile > a').on('click', function(e){
+            let getID = '#getStarted';
+            let barHeight = $('.header__announcement-bar').outerHeight() || 0, 
+                navHeight = $('header.custom').outerHeight();
+            $('html, body').animate({
+                scrollTop: $(getID).offset().top - (barHeight+navHeight) + 5
+            }, 1000);
+        });
+
+    });
+</script>
+
+{% schema %}
+{
+    "name":"Complexion Landing",
+    "tag":"section",
+    "max_blocks":3,
+    "settings":[
+       {
+          "type":"text",
+          "id":"title",
+          "label":"Title"
+       },
+       {
+          "type":"richtext",
+          "id":"description",
+          "label":"Description"
+       }
+    ],
+    "blocks":[
+       {
+          "type":"text",
+          "name":"Complexion Product",
+          "settings":[
+             {
+                "type":"product",
+                "id":"complexion_product",
+                "label":"Complexion Product"
+             },
+             {
+                "type":"richtext",
+                "id":"custom_sub_heading",
+                "label":"Product Sub Heading"
+             },
+             {
+                "type":"text",
+                "id":"custom_product_video_url",
+                "label":"Custom Product Video Url"
+             },
+             {
+                "type":"text",
+                "id":"custom_product_navigation_video_url",
+                "label":"Custom Product Navigation Video Url"
+             },
+             {
+                "type":"text",
+                "id":"navigation_title_1",
+                "label":"Navigation Title 1"
+             },
+             {
+                "type":"html",
+                "id":"navigation_description_1",
+                "label":"Navigation Description 1"
+             },
+             {
+                "type":"text",
+                "id":"navigation_title_2",
+                "label":"Navigation Title 2"
+             },
+             {
+                "type":"html",
+                "id":"navigation_description_2",
+                "label":"Navigation Description 2"
+             },
+             {
+                "type":"text",
+                "id":"navigation_title_3",
+                "label":"Navigation Title 3"
+             },
+             {
+                "type":"html",
+                "id":"navigation_description_3",
+                "label":"Navigation Description 3"
+             },
+             {
+                "type":"richtext",
+                "id":"shade_sub_heading",
+                "label":"Shade Sub Heading"
+             },
+             {
+                "type":"text",
+                "id":"shade_finder_link",
+                "label":"Shade Finder Link"
+             }
+          ]
+       }
+    ],
+    "presets":[
+       {
+          "name":"Complexion Landing - Product"
+       }
+    ]
+ }
+{% endschema %}

@@ -1,0 +1,19 @@
+<script type="text/javascript">
+	var Shopify = Shopify || {};
+	Shopify.theme = Shopify.theme || {};
+
+	Shopify.theme.locale = {
+		"products": {
+			"product": {
+				"sold_out" : {{ 'products.product.sold_out' | t | json }},
+				"coming_soon" : {{ 'products.product.coming_soon' | t | json }},
+				"not_available_in_region" : {{ 'products.product.not_available_in_region' | t | json }},
+				"sale" : {{ 'products.product.sale' | t | json }},
+				"unavailable" : {{ 'products.product.unavailable' | t | json }}
+			}
+		},
+		"cart": {
+			"error": {{ 'layout.cart.error' | t | json }}
+		}
+	}
+</script>

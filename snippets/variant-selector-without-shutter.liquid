@@ -1,0 +1,246 @@
+{%- assign __product = variant-selector | default: product -%}
+
+<div class="shutter">
+
+    <div class="shutter-info hidden-sm- hidden-md- hidden-lg-">
+        <h3><a href="{{ __product.url }}">{{- __product.title -}}</a></h3>
+        <p>{{- __product.description  -}}</p>
+    </div>
+
+    <div class="hidden-md hidden-lg">
+    {%- include 'eye-product-media' -%}
+    </div>
+
+    {%- assign max = 100 -%}
+    {%- assign diff = max | minus: min -%}
+    {%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+    {% assign isSizeVariant = false %}
+    {% assign checkSelectedOption = 0%}
+
+    {% if __product.variants.size >= 1  and __product.variants[0].title != 'Default Title'    %}
+        <div class="color_info">
+            {% assign colorName = '' %}
+            {% assign colorHex = '' %}
+            {% assign colorTexture = '' %}
+            {% assign colorFlag = '' %}
+            {% assign colorDescription = '' %}
+
+            {% assign maxVariant = 0 %}
+            {% assign checkSelectedOption = 0 %}
+            {% assign selectedColorName = '' %}
+            {% assign selectedColorDescription = '' %}
+            {%- assign background_image = '' -%}
+
+
+            {% for product_option in __product.variants %}
+                {% if product_option.inventory_quantity >= 1 %}
+                    {% assign checkSelectedOption = forloop.index %}
+                    {% break %}
+                {% endif %}
+            {% endfor %}
+
+            {% if checkSelectedOption == 0 %}
+                {% assign checkSelectedOption = 0%}
+            {% else %}
+                {% assign checkSelectedOption = checkSelectedOption | minus: 1 %}
+            {% endif %}
+
+            {% for product_option in __product.options_with_values %}
+                {% for value in product_option.values %}
+
+                    {% if product_option.name == 'Color'%}
+                        <div class="opt">
+                            {% assign maxVariant = product_option.values.size %}
+                            {% for variant in __product.variants %}
+                                {% if variant.metafields.color.name == value %}
+                                    {% assign colorHex = variant.metafields.color.hex %}
+                                    {% assign colorFlag = variant.metafields.flag.title %}
+                                    {% assign originalColorName = variant.metafields.color.name %}
+                                    {% assign colorName = originalColorName | split : "/" %}
+                                    {% assign colorDescription = variant.metafields.description.value %}
+                                    {% assign variantIdForImage = variant.id %}
+                                    {%- if variant.metafields.color.texture %}
+                                        {%- assign background_image = "url('"| append:variant.metafields.color.texture[0].src|append:"')"-%}
+                                    {% else %}
+                                        {%- assign background_image = "none"-%}
+                                    {%- endif -%}
+
+                                    <span style="display: none;" id="color-{{ colorName[0] | replace: ' ','-' }}-{{ __product.id }}-{{ random_number }}">
+                                    <p class="color__name">{{ originalColorName }}</p>
+                                    <p class="color__description">{{ colorDescription }}</p>
+                                </span>
+
+                                    <!--- Get available variant information  --->
+                                    {% if __product.variants[checkSelectedOption].option1 == value %}
+                                        {% assign selectedColorName = originalColorName %}
+                                        {% assign selectedColorDescription = colorDescription %}
+                                    {% endif %}
+                                    <!--- End get available variant information  --->
+                                {% endif %}
+                            {% endfor %}
+
+                            <div class="color_radio productOption special_txt">
+                                {% assign splitName = value |split: "/" %}
+                                <input type="radio" style="display: none;" name="{{ product_option.name }}-{{ __product.id }}-{{ random_number }}"
+                                       value="{{ splitName[0] }}"
+                                        {% if __product.variants[checkSelectedOption].option1 == value %} checked  {% endif %}
+                                       data-pid="{{ __product.id }}-{{ random_number }}"
+                                       data-type="{{ product_option.name }}"
+                                       data-cno="{{ forloop.index }}"
+                                       data-vid="{{ variantIdForImage }}"
+                                       id="{{ splitName[0] | replace: ' ','-' }}-{{ __product.id }}-{{ random_number }}"
+                                       class="{{ product_option.name }}-{{ __product.id }}-{{ random_number }}">
+                                <label for="{{ splitName[0] | replace: ' ','-' }}-{{ __product.id }}-{{ random_number }}"
+                                       style="background-color:{{colorHex}}; background-image:{{background_image}}">
+                                    {% assign getVariantIndex = forloop.index | minus: 1 %}
+                                    {% unless __product.variants[getVariantIndex].metafields.visibility.coming_soon %}
+                                        {% if __product.variants[getVariantIndex].inventory_quantity < 1 %}
+                                            <svg class="variant-notavailable-strike" viewBox="0 0 100 100">
+                                                <line x1="0" y1="100" x2="100" y2="0"></line>
+                                            </svg>
+                                        {% endif %}
+                                    {% endunless %}
+
+                                    <span>{{ colorFlag }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if product_option.name == 'Size' %}
+                        {% assign isSizeVariant = true %}
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endfor %}
+
+        </div>
+
+        <div class="variant_info" id="variant_info_{{ __product.id }}-{{ random_number }}">
+        <p class="color__name">{{ selectedColorName }}</p>
+        <p class="color__description">{{ selectedColorDescription }}</p>
+    </div>
+    {% endif %}
+
+  
+    <div class="cart_actions">
+
+        {% if __product.variants.size >= 1  %}
+            <div class="variants_size {% if isSizeVariant == false or section.settings.hide-variant == true %}  hide-variant-size {% endif %}" id="variants_size_{{ __product.id }}">
+                <select name="Size" class="selectStyled productOption Size-{{ __product.id }}-{{ random_number }}" data-pid="{{ __product.id }}-{{ random_number }}" id="Size-{{ __product.id }}-{{ random_number }}" >
+                    {% for product_option in __product.options_with_values %}
+                        {% for value in product_option.values %}
+                            {% if product_option.name == 'Size'%}
+                                <option value="{{ value }}" {% if __product.variants[checkSelectedOption].option2 == value %} selected {% endif %} >{{ value }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        {% if __product.variants.size > 1 %}
+            <select name="id" id="variantSelectMain_{{ __product.id }}" class="product-form__variants no-js" style="display: none;">
+                {% for variant in __product.variants %}
+                    {% assign splitTitle = variant.title |split: "/" %}
+                    {% if variant.metafields.visibility.coming_soon %}
+                        <option {% if variant.title == __product.variants[checkSelectedOption].title %} selected="selected" {% endif %} value="{{ variant.id }}" data-product-id="{{ __product.id }}" data-variant-title="{{ splitTitle[0] }} - Coming Soon">{{ variant.title }} - Coming Soon</option>
+                        {% elsif variant.available %}
+                        <option {% if variant.title == __product.variants[checkSelectedOption].title %} selected="selected" {% endif %} value="{{ variant.id }}" data-price="{{ variant.price | money_without_trailing_zeros }}" data-product-id="{{ __product.id }}"
+                             data-variant-title="{{ splitTitle[0] }}" data-variant-delayed="{{ variant.metafields.delay.delayed | default: false }}">
+                            {{ variant.title }}
+                        </option>
+                    {% else %}
+                        <option {% if variant.title == __product.variants[checkSelectedOption].title %} selected="selected" {% endif %} value="{{ variant.id }}" data-product-id="{{ __product.id }}"
+                              data-variant-title="{{ splitTitle[0] }} - {{ 'products.product.sold_out' | t }}">{{ variant.title }} - {{ 'products.product.sold_out' | t }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        {% endif %}
+
+        <!--- Form put in capture b/c this can be handle from both condition js/liquid--->
+        {% capture showform %}
+
+            <span id="variant_price_{{ __product.id }}-{{ random_number }}" class="var_price
+             {% if __product.variants[checkSelectedOption].metafields.visibility.coming_soon %}
+                variant-notavailable-span p1
+            {% elsif __product.variants[checkSelectedOption].inventory_quantity <= 0 %}
+                 variant-notavailable-span p0
+            {% endif %}">
+                {% unless __product.variants[checkSelectedOption].metafields.visibility.coming_soon %}
+                    {% if __product.variants[checkSelectedOption].inventory_quantity > 0 %}
+                        {% if __product.variants[checkSelectedOption].compare_at_price and localization.country.iso_code != 'GB' %}
+                          <span class="sr-only">Original price: </span>
+                            <span>{{  __product.variants[checkSelectedOption].compare_at_price | money_without_trailing_zeros }}</span>
+                        {% endif %}
+                        <span class="sr-only">Current price: </span>
+                        {{ __product.variants[checkSelectedOption].price | money_without_trailing_zeros }}
+                    {% endif %}
+                {% endunless%}
+            </span>
+
+            <form method="post" action="/cart/add" class="product_form {% if __product.variants[checkSelectedOption].metafields.visibility.coming_soon %} coming-soon{% elsif __product.variants[checkSelectedOption].inventory_quantity == 0 %}unavailable{% endif %}">
+                <input
+                        type="hidden"
+                        name="id"
+                        id="variant_id_{{ __product.id }}-{{ random_number }}"
+                        value="{{ __product.variants[checkSelectedOption].id }}"
+                        data-product-handle="{{ __product.handle }}"
+                />
+                <input
+                        type="hidden"
+                        value="{{ __product.options.size }}"
+                        id="p_t_v_{{__product.id}}-{{ random_number }}">
+                <input type="submit" id="sub_{{ __product.id }}-{{ random_number }}"
+                        {% if __product.variants[checkSelectedOption].metafields.visibility.coming_soon %} value="Coming Soon" disabled {% elsif __product.variants[checkSelectedOption].inventory_quantity == 0 %} value="Out Of Stock" disabled {% else %} value="Add to Bag" {% endif %}
+                       class="add_btn {% if __product.variants[checkSelectedOption].metafields.visibility.coming_soon %} variant-notavailable-button {% endif %}"
+                       onclick="pintrk('track', 'addtocart', {
+                               value: {{__product.selected_or_first_available_variant.price | money_without_currency }},
+                               product_name: '{{__product.title}}',
+                               product_id: '{{__product.id}}',
+                               product_price: {{__product.selected_or_first_available_variant.price | money_without_currency }},
+                               currency: 'USD'
+                               });"
+                />
+                {% if __product.metafields.product.custom_message %}
+                    <input type="hidden" name="properties[custom_message]" value="{{ __product.metafields.product.custom_message }}" >
+                {% endif %}
+
+            </form>
+        {% endcapture %}
+
+        {% assign coming_soon_uk = false %}
+        {% if __product.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+            {% assign coming_soon_uk = true %}
+        {% endif %}
+
+        <div id="hash_{{ __product.id }}" class="price_btn
+        {% if __product.variants.size >= 1  and __product.variants[0].title == 'Default Title'  %}
+            without_variant
+        {% endif %}
+        {% if shop.metafields.globals.coming_soon == 'true' or __product.metafields.product.coming_soon or coming_soon_uk %}
+            have_coming__btn
+        {% endif %}">
+            {% if shop.metafields.globals.coming_soon != 'true' and __product.metafields.product.coming_soon != 'true' and coming_soon_uk != true %}
+                {{ showform }}
+            {% else %}
+                <input type="submit"  value="Coming Soon" class="add_btn" disabled style="text-align: center;"/>
+            {% endif %}
+        </div>
+
+
+        <script>
+            var hash_localstorage = localStorage.getItem('email_hash');
+            var hash_comingsoon = `{{ shop.metafields.globals.coming_soon }}`;
+            var hash_metafield = `{{ shop.metafields.globals.hash }}`;
+            if(hash_localstorage == hash_metafield && hash_comingsoon){
+                var getId = $('#hash_{{ __product.id }}');
+                var putdata = `{{ showform }}`;
+                getId.html(putdata);
+            }
+        </script>
+
+    </div>
+
+</div>

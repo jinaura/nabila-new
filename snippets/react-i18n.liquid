@@ -1,0 +1,24 @@
+<script>
+{% comment %} Create a block-scope so that we can safely use this snippet multiple times in a page {% endcomment %}
+{
+    {% comment %} Retrieve the parameter passed to the snippet {% endcomment %}
+    const translation_key = "{{ translation_key }}"
+
+    window.i18n = window.i18n || {};
+
+    {% comment %}
+    Pre-translate the required object, and store on the window for later use
+    Note that the template mechanism allows us to translate a whole object
+    but the result is in a weird format (partially html-encoded Ruby hash),
+    so we need to post-process it to get a JS object
+    (undo the html-escaping, convert Ruby '=>' to JSON ':')
+    {% endcomment %}
+    window.i18n[translation_key] = {{ translation_key  | t
+                                                       | replace: '&#39;',  "'"
+                                                       | replace: '&quot;', '"'
+                                                       | replace: '&lt;',   '<'
+                                                       | replace: '&gt;',   '>'
+                                                       | replace: '&amp;',  '&'
+                                                       | replace: '=>',     ':'}}
+}
+</script>

@@ -1,0 +1,950 @@
+{% if collection.metafields.collection.enable_holiday_page %}
+  {% if request.path == '/collections/holiday-gift-guide' and request.design_mode == false %}
+    <script>
+      {% if localization.country.iso_code == 'GB'%}
+        {% assign baseUrl = '' %}
+        {% for link in linklists.holiday-plp-uk.links %}
+          {% if link.url contains 'digital-gift-card' %}
+            {% continue %}
+          {% else %}
+            {% assign category = link.url %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% assign baseUrl = shop.url %}
+        {% assign category = linklists.holiday-plp.links[0].url %}
+      {% endif %}
+      location.href = '{{baseUrl}}/collections/{{collection.handle}}{{category}}';
+    </script>
+  {% endif %}
+  <div class="holiday-plp {{collection.handle}}">
+    {%- section 'hero' -%}
+    {%- section 'hero-mobile' -%}
+    {% if collection.handle == 'holiday-gift-guide' %}
+      {%- section 'holiday-plp-nav' -%}
+    {% endif %}
+    {%- section 'holiday-plp-product-block' -%}
+    {% if collection.handle == 'holiday-gift-guide' %}
+      {%- section 'holiday-plp-menu-grid' -%}
+    {% endif %}
+  </div>
+{% else %}
+  <div class="collections--default {{collection.handle}}">
+    {%- section 'sticky-menu' -%}
+    <div class="collection__header">
+      <div class="collection__links">
+        {% for link in linklists.collections.links %}
+          {% assign _collection = link.object %}
+          {% unless _collection.handle == 'body' and localization.country.iso_code == 'GB' %}
+            {% unless _collection.handle == 'trial' and localization.country.iso_code == 'GB' %}
+              {% if _collection.handle == 'virtual-try-on' %}
+                <a href="/pages/{{_collection.handle}}" class="see-more {% if collection.handle == _collection.handle %} selected{% endif %}" id="{{_collection.handle}}">{{_collection.title}}</a>
+              {% else %}
+                <a href="/collections/{{_collection.handle}}" class="see-more {% if collection.handle == _collection.handle %} selected{% endif %}" id="{{_collection.handle}}">{{_collection.title}}</a>
+              {% endif %}
+            {% endunless %}
+          {% endunless %}
+        {% endfor %}
+      </div>
+      <h2 class="hidden-sm hidden-md hidden-lg">
+        {% if collection.metafields.collection.mobile_title %}
+          {{ collection.metafields.collection.mobile_title }}
+        {% else %}
+          {{ collection.title }}
+        {% endif %}
+      </h2>
+      <div class="collection__filters">
+        {%- include 'collection-filtering' -%}
+        {%- include 'collection-sorting' -%}
+        <div class="filter--count hidden">
+          <span></span>
+        </div>
+      </div>
+      {% if collection.metafields.collection.mobile_subtext and  collection.metafields.collection.mobile_cta %}
+        <hr class="collection__cta__divider section__divider">
+        <div class="collection__cta hidden-sm hidden-md hidden-lg">
+          <h3>{{ collection.metafields.collection.mobile_subtext }}</h3>
+          <a href="{{ collection.metafields.collection.mobile_cta }}">{{ collection.metafields.collection.mobile_cta_text }}</a>
+        </div>
+      {% endif %}
+    </div>
+    <hr class="section__divider">
+    <div class="selected__filters">
+      <a href="/collections/{{collection.handle}}" class="see-more clear-filter hidden" aria-label="Clear filters">Clear</a>
+    </div>
+  <div class="page_collection___mainWarp {% if collection.title == 'Samples' %} four-col-page {% endif %}">
+    <div class="collection__items">
+      {%- assign collection_image = collection.image -%}
+      {% if collection.metafields.collection.video or collection_image  %}
+        <div class="product__item animate first-tile">
+          <a class="collection__item-link no-link-collection-banner">
+            <span class="collection__item-image">
+              {% if collection.metafields.collection.video %}
+                {% for videoFile in collection.metafields.collection.video %}
+                  {% if videoFile.media_type == 'video' %}
+                    <video
+                      id="collection_video"
+                      class="collection__video animate"
+                      autoplay
+                      loop
+                      muted
+                      playsinline="true" webkit-playsinline="true"
+                      preload="auto"
+                      width="100%"
+                      height="100%">
+                      <source src="{{ videoFile.src }}" type='video/mp4' />
+                    </video>
+                  {% endif %}
+                {% endfor %}
+              {% elsif collection_image %}
+                {{collection_image | image_url: width: 1290, height: 1950 | image_tag: width: nil, height: nil, preload: true, alt: collection_image.alt, fetchpriority: 'high' }}
+              {% endif %}
+            </span>
+          <div class="collection__item-title">
+            {% if collection.metafields.collection.display_name %}
+              <h3 class="{{collection.metafields.collection.name_color}}">
+                {% if collection.metafields.collection.display_name == 'no-display' %}
+                {% else %}
+                  {{collection.metafields.collection.display_name}}
+                {% endif %}
+              </h3>
+            {% else %}
+              <h3>Shop {{ collection.title }}</h3>
+            {% endif %}
+            
+            {% if collection.description != blank %}
+              <div class="collection_desc">
+                {{- collection.description -}}
+              </div>
+            {% endif %}
+
+          </div>
+          </a>
+        </div>
+      {% endif %}
+
+    {% assign autoIncre = 1 %}
+    {%- for _product in collection.products -%}
+
+        <!-- hide PLP promo module on Rose UK -->
+      {% if collection.metafields.collection.enable_promo_module and localization.country.iso_code != 'GB' %}
+
+        {%- if collection.metafields.collection.promo_link_url_product -%}
+          {% assign promoLinkUrl = "/products/" | append: collection.metafields.collection.promo_link_url_product %}
+        {%- elsif collection.metafields.collection.promo_link_url_collection -%}
+          {% assign promoLinkUrl = "/collections/" | append: collection.metafields.collection.promo_link_url_collection %}
+        {%- elsif collection.metafields.collection.promo_link_url_page -%}
+          {% assign promoLinkUrl = "/pages/" | append: collection.metafields.collection.promo_link_url_page %}
+        {%- endif -%}
+        
+          {% if forloop.length >= 5 and forloop.index == 5 and collection.handle == 'sets' %}
+            <div class="product__item promo-module animate visible-xs-block">
+              <span class="collection__item-media">
+                {% for promo_media in collection.metafields.collection.background_media_mobile %}
+                  {% if promoLinkUrl %}
+                    <a href="{{promoLinkUrl}}" class="promo-trout">
+                  {% endif %}
+                    {% if promo_media.media_type == 'image' %}
+                      <img src="{{ promo_media.src }}"
+                        srcset="
+                          {{ promo_media.src | append: '&transform=resize=600' }} 600w,
+                          {{ promo_media.src | append: '&transform=resize=860' }} 860w,
+                          {{ promo_media.src | append: '&transform=resize=1000' }} 1000w
+                        "
+                        alt="{{ promo_media.alt }}" class="promo-image animate" fetchpriority="low" loading="lazy"
+                      />
+                    {% elsif promo_media.media_type == 'video' %}
+                      <video
+                              id="collection-promo-video"
+                              class="promo-video animate"
+                              autoplay
+                              loop
+                              muted
+                              playsinline="true" webkit-playsinline="true"
+                              preload="auto"
+                              width="100%"
+                              height="100%"
+                              title="{{ promo_media.alt }}">
+                        <source src="{{ promo_media.src }}" type='video/mp4'/>
+                      </video>
+                      {% endif %}
+                    {% if promoLinkUrl %}
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <div class="collection__item-text-block {{collection.metafields.collection.promo_text_horizontal_align}} {{collection.metafields.collection.promo_text_vertical_align}}">
+                  {% if collection.metafields.collection.promo_title %}
+                    <h4>{{ collection.metafields.collection.promo_title }}</h4>
+                  {% endif %}
+                  {% if collection.metafields.collection.promo_description %}
+                    <p>{{ collection.metafields.collection.promo_description }}</p>
+                  {% endif %}
+                  {% if collection.metafields.collection.promo_link_text %}
+                    <div class="link-wrapper">
+                      <a href="{%- if promoLinkUrl -%}{{promoLinkUrl}}{%- else -%}/{%- endif -%}">
+                        {{collection.metafields.collection.promo_link_text}}
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% elsif forloop.length >= 7 and forloop.index == 7 and collection.handle != 'sets' %}
+              <div class="product__item promo-module animate visible-xs-block">
+                <span class="collection__item-media">
+                  {% for promo_media in collection.metafields.collection.background_media_mobile %}
+                    {% if promoLinkUrl %}
+                      <a href="{{promoLinkUrl}}" class="promo-trout">
+                    {% endif %}
+                      {% if promo_media.media_type == 'image' %}
+                        <img src="{{ promo_media.src }}"
+                          srcset="
+                            {{ promo_media.src | append: '&transform=resize=600' }} 600w,
+                            {{ promo_media.src | append: '&transform=resize=860' }} 860w,
+                            {{ promo_media.src | append: '&transform=resize=1000' }} 1000w
+                          "
+                          alt="{{ promo_media.alt }}" class="promo-image animate" fetchpriority="low" loading="lazy"
+                        />
+                      {% elsif promo_media.media_type == 'video' %}
+                        <video id="collection-promo-video" class="promo-video animate" autoplay loop muted playsinline="true" webkit-playsinline="true" preload="auto" width="100%" height="100%" title="{{ promo_media.alt }}">
+                          <source src="{{ promo_media.src }}" type='video/mp4'/>
+                        </video>
+                      {% endif %}
+                    {% if promoLinkUrl %}
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <div class="collection__item-text-block {{collection.metafields.collection.promo_text_horizontal_align}} {{collection.metafields.collection.promo_text_vertical_align}}">
+                  {% if collection.metafields.collection.promo_title %}
+                    <h4>{{ collection.metafields.collection.promo_title }}</h4>
+                  {% endif %}
+                  {% if collection.metafields.collection.promo_description %}
+                    <p>{{ collection.metafields.collection.promo_description }}</p>
+                  {% endif %}
+                  {% if collection.metafields.collection.promo_link_text %}
+                    <div class="link-wrapper">
+                      <a href="{%- if promoLinkUrl -%}{{promoLinkUrl}}{%- else -%}/{%- endif -%}">
+                        {{collection.metafields.collection.promo_link_text}}
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% elsif forloop.length < 5 and forloop.last == true %}
+              <div class="product__item promo-module animate visible-xs-block" style="order: 1;">
+                <span class="collection__item-media">
+                  {% for promo_media in collection.metafields.collection.background_media_mobile %}
+                    {% if promoLinkUrl %}
+                      <a href="{{promoLinkUrl}}" class="promo-trout">
+                    {% endif %}
+                      {% if promo_media.media_type == 'image' %}
+                        <img src="{{ promo_media.src }}"
+                          srcset="
+                            {{ promo_media.src | append: '&transform=resize=600' }} 600w,
+                            {{ promo_media.src | append: '&transform=resize=860' }} 860w,
+                            {{ promo_media.src | append: '&transform=resize=1000' }} 1000w
+                          "
+                          alt="{{ promo_media.alt }}" class="promo-image animate" fetchpriority="low" loading="lazy"
+                        />
+                      {% elsif promo_media.media_type == 'video' %}
+                        <video id="collection-promo-video" class="promo-video animate" autoplay loop muted playsinline="true" webkit-playsinline="true" preload="auto" width="100%" height="100%" title="{{ promo_media.alt }}">
+                          <source src="{{ promo_media.src }}" type='video/mp4'/>
+                        </video>
+                      {% endif %}
+                    {% if promoLinkUrl %}
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <div class="collection__item-text-block {{collection.metafields.collection.promo_text_horizontal_align}} {{collection.metafields.collection.promo_text_vertical_align}}">
+                  {% if collection.metafields.collection.promo_title %}
+                    <h4>{{ collection.metafields.collection.promo_title }}</h4>
+                  {% endif %}
+                  {% if collection.metafields.collection.promo_description %}
+                    <p>{{ collection.metafields.collection.promo_description }}</p>
+                  {% endif %}
+                  {% if collection.metafields.collection.promo_link_text %}
+                    <div class="link-wrapper">
+                      <a href="{%- if promoLinkUrl -%}{{promoLinkUrl}}{%- else -%}/{%- endif -%}">
+                        {{collection.metafields.collection.promo_link_text}}
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+            {% if forloop.length >= 8 and forloop.index == 8 %}
+              <div class="product__item promo-module animate hidden-xs">
+                <span class="collection__item-media">
+                  {% for promo_media in collection.metafields.collection.background_media %}
+                    {% if promoLinkUrl %}
+                      <a href="{{promoLinkUrl}}" class="promo-trout">
+                    {% endif %}
+                      {% if promo_media.media_type == 'image' %}
+                        <img src="{{ promo_media.src }}"
+                          srcset="
+                            {{ promo_media.src | append: '&transform=resize=600' }} 600w,
+                            {{ promo_media.src | append: '&transform=resize=860' }} 860w,
+                            {{ promo_media.src | append: '&transform=resize=1000' }} 1000w
+                          "
+                          alt="{{ promo_media.alt }}" class="promo-image animate" fetchpriority="low" loading="lazy"
+                        />
+                      {% elsif promo_media.media_type == 'video' %}
+                        <video id="collection-promo-video" class="promo-video animate" autoplay loop muted playsinline="true" webkit-playsinline="true" preload="auto" width="100%" height="100%" title="{{ promo_media.alt }}">
+                          <source src="{{ promo_media.src }}" type='video/mp4'/>
+                        </video>
+                      {% endif %}
+                    {% if promoLinkUrl %}
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <div class="collection__item-text-block {{collection.metafields.collection.promo_text_horizontal_align}} {{collection.metafields.collection.promo_text_vertical_align}}">
+                  {% if collection.metafields.collection.promo_title %}
+                    <h4>{{ collection.metafields.collection.promo_title }}</h4>
+                  {% endif %}
+                  {% if collection.metafields.collection.promo_description %}
+                    <p>{{ collection.metafields.collection.promo_description }}</p>
+                  {% endif %}
+                  {% if collection.metafields.collection.promo_link_text %}
+                    <div class="link-wrapper">
+                      <a href="{%- if promoLinkUrl -%}{{promoLinkUrl}}{%- else -%}/{%- endif -%}">
+                        {{collection.metafields.collection.promo_link_text}}
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% elsif forloop.length < 8 and forloop.last == true %}
+              <div class="product__item promo-module animate hidden-xs" style="order: 1;">
+                <span class="collection__item-media">
+                  {% for promo_media in collection.metafields.collection.background_media %}
+                    {% if promoLinkUrl %}
+                      <a href="{{promoLinkUrl}}" class="promo-trout">
+                    {% endif %}
+                      {% if promo_media.media_type == 'image' %}
+                        <img src="{{ promo_media.src }}"
+                          srcset="
+                            {{ promo_media.src | append: '&transform=resize=600' }} 600w,
+                            {{ promo_media.src | append: '&transform=resize=860' }} 860w,
+                            {{ promo_media.src | append: '&transform=resize=1000' }} 1000w
+                          "
+                          alt="{{ promo_media.alt }}" class="promo-image animate" fetchpriority="low" loading="lazy"
+                        />
+                      {% elsif promo_media.media_type == 'video' %}
+                        <video id="collection-promo-video" class="promo-video animate" autoplay loop muted playsinline="true" webkit-playsinline="true" preload="auto" width="100%" height="100%" title="{{ promo_media.alt }}">
+                          <source src="{{ promo_media.src }}" type='video/mp4'/>
+                        </video>
+                      {% endif %}
+                    {% if promoLinkUrl %}
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <div class="collection__item-text-block {{collection.metafields.collection.promo_text_horizontal_align}} {{collection.metafields.collection.promo_text_vertical_align}}">
+                  {% if collection.metafields.collection.promo_title %}
+                    <h4>{{ collection.metafields.collection.promo_title }}</h4>
+                  {% endif %}
+                  {% if collection.metafields.collection.promo_description %}
+                    <p>{{ collection.metafields.collection.promo_description }}</p>
+                  {% endif %}
+                  {% if collection.metafields.collection.promo_link_text %}
+                    <div class="link-wrapper">
+                      <a href="{%- if promoLinkUrl -%}{{promoLinkUrl}}{%- else -%}/{%- endif -%}">
+                        {{collection.metafields.collection.promo_link_text}}
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endif %}
+
+          {% if localization.country.iso_code != 'GB' and settings.enable_holiday_gwp_coll_us and forloop.index == 3 and collection.metafields.collection.video or collection.image %}
+            {%- include 'holiday-gwp-module' -%}
+          {% elsif localization.country.iso_code != 'GB' and settings.enable_holiday_gwp_coll_us and forloop.index == 4 and collection.metafields.collection.video == blank and collection.image == blank %}
+            {%- include 'holiday-gwp-module' -%}
+          {% endif %}
+
+          {% if _product.handle contains "-free" %}
+            {%- continue -%}
+          {% endif %}
+          {% if _product.type == 'Sets Product' %}
+            {%- include 'product-item-sets' with _product, coll_type: collection.handle -%}
+          {% else %}
+            {%- include 'product-item' with _product, coll_type: collection.handle  -%}
+          {% endif %}
+
+          {% unless _product.tags contains 'do_not_sell_to_UK' %}
+            {% assign autoIncre = autoIncre | plus: 1 %}
+            {% if localization.country.iso_code == 'GB' and settings.enable_holiday_gwp_coll_uk and autoIncre == 3 and collection.metafields.collection.video or collection.image %}
+              {%- include 'holiday-gwp-module' -%}
+            {% elsif localization.country.iso_code == 'GB' and settings.enable_holiday_gwp_coll_uk and autoIncre == 4 and collection.metafields.collection.video == blank and collection.image == blank %}
+              {%- include 'holiday-gwp-module' -%}
+            {% endif %}
+          {% endunless %}
+
+        {%- endfor -%}
+      </div>
+    </div>
+    <hr class="section__divider">
+    {% if collection.metafields.collection.show_shadefinder %}
+      <div class="collection_shadefinder">
+        <div class="img--wrapper hidden-xs">
+          <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/rose-inc-toner-copy-13_2x_06af10c6-9e03-419c-ac0d-9412c439e832.png?v=1626265321" alt="shadefinder" 
+            srcset="
+            https://cdn.shopify.com/s/files/1/0549/9633/6789/files/rose-inc-toner-copy-13_2x_06af10c6-9e03-419c-ac0d-9412c439e832.png?v=1626265321&width=600 600w,
+            https://cdn.shopify.com/s/files/1/0549/9633/6789/files/rose-inc-toner-copy-13_2x_06af10c6-9e03-419c-ac0d-9412c439e832.png?v=1626265321&width=900 900w,
+            https://cdn.shopify.com/s/files/1/0549/9633/6789/files/rose-inc-toner-copy-13_2x_06af10c6-9e03-419c-ac0d-9412c439e832.png?v=1626265321&width=1400 1400w,
+            https://cdn.shopify.com/s/files/1/0549/9633/6789/files/rose-inc-toner-copy-13_2x_06af10c6-9e03-419c-ac0d-9412c439e832.png?v=1626265321&width=2000 2000w,
+            https://cdn.shopify.com/s/files/1/0549/9633/6789/files/rose-inc-toner-copy-13_2x_06af10c6-9e03-419c-ac0d-9412c439e832.png?v=1626265321&width=2600 2600w
+            "
+            fetchpriority="low" loading="lazy" 
+          />
+        </div>
+        <div class="img--wrapper visible-xs-block">
+          <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/group-2-copy-2_3x_0c462785-964e-48e1-9d49-2136d68a39af.png?v=1626265505" alt="shadefinder"
+            srcset="
+            https://cdn.shopify.com/s/files/1/0549/9633/6789/files/group-2-copy-2_3x_0c462785-964e-48e1-9d49-2136d68a39af.png?v=1626265505&width=600 600w,
+            https://cdn.shopify.com/s/files/1/0549/9633/6789/files/group-2-copy-2_3x_0c462785-964e-48e1-9d49-2136d68a39af.png?v=1626265505&width=900 900w
+            "
+            fetchpriority="low" loading="lazy" 
+          />
+        </div>
+        <div class="shadefinder_content">
+          <h3>SHADE FINDER</h3>
+          <a href="/pages/shade-finder" class="see-more">FIND YOUR MATCH</a>
+        </div>
+      </div>
+      <hr class="section__divider">
+    {% endif %}
+
+    {% if collection.metafields.collection.show_seo_section %}
+      <div class="collection_seo">
+        <h4 class="seo--title">{{collection.metafields.collection.seo_section_title}}</h4>
+        <p class="seo--content">{{collection.metafields.collection.seo_section_text}}</p>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+<style>
+  .no-link-collection-banner {
+    cursor: default;
+  }
+  .collections--default {
+    max-width: 1350px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0 auto;
+  }
+  .collections--default .collection__header {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 3.4rem 0 0;
+  }
+  .collections--default .collection__header h2 {
+    display: none;
+  }
+  .collections--default .collection__video {
+    max-width: 636px;
+    max-height: 787px;
+    object-fit: cover;
+  }
+  .collections--default .collection__links {
+    flex: 1;
+    flex-basis: 75%;
+    display: flex;
+    justify-content: flex-start;
+    max-width: 100%;
+    overflow: auto;
+    white-space: nowrap;
+    padding-bottom: 1rem;
+    padding-top: 1px;
+    padding-left: 1px;
+  }
+  .collections--default .collection__filters {
+    flex: 1;
+    flex-basis: 25%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .collections--default .color_info {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .collections--default .color_radio label {
+    width: 60px;
+    height: 60px;
+  }
+  .collections--default .color_radio.special_txt label span {
+    margin-top: 63px;
+  }
+  .collections--default .color_info .color_radio {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 0;
+  }
+  .collections--default .selected__filters {
+    padding: 26px 0;
+    display: none;
+    justify-content: flex-end;
+  }
+  .collections--default .selected__filters span {
+    padding: 0 0.8rem;
+    color: var(--border-color);
+    cursor: pointer;
+  }
+  .collections--default .selected__filters .clear-filter {
+    color: var(--border-color);
+  }
+
+  .collections--default a.see-more,
+  .collections--default button.see-more {
+    border: none;
+    background: none;
+    text-decoration: underline;
+    font-weight: 400;
+    padding-left: 0;
+  }
+  .collections--default a.see-more {
+    margin-right: 20px;
+    border: transparent solid 2px !important;
+  }
+  .collections--default a.see-more:last-child {
+    margin-right: 0;
+  }
+  .collections--default a.see-more:first-child,
+  .collections--default button.see-more:first-child:not(.sort) {
+    padding-left: 0;
+  }
+  .collection__filters button.see-more,
+  .collection__filters button.close {
+    padding-left: 28px;
+  }
+  .collections--default a.see-more:hover,
+  .collections--default a.see-more.selected,
+  .collections--default button.see-more:hover {
+    font-family: var(--font-medium);
+  }
+  .collections--default hr.section__divider {
+    border: none;
+    border-top: solid 1px var(--border-color);
+    padding-bottom: 55px;
+  }
+  .collections--default .collection__items {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -45px;
+  }
+
+  @media(max-width: 1023px) {
+    .collections--default .collection__items {
+      margin-left: -15px;
+      margin-right: -30px;
+    }
+  }
+  .collection__items .collection__item-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    height: 90%;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-flow: column;
+  }
+  .collection__items .collection__item-title h3 {
+    font-size: 24px;
+    color: #545353;
+    letter-spacing: 1px;
+  }
+  .collection__items .collection__item-title h3.dark {
+    color: #1d1d1d
+  }
+  .collection__items .collection__item-title h3.white {
+    color: #fff;
+  }
+  .collection_desc {
+    font-size: 14px;
+    color: #545353;
+    text-align: center;
+    line-height: 18px;
+    padding: 5px 15px 0;
+  }
+  .collections--default.complexion-2-0 .collection__items .collection__item-title h3,
+  .collections--default.complexion-2-0 .collection_desc {
+    color: #fff;
+  }
+  .collection__items .collection__item-description {
+    padding-bottom: 20px;
+  }
+  .collection__reading h2.section__subtitle {
+    font-weight: 300;
+    padding-top: 4rem;
+    padding-bottom: 0.5rem;
+  }
+  .collection__reading .article__wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+  .collection__reading .article__item {
+    flex-basis: 50%;
+    max-width: 50%;
+    text-decoration: none;
+  }
+  .collection__reading .article__item:first-child {
+    margin-right: 3rem;
+  }
+  .collection__reading .article__category {
+    text-transform: uppercase;
+    font-size: 12px;
+    padding: 10px 0 16px;
+    margin-bottom: 0;
+  }
+  .collection__reading .article__title {
+    max-width: 400px;
+    letter-spacing: 1px;
+    padding-bottom: 1rem;
+  }
+  .collections--default .product__item.promo-module .collection__item-text-block {
+    max-width: {{collection.metafields.collection.promo_text_width_desktop | append: 'px'}};
+    position: absolute;
+    padding: 40px;
+    color: {{ collection.metafields.collection.promo_text_color}};
+  }
+  .collections--default .product__item.promo-module .collection__item-text-block.left {
+    left: 0;
+    text-align: left;
+  }
+  .collections--default .product__item.promo-module .collection__item-text-block.center {
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .collections--default .product__item.promo-module .collection__item-text-block.right {
+    right: 0;
+    text-align: right;
+  }
+  .collections--default .product__item.promo-module .collection__item-text-block.bottom {
+    bottom: 58px;
+    width: 100%;
+  }
+  .collections--default .product__item.promo-module .collection__item-text-block.top {
+    top: 0;
+    width: 100%;
+  }
+  .collections--default .product__item.promo-module .collection__item-text-block.middle {
+    top: calc(50% - 95px);
+    width: 100%;
+  }
+  .collections--default .product__item.promo-module .collection__item-text-block .link-wrapper a {
+    font-family: var(--font-medium);
+    font-size: 15px;
+    letter-spacing: 1.07px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 2px solid;
+  }
+  .collections--default .product__item.promo-module .collection__item-text-block h4 {
+    font-size: 18px;
+    line-height: 20px;
+    letter-spacing: 1.29px;
+    padding-bottom: 2px;
+    color: {{ collection.metafields.collection.promo_text_color}};
+  }
+  .collections--default .product__item.promo-module .collection__item-text-block p {
+    margin-bottom: 6px;
+  }
+  .collection__reading .article__author {
+    font-size: 12px;
+    padding-bottom: 3rem;
+  }
+  .product__item .product__review h2 {
+    font-size: 42px;
+    line-height: 1;
+  }
+  .product__item .product__review h6 {
+    font-family: var(--font-heading);
+    font-size: 21px;
+    color: var(--secondary-color);
+    text-transform: none;
+    margin: 20px 0;
+  }
+  .product__item .product__review {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+  .product__item .product__review div {
+    max-width: 380px;
+  }
+  .product__item .product__review img {
+    height: 16px;
+    margin: 25px 0;
+  }
+  .product__item .product__review button.see-more {
+    padding-left: 0;
+  }
+  .collections--default .collection_shadefinder {
+    padding-bottom: 3.5rem;
+    position: relative;
+  }
+  .collections--default .shadefinder_content {
+    position: absolute;
+    top: 10%;
+    left: 45%;
+    text-align: center;
+  }
+  .collections--default .shadefinder_content a.see-more {
+    padding-left: 0;
+    text-decoration: none;
+    letter-spacing: 1px;
+    font-family: var(--font-medium);
+    border-bottom: 2px solid var(--secondary-color);
+  }
+  .shadefinder_content h3 {
+    font-size: 18px;
+    letter-spacing: 1.29px;
+    color: var(--secondary-color);
+    padding-bottom: 12px;
+  }
+
+  .collections--default .collection_seo h4.seo--title {
+    padding-bottom: 1.5rem;
+  }
+  .collections--default .collection_seo p.seo--content {
+    column-count: 2;
+    column-gap: 60px;
+  }
+
+  .collection__items .first-tile .collection__item-image {
+    margin: 0;
+  }
+  .collection__items .first-tile .collection__item-image img {
+    height: 92%;
+  }
+  .page_collection___mainWarp .collection__items .first-tile,
+  .page_collection___mainWarp .collection__items .promo-module {
+    border-color: transparent;
+  }
+
+  .collection__items .product_set {
+    max-height: 446px;
+  }
+
+  .collections--default .collection__filter {
+    padding-right: 20px;
+  }
+
+  {% if collection.metafields.collection.enable_holiday_page %}
+    .wrapper .footer {
+      margin-top: 0;
+    }
+  {% endif %}
+
+  @media(max-width: 900px) {
+    .collections--default .shadefinder_content {
+      left: calc(45% - 30px);
+    }
+  }
+  @media(max-width: 767px) {
+
+    .collections--default .selected__filters {
+      padding: 0px 0px 30px 0px;
+    }
+
+    .collections--default .product__item:not(.sets_coll) {
+      flex-basis: calc(50% - 10px);
+      max-width: calc(50% - 10px);
+    }
+    .collections--default .product__item.promo-module {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+    .collections--default .product__item.promo-module .collection__item-text-block {
+      padding: 25px 23px;
+      max-width: {{collection.metafields.collection.promo_text_width_mobile | append: 'px'}};
+    }
+    .collections--default .product__item.promo-module .collection__item-text-block.center {
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .collections--default .product__item.promo-module .collection__item-text-block.middle {
+      top: calc(50% - 76px);
+    }
+    .collections--default .product__item.promo-module .collection__item-text-block.bottom {
+      bottom: 0;
+    }
+    .collections--default {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .collections--default.complexion-2-0 .collection__items .collection__item-title h3,
+    .collections--default.complexion-2-0 .collection_desc {
+      color: #545353;
+    }
+    .collections--default .collection__items {
+      margin-left: 0;
+      margin-right: 0;
+      justify-content: space-between;
+    }
+    .collections--default .collection__header {
+      padding: 25px 0 0;
+    }
+    .collections--default .collection__header h2 {
+      display: block;
+    }
+    .collections--default .collection__header .collection__cta__divider {
+      padding-bottom: 20px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .collections--default .collection__header .collection__cta {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .collections--default hr.section__divider {
+      padding-bottom: 30px;
+      margin-top: 20px;
+    }
+    .collections--default .collection_shadefinder {
+      padding-bottom: 2.5rem;
+    }
+    .collections--default .collection_seo h4.seo--title {
+      padding-top: 1rem;
+    }
+    .collections--default .collection_seo p.seo--content {
+      column-count: 1;
+      column-gap: unset;
+    }
+    .collections--default .collection__links {
+      display: none;
+      overflow-x: scroll;
+      flex-basis: 100%;
+      padding-bottom: 10px;
+    }
+    .collections--default .collection__filters {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      border: none;
+      align-self: center;
+      text-align: right;
+      flex-basis: 0;
+    }
+    .collections--default .collection__filter,
+    .collections--default .collection__sort {
+      flex: 1;
+      padding: 0;
+      flex-basis: 50%;
+    }
+    .modal.sort .modal__overlay,
+    .modal.filter .modal__overlay {
+      align-items: center;
+      top: 0;
+    }
+    .modal.sort .modal__overlay .modal__container,
+    .modal.filter .modal__overlay .modal__container {
+      width: 100%;
+    }
+    .collection__header a.see-more,
+    .collection__header button.see-more {
+      white-space: nowrap;
+      font-size: 12px;
+      text-decoration: none;
+      text-transform: uppercase;
+      position: relative;
+      padding-right: 13px;
+    }
+    .collection__header a.see-more,
+    .collection__header button.see-more::after {
+      content: '+';
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: 16px;
+      line-height: 0.9;
+    }
+    .collection__items .collection__item-title {
+      top: 33%;
+      left: 30%;
+      position: relative;
+      height: auto !important;
+    }
+    .collection__items .collection__item-description {
+      padding: 0 1rem;
+    }
+    .collection__items .product__item-title,
+    .collection__items .product__item-subtitle {
+      padding: 0 1rem;
+    }
+    .collection__items .inner_content {
+      padding: 1rem;
+    }
+    .collection__reading h2.section__subtitle {
+      padding-top: 1.5rem;
+    }
+    .collection__reading .tns-outer {
+      margin-left: -20px;
+      margin-right: -20px;
+    }
+    .collection__reading .article__author {
+      padding-bottom: 1.5rem;
+    }
+    .slider--arrow {
+      width: 0;
+      height: 0;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-left: 10px solid #545353;
+      border-radius: 1px;
+    }
+    .slider--arrow.left {
+      border-left: none;
+      border-right: 10px solid transparent;
+    }
+
+    .collection__items .first-tile .collection__item-image {
+      display: none;
+    }
+
+  }
+  @media(max-width: 500px) {
+    .collections--default .shadefinder_content {
+      left: calc(38% - 30px);
+    }
+  }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
+<script>
+  $(document).ready(function() {
+    if (location.href.includes('sort_by') && $(window).width() > 767) {
+      const sortParams = '?sort_by' + location.href.split('?sort_by')[1];
+      const currentHref = $('.collections--default .clear-filter').attr('href');
+      $('.collections--default .clear-filter').attr('href', currentHref + sortParams);
+    }
+
+    //// this script is use for swap the 3rd item ////
+    var isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|webOS|BlackBerry|IEMobile|Opera Mini)/i);
+    if(isMobile){
+      if($( ".holiday-gwp-module" ).index() == 3 && $('.first-tile').length == 0 ){
+        var e = $(".holiday-gwp-module");
+        // move up:
+        e.prev().insertAfter(e);
+      }
+    }
+  });
+</script>

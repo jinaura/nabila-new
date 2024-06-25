@@ -1,0 +1,99 @@
+{% assign _section = section.settings %}
+
+<div class="container customer-service store-locator">
+    <div class="container--inner">
+        <aside>
+            <h1>{{_section.title}}</h1>
+            <a href = "{{_section.link}}">{{_section.link_text}}</a>
+        </aside>
+        <div class="nav-links">
+          {% if _section.top_text != blank %}
+            <p class="top-text">{{_section.top_text}}</p>
+          {% endif %}
+          {%- for block in section.blocks -%}
+            {%- assign _block = block.settings -%}
+
+            {%- case block.type -%}
+              {%- when 'store' -%}
+              <div class="store_info">
+                <h2>{{_block.store_title}}</h2>
+                <a target='_blank' rel='noopener noreferrer' href="{{_block.store_link}}">View {{_block.store_title}} location</a>
+                <ul class="list-items">
+                  {%- assign locations = _block.locations | split: "," -%}
+                  {% for loc in locations %}
+                    <li class="list-item">{{loc}}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+    </div>
+</div>
+
+<style>
+  .container.store-locator .nav-links p.top-text {
+    margin-bottom: 1.6rem;
+    margin-top: 8px;
+  }
+  @media (max-width: 767px) {
+    .container.store-locator .nav-links p.top-text {
+      margin-bottom: 10px;
+      margin-top: 2.5rem;
+    }
+  }
+</style>
+
+{% schema %}
+    {
+      "name": "Store Locator",
+      "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Store Locator"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Back Home Link"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "Customer service home"
+    },
+    {
+      "type": "text",
+      "id": "top_text",
+      "label": "Top Text"
+    }
+    ],
+    "blocks": [
+    {
+        "type": "store",
+        "name": "Store",
+        "settings": [
+          {
+            "type": "text",
+            "id": "store_title",
+            "label": "Store Title"
+          },
+          {
+            "type": "url",
+            "id": "store_link",
+            "label": "Store Link"
+          },
+          {
+            "type": "text",
+            "id": "locations",
+            "label": "Locations List (comma-separated)",
+            "default": "Canada, United Kingdom, United States of America"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

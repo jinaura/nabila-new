@@ -1,0 +1,43 @@
+{%- include 'body_class' -%}
+
+{%- capture theme_title -%}
+	{{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} | {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}
+	{% endunless %}
+{%- endcapture -%}
+
+{%- capture theme_styles -%}
+	{{ 'slick-theme.css' | asset_url | stylesheet_tag: preload: true }}
+	{{ 'style.css' | asset_url | stylesheet_tag: preload: true }}
+	<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" as="style" />
+{%- endcapture -%}
+
+{%- capture theme_scripts -%}
+	{%- include 'locale' -%}
+
+	{%- if template contains 'customers' -%}
+		{{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+		{{ 'customer_area.js'  | shopify_asset_url | script_tag }}
+	{%- endif -%}
+
+	{%- if template contains 'product' or template contains 'cart' -%}
+		{{ 'https://www.youtube.com/iframe_api' | script_tag }}
+		{{ 'option_selection.js' | shopify_asset_url | script_tag }}
+
+		<script>
+			var Shopify = Shopify || {};
+			Shopify.product = {{ product | json }};
+		</script>
+	{%- endif -%}
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  {% unless template contains 'vto' or template contains 'shade-finder' or template contains 'password' or template contains 'product' %}
+  	<!-- Start of roseinc Zendesk Widget script -->
+	<script type="text/plain" class="optanon-category-C0003" id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=09437276-7efa-49c6-800b-8d7c421c9f8a"> </script>
+	<!-- End of roseinc Zendesk Widget script -->
+  {% endunless %}
+
+	<!-- Bing Tracking -->
+	<script type="text/plain" class="optanon-category-C0004">(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:"134617403"};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");</script>
+	<!-- End Bing Tracking -->
+{%- endcapture -%}

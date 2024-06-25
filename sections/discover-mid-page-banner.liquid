@@ -1,0 +1,211 @@
+<section class="mid-page container section_spacing full-width-in-container">
+
+    <div class="mid-page__desktop-container">
+
+        <div class="mid-page__blocks-content">
+
+            {% for midpage_media in product.metafields.discovery.mid_page_media %}
+                {% if midpage_media.media_type == 'image' %}
+                    <img src="{{ midpage_media.src }}" alt="{{ midpage_media.alt }}" class="product__detail animate" fetchpriority="low" loading="lazy" />
+                    {% elsif midpage_media.media_type == 'video' %}
+                    <div class="video-wrapper">
+                        <video id="videoplayer" autoplay="autoplay" loop="" muted="muted" preload="auto"
+                               playsinline="true" webkit-playsinline="true" width="100%" height="100%"
+                               data-setup='{"width": 300, "height": 250}' alt="{{ midpage_media.alt }}">
+                            <source src="{{ midpage_media.src }}" type='video/mp4' />
+                        </video>
+
+                        <!-- volume on/off -->
+                        <div class="player-controls left" id="mid-pageBanner">
+                            <button class="play" >{% render 'svg-icons' with 'play' %}</button>
+                            <button class="pause" >{% render 'svg-icons' with 'pause' %}</button>
+                            <button class="volume" >{% render 'svg-icons' with 'volume' %}</button>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+<style>
+    .mid-page.container {
+        padding-bottom: 80px;
+        padding-top: 80px;
+    }
+
+    #mid-pageBanner{
+        left:20px;
+        bottom: 20px !important;
+    }
+
+    .mid-page .heading-with-link {
+        padding-bottom: 22px;
+    }
+
+    .mid-page__desktop-container {
+        position: relative;
+        display: flex;
+    }
+
+    .mid-page__desktop-container .mid-page__text-content {
+        position: absolute;
+        max-width: 311px;
+        z-index: 1;
+    }
+
+
+
+    .mid-page__blocks-content {
+        display: flex;
+      	width:100%;
+    }
+
+    .mid-page__blocks-content .video-wrapper,
+    .mid-page__blocks-content img {
+        width: 100%;
+    }
+
+    .mid-page__blocks-content .video-wrapper,
+    .mid-page__mobile-container .video-wrapper {
+        position: relative;
+    }
+
+    .video-wrapper video {
+        object-fit: cover;
+      	max-height:500px;
+      	width:100%;
+    }
+
+
+    #switch-container,
+    #mobile-switch-container {
+        display:block;
+        position: absolute;
+        bottom: 34px;
+        left: 45px;
+        cursor: pointer;
+        -webkit-transition: all 0.3s ease-in;
+        -moz-transition: all 0.3s ease-in;
+        transition: all 0.3s ease-in 0s;
+    }
+
+    #btns-switch-container,
+    #mobile-btns-switch-container {
+        display:block;
+        position: absolute;
+        bottom: 32px;
+        left: 15px;
+        cursor: pointer;
+        -webkit-transition: all 0.3s ease-in;
+        -moz-transition: all 0.3s ease-in;
+        transition: all 0.3s ease-in 0s;
+    }
+
+    .vid-btns {
+        position: absolute;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    /* volume on : button */
+    #switch-container:after,
+    #mobile-switch-container:after {
+        content: "";
+        border: 0px solid black;
+        background: url({{ 'sound-off-icon.png' | asset_url }}) center center;
+        background-size: 100%;
+        position: absolute;
+        width: 23px;
+        height: 20px;
+    }
+
+    #btns-switch-container:after,
+    #mobile-btns-switch-container:after  {
+        content: "";
+        border: 0px solid black;
+        background: url({{ 'pause.png' | asset_url }}) center center;
+        background-size: 100%;
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        filter: invert(1)
+    }
+
+
+    /* volume off : button */
+    #volume-switch:checked + #switch-container:after,
+    #mobile-volume-switch:checked + #mobile-switch-container:after {
+        content: "";
+        background: url({{ 'sound-on-icon.png' | asset_url }}) center center;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        width: 18px;
+    }
+
+    #btns-switch:checked + #btns-switch-container:after,
+    #mobile-btns-switch:checked + #mobile-btns-switch-container:after {
+        content: "";
+        background: url({{ 'play-button.png' | asset_url }}) center center;
+        background-size: 100%;
+        filter: invert(1);
+        width: 18px;
+    }
+  
+    .full-width-in-container {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+    }
+  
+  
+  	@media (max-width:767px){
+      .mid-page.container{
+        padding-bottom:40px;
+        padding-top: calc(90px - 1.7rem);
+      }
+      .mid-page__blocks-content img, 
+      .mid-page__blocks-content vid{
+        min-height: 275px;
+        object-fit: cover;
+        object-position: center;
+      }
+      #mid-pageBanner{
+          display: block;
+      }
+    }
+
+</style>
+
+<script>
+
+    $('#mid-pageBanner .play').on('click', function(){
+        var wIVideo = document.getElementById("videoplayer");
+        wIVideo.play();
+        $(this).hide();
+        $('#mid-pageBanner .pause').show();
+    });
+    $('#mid-pageBanner .pause').on('click', function(){
+        var wIVideo = document.getElementById("videoplayer");
+        wIVideo.pause();
+        $(this).hide();
+        $('#mid-pageBanner .play').show();
+    });
+
+    $('#mid-pageBanner .volume').on('click', function(){
+        var wIVideo = document.getElementById("videoplayer");
+        if(wIVideo.muted){
+            wIVideo.muted = false;
+            $(this).addClass('unmuted');
+        } else {
+            wIVideo.muted = true;
+            $(this).removeClass('unmuted');
+        }
+    });
+
+</script>
+

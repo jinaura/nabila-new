@@ -1,0 +1,40 @@
+{% assign s = section.settings %}
+<section class="quoteModule" id="section-{{section.id}}">
+  <div{% if s.full_width %} class="full-width"{% endif %}>
+    <h2>{{ s.quotes }}</h2>
+    <h2 class="auther">{{ s.author_quotes }}</h2>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "1 Col Quotes",
+	"tag":"section",
+	"class": "container",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Full Width",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "quotes",
+        "label": "Quotes",
+		"default": "Lorem Ipsum is simply dummy"
+      },
+      {
+        "type": "richtext",
+        "id": "author_quotes",
+        "label": "Author Quotes",
+		"default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>"
+      }
+    ],
+    "presets": [
+      {
+        "name": "1 Col Quotes - Article"
+      }
+    ]
+  }
+{% endschema %}

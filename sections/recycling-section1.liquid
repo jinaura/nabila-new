@@ -1,0 +1,816 @@
+{{ 'slick.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'slick-theme.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'slick.js' | asset_url | script_tag }}
+
+{{ '//unpkg.com/swiper/swiper-bundle.min.css' | stylesheet_tag }}
+{{ '//unpkg.com/swiper/swiper-bundle.min.js' | script_tag }}
+<style>
+  .shopify-section.recycling-section1 {
+    width: 100%;
+    position: relative;
+  }
+  .rcy-sect1 .rcy-s1-wrap {
+    border-bottom: 1px solid #919191;
+    padding-bottom: 60px;
+  }
+
+  .rcy-sect1 .rcy-row1 .s-heading {
+    border-bottom: 1px solid #919191;
+    padding-top: 30px;
+    padding-bottom: 10px;
+  }
+
+  .rcy-sect1 .rcy-row1 .s-heading h1 {
+    font-size: 32px;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1;
+    font-family: var(--font-heading);
+  }
+
+  .rcy-sect1 .rcy-row1 .sub-content {
+    border-bottom: 1px solid #e6e3e0;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+
+  .rcy-sect1 .rcy-row1 .sub-content .c-wrap {
+    width: 50%;
+  }
+
+  .rcy-sect1 .rcy-row1 .sub-content .c-wrap h4 {
+    margin-bottom: 10px;
+  }
+
+
+  .rcy-sect1 .rcy-row2 {
+    border-bottom: 1px solid #e6e3e0;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+  }
+
+  .rcy-sect1 .rcy-row2 ul {}
+
+  .rcy-sect1 .rcy-row2 ul li {
+    display: inline;
+    padding: 0 10px;
+  }
+
+  .rcy-sect1 .rcy-row2 ul li:first-child {
+    padding-left: 0;
+  }
+
+  .rcy-sect1 .rcy-row2 ul li.active a {
+    color: #1d1d1d !important;
+    font-weight: 600 !important;
+  }
+
+  .rcy-sect1 .rcy-row3 {}
+
+  .rcy-sect1 .rcy-row3 .c-wrap {
+    display: flex;
+    flex-wrap: wrap;
+
+  }
+
+  .rcy-sect1 .rcy-row3 .slider-grid {
+    width: 65%
+  }
+
+  .rcy-sect1 .rcy-row3.rcy-row3-mobile .slider-grid {
+    width: 100% !important;
+  }
+
+  .rcy-sect1 .rcy-row3.rcy-row3-mobile .slider-grid .content-col {
+    width: 100% !important;
+  }
+
+  .rcy-sect1 .rcy-row3.rcy-row3-mobile .slider-grid .p-item {
+    width: 100% !important;
+    height: 335px !important;
+  }
+
+  .rcy-sect1 .rcy-row3.rcy-row3-mobile .slider-grid .p-item a img {
+
+    outline: none !important;
+  }
+
+  .rcy-sect1 .rcy-row3.rcy-row3-mobile .content-col .cont-info {
+    padding-left: 0px !important;
+
+  }
+
+  .rcy-sect1 .rcy-row3.rcy-row3-mobile .mobile-thumbs {
+    width: 100% !important;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+
+  .rcy-sect1 .rcy-row3.rcy-row3-mobile .mobile-thumbs .slick-list {
+    padding-left: 0 !important;
+    padding-right: 15px;
+  }
+
+
+  .rcy-sect1 .rcy-row3.rcy-row3-mobile .mobile-thumbs .thumb-item {
+
+    height: 80px;
+
+
+  }
+
+  .rcy-sect1 .rcy-row3.rcy-row3-mobile .mobile-thumbs .thumb-item a {
+    height: 100%;
+    width: 100%;
+    display: block;
+    /* padding-right:10px; */
+  }
+
+  .rcy-sect1 .rcy-row3.rcy-row3-mobile .mobile-thumbs .thumb-item img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+
+
+
+  .rcy-sect1 .rcy-row3 .slider-grid .slider-chunk {
+    display: flex !important;
+    flex-wrap: wrap;
+  }
+
+  .rcy-sect1 .rcy-row3 .slider-grid .p-item {
+    width: 33%;
+  }
+
+
+  .rcy-sect1 .rcy-row3 .slider-grid .slider-chunk .p-item {
+    height: 350px;
+
+  }
+
+  .rcy-sect1 .rcy-row3 .slider-grid .slider-chunk .p-item a {
+    display: block;
+    height: 100%;
+    position: relative;
+    margin: 0 1px;
+    padding-bottom: 3px;
+  }
+
+
+  .rcy-sect1 .rcy-row3 .slider-grid .slider-chunk .p-item a img {
+    display: block;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+
+  }
+
+  .rcy-sect1 .rcy-row3 .slider-grid .slider-chunk .p-item a img.active-border {}
+
+  .rcy-sect1 .rcy-row3 .slider-grid .slider-chunk .p-item.active>a {
+    position: relative;
+
+  }
+
+  .rcy-sect1 .rcy-row3 .slider-grid .slider-chunk .p-item.active>a::after {
+    content: "";
+    width: 100%;
+    height: calc(100% - 4px);
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: 4px solid #919191;
+    pointer-events: none;
+  }
+
+  .rcy-row3 .slick-next {
+    right: -35px;
+  }
+
+  .rcy-row3 .slick-prev {
+    left: -25px;
+  }
+
+  .rcy-row3 .slick-arrow.slick-next:before {
+
+
+    content: '' !important;
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 10px solid #545353;
+    border-radius: 1px;
+    display: block;
+  }
+
+  .rcy-row3 .slick-arrow.slick-next.slick-disabled:after {
+
+
+    content: '' !important;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 7px solid #fafafa;
+    border-radius: 1px;
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 1px;
+  }
+
+  .rcy-row3 .slick-arrow.slick-prev:before {
+
+
+    content: '' !important;
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-right: 10px solid #545353;
+    border-radius: 1px;
+    display: block;
+  }
+
+  .rcy-row3 .slick-arrow.slick-prev.slick-disabled:after {
+    content: '' !important;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 7px solid #fafafa;
+    border-radius: 1px;
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 2px;
+  }
+
+  .rcy-sect1 .rcy-row3 .content-col {
+    width: 35%
+  }
+
+  .rcy-sect1 .rcy-row3 .content-col .cont-info {
+    padding-left: 60px;
+  }
+
+  .rcy-sect1 .rcy-row3 .content-col .cont-info .info-div {
+
+    border-top: 1px solid #e6e3e0;
+  }
+
+  .rcy-sect1 .rcy-row3 .content-col .cont-info .s-heading {
+
+    border-bottom: 1px solid #e6e3e0;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+
+  .rcy-sect1 .rcy-row3 .content-col .cont-info .s-heading h4 {
+    font-size: 14px;
+  }
+
+  .rcy-sect1 .rcy-row3 .content-col .cont-info .sub-content {
+    border-bottom: 1px solid #e6e3e0;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+
+
+  .rcy-sect1 .rcy-row3 .content-col .cont-info .sub-content table .data {
+    text-align: right;
+
+  }
+
+  .rcy-sect1 .rcy-row3 .content-col .cont-info .no-border {
+    border: none !important;
+  }
+
+
+  @media (max-width:1300px) {
+    .rcy-sect1 .rcy-row1 .sub-content .c-wrap {
+      width: 90%;
+    }
+
+    .rcy-row3 .slick-prev {
+      left: -13px;
+    }
+
+    .rcy-row3 .slick-next {
+      right: -23px;
+    }
+
+    .rcy-sect1 .rcy-row3 .slider-grid {
+      width: 60%;
+    }
+
+    .rcy-sect1 .rcy-row3 .content-col {
+      width: 40%;
+    }
+
+    .rcy-sect1 .rcy-row3 .content-col .cont-info {
+      padding-left: 40px;
+    }
+
+    .rcy-sect1 .rcy-row3 .slider-grid .slider-chunk .p-item {
+      height: 185px;
+    }
+
+  }
+
+
+  @media (max-width:992px) {
+    .rcy-sect1 .rcy-row1 .sub-content .c-wrap {
+      width: 90%;
+    }
+
+    .rcy-row3 .slick-prev {
+      left: -13px;
+    }
+
+    .rcy-row3 .slick-next {
+      right: -23px;
+    }
+
+    .rcy-sect1 .rcy-row3 .slider-grid {
+      width: 50%;
+    }
+
+    .rcy-sect1 .rcy-row3 .content-col {
+      width: 50%;
+    }
+
+    .rcy-sect1 .rcy-row3 .content-col .cont-info {
+      padding-left: 40px;
+    }
+
+    .rcy-sect1 .rcy-row3 .slider-grid .slider-chunk .p-item {
+      height: 130px;
+    }
+
+  }
+
+  .rcy-row3-mobile {
+    display: none;
+  }
+
+
+  @media (max-width:767px) {
+    .rcy-row3-desktop {
+      display: none;
+    }
+
+    .rcy-row3-mobile {
+      display: block;
+
+      margin-left: -20px;
+      margin-right: -20px;
+    }
+
+    .rcy-sect1 .rcy-row3 .content-col .cont-info .sub-content table td {
+      padding-bottom: 10px;
+    }
+
+    .rcy-row3-mobile .mobile-thumbs .swiper-slide-thumb-active a img {
+      border: solid 2px #919191;
+    }
+
+    .rcy-row3-mobile .mobile-thumbs .slick-active.slick-current a img {
+      border: solid 2px #919191;
+    }
+
+    .rcy-sect1 .rcy-row3 .slider-grid .slider-chunk .p-item a {
+      margin: 0;
+    }
+
+    .rcy-sect1 .rcy-row3.rcy-row3-mobile .slider-grid .content-col {
+
+      padding: 0 20px;
+    }
+
+    .rcy-sect1 .rcy-row3 .content-col .cont-info .info-div {
+      border-top: 0px solid #e6e3e0;
+    }
+
+    .rcy-sect1 .rcy-row1 .sub-content .c-wrap {
+      width: 90%;
+    }
+
+    .rcy-sect1 .rcy-row2 {
+      overflow: auto;
+      width: 100%;
+    }
+
+    .rcy-sect1 .rcy-row2 ul {
+      display: flex;
+      width: max-content;
+    }
+
+    .slider-grid .slick-list {
+      padding: 0 30px 0 0;
+      margin: 0;
+    }
+
+    .slider-grid .slick-slide {
+      margin-right: 10px;
+    }
+
+    .rcy-sect1 .rcy-row2 ul li.active a {
+      text-decoration: underline;
+    }
+
+
+  }
+
+  .hide-rcy {
+    display: none !important;
+  }
+
+  .m-top-30 {
+    margin-top: 30px;
+  }
+
+  .rcy-row3-desktop .lbl {
+    width: 151px;
+    vertical-align: top;
+  }
+
+  .rcy-row3-desktop .data {
+    width: 182px;
+  }
+
+  .rcy-row3-mobile .lbl {
+    width: 80px;
+    vertical-align: top;
+  }
+
+  .rcy-row3-mobile .data {
+    width: 170px;
+  }
+
+</style>
+
+<section class="rcy-sect1">
+  <div class="container">
+
+
+    <div class="rcy-s1-wrap">
+      <div class="rcy-row1">
+
+        <div class="s-heading">
+          <h1>{{ section.settings.heading }}</h1>
+        </div>
+
+        <div class="sub-content">
+          <div class="c-wrap">
+
+            <h4>{{ section.settings.title_text }}</h4>
+            <div>{{ section.settings.description }}</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="rcy-row2 hide-rcy">
+
+        <ul class="recycling-ul">
+          {% for block in section.blocks %}
+
+
+          {% assign collec = collections[block.settings.recycling_collection] %}
+          <li data-id="{{ collec.handle }}" class="{% if forloop.index  == 1 %} active {% endif %}"><a
+              href="#_">{{ collec.title }}</a></li>
+
+
+          {% endfor %}
+        </ul>
+      </div>
+
+
+      <div class="rcy-row3 rcy-row3-desktop m-top-30">
+        {% for block in section.blocks %}
+        {% assign collec = collections[block.settings.recycling_collection] %}
+        {% assign products = collections[block.settings.recycling_collection].products %}
+        <div class="c-wrap">
+          <div class="slider-grid">
+
+            <div class="img-div" id="{{ collec.handle }}-desktop"
+              style="{% if forloop.index  > 1 %} display: none; {% endif %}">
+              {% assign divCount = 1 %}
+              <div class="slider-chunk">
+                {% assign hideArticleCounter = 0 %}
+                {% for product in products %}
+
+                  <!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+                  {% unless product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+                  {% unless product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+                    {% if product.type != 'Sets Product' %}
+                      <div class="p-item"><a href="#_"><img class="lazyload" id="{{ collec.handle }}-{{ product.id }}"
+                        data-src="{{ product.featured_image.src | img_url: 'large' }}" fetchpriority="low" loading="lazy"></a></div>
+                      {% assign hideArticleCounter = hideArticleCounter | plus:1 %}
+                      {% assign remainingMod = hideArticleCounter | modulo:6 %}
+                    {% endif %}
+                    {% if remainingMod == 0 %}
+                      </div>
+                      <div class="slider-chunk">
+                    {% endif %}
+                  {% endunless %}
+                  {% endunless %}
+
+                {% endfor %}
+              </div>
+            </div>
+
+          </div>
+          <div class="content-col">
+            <div class="cont-info">
+              {% for product in products %}
+                <!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+                {% unless product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+                {% unless product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+                  {% if product.type != 'Sets Product' %}
+                  <div class="info-div" style="display: none;" id="pro-info-{{ collec.handle }}-{{product.id}}">
+                  
+                    <div class="s-heading">
+                      <h4>{{ product.title }}</h4>
+                    </div>
+                    <div class="sub-content">
+                    
+                      <table>
+                        {% for i in (1..product.metafields.specification.no_of_items) %}
+                        {% assign specificationkey = "specification_key_" | append: i %}
+                        {% assign ingredientkey = product.metafields.specification[specificationkey] %}
+                        {% assign ingredientValue = "specification_value_" | append: i %}
+                        {% assign ingredientValue = product.metafields.specification[ingredientValue] %}
+                        <tr>
+                          <td class="lbl"> {{ ingredientkey }}</td>
+                          <td class="data">{{ ingredientValue }}</td>
+                        </tr>
+                        {% endfor %}
+                      
+                      </table>
+                    
+                    </div>
+                  
+                    <div class="s-heading">
+                      <h4>Recycle</h4>
+                      <p>{{ product.metafields.product.description }}</p>
+                    </div>
+                  
+                    <div class="sub-content no-border">
+                      <a href="{{ product.url }}">Product details</a>
+                    
+                    </div>
+                  
+                  </div>
+                  {% endif %}
+                {% endunless %}
+                {% endunless %}
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+
+        <script>
+          var slider = $('#{{ collec.handle }}-desktop').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            autoplay: false,
+            arrows: true,
+            infinite: false,
+
+          });
+        </script>
+        {% endfor %}
+
+      </div>
+
+
+
+      <div class="rcy-row3 rcy-row3-mobile">
+        {% for block in section.blocks %}
+        {% assign collec = collections[block.settings.recycling_collection] %}
+        {% assign products = collections[block.settings.recycling_collection].products %}
+        <div class="c-wrap-thumb">
+          <div class="mobile-thumbs swiper-container" id="{{ collec.handle }}-thumbs"
+            style="{% if forloop.index  > 1 %} display: none; {% endif %}">
+            <div class="swiper-wrapper">
+              {% for product in products %}
+                <!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+                {% unless product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+                {% unless product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+                  {% if product.type != 'Sets Product' %}
+                    <div class="thumb-item swiper-slide">
+                      <a href="#_"><img class="lazyload" id="{{ collec.handle }}-{{ product.id }}-thumb" data-src="{{ product.featured_image.src | img_url: 'large' }}" fetchpriority="low" loading="lazy"></a>
+                    </div>
+                  {% endif %}
+                {% endunless %}
+                {% endunless %}
+              {% endfor %}
+
+            </div>
+          </div>
+
+        </div>
+
+        <div class="c-wrap">
+
+
+          <div class="slider-grid">
+
+            <div class="img-div swiper-container" id="{{ collec.handle }}-mobile"
+              style="{% if forloop.index  > 1 %} display: none; {% endif %}">
+              <div class="swiper-wrapper">
+                {% for product in products %}
+                  <!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+                  {% unless product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+                  {% unless product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+                    {% if product.type != 'Sets Product' %}
+                    <div class="slider-chunk swiper-slide">
+                    
+                      <div class="p-item"><a href="#_"><img class="lazyload" id="{{ collec.handle }}-{{ product.id }}"
+                            data-src="{{ product.featured_image.src | img_url: '600x' }}" fetchpriority="low" loading="lazy"></a></div>
+                      <div class="content-col">
+                        <div class="cont-info">
+                        
+                          <div class="info-div" id="pro-info-{{ collec.handle }}-{{product.id}}-mobile">
+                          
+                            <div class="s-heading">
+                              <h4>{{ product.title }}</h4>
+                            </div>
+                            <div class="sub-content">
+                            
+                              <table>
+                                {% for i in (1..product.metafields.specification.no_of_items) %}
+                                {% assign specificationkey = "specification_key_" | append: i %}
+                                {% assign ingredientkey = product.metafields.specification[specificationkey] %}
+                                {% assign ingredientValue = "specification_value_" | append: i %}
+                                {% assign ingredientValue = product.metafields.specification[ingredientValue] %}
+                                <tr>
+                                  <td class="lbl"> {{ ingredientkey }}</td>
+                                  <td class="data">{{ ingredientValue }}</td>
+                                </tr>
+                                {% endfor %}
+                              
+                              </table>
+                            
+                            </div>
+
+                            <div class="s-heading">
+                              <h4>Recycle</h4>
+                              <p>{{ product.metafields.product.description }}</p>
+                            </div>
+                          
+                            <div class="sub-content no-border">
+                              <a href="{{ product.url }}">Product details</a>
+                            
+                            </div>
+                          
+                          </div>
+                        </div>
+                      </div>
+                     
+                    </div>
+                    {% endif %}
+                  {% endunless %}
+                  {% endunless %}
+                {% endfor %}
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+
+        <script>
+          var swiper = new Swiper("#{{ collec.handle }}-thumbs", {
+            loop: true,
+            spaceBetween: 20,
+            slidesPerView: 4.277,
+            freeMode: true,
+            watchSlidesVisibility: true,
+            watchSlidesProgress: true,
+          });
+          var swiper2 = new Swiper("#{{ collec.handle }}-mobile", {
+            loop: true,
+            spaceBetween: 10,
+            slidesPerView: 1.115,
+            autoHeight: true,
+            navigation: {
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            },
+            thumbs: {
+              swiper: swiper,
+            },
+          });
+        </script>
+        {% endfor %}
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<script>
+
+  $(document).ready(function () {
+
+    setTimeout(
+      function () {
+        $("#" + $(".recycling-ul li:first").attr('data-id') + "-desktop" + " img:first").trigger('click');
+      }, 100);
+
+    $(".recycling-ul li").click(function (e) {
+      var collection_value = $(this).attr('data-id');
+
+      $('li').removeClass("active");
+      $(this).addClass("active");
+
+      setTimeout(
+        function () {
+          $(".rcy-row3-desktop #" + collection_value + "-desktop img:first").trigger('click');
+        }, 100);
+
+      $('.rcy-row3-desktop .img-div').hide();
+      $('.rcy-row3-desktop .info-div').hide();
+      $('.rcy-row3-desktop #' + collection_value + '-desktop').show();
+      $('.rcy-row3-desktop #' + collection_value + '-desktop').slick('setPosition');
+
+      /* mobile*/
+      $('.rcy-row3-mobile .mobile-thumbs').hide();
+      $('.rcy-row3-mobile .img-div').hide();
+      $('.rcy-row3-mobile #' + collection_value + '-thumbs').show();
+      $('.rcy-row3-mobile #' + collection_value + '-thumbs').slick('setPosition');
+      $('.rcy-row3-mobile #' + collection_value + '-mobile').show();
+      $('.rcy-row3-mobile #' + collection_value + '-mobile').slick('setPosition');
+
+    });
+
+    $(".rcy-row3-desktop .img-div img").on('click', function () {
+      var product_id = $(this).attr('id');
+      $(".rcy-row3-desktop img").removeClass("active-border");
+      $(".rcy-row3-desktop .p-item").removeClass("active");
+      $(this).addClass('active-border');
+      $(this).parents('.p-item').addClass('active');
+      $('.rcy-row3-desktop .info-div').hide();
+      $('.rcy-row3-desktop #pro-info-' + product_id).css("display", "block");
+
+    });
+  });
+
+
+</script>
+
+{% schema %}
+{
+"name": "Section 1",
+"class": "recycling-section1",
+"max_blocks": 8,
+"settings": [
+{
+"type": "text",
+"id": "heading",
+"label": "Heading",
+"default": "Recycling"
+},
+{
+"id": "title_text",
+"type": "text",
+"label": "Title",
+"default": "SENSUAL AND SUSTAINABLE"
+},
+{
+"id": "description",
+"type": "richtext",
+"label": "description",
+"default": "<p>SENSUAL AND SUSTAINABLE</p>"
+}
+],
+"blocks" : [
+{
+"type": "slide",
+"name": "Collection",
+"settings": [
+{
+"type": "collection",
+"id": "recycling_collection",
+"label": "Collection"
+}
+]
+}
+]
+}
+{% endschema %}

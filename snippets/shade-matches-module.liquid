@@ -1,0 +1,301 @@
+<script src="{{ 'slick.js' | asset_url  | append: '&enable_js_minification=1' }}"  defer=defer type="text/javascript"></script>
+<div class="accordion__container">
+  <hr class="divider--start">
+  <div class="shade-matches__container">
+    <button 
+      class="accordion__trigger"
+      aria-expanded="false"
+      aria-controls="acc-content-shade-match"
+      aria-label="Expand content"
+      type="button"
+    >
+      <h2>Shade match</h2>
+      <span class="arrow-up hidden">{% include 'svg-icons' with 'arrow-up'%}</span>
+      <span class="arrow-down">{% include 'svg-icons' with 'arrow-down'%}</span>
+    </button>
+    <div class="accordion__content collapsed" id="acc-content-shade-match">
+      <div class="accordion__content--inner hidden">
+        <div class="shade-matches-module">
+          <div class="shade-matches-container">
+            <div class="shade-matches-wrapper">
+
+              <div class="swap-x">
+              {%- assign autoInc = 0 -%}
+              {% for variant in product.variants %}
+                {% if variant.inventory_quantity > 0 %}
+                  {%- assign autoInc = autoInc | plus: 1 -%}
+                {% endif %}
+
+                <div class="shade-matches {% if autoInc == 1 %}showSlider{% else%} hideSlider {% endif %}" id="shade-{{ variant.id }}">
+
+                {% for variantMeta in variant.metafields.shade_product_variant.product_variant %}
+                  {% assign product_handle = variantMeta | split: ':' | first %}
+                  {% assign variant_id = variantMeta | split: ':' | last | plus: 0 %}
+                                                                              
+                  {% assign referenced_product = all_products[product_handle] %}
+                  {% assign referenced_variant = referenced_product.variants | where: "id", variant_id | first %}                                                    
+
+                  <!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+                  {% unless referenced_product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+                    {% unless referenced_product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+                      {%- if referenced_product != empty -%}
+                        {% assign coming_soon_uk = false %}
+                        {% if referenced_product.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+                          {% assign coming_soon_uk = true %}
+                        {% endif %}
+
+                        <div class="product_card">
+                          <a href="{{- referenced_product.url -}}{%- if referenced_variant.title != 'Default Title' -%}?variant={{referenced_variant.id}}{%- endif -%}" class="product__item-link">
+                            <div class="flexObject">
+                              <div class="img_wrapper">
+                                {% if referenced_variant.title == 'Default Title' %}
+                                  {{referenced_product.featured_image | image_url: width: 1200 | image_tag: width: 120, height: 140, alt: referenced_product.featured_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                                {% else %}
+                                  {{referenced_variant.image | image_url: width: 1200 | image_tag: width: 120, height: 140, alt: referenced_variant.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                                {% endif %}
+                              </div>
+                              <div class="productNameAndLink">
+                                <h3 class="product__title">{{- referenced_product.title  -}}</h3>
+                                <div>
+                                  {% if referenced_variant.title == 'Default Title' %}
+                                    <p class="product__description">{{- referenced_product.metafields.product.shortdescription -}}</p>
+                                  {% else %}
+                                    <p class="variant__title">{{- referenced_variant.title -}}</p>
+                                    <p class="variant__description">{{- referenced_variant.metafields.description.value -}}</p>
+                                  {% endif %}
+                                </div>
+                                                    
+                                <div class="product__cta">
+                                  <button id="{{referenced_variant.id}}" class="
+                                    {%- if referenced_product.metafields.product.coming_soon != 'true' and shop.metafields.globals.coming_soon != 'true' and referenced_variant.metafields.visibility.coming_soon != 'true' and coming_soon_uk != true and referenced_variant.available -%} 
+                                      add-to-cart-button
+                                    {%- endif -%}
+                                    "
+                                    data-id="{{referenced_product.id}}"
+                                    data-purchase-id="{{referenced_variant.id}}"
+                                    {%- unless referenced_variant.available and referenced_product.metafields.product.coming_soon != 'true' and shop.metafields.globals.coming_soon != 'true' and referenced_variant.metafields.visibility.coming_soon != 'true' and coming_soon_uk != true -%}
+                                      disabled
+                                    {%- endunless -%}
+                                  >
+                                    {%- if referenced_product.metafields.product.coming_soon or shop.metafields.globals.coming_soon == 'true' or referenced_variant.metafields.visibility.coming_soon -%}
+                                      {{- 'products.product.coming_soon' | t -}}
+                                    {%- elsif coming_soon_uk == true -%}
+                                      {{- 'products.product.not_available_in_region' | t -}}
+                                    {%- elsif referenced_variant.available -%}
+                                      Add to bag
+                                    {%- else -%}
+                                      {{- 'products.product.sold_out' | t -}}
+                                    {%- endif -%} 
+                                  </button>
+                                  <span class="price">{{- referenced_variant.price | money_without_trailing_zeros -}}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      {%- endif -%}
+                    {% endunless %}
+                  {% endunless %}
+                {% endfor %}
+                </div>
+              {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .shade-matches-module {
+    padding-top: 5px;
+    margin-right: -20px;
+  }
+  .shade-matches-module .hideSlider {
+    display: none!important;
+  }
+  .shade-matches-module .shade-matches-container {
+    margin: 0 auto;
+  }
+  .shade-matches-module .flexObject {
+    display: flex;
+  }
+  .shade-matches-module .productNameAndLink {
+    background:#fff;
+    width: 100%;
+    padding: 20px 20px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .shade-matches-module .productNameAndLink h3 {
+    font-size: 14px;
+    line-height: 15px;
+    letter-spacing: 1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-width: 260px;
+  }
+  .shade-matches-module .productNameAndLink p {
+    margin-bottom: 0;
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .shade-matches-module .productNameAndLink .product__cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 12px;
+    line-height: 15.22px;
+  }
+  .shade-matches-module .productNameAndLink .product__cta span.price {
+    padding-top: 2px;
+    margin-bottom: 0;
+    font-weight: normal;
+  }
+  .shade-matches-module .productNameAndLink .product__cta button {
+    background: none;
+    border: none;
+    font-size: 12px;
+    line-height: 16px;
+    border-bottom: 1px solid #545353;
+  }
+  .shade-matches-module .productNameAndLink .product__cta button:hover {
+    color: var(--border-color);
+    border-bottom-color: var(--border-color);
+  }
+  .shade-matches-module .showSlider {
+    {% comment %} display: flex!important; {% endcomment %}
+  }
+  .shade-matches-module .product_card {
+    margin: 0 20px 0 0;
+    scroll-snap-align: start;
+    max-width: 400px;
+  }
+  .shade-matches-module .product_card .img_wrapper img {
+    height: 147px;
+    min-width: 119px;
+    object-fit: cover;
+  }
+  body .shade-matches-module .swap-x {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  body .shade-matches-module .swap-x::-webkit-scrollbar {
+    display: none;
+  }
+  body .shade-matches-module .swap-x .shade-matches {
+    {% comment %} width: max-content;
+    display: flex; {% endcomment %}
+    margin: 0 20px 0 0;
+  }
+  body .shade-matches-module .swap-x .shade-matches .inner_content {
+    bottom: 15px;
+    padding-top: 0!important; 
+    padding-bottom: 0!important;
+  }
+  .shade-matches-module .shade-matches .slick-list {
+    margin: 0;
+    padding: 0 58px 0 0;
+  }
+  .shade-matches-module .shade-matches .slick-arrow {
+    display: none !important;
+  }
+  .shade-matches-module .shade-matches .slick-slide {
+    margin-right: 17px;
+  }
+  .shade-matches-module .shade-matches .slick-slide>div {
+    padding: 0 !important;
+  }
+  .shade-matches-module .shade-matches .product__item-link {
+    text-decoration: none;
+  }
+
+  @media screen and (max-width: 767px) {
+    .shade-matches-module .product_card {
+      max-width: unset;
+    }
+    .shade-matches-module .product_card .img_wrapper img {
+      height: 157px;
+      min-width: 127px;
+    }
+    .shade-matches-module .productNameAndLink {
+      padding: 22px 12px 22px 18px;
+    }
+    .shade-matches-module .productNameAndLink .product__title {
+      font-size: 11.5px;
+      margin-bottom: 0;
+      letter-spacing: 0.8px;
+      -webkit-line-clamp: 2;
+    }
+    .shade-matches-module .product_card {
+      margin: 0 15px 0 0;
+      width: 83vw;
+    }
+    .shade-matches-module .productNameAndLink p {
+      max-width: 140px;
+      line-height: 16px;
+    }
+    .shade-matches-module .productNameAndLink .product__cta button {
+      font-size: 12px;
+    }
+    .shade-matches-module .productNameAndLink .product__cta span.price {
+      display: none;
+    }
+    body .shade-matches-module .swap-x .shade-matches.showSlider {
+      width: unset !important;
+      display: block !important;
+    }
+    .shade-matches-module .shade-matches .slick-list {
+      padding: 0 30px 0 0;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .shade-matches-module .shade-matches .slick-list {
+      padding: 0 30px 0 0;
+    }
+  }
+
+  @media (min-width: 500px) and (max-width: 767px) {
+    .shade-matches-module .shade-matches .slick-list {
+      padding: 0 calc(100%/5) 0 0;
+    }
+  }
+</style>
+
+<script>
+  $(document).ready(function() {
+    function getSliderSettings() {
+      return {
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        dots: false,
+        infinite: false,
+        arrows: false,
+        adaptiveHeight: false,
+        centerMode: false,
+        centerPadding: "1px",
+        speed: 500
+      }
+    }
+    $('.shade-matches.showSlider').slick(getSliderSettings());
+
+    $(document).on('click', '.variant_list_item_selected', function (e) {
+      $('.shade-matches.slick-initialized').slick('unslick');
+      $('.shade-matches').removeClass("showSlider");
+      $('.shade-matches').addClass("hideSlider");
+      $('#shade-'+e.target.dataset.variantId).removeClass("hideSlider").addClass("showSlider");
+      $('#shade-'+e.target.dataset.variantId).slick(getSliderSettings());
+    });
+  });
+</script>

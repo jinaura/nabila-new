@@ -1,0 +1,312 @@
+[
+  {
+    "id": 2,
+    "modelName": "KENNA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_02_200x.jpg?v=61167338140557798021718609180",
+    "darkness": 1,
+    "warmth": 1,
+    "recommendedFoundation": "1C",
+    "recommendedSerum": "010",
+    "recommendedConcealer": "LX 010"
+  },
+  {
+    "id": 38,
+    "modelName": "DANI",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_38_200x.jpg?v=169443974153119042421718609181",
+    "darkness": 1,
+    "warmth": 2,
+    "recommendedFoundation": "2N",
+    "recommendedSerum": "010",
+    "recommendedConcealer": "LX 010"
+  },
+  {
+    "id": 28,
+    "modelName": "MIA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_28_200x.jpg?v=159923139306880855461718609181",
+    "darkness": 1,
+    "warmth": 0,
+    "recommendedFoundation": "3N",
+    "recommendedSerum": "030",
+    "recommendedConcealer": "LX 030"
+  },
+  {
+    "id": 3,
+    "modelName": "TRINITY",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_03_200x.jpg?v=45550603640034216001718609180",
+    "darkness": 1,
+    "warmth": 2,
+    "recommendedFoundation": "4W",
+    "recommendedSerum": "020",
+    "recommendedConcealer": "LX 030"
+  },
+  {
+    "id": 7,
+    "modelName": "EMILY",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_07_200x.jpg?v=16250514018533314991718609180",
+    "darkness": 1,
+    "warmth": 1,
+    "recommendedFoundation": "5N",
+    "recommendedSerum": "030",
+    "recommendedConcealer": "LX 040"
+  },
+  {
+    "id": 27,
+    "modelName": "SORAYA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_27_200x.jpg?v=121173227175539274111718609181",
+    "darkness": 2,
+    "warmth": 2,
+    "recommendedFoundation": "6W",
+    "recommendedSerum": "050",
+    "recommendedConcealer": "LX 040"
+  },
+  {
+    "id": 5,
+    "modelName": "ALEXA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_05_200x.jpg?v=118102120879925806231718609180",
+    "darkness": 2,
+    "warmth": 0,
+    "recommendedFoundation": "7C",
+    "recommendedSerum": "030",
+    "recommendedConcealer": "LX 030"
+  },
+  {
+    "id": 43,
+    "modelName": "EILEEN",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_43_200x.jpg?v=1943209075804393451718609181",
+    "darkness": 2,
+    "warmth": 1,
+    "recommendedFoundation": "8N",
+    "recommendedSerum": "030",
+    "recommendedConcealer": "LX 030"
+  },
+  {
+      "id": 14,
+      "modelName": "DIANA",
+      "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_14_200x.jpg?v=138348361137577672441718609181",
+      "darkness": 2,
+      "warmth": 1,
+      "recommendedFoundation": "9W",
+      "recommendedSerum": "030",
+      "recommendedConcealer": "LX 020"
+  },
+  {
+    "id": 30,
+    "modelName": "GRACE",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_30_200x.jpg?v=24476228756599380231718609181",
+    "darkness": 2,
+    "warmth": 2,
+    "recommendedFoundation": "10N",
+    "recommendedSerum": "040",
+    "recommendedConcealer": "LX 040"
+  },
+  {
+    "id": 44,
+    "modelName": "PARIS",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_44_200x.jpg?v=89493124725032524541718609181",
+    "darkness": 2,
+    "warmth": 2,
+    "recommendedFoundation": "11W",
+    "recommendedSerum": "040",
+    "recommendedConcealer": "LX 040"
+  },
+  {
+    "id": 41,
+    "modelName": "MAXINE",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_41_200x.jpg?v=54554005697957515101718609181",
+    "darkness": 3,
+    "warmth": 0,
+    "recommendedFoundation": "12C",
+    "recommendedSerum": "050",
+    "recommendedConcealer": "LX 050"
+  },
+  {
+    "id": 33,
+    "modelName": "KAROLINA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_33_200x.jpg?v=80626587915368017331718609181",
+    "darkness": 3,
+    "warmth": 1,
+    "recommendedFoundation": "13N",
+    "recommendedSerum": "050",
+    "recommendedConcealer": "LX 050"
+  },
+  {
+    "id": 20,
+    "modelName": "AYLYA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_20_200x.jpg?v=96794475050044322131718609181",
+    "darkness": 3,
+    "warmth": 0,
+    "recommendedFoundation": "14W",
+    "recommendedSerum": "050",
+    "recommendedConcealer": "LX 040"
+  },
+  {
+    "id": 16,
+    "modelName": "ABRIELLE",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_16_200x.jpg?v=5466782628208788501718609181",
+    "darkness": 3,
+    "warmth": 2,
+    "recommendedFoundation": "15N",
+    "recommendedSerum": "060",
+    "recommendedConcealer": "LX 060"
+  },
+  {
+    "id": 36,
+    "modelName": "LISA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_36_200x.jpg?v=65697678223431475231718609181",
+    "darkness": 3,
+    "warmth": 2,
+    "recommendedFoundation": "16W",
+    "recommendedSerum": "060",
+    "recommendedConcealer": "LX 060"
+  },
+  {
+    "id": 22,
+    "modelName": "CATHY",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_22_200x.jpg?v=128266348953227123721718609181",
+    "darkness": 4,
+    "warmth": 0,
+    "recommendedFoundation": "17C",
+    "recommendedSerum": "070",
+    "recommendedConcealer": "LX 080"
+  },
+  {
+    "id": 48,
+    "modelName": "MARGO",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_48_200x.jpg?v=84151359529004569211718609181",
+    "darkness": 4,
+    "warmth": 0,
+    "recommendedFoundation": "18W",
+    "recommendedSerum": "060",
+    "recommendedConcealer": "LX 070"
+  },
+  {
+    "id": 53,
+    "modelName": "LUCIE",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_53_200x.jpg?v=157131178161129692941718609181",
+    "darkness": 4,
+    "warmth": 1,
+    "recommendedFoundation": "19N",
+    "recommendedSerum": "080",
+    "recommendedConcealer": "LX 070"
+  },
+  {
+    "id": 57,
+    "modelName": "ANDREA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_57_200x.jpg?v=149951620785233482211718609181",
+    "darkness": 4,
+    "warmth": 2,
+    "recommendedFoundation": "20N",
+    "recommendedSerum": "080",
+    "recommendedConcealer": "LX 090"
+  },
+  {
+    "id": 51,
+    "modelName": "NADIA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_51_200x.jpg?v=146608248222941630721718609181",
+    "darkness": 5,
+    "warmth": 0,
+    "recommendedFoundation": "21W",
+    "recommendedSerum": "090",
+    "recommendedConcealer": "LX 100"
+  },
+  {
+    "id": 69,
+    "modelName": "SARAH",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_69_200x.jpg?v=122839448785760573891718609181",
+    "darkness": 5,
+    "warmth": 2,
+    "recommendedFoundation": "22N",
+    "recommendedSerum": "090",
+    "recommendedConcealer": "LX 110"
+  },
+  {
+    "id": 68,
+    "modelName": "ZAHRAH",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_68_200x.jpg?v=102061185838592813311718609181",
+    "darkness": 5,
+    "warmth": 0,
+    "recommendedFoundation": "23C",
+    "recommendedSerum": "100",
+    "recommendedConcealer": "LX 110"
+  },
+  {
+    "id": 56,
+    "modelName": "BIJAN",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_56_200x.jpg?v=5933708338043484581718609181",
+    "darkness": 5,
+    "warmth": 1,
+    "recommendedFoundation": "24W",
+    "recommendedSerum": "110",
+    "recommendedConcealer": "LX 130"
+  },
+  {
+    "id": 66,
+    "modelName": "KENNEDY",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_66_200x.jpg?v=118266016154529823731718609181",
+    "darkness": 5,
+    "warmth": 1,
+    "recommendedFoundation": "25W",
+    "recommendedSerum": "110",
+    "recommendedConcealer": "LX 140"
+  },
+  {
+    "id": 74,
+    "modelName": "AISHA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_74_200x.jpg?v=12217174872862571051718609181",
+    "darkness": 6,
+    "warmth": 1,
+    "recommendedFoundation": "26N",
+    "recommendedSerum": "120",
+    "recommendedConcealer": "LX 170"
+  },
+  {
+    "id": 78,
+    "modelName": "ROSEMARIE",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_78_200x.jpg?v=120795701856397845131718609181",
+    "darkness": 6,
+    "warmth": 1,
+    "recommendedFoundation": "27C",
+    "recommendedSerum": "130",
+    "recommendedConcealer": "LX 160"
+  },
+  {
+    "id": 82,
+    "modelName": "TASHANDA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_82_200x.jpg?v=109905329583264624821718609181",
+    "darkness": 6,
+    "warmth": 2,
+    "recommendedFoundation": "28W",
+    "recommendedSerum": "120",
+    "recommendedConcealer": "LX 150"
+  },
+  {
+    "id": 75,
+    "modelName": "MOLLIE",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_75_200x.jpg?v=90094159249752812901718609181",
+    "darkness": 6,
+    "warmth": 1,
+    "recommendedFoundation": "29N",
+    "recommendedSerum": "130",
+    "recommendedConcealer": "LX 180"
+  },
+  {
+    "id": 85,
+    "modelName": "KHASNAA",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_85_200x.jpg?v=43197109814051866651718609181",
+    "darkness": 6,
+    "warmth": 0,
+    "recommendedFoundation": "30W",
+    "recommendedSerum": "140",
+    "recommendedConcealer": "LX 190"
+  },
+  {
+    "id": 86,
+    "modelName": "APIO",
+    "url": "\/\/nabillabeauty.com\/cdn\/shop\/t\/42\/assets\/sf_face_86_200x.jpg?v=151427213912221025291718609181",
+    "darkness": 6,
+    "warmth": 1,
+    "recommendedFoundation": "31N",
+    "recommendedSerum": "140",
+    "recommendedConcealer": "LX 200"
+  }
+]

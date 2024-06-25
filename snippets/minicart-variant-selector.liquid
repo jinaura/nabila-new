@@ -1,0 +1,261 @@
+{%- assign __product = variant-selector | default: product -%}
+<div class="shutter">
+
+    <div class="ctas">
+        <button type="button" class="close">Close</button>
+        <a href="{{ __product.url  }}">Product details</a>
+    </div>
+
+    <div class="hidden-sm hidden-md hidden-lg">
+        <h3>{{- __product.title | truncatewords: 5, "" -}}</h3>
+        <p>{{- __product.description | truncatewords: 10, "..." -}}</p>
+    </div>
+
+    {% if product.variants.size >= 1 %}
+
+        <div class="color_info {% if __product.tags contains 'show_color_slider' %}slide-enable{% else %}wrap_in{% endif %}" id="mini-color-info-{{ __product.id }}">
+            {% assign colorName = '' %}
+            {% assign colorHex = '' %}
+            {% assign colorTexture = '' %}
+            {% assign colorFlag = '' %}
+            {% assign colorDescription = '' %}
+            {% assign isSizeVariant = false %}
+            {% assign maxVariant = 0 %}
+            {% assign checkSelectedOption = 0 %}
+            {% assign selectedColorName = '' %}
+            {% assign selectedColorDescription = '' %}
+            {%- assign background_image = '' -%}
+
+            {% for product_option in __product.variants %}
+                {% if product_option.inventory_quantity >= 1 and product_option.metafields.visibility.hide != 'true' %}
+                    {% assign checkSelectedOption = forloop.index %}
+                    {% break %}
+                {% endif %}
+            {% endfor %}
+
+            {% if checkSelectedOption == 0 %}
+                {% assign checkSelectedOption = 0 %}
+            {% else %}
+                {% assign checkSelectedOption = checkSelectedOption | minus: 1 %}
+            {% endif %}
+
+            {% for product_option in __product.options_with_values %}
+                {% for value in product_option.values %}
+
+                    {% if product_option.name == 'Color'%}
+                        {% assign maxVariant = product_option.values.size %}
+
+                        <div class="opt">
+                            
+                            {% for variant in __product.variants %}
+                                {% unless variant.metafields.visibility.hide %}
+                                    {% if variant.metafields.color.name == value %}
+                                        {% assign colorHex = variant.metafields.color.hex %}
+                                        {% assign colorFlag = variant.metafields.flag.title %}
+                                        {% assign originalColorName = variant.metafields.color.name %}
+                                        {% assign colorName = originalColorName | split : "/" %}
+                                        {% assign colorDescription = variant.metafields.description.value %}
+                                        {%- if variant.metafields.color.texture %}
+                                            {%- assign background_image = "url('"| append:variant.metafields.color.texture[0].src|append:"')"-%}
+                                        {% else %}
+                                            {%- assign background_image = "none"-%}
+                                        {%- endif -%}
+                                        <span style="display: none;" id="color-minicart-{{ colorName[0] | replace: ' ','-' }}-{{ __product.id }}">
+                                            <p class="color__name">{{ originalColorName }}</p>
+                                            <p class="color__description">{{ colorDescription }}</p>
+                                        </span>
+
+                                        <!--- get available variant information  --->
+                                        {% if __product.variants[checkSelectedOption].option1 == value %}
+                                            {% assign selectedColorName = originalColorName %}
+                                            {% assign selectedColorDescription = colorDescription %}
+                                        {% endif %}
+                                        <!--- end get available variant information  --->
+                                    {% endif %}
+                                {% endunless %}
+                            {% endfor %}
+
+                            {% unless colorName == '' %}
+                                <div class="color_radio miniProductOption special_txt">
+                                    {% assign splitName = value |split: "/" %}
+                                    <input type="radio" style="display: none;" name="{{ product_option.name }}-{{ random_number }}"
+                                           value="{{ splitName[0] }}"
+                                            {% if __product.variants[checkSelectedOption].option1 == value %} checked {% endif %}
+                                           data-pid="{{ __product.id }}"
+                                           data-type="{{ product_option.name }}"
+                                           data-cno="{{ forloop.index }}"
+                                           id="minicart-{{ splitName[0] | replace: ' ','-' }}-{{ __product.id }}"
+                                           class="{{ product_option.name }}-{{ __product.id }} mini-cart-color_variant_selector"
+                                           data-product-id="{{__product.id}}">
+                                        <label for="minicart-{{ splitName[0] | replace: ' ','-' }}-{{ __product.id }}" style="background-color:{{colorHex}};  background-image: {{ background_image }}">
+                                        {% assign getVariantIndex = forloop.index | minus: 1 %}
+                                        {% unless __product.variants[getVariantIndex].metafields.visibility.coming_soon %}
+                                            {% if __product.variants[getVariantIndex].inventory_quantity < 1 %}
+                                                <svg class="variant-notavailable-strike" viewBox="0 0 100 100">
+                                                    <line x1="0" y1="100" x2="100" y2="0"></line>
+                                                </svg>
+                                            {% endif %}
+                                        {% endunless %}
+                                        <span>{{ colorFlag }}</span>
+                                    </label>
+                                </div>
+                            {% endunless %}
+                        </div>
+                    {% endif %}
+
+                    {% if product_option.name == 'Size' %}
+                        {% assign isSizeVariant = true %}
+                    {% endif %}
+
+                    {% assign colorName = '' %}
+                {% endfor %}
+
+            {% endfor %}
+
+        </div>
+
+    {% if product.tags contains 'show_color_slider' %}
+        <form class="rangeSlider hide">
+            <input class="scroll-range" min="1" max="{{ maxVariant }}" value="{{ checkSelectedOption }}" id="mini-scroll-range-{{ product.id }}" type="range" />
+        </form>
+
+        <script>
+            $(window).ready(function() {
+                var getLength = $('#mini-color-info-{{ __product.id }} .color_radio').length;
+
+
+                if (getLength >= 4){
+                    var scroll = document.getElementById('mini-scroll-range-{{ __product.id }}');
+                    scroll.oninput = function () {
+                        var panel = document.getElementById('mini-color-info-{{ __product.id }}');
+
+                        /// color selection according to slider movement and trigger this filed ///
+                        var color_value = $(this).parent().parent().find('.color_radio').find('input[data-cno="' + this.value + '"]').attr('value');
+                        color_value = (color_value.replace(/ /g,"-"));
+                        console.log('color_value ', color_value)
+                        $(this).parent().parent().find('.color_radio').find('input[data-cno="' + this.value + '"]').trigger('click');
+                        $('#'+color_value+'-{{ __product.id }}').prop('checked', true);
+
+                        var total = panel.scrollWidth - panel.offsetWidth;
+                        if (getLength > 3 && getLength < 8) {
+                             var percentage = this.value * (total / getLength);
+                             percentage < 23 ?  panel.scrollLeft = 0 : panel.scrollLeft = percentage;
+                        } else if (getLength >= 8 ) {
+                            var percentage = this.value * (total / getLength);
+                            percentage < 60 ?  panel.scrollLeft = 0 : panel.scrollLeft = percentage;
+                        }
+                    }
+
+                    $('#mini-scroll-range-{{ __product.id }}').parent().removeClass('hide');
+                }
+            });
+        </script>
+    {% endif %}
+
+
+    {% endif %}
+
+    <div class="variant_info" id="variant-info-minicart-{{ __product.id }}">
+        <p class="color__name">{{ selectedColorName }}</p>
+        <p class="color__description">{{ selectedColorDescription }}</p>
+    </div>
+
+    <div class="cart_actions">
+
+        {% if product.variants.size >= 1 %}
+            <div class="variants_size {% if isSizeVariant == false %}  hide-variant-size {% endif %}" id="variants_size_{{ __product.id }}">
+                <select name="Size" class="selectStyled miniProductOption {{ product_option.name }}-{{ __product.id }}" data-pid="{{ __product.id }}" id="mini-Size-{{ __product.id }}">
+                    {% for product_option in product.options_with_values %}
+                        {% for value in product_option.values %}
+                            {% if product_option.name == 'Size'%}
+                                <option value="{{ value }}" {% if __product.variants[checkSelectedOption].option2 == value %} selected {% endif %} >{{ value }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+
+        {% if product.variants.size > 1 %}
+            <select name="id" id="miniVariantSelectMain_{{ __product.id }}" class="product-form__variants no-js" style="display: none;">
+                {% for variant in product.variants %}
+                    {% assign splitTitle = variant.title |split: "/" %}
+                    {% if variant.metafields.visibility.coming_soon %}
+                        <option {% if variant.title == __product.variants[checkSelectedOption].title %} selected="selected" {% endif %} value="{{ variant.id }}" data-product-id="{{ __product.id }}" data-variant-title="{{ splitTitle[0] }} - Coming Soon">{{ variant.title }} - Coming Soon</option>
+                    {% elsif variant.available %}
+                        <option {% if variant.title == __product.variants[checkSelectedOption].title %} selected="selected" {% endif %} value="{{ variant.id }}" data-price="{{ variant.price | money_without_trailing_zeros }}" data-product-id="{{ __product.id }}" data-variant-title="{{ splitTitle[0] }}">
+                            {{ variant.title }}
+                        </option>
+                    {% else %}
+                        <option {% if variant.title == __product.variants[checkSelectedOption].title %} selected="selected" {% endif %} value="{{ variant.id }}" data-product-id="{{ __product.id }}" data-variant-title="{{ splitTitle[0] }} - {{ 'products.product.sold_out' | t }}">{{ variant.title }} - {{ 'products.product.sold_out' | t }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        {% endif %}
+
+        <!--- form put in capture b/c this can be handle from both condition js/liquid--->
+
+        {% capture miniCartShowForm%}
+
+            <span id="mini_variant_price_{{ __product.id }}" class="var_price {% if __product.variants[checkSelectedOption].metafields.visibility.coming_soon %} variant-notavailable-span p1{% elsif __product.variants[checkSelectedOption].inventory_quantity <= 0 %} variant-notavailable-span p0{% endif %}">
+                {% unless __product.variants[checkSelectedOption].metafields.visibility.coming_soon %}
+                    {% if __product.variants[checkSelectedOption].inventory_quantity > 0 %}
+                        {% if __product.variants[checkSelectedOption].compare_at_price and localization.country.iso_code != 'GB' %}
+                          <span class="sr-only">Original price: </span>
+                            <span>{{  __product.variants[checkSelectedOption].compare_at_price | money_without_trailing_zeros }}</span>
+                        {% endif %}
+                        <span class="sr-only">Current price: </span>
+                        {{ __product.variants[checkSelectedOption].price | money_without_trailing_zeros }}
+                    {% endif %}
+                {% endunless%}
+            </span>
+
+            <form method="post" action="/cart/add" onsubmit="return false;" class="product_form impulse_item {% if __product.variants[checkSelectedOption].metafields.visibility.coming_soon %} coming-soon{% elsif __product.variants[checkSelectedOption].inventory_quantity <= 0 %} unavailable{% endif %}">
+                <input type="hidden" name="id" id="mini_variant_id_{{ __product.id }}" class="mini-cart-variant_id_{{ __product.id }} variant_id_{{ __product.id }}" value="{{ product.variants[checkSelectedOption].id }}" />
+                <input type="hidden" value="{{ product.options.size }}" id="mini_p_t_v_{{__product.id}}" />
+
+                <input type="submit" data-purchase-id="{{ product.variants[checkSelectedOption].id }}" id="mini_sub_{{ __product.id }}" {% if __product.variants[checkSelectedOption].metafields.visibility.coming_soon %} value="Coming Soon" disabled {% elsif __product.variants[checkSelectedOption].inventory_quantity <= 0 %} value="Out Of Stock" disabled {% else %} value="Add to Cart" {% endif %} class="add_btn impulse-mini mini-cart-add-to-cart-button mini-cart-add-to-cart-button_{{__product.id}}" 
+                  onclick="pintrk('track', 'addtocart', {
+                    value: {{__product.selected_or_first_available_variant.price | money_without_currency }},
+                    product_name: '{{__product.title}}',
+                    product_id: '{{__product.id}}',
+                    product_price: {{__product.selected_or_first_available_variant.price | money_without_currency }},
+                    currency: 'USD'
+                  });"
+                />
+                {% if __product.metafields.product.custom_message %}
+                    <input type="hidden" name="properties[custom_message]" value="{{ __product.metafields.product.custom_message }}" >
+                {% endif %}
+            </form>
+        {% endcapture %}
+
+        {% assign coming_soon_uk = false %}
+        {% if product.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+            {% assign coming_soon_uk = true %}
+        {% endif %}
+
+        <div id="hash_minicart_{{ __product.id }}" class="price_btn {% if isSizeVariant == true %} decWidth{% endif %} {% if shop.metafields.globals.coming_soon == 'true' or product.metafields.product.coming_soon or coming_soon_uk %} have_coming__btn {% endif %}">
+
+            {% if shop.metafields.globals.coming_soon != 'true' and product.metafields.product.coming_soon != 'true' and coming_soon_uk != true %}
+                {{ miniCartShowForm }}
+            {% else %}
+                <input type="submit"  value="Coming Soon" class="add_btn" disabled />
+            {% endif %}
+        </div>
+
+        <script>
+            var hash_localstorage = localStorage.getItem('email_hash');
+            var hash_comingsoon = `{{ shop.metafields.globals.coming_soon }}`;
+            var hash_metafield = `{{ shop.metafields.globals.hash }}`;
+            if(hash_localstorage == hash_metafield && hash_comingsoon){
+                var getId = $('#hash_minicart_{{ __product.id }}');
+                var putdata = `{{ miniCartShowForm }}`;
+                getId.html(putdata);
+            }
+        </script>
+
+    </div>
+
+</div>
+{%- assign _product = '' -%}

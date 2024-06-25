@@ -1,0 +1,440 @@
+{%- assign _product_item_sets = product-item-sets -%}
+<!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+{% unless _product_item_sets.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+{% unless _product_item_sets.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+{% unless  product.handle ==  _product_item_sets.handle %}
+{%- if _product_item_sets != empty -%}
+	<div class="product__item set {{coll_type}}_coll {% unless holiday_enabled == true or section.settings.disable_animation %}animate{% endunless %} {% unless _product_item_sets.available %}product__item--sold-out{% endunless %}">
+	  <div class="product_img_wrapper">
+      {%- include 'feature-tag' prod: _product_item_sets -%}
+      <a href="{{ _product_item_sets.url }}" class="product__item-link">
+        
+        <!-- show award badge for US -->
+        {% capture awardBadge %}
+            {% if _product_item_sets.metafields.media.badge and localization.country.iso_code != 'GB' %}
+                <span class="badge-img__wrapper">
+                    <img src="{{ _product_item_sets.metafields.media.badge[0].src }}" alt="{{ _product_item_sets.metafields.media.badge[0].alt | strip }}" class="badge-img" 
+                      srcset="
+                      {{ _product_item_sets.metafields.media.badge[0].src | append: '&transform=resize=150' }} 150w,
+                      {{ _product_item_sets.metafields.media.badge[0].src | append: '&transform=resize=300' }} 300w
+                      " 
+                      fetchpriority="low" loading="lazy"
+                    />
+                </span>
+            {% endif %}
+        {% endcapture %}
+
+
+        <span class="product__item-image">
+            {% assign hunza_enabled = false %}
+            {% if coll_type == 'hunza-shopall' and _product.metafields.product.prod_image_holiday_coll[0] %}
+                {% assign hunza_enabled = true %}
+            {% endif %}
+            {% assign holiday_enabled_img = false %}
+            {% if holiday_enabled == true and _product.metafields.product.prod_image_holiday_coll[0] %}
+              {% assign holiday_enabled_img = true %}
+            {% endif %}
+            {% if holiday_enabled_img == true or hunza_enabled == true %}
+              {% for prod_media in _product.metafields.product.prod_image_holiday_coll %}
+                <img src="{{ prod_media.src }}" alt="{{ prod_media.alt }}" 
+                  srcset="
+                  {{ prod_media.src | append: '&transform=resize=600' }} 600w,
+                  {{ prod_media.src | append: '&transform=resize=900' }} 900w,
+                  {{ prod_media.src | append: '&transform=resize=1200' }} 1200w
+                  "
+                  fetchpriority="high" loading="lazy"
+                >
+              {% endfor %}
+            {% else %}
+              {{ awardBadge }}
+              {{_product_item_sets.featured_image | image_url: width: 1200, height: 1200, crop: 'center' | image_tag: width: nil, height: nil, alt: _product_item_sets.featured_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+            {% endif %}
+        </span>
+      </a>
+        
+        
+        <article class="section__flex-item product_set" id="product_bundle_{{ _product_item_sets.handle }}" style="display: none;" >
+          <div class="popupHeader">
+              <button type="button" class="close_link see-more" id="{{ _product_item_sets.handle }}" aria-expanded="false" aria-controls="product_bundle_{{ _product_item_sets.handle }}">Close</button>
+              <a href="{{ _product_item_sets.url }}" class="see-more">Product details</a>
+          </div>
+
+
+            <h3 class="mobile-sets-title hidden-sm hidden-md hidden-lg">{{ _product_item_sets.title }}</h3>
+            <hr class="section__divider hidden-sm hidden-md hidden-lg">
+       
+
+          <form method="post" action="/cart/add" onsubmit="return false;" id="bundle_items_{{ forloop.index }}" class="product_form">
+            {% assign form_id = forloop.index | prepend: 'bundle_items_' %}
+            {% assign bundle_index = forloop.index %}
+            {% assign bundle_size = forloop.length %}
+
+            {% comment %}{% assign bundle_product_items = _product_item_sets.metafields.bundle.product_items | split: '|' %}{% endcomment %}
+            {% assign bundle_threashold_metafield = _product_item_sets.metafields.bundle.bundle_threshold | plus: 0 %}
+            {% assign forCheckBox = 0 %}
+            {% assign sold_out_product = false %}
+
+            {%- assign min = forCheckBox -%}
+            {%- assign max = 100 -%}
+            {%- assign diff = max | minus: min -%}
+            {%- assign parent_random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+
+            {% for productItem in _product_item_sets.metafields.bundle.product_items %}
+
+                {%- assign min = forCheckBox -%}
+                {%- assign max = 100 -%}
+                {%- assign diff = max | minus: min -%}
+                {%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+
+                {% if collections['bundles-child-product'].products.size > 0 %}
+                    {% assign collectionVariable = 'bundles-child-product' %}
+                {% else %}
+                    {% assign collectionVariable = 'shop-all' %}
+                {% endif%}
+
+                {% for bundleCp in collections[collectionVariable].products %}
+                    {% if bundleCp.handle == productItem %}
+                        {% assign bundleProductItem = bundleCp %}
+                        {% break %}
+                    {% endif %}
+                {% endfor %}
+            
+              <div class="product_item product_item_{% for variant in _product_item_sets.variants %}{{ variant.id }}{% endfor %}_{{ parent_random_number }}" data-index="{% if bundle_index > 2 and forloop.length < 3 %}{{ forloop.index }}{% else %}{{ forloop.index0 }}{% endif %}">
+                <figure>
+                    <img src="{{bundleProductItem.featured_image | img_url: '200x'}}" alt="{{bundleProductItem.featured_image.alt}}" fetchpriority="low" loading="lazy" 
+                        class="bundle-img animate bundle_image_{% for variant in _product_item_sets.variants %}{{ variant.id }}{% endfor %}" fetchpriority='low'  fetchpriority="low" loading="lazy" /></figure>
+                    <div class="content">
+                      <h3 class="bundle_header_{% for variant in _product_item_sets.variants %}{{ variant.id }}{% endfor %}">{{- bundleProductItem.title | truncatewords: 8, "" -}}</h3>
+                      <p>{{- bundleProductItem.metafields.product.properties -}}</p>
+
+                      <!--- 3 check availble product in bundel w.r.t bundle threashold ---->
+                      {% for bundle_variants in bundleProductItem.variants %}
+                          {% if bundle_variants.inventory_quantity > bundle_threashold_metafield and bundle_variants.metafields.visibility.hide != 'true' %}
+                              {% assign checkSelectedOption = forloop.index %}
+                              {% break %}
+                          {% endif %}
+                      {% endfor %}
+
+                      {% if checkSelectedOption == 0 %}
+                          {% assign checkSelectedOption = 0 %}
+                      {% else %}
+                          {% assign checkSelectedOption = checkSelectedOption | minus: 1 %}
+                      {% endif %}
+                      <!--- end check availble product in bundel w.r.t bundle threashold ---->
+
+                      {% for product_option in bundleProductItem.options_with_values %}
+
+                          {% if product_option.name == 'Color'%}
+                              <div class="choose_shades" id="choose_shade_{{ bundleProductItem.id }}" >
+                                  <span class="c_btn">Choose Shades</span>
+                                  <div class="shades_content">
+                                    <span class="main_color"></span>
+                                    <span class="var_txt" >
+                                    {% comment %} {% if bundleProductItem.variants[checkSelectedOption].metafields.visibility.coming_soon %}
+                                        {% assign sold_out_product = true %}
+                                        {{ bundleProductItem.variants[checkSelectedOption].option1 }} <span>Coming Soon</span>
+                                    {% elsif bundleProductItem.variants[checkSelectedOption].inventory_quantity > bundle_threashold_metafield %}
+                                        {{ bundleProductItem.variants[checkSelectedOption].option1 }}
+                                    {% else %}
+                                        {% assign sold_out_product = true %}
+                                        {{ bundleProductItem.variants[checkSelectedOption].option1 }} <span>{{ 'products.product.sold_out' | t }}</span>
+                                    {% endif %} {% endcomment %}
+                                    </span>
+                                </div>
+                              </div>
+                          {% endif %}
+
+                          {% if product_option.name == 'Title'%}
+                              {% if bundleProductItem.variants[0].metafields.visibility.coming_soon %}
+                                {% assign sold_out_product = true %}
+                                <div class="choose_shades">
+                                    <span class="var_txt" ><span>Coming Soon</span></span>
+                                </div>                         
+                              {% elsif bundleProductItem.variants[0].inventory_quantity <= bundle_threashold_metafield %}
+                                  {% assign sold_out_product = true %}
+                                  <div class="choose_shades">
+                                      <span class="var_txt" ><span>{{ 'products.product.sold_out' | t }}</span></span>
+                                  </div>
+                              {% endif %}
+                          {% endif %}
+                      {% endfor %}
+                  </div>
+
+                  <!-- SHUTTER POPUP -->
+                  {% assign bundle_product = bundleProductItem %}
+                  {% assign bundle_product_seq = forloop.index %}
+                  {% include 'collection-bundle-variant-selector' %}
+                  <input type="hidden" id="properties_{{ forloop.index }}" name="product_handle{{ forloop.index }}"  value="{{ bundle_product.handle }}">
+                  <!-- SHUTTER POPUP END // -->
+                </div>
+
+
+
+                {% assign forCheckBox = forCheckBox | plus: 1 %}
+            {% endfor %}
+
+              <!-- bundle pre selected variant --->
+              {% include 'bundle-preselected-variant' %}
+
+            <div class="price_btn--wrapper price_btn--wrapper_{% for variant in _product_item_sets.variants %}{{ variant.id }}"{% endfor %}">
+                {% assign has_shade = false %}
+                {% for productItem in _product_item_sets.metafields.bundle.product_items %}
+                  {% if collections['bundles-child-product'].products.size > 0 %}
+                    {% assign collectionVariable = 'bundles-child-product' %}
+                  {% else %}
+                    {% assign collectionVariable = 'shop-all' %}
+                  {% endif%}
+
+                  {% for bundleCp in collections[collectionVariable].products %}
+                    {% if bundleCp.handle == productItem %}
+                      {% assign bundleProductItem = bundleCp %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% for product_option in bundleProductItem.options_with_values %}
+                    {% if product_option.name == 'Color' %}
+                      {% assign has_shade = true %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor%}
+                {% endfor %}
+                {% for productItem in _product_item_sets.metafields.product_variant.product_variant %}
+                  {% for product_option in bundleProductItem.options_with_values %}
+                    {% if product_option.name == 'Color' %}
+                      {% assign has_shade = true %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+                {% endfor %}
+
+                <!--- form put in capture b/c this can be handle from both condition js/liquid--->
+                {% capture collectionSet %}
+                    {%- assign product_compare_at_price = 0 | plus: 0 -%}
+                    {% if localization.country.iso_code == 'GB' and _product_item_sets.metafields.set.compare_at_price_uk %}
+                        {%- assign product_compare_at_price = _product_item_sets.metafields.set.compare_at_price_uk | times: 100 -%}
+                    {% elsif localization.country.iso_code != 'GB' %}
+                        {%- assign product_compare_at_price = _product_item_sets.compare_at_price -%}
+                    {% endif %}
+                    <span class="var_price">
+                        {%- if product_compare_at_price > _product_item_sets.price -%}
+                            <span class="sr-only">Original price: </span>
+                            <span {% for variant in _product_item_sets.variants %}class='compare___{{ variant.id }}'{% endfor %}>
+                                {{- product_compare_at_price | money_without_trailing_zeros -}}
+                            </span>
+                        {%- endif -%}
+                        <span class="sr-only">Current price: </span>
+                        {{- _product_item_sets.price | money_without_trailing_zeros -}}
+                    </span>
+
+                    <input type="hidden" name="id"  value="{{_product_item_sets.variants.first.id}}" tabindex="0">
+                    <input type="submit" class="add_btn add-to-cart-sets-button {% if sold_out_product != true and has_shade == false %} remove_disable_btn {% endif %}" tabindex="0" 
+                    {% if sold_out_product == true %}  value="Out of Stock" disabled {% else %} {% for variant in _product_item_sets.variants %}data-purchase-id="{{ variant.id }}"{% endfor %} data-parent-random="{{ parent_random_number }}"
+                    {% if has_shade == true %}value="ADD SET TO BAG"{% else %}value="ADD SET TO BAG" {% endif %} {% endif %}
+                      onclick="pintrk('track', 'addtocart', {
+                        value: {{_product_item_sets.selected_or_first_available_variant.price | money_without_currency }},
+                        product_name: '{{_product_item_sets.title}}',
+                        product_id: '{{_product_item_sets.id}}',
+                        product_price: {{_product_item_sets.selected_or_first_available_variant.price | money_without_currency }},
+                        currency: 'USD'
+                      });"
+                    >
+                    <input type="hidden" name="properties[bundle_product]" id="variant_array" >
+                    <input type="hidden" name="properties[custom_message]" value="{{ _product_item_sets.metafields.product.custom_message }}" >
+
+                {% endcapture %}
+
+                {% assign coming_soon_uk = false %}
+                {% if _product_item_sets.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+                    {% assign coming_soon_uk = true %}
+                {% endif %}
+
+                <div id="hash_collectioset_{{ _product_item_sets.id}}" class="price_btn {% if sold_out_product != true and has_shade == true %} choose_all_shades{% endif %} {% if shop.metafields.globals.coming_soon == 'true' or _product_item_sets.metafields.product.coming_soon or _product_item_sets.variants[checkSelectedOption].metafields.visibility.coming_soon or coming_soon_uk %} have_coming__btn {% endif %}">
+                    {% if shop.metafields.globals.coming_soon != 'true' and _product_item_sets.metafields.product.coming_soon != 'true' and _product_item_sets.variants[checkSelectedOption].metafields.visibility.coming_soon != 'true' and coming_soon_uk != true %}
+                        {{ collectionSet }}
+                      {% if _product_item_sets.variants[checkSelectedOption].metafields.visibility.coming_soon %}
+                        <span>{{_product_item_sets.variants[checkSelectedOption].metafields.visibility.coming_soon}}</span>
+                        {% endif %}
+                    {% else %}
+                        <input type="button" class="add_btn" tabindex="0" value="{% if coming_soon_uk %}{{- 'products.product.not_available_in_region' | t -}}{% else %}Coming Soon{% endif %}" disabled >
+                    {% endif %}
+                </div>
+
+                <script>
+                    var hash_localstorage = localStorage.getItem('email_hash');
+                    var hash_comingsoon = `{{ shop.metafields.globals.coming_soon }}`;
+                    var hash_metafield = `{{ shop.metafields.globals.hash }}`;
+                    if (hash_localstorage == hash_metafield && hash_comingsoon) {
+                        $('.price_btn').removeClass( "have_coming__btn" )
+                        var getId = $('#hash_collectioset_{{ _product_item_sets.id}}');
+                        var putdata = `{{ collectionSet }}`;
+                        getId.html(putdata);
+                    }
+                </script>
+            </div>
+          </form>
+        </article>
+	
+        {% unless holiday_enabled == true %}
+        {% unless coll_type == 'hunza-shopall' %}
+            <div class="inner_content">
+                <a href="{{ _product_item_sets.url }}" aria-expanded="false" aria-controls="product_bundle_{{ _product_item_sets.handle }}" class="buy_now {% unless bundle_product_items == empty %} {% endunless%}" data-id="bundle_{{ _product_item_sets.handle }}">
+                    {% if shop.metafields.globals.coming_soon != 'true' and _product_item_sets.metafields.product.coming_soon != 'true' and _product_item_sets.variants[checkSelectedOption].metafields.visibility.coming_soon != 'true' and coming_soon_uk != true %}
+                    Quick Shop
+                    {% else %}
+                    Coming Soon
+                    {% endif %}
+                </a>
+
+                <script>
+                    var hash_localstorage = localStorage.getItem('email_hash');
+                    var hash_comingsoon = `{{ shop.metafields.globals.coming_soon }}`;
+                    var hash_metafield = `{{ shop.metafields.globals.hash }}`;
+                    if (hash_localstorage == hash_metafield && hash_comingsoon) {
+                        var getId = $('.buy_now');
+                        var putdata = 'Buy Now';
+                        getId.html(putdata);
+                    }
+                </script>
+            </div>
+        {% endunless %}
+        {% endunless %}
+        
+      </div>
+
+      <a href="{{ _product_item_sets.url }}" class="outer_content block-link-no-deco ">
+			<h4 class="product__item-title">
+				{{- _product_item_sets.title -}}
+			</h4>
+			{% if _product_item_sets.metafields.product.properties != blank %}
+			  <p class="product__item-subtitle">
+			  	{{- _product_item_sets.metafields.product.properties -}}
+			  </p>
+			{% else %}
+                <div class="product__item-subtitle">{{- _product_item_sets.description | truncatewords: 8, "..." -}}</div>
+            {% endif %}
+
+            {% unless holiday_enabled == true %}
+            {% unless coll_type == 'hunza-shopall' %}
+                <div class="p-price__tag ">
+                    {%- assign product_compare_at_price = 0 | plus: 0 -%}
+                    {% if localization.country.iso_code == 'GB' and _product_item_sets.metafields.set.compare_at_price_uk %}
+                        {%- assign product_compare_at_price = _product_item_sets.metafields.set.compare_at_price_uk | times: 100 -%}
+                    {% elsif localization.country.iso_code != 'GB' %}
+                        {%- assign product_compare_at_price = _product_item_sets.compare_at_price -%}
+                    {% endif %}
+                    {%- if product_compare_at_price > _product_item_sets.price -%}
+                      <span class="sr-only">Original price: </span>
+                      <span class="old-price">{{- product_compare_at_price | money_without_trailing_zeros -}}</span>
+                    {%- endif -%}
+                    <span class="sr-only">Current price: </span>
+                    <span class="new-price">
+                        {{- _product_item_sets.price | money_without_trailing_zeros -}}
+                    </span>
+                </div>
+            {% endunless %}
+            {% endunless %}
+      </a>
+      {% if collection and holiday_enabled != true %}
+        <div class="product-border-bottom"></div>
+      {% endif %}
+
+      {% if holiday_enabled == true or coll_type == 'hunza-shopall' %}
+        <a href="{{ _product_item_sets.url }}" class="holiday-coll-btn buy_now {% unless bundle_product_items == empty %} {% endunless%}" data-id="bundle_{{ _product_item_sets.handle }}">
+            {% if shop.metafields.globals.coming_soon != 'true' and _product_item_sets.metafields.product.coming_soon != 'true' and _product_item_sets.variants[checkSelectedOption].metafields.visibility.coming_soon != 'true' and coming_soon_uk != true %}
+                <div class="p-price__tag ">
+                    {%- assign product_compare_at_price = 0 | plus: 0 -%}
+                    {% if localization.country.iso_code == 'GB' and _product_item_sets.metafields.set.compare_at_price_uk %}
+                        {%- assign product_compare_at_price = _product_item_sets.metafields.set.compare_at_price_uk | times: 100 -%}
+                    {% elsif localization.country.iso_code != 'GB' %}
+                        {%- assign product_compare_at_price = _product_item_sets.compare_at_price -%}
+                    {% endif %}
+                    {%- if product_compare_at_price > _product_item_sets.price -%}
+                        <span class="old-price">{{- product_compare_at_price | money_without_trailing_zeros -}}</span>
+                    {%- endif -%}
+                    <span class="new-price">
+                        {{- _product_item_sets.price | money_without_trailing_zeros -}}
+                    </span>
+                </div>
+                <span>Quick Shop</span>
+            {% else %}
+                <span>Soon</span>
+            {% endif %}
+        </a>
+
+        <script>
+            var hash_localstorage = localStorage.getItem('email_hash');
+            var hash_comingsoon = `{{ shop.metafields.globals.coming_soon }}`;
+            var hash_metafield = `{{ shop.metafields.globals.hash }}`;
+            if (hash_localstorage == hash_metafield && hash_comingsoon) {
+                var getId = $('.buy_now');
+                var putdata = 'Buy Now';
+                getId.html(putdata);
+            }
+        </script>
+      {% endif %}
+
+        <style>
+          .product__item.set .section__flex-item.product_set .price_btn--wrapper .price_btn.change_choose_shades {
+            background: none;
+            color: #545353;
+            border: #919191 solid 1px;  
+            justify-content: space-between;
+            height: 62px;
+          }
+
+          .product__item.set .section__flex-item.product_set .price_btn--wrapper .price_btn.choose_all_shades {
+            position: relative;
+          }
+  
+          .product__item.set .section__flex-item.product_set .price_btn--wrapper .price_btn.choose_all_shades::after {
+            position: absolute;
+            content: "";
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+          }
+
+          .product__item.set .section__flex-item.product_set .price_btn--wrapper .price_btn.change_choose_shades .var_price,
+          .product__item.set .section__flex-item.product_set .price_btn--wrapper .price_btn.change_choose_shades .add_btn {
+            color: #545353;
+            padding: 0 20px
+          }
+
+          .product__item.set .section__flex-item.product_set .price_btn--wrapper .price_btn {
+            height: 62px;
+          }
+  
+          .product__item.set .section__flex-item.product_set .price_btn--wrapper .price_btn .var_price,
+          .product__item.set .section__flex-item.product_set .price_btn--wrapper .price_btn .add_btn {
+            padding: 0 20px
+          }
+        </style>
+        <script>
+            $(document).ready(function() {
+                /// remove disable form button when page is loaded ///
+                $('.remove_disable_btn').prop("disabled", false);
+
+                $(document).on('click','.ctas-sb .close', function(e){
+                e.preventDefault();
+                $(this).parent().parent().fadeOut('slow');
+                var cbtn = $(this).parents(".product_item").find(".c_btn");
+                if ($(cbtn).text()=="Hide Shades") {
+                    $(cbtn).text("Choose Shades");
+                }
+                setTimeout(() => {           
+                    $(cbtn).removeAttr('id','closeShutter');
+                    $(cbtn).removeClass('closeShutter');
+                }, 100)  
+            });
+
+            });
+        </script>
+	</div><!-- /.product__item -->
+
+{%- endif -%}
+{% endunless %}
+{% endunless %}
+{% endunless %}
+{%- assign _product_item_sets = '' -%}

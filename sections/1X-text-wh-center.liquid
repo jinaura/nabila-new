@@ -1,0 +1,57 @@
+<section>
+
+    {% for block in section.blocks %}
+
+        {% if article.handle == articles[block.settings.text-wh-center1-article].handle %}
+
+            <div style="text-align: center">
+                <h2>{{ block.settings.heading  }}</h2>
+                <br>
+                <p>{{ block.settings.description  }}</p>
+            </div>
+
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 50px 0;
+    }
+
+    td {
+        padding: 10px 0;
+    }
+</style>
+
+{% schema %}
+    {
+    "name": "1X Text WH Center1",
+    "class": "text-wh-center",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "1X Text WH Center1",
+    "settings": [
+    {
+    "type": "article",
+    "id": "text-wh-center1-article",
+    "label": "Article"
+    },
+    {
+    "type": "text",
+    "id": "heading",
+    "label": "Heading"
+    },
+    {
+    "type": "textarea",
+    "id": "description",
+    "label": "Description"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

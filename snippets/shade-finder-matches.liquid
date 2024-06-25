@@ -1,0 +1,78 @@
+{%- comment -%}
+    var: product variant
+{%- endcomment -%}
+
+{%- assign prod = var.product -%}
+{%- assign color = var.metafields.color.name | default: var.title -%}
+{%- assign color_img = "none"-%}
+{%- if var.metafields.color.texture -%}
+  {%- assign color_img = "url('"| append:var.metafields.color.texture[0].src|append:"')" -%}
+{%- endif -%}
+{%- assign color_hex = var.metafields.color.hex | default: 'transparent' -%}
+<div class="complexion-product">
+    <div class="complexion-product__img-wrapper">
+        {%- assign badge = prod.metafields.media.badge[0] -%}
+        {%- if badge and localization.country.iso_code != "GB" -%}
+            <div class="badge-img__wrapper">
+                <img
+                    src="{{- badge.src -}}"
+                    srcset="{{- badge.src -}}&transform=resize=200 200w,
+                            {{- badge.src -}}&transform=resize=300 300w"
+                    alt="{{- badge.alt | replace: '"', "'" | strip | default: "Product Award Certification" -}}"
+                    class="badge-img"
+                />
+            </div>
+        {%- endif -%}
+        <div class="complexion-product__img">
+            {%- assign img = var.metafields.shade_finder.featured_image | image_url: width: 1400 -%}
+            <img draggable="false"
+                 src="{{- img -}}"
+                 alt="{{- img.alt | replace: '"', "'" | default: color -}}"
+            >
+        </div>
+    </div>
+    <div class="single-complexion-info">
+        <h3 class="title-text">{{- prod.title -}}</h3>
+        <div class="single-complexion-info__description">
+            {{- prod.content -}}
+        </div>
+        <div class="single-complexion-info__variant">
+            <div class="single-complexion-info__variant-swatch"
+                 style="background-color: {{-  color_hex -}};background-image: {{-  color_img -}};"
+            >&nbsp;</div>
+            <div class="single-complexion-info__variant-color-wrapper">
+                <h3 class="single-complexion-info__variant-color-name">{{- color -}}</h3>
+                <div class="single-complexion-info__variant-color-description">
+                    {{- var.metafields.description.value -}}
+                </div>
+            </div>
+        </div>
+        {%- assign feature_text_list = prod.metafields.shade_finder.feature_text.value -%}
+        {%- if feature_text_list -%}
+            <ul class="single-complexion-info__features">
+                {%- for feature_text in feature_text_list -%}
+                    <li>{{ feature_text }}</li>
+                {%- endfor -%}
+            </ul>
+        {%- endif -%}
+    </div>
+
+    <button
+        class="complexion-product__add-to-button add-to-cart-button justify-content-between"
+        data-product-handle="{{- prod.handle -}}"
+        data-variant-color-name="{{- color -}}"
+        data-purchase-id="{{- var.id -}}"
+        {%- unless var.available -%}disabled{%- endunless -%}
+    >
+        {%- if var.available -%}
+            <span>{{- var.price | money_without_trailing_zeros -}}</span>
+            <span>Add to Bag</span>
+        {%- else -%}
+            <span>{{- 'products.product.sold_out' | t -}}</span>
+        {%- endif -%}
+    </button>
+
+    <div class="notify_when_available {% unless var.available %}unavailable{% endunless %}">
+        <a class="see-more" data-micromodal-trigger="modal-back-in-stock" href='#'>Sign up to be notified when this product is available</a>
+    </div>
+</div>

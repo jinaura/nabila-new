@@ -1,0 +1,55 @@
+{% comment %}
+
+    This snippet renders a custom widget based on the current 'paginate' context,
+    defined in { % paginate XXXX by 5 % } tags wrapping the content.
+
+    Replace Text Example:
+    <div class="pagination">
+        {{ paginate | default_pagination | replace: 'Previous', 'Newer articles' | replace: 'Next', 'Older articles' }}
+    </div>
+
+    More information:
+    - http://docs.shopify.com/themes/liquid-variables/paginate
+
+{% endcomment %}
+
+{% if paginate.pages > 1 %}
+    <div class="{% if pagination %}twelve{% else %}sixteen{% endif %} columns">
+        <div class="section clearfix">
+            <div class="paginate">
+                <!-- {{ paginate | default_pagination }} -->
+
+                <a href="{{ paginate.previous.url }}" class="pageination-icon prev {% unless paginate.previous.is_link %}disable{% endunless %}" >
+                   
+                    {% if paginate.previous.is_link %}
+                    <img src="{{ 'arrow-left.svg' | asset_url }}" alt="" />
+                    <span>Prev</span>
+                    {% else %}
+                    <img src="{{ 'arrow-left-empty.svg' | asset_url }}" alt="" />
+                    
+            {% endif %}
+                    
+                    <!-- <i class="fas fa-angle-left {% unless paginate.previous.is_link %}disable{% endunless %}" title="previous"></i> -->
+                </a>
+
+                <p> 
+                    Showing {{paginate.current_page}} of {{paginate.pages}} pages 
+                </p>
+
+                <a href="{{ paginate.next.url }}" title="next" class="pageination-icon next {% unless paginate.next.is_link %}disable {% endunless %}">
+                    {% if paginate.next.is_link %}
+                    <span>Next</span>
+                    <img src="{{ 'arrow-right.svg' | asset_url }}" alt="" />
+                    {% else %}
+                    <img src="{{ 'arrow-right-empty.svg' | asset_url }}" alt="" />
+                    
+            {% endif %}
+
+                    <!-- <i class="fas fa-angle-right {% unless paginate.next.is_link %}disable {% endunless %}" title="next"></i> -->
+                </a>
+
+            </div>
+        </div>
+    </div>
+{% endif %}
+

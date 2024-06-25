@@ -1,0 +1,57 @@
+<section class="parallelImageModule">
+    {% for block in section.blocks %}
+        {% if article.handle == articles[block.settings.limage-limage-article].handle %}
+            <div>
+                {{block.settings.left_image | image_url: width: 1600 | image_tag: width: 600, height: 800, alt: block.settings.left_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+            <div>
+              {{block.settings.right_image | image_url: width: 1600 | image_tag: width: 600, height: 800, alt: block.settings.right_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+.parallelImageModule{
+  display: flex;
+  padding-bottom:120px;
+}
+.parallelImageModule > div{
+  width:50%;
+}
+.parallelImageModule > div img{
+  width:100%;
+  display:block;
+}
+</style>
+
+{% schema %}
+    {
+    "name": "2X LImage|LImage",
+    "class": "limage-limage",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "2X LImage|LImage",
+    "settings": [
+    {
+    "type": "article",
+    "id": "limage-limage-article",
+    "label": "Article"
+    },
+    {
+    "type": "image_picker",
+    "id": "left_image",
+    "label": "Left Image"
+    },
+    {
+    "type": "image_picker",
+    "id": "right_image",
+    "label": "Right Image"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

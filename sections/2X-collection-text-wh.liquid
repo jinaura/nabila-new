@@ -1,0 +1,117 @@
+{{ 'slick.js'  | asset_url | script_tag     }}
+
+<section>
+
+    {% for block in section.blocks %}
+
+        {% if article.handle == articles[block.settings.collection-text-wh-article].handle %}
+
+            <div style="float: left;width:50%;">
+                <div class="multiple-items collection__items" data-slick='{
+           "slidesToShow": 1,
+           "slidesToScroll": 1,
+           "infinite": true,
+           "arrows": true,
+           "autoplay": false,
+           "autoplaySpeed": 3000,
+           "adaptiveHeight": false,
+           "speed": 500,
+           "centerMode": false,
+  		   "centerPadding": "1px",
+           "responsive": [
+               {
+      			"breakpoint": 768,
+                "settings":{
+      				"slidesToShow": 1,
+        			"slidesToScroll": 1
+                  }
+                },
+                {
+      			"breakpoint": 1024,
+                  "settings":{
+                      "slidesToShow": 2,
+                      "slidesToScroll": 2
+                  }
+    			}
+           ]
+      }'>
+                    {% for _product in collections[block.settings.collection].products %}
+                        {%- include 'product-item' with _product -%}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div style="float: right;width:50%;">
+                <h2>{{ block.settings.heading }}</h2>
+                <br>
+                <p>{{ block.settings.description }}</p>
+            </div>
+
+
+
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 50px 0;
+    }
+
+    td {
+        padding: 10px 0;
+    }
+</style>
+<script>
+
+    var slider = $('.multiple-items').slick();
+
+    var hold = false;
+    $(".rangeSlider").hover(function() {
+        //slider.slick("slickSetOption", "accessibility", hold);
+        slider.slick("slickSetOption", "draggable", hold);
+        slider.slick("slickSetOption", "swipe", hold);
+        slider.slick("slickSetOption", "touchMove", hold);
+
+        hold = !hold;
+        console.log('hover');
+    });
+
+</script>
+
+{% schema %}
+    {
+    "name": "2X Collection|Text WH",
+    "class": "collection-text-wh",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "2X Collection|Text WH",
+    "settings": [
+    {
+    "type": "article",
+    "id": "collection-text-wh-article",
+    "label": "Article"
+    },
+    {
+    "type": "collection",
+    "id": "collection",
+    "label": "Collection"
+    },
+    {
+    "type": "text",
+    "id": "heading",
+    "label": "Heading"
+    },
+    {
+    "type": "textarea",
+    "id": "description",
+    "label": "Description"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

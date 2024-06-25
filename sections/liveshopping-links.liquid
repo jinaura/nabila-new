@@ -1,0 +1,73 @@
+<script>
+    document.data = document.data || {}
+    document.data.liveshoppingLinks = [
+        {%- for block in section.blocks -%}
+        {%- liquid
+            assign path_parts = request.path |  split: '/'
+            assign show_short_id_and_referral_code = path_parts[3]
+            assign show_id_parts = show_short_id_and_referral_code |  split: '!'
+            assign show_short_id = show_id_parts[0] |  slice: 0, 22
+            if block.settings.show_short_ids and block.settings.show_short_ids != ''
+                assign found = false
+                assign short_ids = block.settings.show_short_ids |  split: ','
+                for short_id in short_ids
+                    if show_short_id == short_id
+                        assign found = true
+                        break
+                    endif
+                endfor
+                unless found
+                    continue
+                endunless
+            endif
+        -%}
+        {
+            name: {{ block.settings.heading | json }},
+            url: {{ block.settings.url | json }},
+            {%- if block.settings.image -%}
+                image: {{ block.settings.image |  image_url: width: 98 |  json }},
+            {%- endif -%}
+            allowAfterLive: {{ block.settings.allow_after_live |  json }}
+        },
+        {%- endfor -%}
+    ]
+</script>
+{% schema %}
+{
+    "name":"Liveshopping Links",
+    "limit": 1,
+    "blocks": [
+        {
+            "name": "Link",
+            "type": "liveshopping_link",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Title"
+                },
+                {
+                    "type": "url",
+                    "id": "url",
+                    "label": "URL"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "allow_after_live",
+                    "label": "Allow after live"
+                },
+                {
+                    "type": "text",
+                    "id": "show_short_ids",
+                    "label": "Show Short IDs (optional, comma-separated)"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

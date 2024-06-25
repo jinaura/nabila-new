@@ -1,0 +1,108 @@
+{% assign _section = section.settings %}
+
+{% if localization.country.iso_code != 'GB' or request.design_mode == true %}
+  <div class="container customer-service lp">
+    <div class="container--inner">
+        <aside>
+            <h1>{{_section.title}}</h1>
+            <a href = "mailto: {{_section.email}}">{{_section.email}}</a>
+            <p>{{_section.phone}}</p>
+            <article class="info-text">
+              {{_section.info_text}}
+            </article>
+        </aside>
+        <div class="nav-links">
+          {%- if _section.links_menu != blank -%}
+            {%- include 'menu' handle: _section.links_menu -%}
+          {% endif %}
+        </div>
+    </div>
+  </div>
+
+  <style>
+    .container.customer-service.lp h2 {
+      font-size: 14px;
+      margin-top: 2rem;
+      margin-bottom: 8px;
+    }
+    .container.customer-service.lp button.chat-now {
+      border: 1px solid #919191;
+      background-color: transparent;
+      color: #545353;
+      padding: 11px;
+      max-width: 185px;
+    }
+    .container.customer-service.lp button.chat-now:hover {
+      border: 1px solid #545353;
+      background-color: #545353;
+      color: white;
+    }
+    @media (max-width: 767px) {
+      .container.customer-service.lp aside {
+        margin-right: 0;
+        padding-bottom: 34px;
+      }
+      .container.customer-service.lp h2 {
+        margin-top: 0;
+      }
+      .container.customer-service.lp aside article {
+        padding-bottom: 40px;
+      }
+      .container.customer-service.lp aside article.ba-text {
+        padding-bottom: 8px;
+      }
+      .container.customer-service.lp button.chat-now {
+        max-width: unset;
+      }
+    }
+  </style>
+  <script>
+    const chatNowTriggerButton = document.querySelector('.container.customer-service.lp button.chat-now');
+    chatNowTriggerButton.addEventListener('click', () => {
+      const BAchatTrigger = document.querySelector('.beauty-advisor-wrapper .live-advisor-wrap .BA-CC-chatbubble-extended');
+      BAchatTrigger.click();
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Customer Service",
+    "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Customer Service"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email Address",
+      "default": "support@roseinc.com"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone Number",
+      "default": "1-800-ROSE-INC"
+    },
+    {
+      "type": "text",
+      "id": "info_text",
+      "label": "Info Text"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "BA/Makeup Artist CTA Text",
+      "default": "Chat now"
+    },
+    {
+      "type": "link_list",
+      "id": "links_menu",
+      "label": "Nav Links Menu"
+    }
+    ]
+  }
+{% endschema %}

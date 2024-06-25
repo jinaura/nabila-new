@@ -1,0 +1,86 @@
+{% for productItem in _product_item_sets.metafields.product_variant.product_variant %}
+
+    {% assign splitString = productItem | split: ":"  %}
+    {% if collections['bundles-child-product'].products.size > 0 %}
+        {% assign collectionVariable = 'bundles-child-product' %}
+    {% else %}
+        {% assign collectionVariable = 'shop-all' %}
+    {% endif%}
+    {% for bundleCVP in collections[collectionVariable].products %}
+        {% if bundleCVP.handle == splitString[0] %}
+            {% assign bundleProductItem = bundleCVP %}
+            {% break %}
+        {% endif %}
+    {% endfor %}
+
+    <div class="product_item product_item_{% for variant in _product_item_sets.variants %}{{ variant.id }}{% endfor %}">
+        <figure><img src="{{bundleProductItem.featured_image | img_url: '200x'}}" alt="" fetchpriority="low" loading="lazy"
+                     class="bundle-img animate bundle_image_{% for variant in _product_item_sets.variants %}{{ variant.id }}{% endfor %}" /></figure>
+        <div class="content">
+            <h3 class="bundle_header_{% for variant in _product_item_sets.variants %}{{ variant.id }}{% endfor %}">{{- bundleProductItem.title | truncatewords: 8, "" -}}</h3>
+            <p>{{- bundleProductItem.metafields.product.properties -}}</p>
+
+            <!--- 1 check availble product in bundel w.r.t bundle threashold ---->
+            {% for bundle_variants in bundleProductItem.variants %}
+                {% assign singleVariantId = splitString[1] | plus: 0 %}
+                {% if bundle_variants.inventory_quantity > bundle_threashold_metafield and bundle_variants.id == singleVariantId and bundle_variants.metafields.visibility.hide != 'true' %}
+                    {% assign checkSelectedOption = forloop.index %}
+                    {% break %}
+                {% endif %}
+            {% endfor %}
+
+
+            {% if checkSelectedOption == 0 %}
+                {% assign checkSelectedOption = 0 %}
+            {% else %}
+                {% assign checkSelectedOption = checkSelectedOption | minus: 1 %}
+            {% endif %}
+            <!--- end check availble product in bundel w.r.t bundle threashold ---->
+
+            {% for product_option in bundleProductItem.options_with_values %}
+
+                {% if product_option.name == 'Color'%}
+                    <div class="choose_shades" id="choose_shade_{{ bundleProductItem.id }}" >
+                        <div class="shades_content">
+                            <span class="main_color"></span>
+                            <span class="var_txt" >
+                                {% if bundleProductItem.variants[checkSelectedOption].metafields.visibility.coming_soon %}
+                                    {% assign sold_out_product = true %}
+                                    {{ bundleProductItem.variants[checkSelectedOption].option1 }} <span>Coming Soon</span>
+                                {% elsif bundleProductItem.variants[checkSelectedOption].inventory_quantity > bundle_threashold_metafield %}
+                                    {{ bundleProductItem.variants[checkSelectedOption].option1 }}
+                                {% else %}
+                                    {% assign sold_out_product = true %}
+                                    {{ bundleProductItem.variants[checkSelectedOption].option1 }} <span>{{ 'products.product.sold_out' | t }}</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if product_option.name == 'Title'%}
+                    {% if bundleProductItem.variants[0].metafields.visibility.coming_soon %}
+                        {% assign sold_out_product = true %}
+                        <div class="choose_shades">
+                            <span class="var_txt" ><span>Coming Soon</span></span>
+                        </div> 
+                    {% elsif bundleProductItem.variants[0].inventory_quantity <= bundle_threashold_metafield %}
+                        {% assign sold_out_product = true %}
+                        <div class="choose_shades">
+                            <span class="var_txt" ><span>{{ 'products.product.sold_out' | t }}</span></span>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- SHUTTER POPUP -->
+        {% assign bundle_product = bundleProductItem %}
+        {% assign bundle_product_seq = forloop.index %}
+        {% include 'collection-bundle-variant-selector' %}
+        <input type="hidden" id="properties_{{ forloop.index }}" name="product_handle{{ forloop.index }}"  value="{{ splitString[0] }}">
+        <!-- SHUTTER POPUP END // -->
+
+    </div>
+
+{% endfor %}

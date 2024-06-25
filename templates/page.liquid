@@ -1,0 +1,44 @@
+<!-- redirect to 404 if it's a 'Rewards Program Page' on UK site  -->
+{% if page.handle == "referral-program-page" and localization.country.iso_code == 'GB' %}
+	<script type="text/javascript">
+		window.location = "/404";
+	</script>
+{% endif %}
+{% if page.handle == "offers" and localization.country.iso_code == 'GB' %}
+	<script type="text/javascript">
+		window.location = "/404";
+	</script>
+{% endif %}
+
+{% if page.title != "Check Gift Card balance" %}
+<div class="container">
+	<div class="page--default">
+		<div class="page__head">
+			<h1 class="page__title">
+				{{- page.title -}}
+			</h1>
+		</div><!-- /.page__head -->
+
+		<div class="page__content">
+			{{- page.content -}}
+		</div><!-- /.page__content -->
+	</div>
+</div><!-- /.container -->
+
+{% else  %}
+
+<div class="container">
+	<div class="page--default-giftcard">
+		<div class="page__head-giftcard">
+			<h1 class="page__title-giftcard">Need further assistance?</h1>
+            <a href="/pages/support">Contact us</a>
+		</div><!-- /.page__head -->
+      
+      	<div class="page__content">
+			{{- page.content -}}
+		</div><!-- /.page__content -->
+
+	</div>
+</div><!-- /.container -->
+
+{% endif %}

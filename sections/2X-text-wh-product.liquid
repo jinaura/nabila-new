@@ -1,0 +1,70 @@
+
+<section>
+
+    {% for block in section.blocks %}
+
+        {% if article.handle == articles[block.settings.text-wh-product-article].handle %}
+            <div style="float: left;width:50%;">
+                <h2>{{ block.settings.heading }}</h2>
+                <br>
+                <p>{{ block.settings.description }}</p>
+            </div>
+
+            <div style="float: right;width:50%;">
+                <div  class="multiple-items collection__items">
+                    {%- assign _product = all_products[block.settings.product] -%}
+                    {%- include 'product-item' with _product -%}
+                </div>
+            </div>
+
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+    table {
+        border-collapse: separate;
+        border-spacing: 50px 0;
+    }
+
+    td {
+        padding: 10px 0;
+    }
+</style>
+
+
+{% schema %}
+    {
+    "name": "2X Text WH|Product",
+    "class": "text-wh-product",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "2X Text WH|Product",
+    "settings": [
+    {
+    "type": "article",
+    "id": "text-wh-product-article",
+    "label": "Article"
+    },
+    {
+    "type": "text",
+    "id": "heading",
+    "label": "Heading"
+    },
+    {
+    "type": "textarea",
+    "id": "description",
+    "label": "Description"
+    },
+    {
+    "type": "product",
+    "id": "product",
+    "label": "Product"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

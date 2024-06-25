@@ -1,0 +1,229 @@
+{% unless product.metafields.product.ingredients_hide %}
+  {% unless product.type == 'Sets Product' %}
+  <section class="discover-ingredient">
+    <div class="left">
+      <h2 class="section__title pt-0">Eco/Logical Ingredients</h2>
+      <hr class="section__divider">
+      <summary class="details__summary">{{product.metafields.product.ingredients_subtitle}}</summary>
+      <hr class="divider--start">
+      <div class="description">
+        {{product.metafields.product.ingredients_description}}
+      </div>
+
+      <div class="shades">
+        {% for bottom_media in product.metafields.product.ingredient_1_media %}
+        {% if bottom_media.media_type == 'image' %}
+        <img src="{{ bottom_media.src }}" alt="{{ bottom_media.alt }}" class="product__detail animate" fetchpriority="low" loading="lazy"/>
+        {% elsif bottom_media.media_type == 'video' %}
+        <video
+               id="details_video1"
+               class="video__bottom animate"
+               autoplay
+               loop
+               muted
+               playsinline="true" webkit-playsinline="true"
+               preload="auto"
+               width="100%"
+               height="100%"
+               title="{{ bottom_media.alt }}">
+          <source src="{{ bottom_media.src }}" type='video/mp4'/>
+        </video>
+          <div class="player-controls left" id="ingredient-media1">
+            <button class="play" >{% render 'svg-icons' with 'play' %}</button>
+            <button class="pause" >{% render 'svg-icons' with 'pause' %}</button>
+            <button class="volume" >{% render 'svg-icons' with 'volume' %}</button>
+          </div>
+
+        {% endif %}
+        {% endfor %}
+      </div>
+
+    </div>
+    <div class="right">
+
+      <div class="details__face">
+        {% for top_media in product.metafields.discovery.v2__lab_tested_media %}
+        {% if top_media.media_type == 'image' %}
+        <img src="{{ top_media.src }}" alt="{{ top_media.alt }}" class="product__detail animate" fetchpriority="low" loading="lazy" />
+        {% elsif top_media.media_type == 'video' %}
+        <video
+               id="details_video2"
+               class="video__bottom animate"
+               autoplay
+               loop
+               muted
+               playsinline="true" webkit-playsinline="true"
+               preload="auto"
+               width="100%"
+               height="100%"
+               title="{{ top_media.alt }}">
+          <source src="{{ top_media.src }}" type='video/mp4'/>
+        </video>
+        <div class="player-controls left" id="ingredient-media2">
+          <button class="play" >{% render 'svg-icons' with 'play' %}</button>
+          <button class="pause" >{% render 'svg-icons' with 'pause' %}</button>
+          <button class="volume" >{% render 'svg-icons' with 'volume' %}</button>
+        </div>
+
+        {% endif %}
+        {% endfor %}
+      </div>
+      <section id="ingredients-section" class="navigable">
+        <h3 class="section__title">Benefits</h3>
+        <hr class="section__divider">
+        <div class="ingredients__container">
+          {{ product.metafields.product.labtested_results}}
+        </div>
+
+      </section>
+
+    </div>
+  </section>
+
+  <style>
+  .discover-ingredient{
+    display:flex;
+    justify-content: space-between;
+    padding-top:75px;
+  }
+  .discover-ingredient > div{
+    width:48%;
+  }
+
+  #ingredient-media1,#ingredient-media2{
+    left: 5px;
+    bottom: 25px;
+  }
+
+  .discover-ingredient .left .shades{
+    margin-top:125px;
+    position: relative;
+  }
+    
+  .discover-ingredient .left .description{
+    max-width: 565px;
+  }
+    
+  #ingredients-section{
+    margin-top:40px;
+  }
+  #ingredients-section .section__divider{
+    margin: 20px 0 40px 0;
+    padding: 0;
+  }
+  .ingredients__container ul li{
+    display:block;
+    padding-bottom:10px;
+  }
+    .ingredients__container ul li::before {
+      content: "";
+      width: 4px;
+      height: 4px;
+      display: inline-block;
+      background: var(--secondary-color);
+      border-radius: 100px;
+      margin-right: 5px;
+      position: relative;
+      top: -3px;
+    }    
+  .ingredients__container p{
+    margin:0;
+    font-size:12px;
+    max-width: 585px;
+    padding: 5px 0;
+  }
+  .ingredients__container p span{
+    font-size:12px !important;
+  }
+    
+  #details_video{
+    display:block;
+  }
+    
+  .details__face{
+    position:relative;
+  }
+  .details__face #media-text-pause-play-switcher-container{
+    left:0;
+  }
+    
+  .product__container hr.section__divider{
+    margin-top:1rem;
+  }
+    
+  @media (max-width:767px){
+    .discover-ingredient{padding-top:40px; flex-flow: column; padding-left: 20px; padding-right: 20px;}
+    .discover-ingredient > div{width:100%;}
+    
+    .discover-ingredient .section__title, 
+    .discover-ingredient .left .section__divider, 
+    .discover-ingredient .details__summary{margin:0 !important;}
+    .discover-ingredient .left .shades{margin-top:30px;}
+    
+    .discover-ingredient > div.right{display: flex;flex-flow: column-reverse;}
+
+    #ingredient-media1,#ingredient-media2{
+      display: block;
+    }
+  }
+ 
+    
+  </style>
+
+
+    <script>
+
+
+      $('#ingredient-media1 .play').on('click', function(){
+        var wIVideo = document.getElementById("details_video1");
+        wIVideo.play();
+        $(this).hide();
+        $('#ingredient-media1 .pause').show();
+      });
+      $('#ingredient-media1 .pause').on('click', function(){
+        var wIVideo = document.getElementById("details_video1");
+        wIVideo.pause();
+        $(this).hide();
+        $('#ingredient-media1 .play').show();
+      });
+
+      $('#ingredient-media1 .volume').on('click', function(){
+        var wIVideo = document.getElementById("details_video1");
+        if(wIVideo.muted){
+          wIVideo.muted = false;
+          $(this).addClass('unmuted');
+        } else {
+          wIVideo.muted = true;
+          $(this).removeClass('unmuted');
+        }
+      });
+
+
+
+      $('#ingredient-media2 .play').on('click', function(){
+        var wIVideo = document.getElementById("details_video2");
+        wIVideo.play();
+        $(this).hide();
+        $('#ingredient-media2 .pause').show();
+      });
+      $('#ingredient-media2 .pause').on('click', function(){
+        var wIVideo = document.getElementById("details_video2");
+        wIVideo.pause();
+        $(this).hide();
+        $('#ingredient-media2 .play').show();
+      });
+
+      $('#ingredient-media2 .volume').on('click', function(){
+        var wIVideo = document.getElementById("details_video2");
+        if(wIVideo.muted){
+          wIVideo.muted = false;
+          $(this).addClass('unmuted');
+        } else {
+          wIVideo.muted = true;
+          $(this).removeClass('unmuted');
+        }
+      });
+
+    </script>
+  {% endunless %}
+{% endunless %}

@@ -1,0 +1,263 @@
+<section class="{% if section.settings.pdp_community_hide == true %}hide-community {% endif %}pdp-community-ugc shop_bundles section_spacing">
+  <article class="container section__item">
+    <h2 class="heading-with-link">{{ section.settings.pdp_community_title }} <a href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a></h2>
+    <hr class="section__divider" />
+    <div class="description">{{ section.settings.pdp_community_description }}</div>
+    <hr class="divider--start">
+
+    <div crl8-container-id="product" crl8-filter="productId:'{{ product.selected_or_first_available_variant.sku }}'"></div>
+
+  </article>
+</section>
+
+<style>
+  #pageWrapper {
+    opacity: 1;
+    transition: opacity 300ms ease-out 700ms;
+  }
+
+  #pageWrapper.fadeout {
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+  }
+
+  .hide-community {
+    display: none;
+  }
+  .shop_bundles h2.heading-with-link {
+    margin: 0;
+    padding-top: 40px;
+    padding-bottom: 0.7rem;
+  }
+  .shop_bundles .description {
+    margin: 0;
+  }
+
+  .product__container .pdp-community-ugc hr.section__divider{
+    padding: 0 0 1.7rem;
+  }
+
+  .product__container .pdp-community-ugc hr.divider--start{
+    padding-bottom: 0.6rem;
+  }
+
+  #crl8-product-carousel .Eupuh,
+  #crl8-product-carousel .gyuXbe{
+    display:none;
+  }
+
+  #crl8-product-carousel button:active::after,
+  #crl8-product-carousel button:focus::after,
+  #crl8-product-carousel .dMMPAj:active::before,
+  #crl8-product-carousel .dMMPAj:focus::before,
+  #crl8-product-carousel-modal button:active::before,
+  #crl8-product-carousel-modal button:focus::before {
+    border: 0 !important;
+  }
+
+  #crl8-product-carousel-modal .jHSFFO,
+  #crl8-product-carousel-modal .ceZbGZ,
+  #crl8-product-carousel-modal .cXFeDf {
+    display: none !important;
+  }
+
+  #crl8-product-carousel [aria-label="Next slide - Media Carousel"],
+  #crl8-product-carousel [aria-label="Previous slide - Media Carousel"],
+  #crl8-product-carousel-modal [aria-label="Next post"]::before,
+  #crl8-product-carousel-modal [aria-label="Previous post"]::before {
+    padding:0 10px;
+  }
+
+  #crl8-product-carousel [aria-label="Next slide - Media Carousel"] > div,
+  #crl8-product-carousel [aria-label="Previous slide - Media Carousel"] > div {
+    display:none
+  }
+
+  #crl8-product-carousel [aria-label="Next slide - Media Carousel"]::before,
+  #crl8-product-carousel [aria-label="Previous slide - Media Carousel"]::before,
+  #crl8-product-carousel-modal [aria-label="Next post"]::before,
+  #crl8-product-carousel-modal [aria-label="Previous post"]::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 10px solid #545353;
+    border-radius: 1px;
+    display: block;
+  }
+
+  #crl8-product-carousel [aria-label="Previous slide - Media Carousel"]::before,
+  #crl8-product-carousel-modal [aria-label="Previous post"]::before {
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-right: 10px solid var(--secondary-color);
+    border-left: 0;
+  }
+
+  #crl8-product-carousel-modal .fEJniK:active::before,
+  #crl8-product-carousel-modal .fEJniK:focus::before {
+    border-top: 9px solid transparent !important;
+    border-bottom: 9px solid transparent !important;
+    border-left: 10px solid #545353 !important;
+    border-radius: 1px !important;
+    outline: none !important;
+    margin: 8px 0 0 4px !important;
+  }
+
+  #crl8-product-carousel-modal .fEJniK:active::after,
+  #crl8-product-carousel-modal .dxoxSB:focus::after,
+  #crl8-product-carousel-modal .fEJniK:active::before,
+  #crl8-product-carousel-modal .dxoxSB:focus::before  {
+      border: none!important;
+  }
+
+  #crl8-product-carousel .zsa45s-0 button:focus,
+  #crl8-product-carousel .sc-4p2pym-0 button:focus {
+    outline: unset;
+  }
+
+  #crl8-product-carousel-modal .fZDuB:active,
+  #crl8-product-carousel-modal .fZDuB:focus {
+    outline: none !important;
+  }
+
+  #crl8-product-carousel-modal .ibGtMI {
+    height: 75% !important;
+    width: 75% !important;
+  }
+
+  #crl8-product-carousel-modal .rfNEO {
+    height: 10.8em !important;
+  }
+
+  @media(min-width: 1401px) {
+    #crl8-product-carousel {
+      margin: 0 -50px;
+    }
+
+    #crl8-product-carousel .zsa45s-0 {
+      right: 10px;
+    }
+
+    #crl8-product-carousel .sc-4p2pym-0 {
+      left: 10px;
+    }
+  }
+
+  @media(min-width: 768px) and (max-width: 1400px){
+    #crl8-product-carousel {
+      margin: 0 -50px;
+    }
+
+    #crl8-product-carousel .zsa45s-0 {
+      right: 55px;
+    }
+
+    #crl8-product-carousel .sc-4p2pym-0 {
+      left: 55px;
+    }
+  }
+
+  @media(max-width:767px){
+    .shop_bundles h2.heading-with-link {
+      margin: 0 1.5rem;
+      padding-top: 40px;
+      padding-bottom: 0.7rem;
+    }
+
+    .shop_bundles .description {
+      margin: 0 1.5rem;
+    }
+
+    .shop_bundles .description p {
+      margin-bottom: 1.3rem;
+    }
+
+    .product__container .pdp-community-ugc hr.section__divider{
+      padding: 0 0 1.3rem;
+    }
+
+    .product__container .pdp-community-ugc hr.divider--start{
+      padding-bottom: 0;
+      margin: 0 1.5rem;
+    }
+
+    #crl8-product-carousel{
+      margin-left: -25px;
+      margin-right: -15px;
+    }
+
+    #crl8-product-carousel .jzEwOf{
+      padding: 0;
+    }
+
+    #crl8-product-carousel [aria-label="Previous slide - Media Carousel"]{
+      margin-left: 10px;
+    }
+
+    #crl8-product-carousel .zsa45s-0 {
+      right: 44px;
+    }
+
+    #crl8-product-carousel .sc-4p2pym-0 {
+      left: 9px;
+    }
+  }
+</style>
+
+<script>
+  $(document).ready(function() {
+
+    $('#crl8-product-carousel').click(function(e) {
+      if ($('.amfTs')[0] !== e.target && $('.jUBLCo')[0] !== e.target) { 
+        return;
+      } else {
+        $('#pageWrapper').addClass('fadeout');
+      }
+    });
+
+    $('#crl8-product-carousel-modal').click(function(e) {
+      if ($('.jGhPnl')[0] !== e.target && $('.fZDuB')[0] !== e.target  && $('.fZDuB')[0] !== e.target) { 
+        return;
+      } else {
+        $('#pageWrapper').removeClass('fadeout');
+      }
+    });
+
+  });
+</script>
+
+
+{% schema %}
+  {
+    "name": "Pdp Community",
+    "class": "pdp-community",
+    "settings": [
+      {
+        "type":"checkbox",
+        "id":"pdp_community_hide",
+        "label":"Hide Section",
+        "default":false
+      },
+      {
+        "type": "text",
+        "id": "pdp_community_title",
+        "label": "Title",
+        "default": "Community"
+      },
+      {
+        "type": "richtext",
+        "id": "pdp_community_description",
+        "label": "Description",
+        "default": "<p>Snap, share and inspire by tagging @roseinc #roseinc.</p>"
+      }
+    ],
+    "presets": [
+      {
+        "name": "PDP Community",
+        "category": "Text"
+      }
+    ]
+  }
+{% endschema %}

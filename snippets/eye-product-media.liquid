@@ -1,0 +1,31 @@
+{% assign withOutVarPro = 'false'  %}
+
+{% for variant in product.variants %}
+    {% assign checkArraySize = product.variants | size  %}
+    {% if checkArraySize > 0 %}
+        <span class="varImgStyle variant_imge_{{ product.id }} {{ variant.id}}"
+              style="{% if product.variants[0].id != variant.id %} display:none; {% endif %}">
+            <a href="{{ product.url }}">
+                <img src="{{ variant.metafields.media.transparent[0].src }}" alt="{{ variant.metafields.media.transparent.alt }}" class="desktopVariant"
+                    srcset="
+                    {{ variant.metafields.media.transparent[0].src | append: '&transform=resize=300' }} 300w,
+                    {{ variant.metafields.media.transparent[0].src | append: '&transform=resize=600' }} 600w,
+                    {{ variant.metafields.media.transparent[0].src | append: '&transform=resize=900' }} 900w,
+                    {{ variant.metafields.media.transparent[0].src | append: '&transform=resize=1200' }} 1200w
+                    "
+                    fetchpriority="low" loading="lazy"
+                /> 
+                <img src="{{ variant.metafields.media.transparent_media_mobile[0].src }}" alt="{{ variant.metafields.media.transparent_media_mobile[0].alt }}" class="mobileVariant"
+                    srcset="
+                    {{ variant.metafields.media.transparent_media_mobile[0].src | append: '&transform=resize=300' }} 300w,
+                    {{ variant.metafields.media.transparent_media_mobile[0].src | append: '&transform=resize=600' }} 600w,
+                    {{ variant.metafields.media.transparent_media_mobile[0].src | append: '&transform=resize=900' }} 900w
+                    " 
+                    fetchpriority="low" loading="lazy"
+                />
+            </a>
+        </span>
+    {% else %}
+        {% assign withOutVarPro = 'true'  %}
+    {% endif %}
+{% endfor %}

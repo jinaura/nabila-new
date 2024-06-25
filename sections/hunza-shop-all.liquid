@@ -1,0 +1,236 @@
+{% assign _section = section.settings %}
+
+<section class="hunza-shop_all" style="background-color: {{_section.bg_color}};">
+  <div class="container">
+    <h2>{{_section.shopall_title}}</h2>
+    <div class="collection-grid">
+      {% for _product in collections[_section.shopall_collection].products %}
+        {% if _product.handle contains "-free" %}
+          {%- continue -%}
+        {% endif %}
+        {% if _product.type == 'Sets Product' %}
+          {%- include 'product-item-sets' with _product, coll_type: 'hunza-shopall' -%}
+        {% else %}
+          {%- include 'product-item' with _product, coll_type: 'hunza-shopall'  -%}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  body.template-page--hunza-lp.page--hunza-collab {
+    background-color: #fff;
+    left: 0;
+    right: 0;
+  }
+  body.template-page--hunza-lp.page--hunza-collab .wrapper .footer {
+    margin-top: 0;
+  }
+  .hunza-shop_all {
+    margin-top: 50px;
+    padding-bottom: 80px;
+  }
+  .hunza-shop_all .container {
+    text-align: center;
+    max-width: 1240px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 90px;
+    margin: 0 auto;
+  }
+  .hunza-shop_all h2 {
+    font-family: var(--font-regular);
+    color: #1D1D1D;
+    font-size: 60px;
+    line-height: 110px;
+    letter-spacing: 0.71px;
+    text-transform: none;
+    padding-bottom: 6px;
+  }
+  .hunza-shop_all .collection-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -60px;
+    margin-right: 0;
+  }
+  .hunza-shop_all .buy_btn, .hunza-shop_all .buy_btn_direct, .hunza-shop_all .buy_now {
+    font-family: var(--font-medium);
+    text-decoration: none;
+    text-transform: uppercase;
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1d1d1d;
+    color: #fff;
+    border: unset;
+    padding: 0 20px;
+  }
+  .hunza-shop_all .buy_btn:hover, .hunza-shop_all .buy_btn_direct:hover, .hunza-shop_all .buy_now:hover {
+    background-color: #545353;
+  }
+  .hunza-shop_all .buy_btn .p-price__tag, .hunza-shop_all .buy_btn_direct .p-price__tag, .hunza-shop_all .buy_now .p-price__tag {
+    margin-top: 0;
+    color: #fff;
+    min-height: unset;
+    text-align: center;
+  }
+  .hunza-shop_all .product__item {
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    height: auto;
+    flex-basis: calc(33.33% - 60px);
+    max-width: calc(33.33% - 60px);
+    margin: 0 0 60px 60px;
+  }
+  .hunza-shop_all .product__item .outer_content {
+    padding: 10px 10px 20px;
+    min-height: 97px;
+  }
+  .hunza-shop_all .product__item .feature_tags, .hunza-shop_all .product__item .tag_label {
+    display: none;
+  }
+  .hunza-shop_all .product__item .product_img_wrapper {
+    position: unset;
+    display: flex;
+    justify-content: center; 
+  }
+  .hunza-shop_all .product__item .product_img_wrapper .shutter {
+    height: auto;
+    padding: 20px 0 0;
+    text-align: left;
+  }
+  .hunza-shop_all .product__item-image img {
+    aspect-ratio: 1;
+    max-width: 360px;
+    width: 100%;
+  }
+  .hunza-shop_all .product__item .product__item-title {
+    letter-spacing: 1px;
+    padding-bottom: 6px;
+  }
+  .hunza-shop_all .color_info {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+  }
+  .hunza-shop_all a.holiday-coll-btn.buy_btn_ofs {
+    width: 100%;
+    align-self: center;
+    line-height: 58px;
+    padding-bottom: 0;
+    border: 1px solid #545353;
+  }
+
+  @media (max-width: 950px) {
+    .hunza-shop_all {
+      padding-bottom: 45px;
+    }
+    .hunza-shop_all .container {
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+    .hunza-shop_all .collection-grid {
+      margin-left: -10px;
+      margin-right: -20px;
+    }
+    .hunza-shop_all .product__item {
+      flex-basis: calc(50% - 20px);
+      max-width: calc(50% - 20px);
+      margin: 0 0 10px 10px;
+    }
+    .hunza-shop_all .product__item-image img {
+      max-width: 450px;
+    }
+    .hunza-shop_all .product__item .product_img_wrapper .shutter {
+      position: fixed;
+      width: 100%;
+      top: auto;
+      left: 0;
+      bottom: 0;
+      padding: 21px 20px!important;
+      text-align: left;
+      height: auto;
+    }
+  }
+  @media (max-width: 767px) {
+    .hunza-shop_all {
+      margin-top: 0;
+    }
+    .hunza-shop_all .container {
+      padding-top: 30px;
+    }
+    .hunza-shop_all h2 {
+      font-size: 44.4px;
+      line-height: 56.3px;
+      letter-spacing: 0.77px;
+      padding-bottom: 10px;
+    }
+    .hunza-shop_all .product__item .outer_content {
+      margin-left: 0;
+      padding: 7px 5px 5px;
+      min-height: 114px;
+    }
+    .hunza-shop_all .product__item .product__item-title {
+      font-size: 12px;
+      line-height: 17px;
+      letter-spacing: 0.86px;
+      padding-bottom: 2px;
+    }
+    .hunza-shop_all .product__item .product__item-subtitle {
+      font-size: 12px;
+      line-height: 15px;
+    }
+    .hunza-shop_all .buy_btn, .hunza-shop_all .buy_btn_direct, .hunza-shop_all .buy_now {
+      height: 40px;
+      font-size: 11px;
+      line-height: 13.95px;
+      letter-spacing: 0.19px;
+    }
+    .hunza-shop_all .buy_btn .p-price__tag, .hunza-shop_all .buy_btn_direct .p-price__tag, .hunza-shop_all .buy_now .p-price__tag {
+      font-size: 11px;
+    }
+    .hunza-shop_all a.holiday-coll-btn.buy_btn_ofs {
+      line-height: 38px;
+      font-size: 11px;
+      letter-spacing: 0.19px;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Hunza Shop All",
+    "settings": [
+      {
+        "type": "text",
+        "id": "shopall_title",
+        "label": "Title",
+        "default": "Shop All"
+      },
+      {
+        "type": "color",
+        "id": "bg_color",
+        "label": "Background Color",
+        "default": "#fafafa"
+      },
+      {
+        "type": "collection",
+        "id": "shopall_collection",
+        "label": "Collection"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Hunza Shop All",
+        "category": "Collection"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,32 @@
+<!-- BACK IN STOCK POP-UP -->
+{%if prod_item_variant %}
+  {% assign prod_var_to_notify  = prod_item_variant %}
+{% else %}
+  {% assign prod_var_to_notify = active_variant.id %}
+{% endif %}
+
+<div class="modal micromodal-slide back-in-stock" id="modal-back-in-stock" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__wrapper" data-micromodal-close>
+            <div class="modal__container" role="dialog" aria-modal="true">
+                <header class="modal__header">
+                    <h3 class="section__subtitle">Notify me</h3>
+                    <button class="modal__close close" aria-label="Close modal" data-micromodal-close>Close</button>
+                </header>
+                <main class="modal__content klaviyo_back_in_stock" id="modal-back-in-stock-content">
+                    <form class='back-in-stock-form'>
+                        <input type='hidden' id='back_in_stock_variant_id_input' name='variant' value='{{prod_var_to_notify}}' />
+                        <input type='email' id='back_in_stock_email' name='email' value='' placeholder="Your email" aria-label="Email Address" />
+                        <input type='submit' class='btn subscribe' value='Notify me when available' />
+                    </form>
+                    <p class="newsletter-disclaimer">By submitting this form, I accept the
+                        <span><a href="/pages/privacy-policy" target="_blank">Privacy Policy</a></span> and the
+                        <span><a href="/pages/terms-conditions" target="_blank">Terms of Service</a></span>.
+                        We don't sell personal information to 3rd parties.
+                    </p>
+                </main>
+                <p class="success-msg hide-elements">Thanks for subscribing - we'll let you know when it is in stock.</p>
+            </div>
+        </div>
+    </div>
+</div>

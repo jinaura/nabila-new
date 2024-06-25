@@ -1,0 +1,226 @@
+{%- assign __product = variant-selector | default: bundle_product -%}
+
+<div class="shutter" data-template="{{ template.name }}">
+   <!-- TODO LV verify conflict -->
+    <div class="ctas-sb">
+        <button type="button" class="close">Close</button>
+    </div>
+
+    {% if bundle_product.variants.size >= 1 %}
+
+        <div class="images_above_shades">
+          {% for product_option in bundle_product.options_with_values %}
+            {% for value in product_option.values %}
+              {% if product_option.name == 'Color'%}
+                {% for variant in __product.variants %}
+                  {% unless variant.metafields.visibility.hide %}
+                    {% if variant.metafields.color.name == value %}
+                      {% unless variant.metafields.m_images.hide_model_images == 'true' %}
+                        {% for model_images in variant.metafields.m_images.model_images %}
+                          {% assign splitVariant = value |split: "/" %}
+                          <figure class='hide-model-image' data-shadeimg='sb-{{ splitVariant[0] | replace: ' ','-' }}-{{ bundle_product.id }}-{{ random_number }}'>
+                            <img 
+                                src="{{model_images.src}}"
+                                srcset="
+                                {{ model_images.src | append: '&transform=resize=200' }} 200w,
+                                {{ model_images.src | append: '&transform=resize=300' }} 300w
+                                "
+                                alt="{{model_images.alt}}"
+                                class="above-shades-img"
+                                fetchpriority="low"
+                                loading="lazy"
+                            />
+                          </figure>
+                        {% endfor %}
+                      {% endunless %}
+                    {% endif %}
+                  {% endunless %}
+                {% endfor %}
+              {% endif %}
+            {% endfor%}
+          {% endfor %}
+        </div>
+
+        <div 
+            class="color_info {% if bundle_product.tags contains 'show_color_slider' %}slide-enable{% else %}wrap_in{% endif %}" 
+            id="sb_color_info_{{ bundle_product.id }}_{{ random_number }}"
+        >
+
+            {% assign colorName = '' %}
+            {% assign colorHex = '' %}
+            {% assign colorTexture = '' %}
+            {% assign colorFlag = '' %}
+            {% assign colorDescription = '' %}
+            {% assign isSizeVariant = false %}
+            {% assign maxVariant = 0 %}
+            {% assign colorImageDescription = '' %}
+            {% assign colorImageName = '' %}
+            {% assign selectedColorName = '' %}
+            {% assign selectedColorDescription = '' %}
+            {%- assign background_image = '' -%}
+
+            {% for product_option in bundle_product.options_with_values %}
+                {% for value in product_option.values %}
+                    {% if product_option.name == 'Color'%}
+                        {% assign maxVariant = product_option.values.size %}
+                        {% for variant in __product.variants %}
+                            {% unless variant.metafields.visibility.hide %}
+                                {% if variant.metafields.color.name == value %}
+                                    {% assign colorHex = variant.metafields.color.hex %}
+                                    {% assign colorFlag = variant.metafields.flag.title %}
+                                    {% assign originalColorName = variant.metafields.color.name %}
+                                    {% assign colorName = originalColorName | split : "/" %}
+                                    {% assign colorDescription = variant.metafields.description.value %}
+                                    {%- if variant.metafields.color.texture %}
+                                        {%- assign background_image = "url('"| append:variant.metafields.color.texture[0].src|append:"')"-%}
+                                    {% else %}
+                                        {%- assign background_image = "none"-%}
+                                    {%- endif -%}
+
+                                    {% if variant.metafields.color.name == __product.selected_or_first_available_variant.option1 %}
+                                        {% assign colorImageName = variant.metafields.color.name %}
+                                        {% assign colorImageDescription = variant.metafields.description.value %}
+                                    {% endif %}
+                                    <span style="display: none;" id="color-sb-{{ colorName[0] | replace: ' ','-' }}-{{ bundle_product.id }}-{{ random_number }}">
+                                        <p class="color__name">{{ originalColorName }}</p>
+                                        <p class="color__description">{{ colorDescription }}</p>
+                                    </span>
+
+                                    <!--- 2 get available variant information  --->
+                                    {% if bundle_product.variants[checkSelectedOption].option1 == value  %}
+                                        {% assign selectedColorName = originalColorName %}
+                                        {% assign selectedColorDescription = colorDescription %}
+                                    {% endif %}
+                                    <!--- end get available variant information  --->
+                                {% endif %}
+                            {% endunless %}
+                        {% endfor %}
+
+                        {% unless colorName == '' %}
+                            <div class="color_radio sbProductOption special_txt">
+                                {% assign splitName = value |split: "/" %}
+                                <input type="radio" name="sb-{{ bundle_product.id }}-{{ product_option.name }}-{{ random_number }}"
+                                       value="{{ splitName[0] }}"
+                                       data-org-name="{{ originalColorName }}"
+                                       data-pid="sb-{{ bundle_product.id }}_{{ random_number }}"
+                                       data-cno="sb-{{ forloop.index }}"
+                                       id="sb-{{ splitName[0] | replace: ' ','-' }}-{{ bundle_product.id }}-{{ random_number }}"
+                                       class="sb-{{ product_option.name }}-{{ bundle_product.id }}">
+                                <label for="sb-{{ splitName[0] | replace: ' ','-' }}-{{ bundle_product.id }}-{{ random_number }}" style="background-color:{{colorHex}}; background-image: {{ background_image }}">
+                                    {% assign getVariantIndex = forloop.index | minus: 1 %}
+                                    {% unless bundle_product.variants[getVariantIndex].metafields.visibility.coming_soon %}
+                                        {% if bundle_product.variants[getVariantIndex].inventory_quantity <= bundle_threashold_metafield %}
+                                            <svg class="variant-notavailable-strike" viewBox="0 0 100 100">
+                                                <line x1="0" y1="100" x2="100" y2="0"></line>
+                                            </svg>
+                                        {% endif %}
+                                    {% endunless %}
+                                    <span>{{ colorFlag }}</span>
+                                </label>
+                            </div>
+                        {% endunless %}
+                    {% endif %}
+                    {% assign colorName = '' %}
+                {% endfor %}
+            {% endfor %}
+
+        </div>
+
+        <script>
+            {% comment %} $(document).ready(function() {
+              var getFirstVarImg = $('#sb_color_info_{{ bundle_product.id }}_{{ random_number }} .sbProductOption label').eq({{ checkSelectedOption  }}).attr('style');
+              $('#choose_shade_{{ bundle_product.id }} .main_color').attr('style', getFirstVarImg);
+            }); {% endcomment %}
+        </script>
+
+    {% if bundle_product.tags contains 'show_color_slider' %}
+        <div class="rangeSlider hide">
+            <input class="scroll-range" min="1" max="{{ maxVariant }}" value="{{ checkSelectedOption }}" id="scroll-range_sb-{{ bundle_product.id }}-{{ random_number }}" type="range" />
+        </div>
+
+        <script>
+            $(document).ready(function() {
+                var getLength = $('#sb_color_info_{{ bundle_product.id }}_{{ random_number }} .color_radio').length;
+                if(getLength >= 4){
+                    var scroll = document.getElementById('scroll-range_sb-{{ bundle_product.id }}-{{ random_number }}');
+                    scroll.oninput = function () {
+                        var panel = document.getElementById('sb_color_info_{{ bundle_product.id }}_{{ random_number }}');
+
+                        /// color selection according to slider movement and trigger this filed ///
+                        var color_value = $(this).parent().parent().find('.color_radio').find('input[data-cno="sb-' + this.value + '"]').attr('value');
+                        color_value = (color_value.replace(/ /g,"-"));
+                        $(this).parent().parent().find('.color_radio').find('input[data-cno="sb-' + this.value + '"]').trigger('click');
+                        $('#sb-'+color_value+'-{{ bundle_product.id }}').prop('checked', true);
+
+                        var total = panel.scrollWidth - panel.offsetWidth;
+                        if (getLength > 3 && getLength < 8) {
+                             var percentage = this.value * (total / getLength);
+                             percentage < 23 ?  panel.scrollLeft = 0 : panel.scrollLeft = percentage;
+                        } else if (getLength >= 8 ) {
+                            var percentage = this.value * (total / getLength);
+                            percentage < 60 ?  panel.scrollLeft = 0 : panel.scrollLeft = percentage;
+                        }
+                    }
+
+                    $('#scroll-range_sb-{{ bundle_product.id }}-{{ random_number }}').parent().removeClass('hide');
+                }
+
+            });
+        </script>
+    {% endif %}
+
+    {% endif %}
+
+    {% if colorImageName %}
+        <div class="variant_info" id="variant_info_sb-{{ bundle_product.id }}_{{ random_number }}">
+            <p class="color__name"></p>
+            <p class="color__description"></p>
+        </div>
+    {% endif %}
+
+    <div class="cart_actions">
+        {% if bundle_product.variants.size >= 1 %}
+            <select name="variant_id{{ bundle_product_seq }}" id="variantSelectMain_sb-{{ bundle_product.id }}" class="product-form__variants no-js" style="display: none;">
+                {% for variant in bundle_product.variants %}
+                    {% assign splitTitle = variant.title |split: "/" %}
+                    {% if variant.metafields.visibility.coming_soon %}
+                        <option {% if variant.title == bundle_product.variants[checkSelectedOption].title %} selected="selected" {% endif %} value="{{ variant.id }}" data-sku="{{ variant.sku }}" data-product-id="{{ bundle_product.id }}" data-variant-title="{{ splitTitle[0] }} - Coming Soon">{{ variant.title }} - Coming Soon</option>
+                    {% elsif variant.inventory_quantity > bundle_threashold_metafield %}
+                        <option {% if variant.title == bundle_product.variants[checkSelectedOption].title %} selected="selected" {% endif %} value="{{ variant.id }}" data-sku="{{ variant.sku }}" data-price="{{ variant.price | money_without_trailing_zeros }}" data-product-id="{{ bundle_product.id }}" data-variant-title="{{ splitTitle[0] }}" data-variant-delayed="{{ variant.metafields.delay.delayed | default: false }}">
+                            {{ variant.title }}
+                        </option>
+                    {% else %}
+                        <option {% if variant.title == bundle_product.variants[checkSelectedOption].title  %} selected="selected" {% endif %} value="{{ variant.id }}" data-sku="{{ variant.sku }}" data-product-id="{{ bundle_product.id }}" data-variant-title="{{ splitTitle[0] }} - {{ 'products.product.sold_out' | t }}">{{ variant.title }} - {{ 'products.product.sold_out' | t }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        {% endif %}
+    </div>
+
+</div>
+
+<style>
+  .shutter .images_above_shades {
+    width: 100%;
+    display: flex;
+  }
+  .shutter .images_above_shades figure {
+    width: calc(100%/3);
+    max-width: 133px;
+    max-height: 133px;
+    margin-bottom: 30px;
+    margin-top: 10px;
+      margin-left: -1px;
+  }
+  .shutter .images_above_shades figure.hide-model-image {
+    display: none;
+  }
+  .shutter .images_above_shades figure img{
+    max-width: 100%;
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+</style>
+
+{%- assign _product = '' -%}

@@ -1,0 +1,66 @@
+<section class="smallLargeImageModule">
+
+    {% for block in section.blocks %}
+
+        {% if article.handle == articles[block.settings.sImage-lImage-article].handle %}
+
+
+            <div>
+              {{block.settings.simage | image_url: width: 1800 | image_tag: height: 500, alt: block.settings.simage.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+
+            <div>
+              {{block.settings.limage | image_url: width: 2000 | image_tag: height: 800, alt: block.settings.limage.alt, fetchpriority: 'low', loading: 'lazy' }}
+            </div>
+
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+.smallLargeImageModule{
+  display: flex;
+  padding-bottom:120px;
+}
+.smallLargeImageModule > div{
+  width:50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.smallLargeImageModule > div img{
+  max-width:100%;
+  display:block;
+}
+</style>
+
+{% schema %}
+    {
+    "name": "2X SImage|LImage",
+    "class": "sImage-lImage",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "2X SImage|LImage",
+    "settings": [
+    {
+    "type": "article",
+    "id": "sImage-lImage-article",
+    "label": "Article"
+    },
+    {
+    "type": "image_picker",
+    "id": "simage",
+    "label": "Small Image"
+    },
+    {
+    "type": "image_picker",
+    "id": "limage",
+    "label": "Large Image"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

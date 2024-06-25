@@ -1,0 +1,119 @@
+<div class="collection__sort hidden-xs">
+	{% assign current_sort = collection.sort_by | default: collection.default_sort_by %}
+
+	{%- capture sort_options -%}
+		manual|{{ 'collections.sorting.manual' | t }}\
+		price-ascending|{{ 'collections.sorting.price_ascending' | t }}\
+		price-descending|{{ 'collections.sorting.price_descending' | t }}\
+    created-descending|{{ 'collections.sorting.created_descending' | t }}\
+    created-ascending|{{ 'collections.sorting.created_ascending' | t }}\
+	{%- endcapture -%}
+	{%- assign sort_options = sort_options | strip_newlines | split: '\' -%}
+
+    <button class="see-more sort" data-micromodal-trigger="modal-sortby">
+        {%- for sortOption in sort_options -%}
+        {%- assign sort_option_array = sortOption | strip | split: '|' -%}
+            {% if current_sort == sort_option_array.first %}
+            {%- assign sortedValue = sort_option_array.last -%}
+              Sort by {{ sort_option_array.last }}
+            {% endif %}   
+    {%- endfor -%}
+    </button>
+
+    <div class="modal micromodal-slide sort" id="modal-sortby" aria-hidden="true">
+        <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+          <div class="modal__wrapper" data-micromodal-close>
+            <div class="modal__container" role="dialog" aria-modal="true">
+              <header class="modal__header">
+                <h3 class="section__subtitle">Sort by</h3>
+                <button class="modal__close close" aria-label="Close modal" data-micromodal-close>Close</button>
+              </header>
+              <main class="modal__content" id="modal-sort-content">
+                <ul name="sortBy" id="sortBy" class="sort__select custom-select" aria-label="Sort By Select">
+                    {%- for sortOption in sort_options -%}
+                        {%- assign sort_option_array = sortOption | strip | split: '|' -%}
+            
+                        <li
+                            data-value="{{ sort_option_array.first }}"
+                            class="sort__option{% if current_sort == sort_option_array.first %} selected{% endif %}"
+                        >
+                            {{ sort_option_array.last }}
+                        </li>
+                    {%- endfor -%}
+                </ul>
+              </main>
+            </div>
+        </div>
+        </div>
+      </div>
+</div><!-- /.collection__sort -->
+
+{% if sortedValue == "Price, low-high" %}
+<style>
+.page_collection___mainWarp .product__item .outer_content{height: 20% !important;}
+</style>
+{% endif %}
+<style>
+  .modal.sort .modal__wrapper {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .modal.sort .modal__overlay {
+    align-items: flex-start;
+    top: 130px;
+  }
+  .modal.sort .modal__overlay .modal__container {
+    margin-right: 0;
+    width: 340px;
+  }
+  .modal.sort .sort__select .sort__option {
+    text-decoration: underline;
+    padding-bottom: 0.5rem;
+  }
+  .modal.sort .sort__select .sort__option:hover {
+    cursor: pointer;
+  }
+  .modal.sort .sort__select .sort__option.selected {
+    font-weight: 600;
+  }
+  .modal.sort .modal__header {
+    padding-bottom: 1.5rem;
+  }
+  @media (max-width: 767px) {
+    .modal.sort .modal__wrapper {
+      position: absolute;
+      bottom: 71px;
+    }
+    .modal.sort .modal__overlay {
+      background: unset;
+    }
+    .modal.sort .modal__header {
+      display: none;
+    }
+    .collections--default .collection__sort {
+      text-align: right;
+    }
+    .collections--default .collection__sort .modal__container {
+      text-align: left;
+    }
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+<script>
+  $( document ).ready(function() {
+    MicroModal.init({
+      onClose: () => {
+        $('.collection__filters .collection__filter button.close-btn').remove();
+        $('.collection__filters .collection__filter button.filter').removeClass('hidden');
+      },
+    });
+    
+    $('.collection__filters .collection__sort button').on('click', function() {
+      if ($('#modal-sortby').hasClass('is-open')) {
+        $('.collection__filters .collection__filter button.filter').addClass('hidden');
+        $('.collection__filters .collection__filter').prepend(`<button class="close close-btn" aria-label="Close modal" data-micromodal-close>Close</button>`);
+      }
+    });
+  });
+</script>

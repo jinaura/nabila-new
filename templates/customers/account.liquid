@@ -1,0 +1,273 @@
+{% comment %}
+TODO:This file should represent the 'account landing page', ie order history
+{% endcomment %}
+
+<section class="section-account">
+
+    <div class="account-main">
+        <div class="ac-wrap">
+            {%- include 'account-sidebar' -%}
+
+            <div class="ac-content-panel">
+                <div class="head-wrap">
+                    <h2>Order History</h2>
+
+
+                </div>
+                {%- paginate customer.orders by 20 -%}
+                {%- if customer.orders.size != 0 -%}
+                <div class="order-list-wrap">
+                    
+                  
+                    {%- for order in customer.orders -%}
+                    <div class="order-list">
+                        <div class="orderList-mobile-wrap">
+                        <div class="order-row">
+                            <div class="order-col">
+                                <div class="order-no">
+                                    {{- 'customer.orders.order_number' | t -}} &nbsp; {{- order.name | link_to:
+                                    order.customer_url -}}
+                                </div>
+                            </div>
+                            <div class="order-col">
+                                <div class="order-date">
+                                    {{- order.created_at | date: '%m/%d/%y' -}}
+                                </div>
+                            </div>
+                            <div class="order-col">
+                                <div class="order-total">
+                                    {{- order.total_price | money -}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-row">
+                            <div class="order-col">
+                                <div class="order-detail">
+                <a href="{{- order.customer_url -}}">Order Details</a>
+                                </div>
+                            </div>
+                            <div class="order-col">
+                                <div class="order-track-shipment">
+                                    <a href="">Track shipment</a>
+                                </div>
+                            </div>
+                            <div class="order-col">
+                                <div class="order-return">
+                                    <a href="/pages/return-center">Start return</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="order-row">
+
+                            <div class="order-col-100 showdesktop">
+                                <div class="order-image-wrap">
+                                    {% assign remainingImages = order.line_items.size | minus: 9 %}
+                                    {% for product in order.line_items %}
+                                    {% if forloop.index == 10 %}
+                                        {% break %}
+                                        {%- endif -%} 
+                                    <div class="order-image">{{ product.image | img_url: '80x80' | img_tag }}</div>
+                                    {% endfor %}
+                                    
+                                    {% if order.line_items.size > 9 %}
+                                    <div class="order-image-more">
+                                        <a>
+                                            <div>+{{- remainingImages -}}</div>
+                                            <div>more</div>
+                                        </a>
+                                    </div>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                            <div class="order-col-100 showmobile">
+                                <div class="order-image-wrap">
+                                    {% assign remainingImagesMobile = order.line_items.size | minus: 3 %}
+                                    {% for product in order.line_items %}
+                                    {% if forloop.index == 4 %}
+                                        {% break %}
+                                        {%- endif -%} 
+                                    <div class="order-image">{{ product.image | img_url: '80x80' | img_tag }}</div>
+                                    {% endfor %}
+                                    
+                                    {% if order.line_items.size > 3 %}
+                                    <div class="order-image-more">
+                                        <a>
+                                            <div>+{{- remainingImagesMobile -}}</div>
+                                            <div>more</div>
+                                            
+                                        </a>
+                                    </div>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {%- endfor -%}
+                    
+                    <!-- <div class="order-list">
+                        <div class="order-row">
+                            <div class="order-col-100">
+                                <a href="">
+                                    See All orders
+                                </a>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+
+                {%- include 'pagination' -%}
+                {%- else -%}
+                    <div class="no-oders">
+                        <p>
+                            {{- 'customer.orders.none' | t -}}
+                        </p>
+                    </div>
+                {%- endif -%}
+                {%- endpaginate -%}
+
+
+                
+                {% if customer.addresses.size > 0 %}
+                <div class="address-wrap">
+                    <div class="head-wrap">
+                        <h2>Your Addresses</h2>
+
+                    </div>
+                    <div class="address-list-wrap">
+                        {% for address in customer.addresses %}
+                        <div class="address-list">
+                        
+                                <div class="address_table">
+                                    <div id="view_address_{{address.id}}" class="customer_address">
+                                        <h4 class="address_title">
+                                            {{ address.first_name | capitalize }} {{address.last_name | capitalize }}
+                                            {% if address == customer.default_address %}({{ 'customer.addresses.default' | t }}){%
+                                            endif %}
+                                        </h4>
+                                        <p class="view_address">
+                                            {% unless address.company == '' %}{{ address.company }}<br>{% endunless %}
+                                            {{ address.street }}<br>
+                                            {{ address.city | capitalize }} {{ address.province_code | upcase }}, {{ address.zip |
+                                            upcase }}
+                                            {{ address.country }}<br>
+                                            {{ address.phone }}
+                                        </p>
+                                        <div class="address_actions">
+                                            <a href="javascript:" class="action-button" id="myBtn_{{address.id}}" >{{
+                                                'customer.addresses.edit' | t }}</a>
+                                        </div>
+                                    </div>
+            
+                              
+                                        <div id="edit_address_{{address.id}}"  class="modal customer_address-form" style="display: none;">
+                                            <div class="modal-content">
+                                                <span id="close_address_{{address.id}}" class="close">&times;</span>
+
+                                        {% form 'customer_address', address %}
+                                        <h4>Edit Address</h4>
+
+                                        <div class="input-wrap">
+
+                                        
+                                        <label for="address_first_name_{{form.id}}">{{ 'customer.addresses.first_name' | t
+                                            }}</label>
+                                        <input type="text" id="address_first_name_{{form.id}}" class="address_form"
+                                            name="address[first_name]" value="{{form.first_name}}" autocapitalize="words">
+                                        </div>
+                                        <div class="input-wrap">
+                                        <label for="address_last_name_{{form.id}}">{{ 'customer.addresses.last_name' | t }}</label>
+                                        <input type="text" id="address_last_name_{{form.id}}" class="address_form"
+                                            name="address[last_name]" value="{{form.last_name}}" autocapitalize="words">
+                                        </div>
+                                        <div class="input-wrap">
+                                        <label for="address_company_{{form.id}}">{{ 'customer.addresses.company' | t }}</label>
+                                        <input type="text" id="address_company_{{form.id}}" class="address_form"
+                                            name="address[company]" value="{{form.company}}" autocapitalize="words">
+                                        </div>
+                                        <div class="input-wrap">
+                                        <label for="address_address1_{{form.id}}">{{ 'customer.addresses.address1' | t }}</label>
+                                        <input type="text" id="address_address1_{{form.id}}" class="address_form"
+                                            name="address[address1]" value="{{form.address1}}" autocapitalize="words">
+                                        </div>
+                                        <div class="input-wrap">
+                                        <label for="address_address2_{{form.id}}">Address 2</label>
+                                        <input type="text" id="address_address2_{{form.id}}" class="address_form"
+                                            name="address[address2]" value="{{form.address2}}" autocapitalize="words">
+                                        </div>
+                                        <div class="input-wrap">
+                                        <label for="address_city_{{form.id}}">City</label>
+                                        <input type="text" id="address_city_{{form.id}}" class="address_form" name="address[city]"
+                                            value="{{form.city}}" autocapitalize="words">
+                                        </div>
+                                        <div class="input-wrap">
+                                        <label for="address_country_{{form.id}}">Country</label>
+                                        <select id="address_country_{{form.id}}" name="address[country]"
+                                            data-default="{{form.country}}">{{ country_option_tags }}</select>
+                                        </div>
+                                        <!-- <div class="input-wrap">
+                                        <label for="address_province_{{form.id}}">{{ 'customer.addresses.province' | t }}</label>
+                                        <select id="address_province_{{form.id}}" class="address_form" name="address[province]"
+                                            data-default="{{form.province}}"></select>
+                                        </div> -->
+                                        <div class="input-wrap">
+                                        <label for="address_zip_{{form.id}}">{{ 'customer.addresses.zip' | t }}</label>
+                                        <input type="text" id="address_zip_{{form.id}}" class="address_form" name="address[zip]"
+                                            value="{{form.zip}}" autocapitalize="characters">
+                                        </div>
+                                        <div class="input-wrap">
+                                        <label for="address_phone_{{form.id}}">{{ 'customer.addresses.phone' | t }}</label>
+                                        <input type="tel" id="address_phone_{{form.id}}" class="address_form" name="address[phone]"
+                                            value="{{form.phone}}">
+                                        </div>
+                                        <div class="checkbox-wrap">
+                                        {{ form.set_as_default_checkbox }}
+                                        <label for="address_default_address_new" class="inline">{{ 'customer.addresses.set_default'
+                                            | t }}</label>
+                                        </div> 
+                                            <div class="input-wrap btn-wrap">
+                                            <input type="submit" class="action-button new-address update-btn" value="{{ 'customer.addresses.update' | t }}">
+                                      
+                                        </div>
+                                    
+                                        {% endform %}
+                                    </div>
+                                    </div>
+                                </div>
+                                <script>
+                                  
+                                    var btn = document.getElementById("myBtn_{{address.id}}");
+                              
+                                    var span = document.getElementById("close_address_{{address.id}}");
+              
+                                    btn.onclick = function() {
+                                        $("#edit_address_{{address.id}}").show();
+                                    }
+                                   
+                                    span.onclick = function() {
+                                        $("#edit_address_{{address.id}}").hide();
+                                    }
+                                   
+                                    window.onclick = function(event) {
+                                        if (event.target == modal) {
+                                            modal.style.display = "none";
+                                        }
+                                    }
+                                </script>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+
+</section>

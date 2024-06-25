@@ -1,0 +1,40 @@
+{% if localization.country.iso_code != 'GB' %}
+  {% assign gwpThreshold = settings.holiday_GWP_threshold_us  | times: 1 %}
+  {% assign gwpPerOrder = settings.GWP_per_order_us %}
+  {% assign gwpProducts = settings.minicart_holiday_gwp_us %}
+{% elsif localization.country.iso_code == 'GB' %}
+  {% assign gwpThreshold = settings.holiday_GWP_threshold_uk  | times: 1 %}
+  {% assign gwpPerOrder = settings.GWP_per_order_uk %}
+  {% assign gwpProducts = settings.minicart_holiday_gwp_uk %}
+{% endif %}
+
+<div class="holiday-gwp-module">
+  <div class="gwp-module-container">
+    <div class="gwp-module-wrapper">
+      <h2>Choose Your Free Gift</h2>
+      <hr class="section__divider">
+
+      <div class="mini-cart__free-gwp" data-gbth="{{ gwpThreshold }}" data-gpo="{{ gwpPerOrder }}">
+
+        {% if localization.country.iso_code == 'GB' %}
+          {% assign message = settings.away_module_msg_uk %}
+        {% elsif localization.country.iso_code != 'GB' %}
+          {% assign message = settings.away_module_msg_us %}
+        {% endif %}
+        <span class="free" id="module_away_msg" style="display: none;">{{message}}</span>
+
+        {% if localization.country.iso_code == 'GB' %}
+          {% assign message = settings.reached_module_msg_uk %}
+        {% elsif localization.country.iso_code != 'GB' %}
+          {% assign message = settings.reached_module_msg_us %}
+        {% endif %}
+        <span class="free" id="module_reached_msg" style="display: none;">{{message}}</span>
+
+        <div class="mini-cart__gwp" data-shipping="{{gwpThreshold}}"></div>
+      </div>
+      <div id="minicart-gwp-ajax">
+        {% include 'minicart-gwp' with is_product %}
+      </div>
+    </div>
+  </div>
+</div>

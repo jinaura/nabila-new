@@ -1,0 +1,214 @@
+{% assign _section = section.settings %}
+
+<section class="bambuserPastShows">
+  <div class="container" id="section-{{- section.id -}}">
+    <h2 class="heading-with-link">{{ _section.title }}</h2>
+    <hr class="section__divider">
+    <div class="shows-nav">
+      {%- for block in section.blocks -%}
+      {% assign _block = block.settings %}
+        <article class="show-item {% cycle 'odd', 'even' %}">
+          <div class="inner" id="{{- block.id -}}">
+            {% if _block.video_url != blank %}
+              <div class="video">
+                <div class="ratio_wrapper res-660x660">
+                  <video muted loop autoplay preload="auto" width="100%" height="100%" playsinline="true" webkit-playsinline="true">
+                    <source src="{{_block.video_url}}" type='video/mp4' />
+                  </video>
+                </div>
+              </div>
+            {% else %}
+              <div class="image">
+                <img src="{{_block.image | image_url }}" alt="{{_block.image.alt}}" fetchpriority="low" loading="lazy" />
+              </div>
+            {% endif %}
+            <div class="show-info">
+              {% if _block.date != blank %}
+                <span>{{- _block.date -}}</span>
+              {% endif %}
+              <h2>{{_block.title}}</h2>
+              {% if _block.desc != blank %}
+                <div class="desc">{{ _block.desc }}</div>
+              {% endif %}
+                <div class="link">{{_section.link_text}}</div>
+            </div>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .bambuserPastShows {
+    padding-top: 90px;
+  }
+  .bambuserPastShows hr.section__divider {
+    margin-top: 14px;
+    padding-bottom: 50px;
+  }
+  .bambuserPastShows .shows-nav {
+    padding-left: 0;
+    padding-right: 0;
+    display: flex;
+    row-gap: 60px;
+    justify-content: center;
+  }
+  .bambuserPastShows .shows-nav article {
+    flex-basis: 50%;
+    padding-bottom: 50px;
+    border-bottom: 1px solid #e6e3e0;
+    display: flex;
+    flex-direction: column;
+  }
+  .bambuserPastShows .shows-nav article.even {
+    align-items: flex-end;
+  }
+  .bambuserPastShows .shows-nav article div.inner {
+    width: calc(100% - 30px);
+    cursor: pointer;
+  }
+  .bambuserPastShows .shows-nav .show-info {
+    padding-top: 20px;
+  }
+  .bambuserPastShows .shows-nav .show-info .link {
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: underline;
+    padding-top: 20px;
+  }
+  .bambuserPastShows .shows-nav .show-info span {
+    font-size: 12px;
+    line-height: 22px;
+    text-transform: uppercase;
+  }
+  .bambuserPastShows .shows-nav .show-info h2 {
+    padding-top: 12px;
+    padding-bottom: 10px;
+    letter-spacing: 1px;
+    font-family: var(--font-medium);
+    font-size: 20px;
+    color: var(--primary-color);
+    line-height: normal;
+  }
+
+  @media (min-width: 768px) and (max-width: 1400px) {
+    .bambuserPastShows .container {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .bambuserPastShows {
+      padding-top: 50px;
+    }
+    .bambuserPastShows .shows-nav {
+      flex-wrap: wrap;
+      row-gap: 40px;
+    }
+    .bambuserPastShows .shows-nav article {
+      flex-basis: 100%;
+      padding-bottom: 34px;
+    }
+    .bambuserPastShows .shows-nav article div.inner {
+      width: 100%;
+    }
+    .bambuserPastShows hr.section__divider {
+      padding-bottom: 30px;
+    }
+    .bambuserPastShows .shows-nav .show-info h2 {
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 1px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    if (!window.initBambuserLiveShopping) {
+      window.initBambuserLiveShopping = function(item) { window.initBambuserLiveShopping.queue.push(item) };
+      window.initBambuserLiveShopping.queue = [];
+      var scriptNode = document.createElement('script');
+      scriptNode['src'] = 'https://lcx-embed.bambuser.com/amyris/embed.js';
+      document.body.appendChild(scriptNode);
+    }
+
+    let blockId;
+    let showId;
+    {%- for block in section.blocks -%}
+      blockId = "{{block.id}}";
+      showId = "{{block.settings.show_id}}";
+      window.initBambuserLiveShopping({
+        showId: showId,
+        node: document.getElementById(blockId),
+        type: 'overlay',
+      });
+    {%- endfor -%}
+  })();
+</script>
+
+{% schema %}
+  {
+    "name":"Bambuser Past Shows",
+    "settings":[
+      {
+        "type":"text",
+        "id":"title",
+        "label":"Title",
+        "default": "Replay & Shop"
+      },
+      {
+        "type": "text",
+        "id": "link_text",
+        "label": "Link Text",
+        "default": "Watch + Shop"
+      }
+    ],
+    "blocks":[
+    {
+      "type":"text",
+      "name":"Show Item",
+      "settings": [
+      {
+        "type":"text",
+        "id":"video_url",
+        "label":"Video Url"
+      },
+      {
+        "type":"image_picker",
+        "id":"image",
+        "label":"Image (if no video)"
+      },
+      {
+        "type":"text",
+        "id":"date",
+        "label":"Date (e.g. February 23, 2022)"
+      },
+      {
+        "type":"text",
+        "id":"title",
+        "label":"Title"
+      },
+      {
+        "type":"richtext",
+        "id":"desc",
+        "label":"Description"
+      },
+      {
+        "type":"text",
+        "id":"show_id",
+        "label":"Show ID"
+      }
+      ]
+    }
+    ],
+    "presets":[
+      {
+       "name":"Bambuser Past Shows"
+      }
+    ]
+
+  }
+{% endschema %}

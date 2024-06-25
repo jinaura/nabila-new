@@ -1,0 +1,115 @@
+<h2 class="section__title">Editorial</h2>
+<hr class="section__divider">
+<section class="section__container editorials">
+  <article class="section__article">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean posuere dignissim ipsum, non dignissim est facilisis ac. Phasellus elit ex, scelerisque id pellentesque at, sollicitudin a lacus. Nam varius feugiat tellus, in feugiat libero venenatis ut. Pellentesque tincidunt, turpis at lacinia placerat.
+  </article>
+  <hr class="divider--start hidden-xs">
+  <div class="section__flex-row fifty-fifty hidden-xs">
+    <article class="section__flex-item fifty-fifty">
+      <h3>The Best Natural Acids for Your Skin Type</h3>
+      <button class="see-more"><a href="https://www.roseinc.com/blogs/content/best-natural-acids-for-your-skin-type" target="_blank">View editorial</a></button>
+      <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/210412-nataf-rose-inc-julia-detail-01-016-copy-31_2x_e44499b3-091e-43b1-a450-bc10235bfff7.png?v=1621950654" class="editorials animate" fetchpriority="low" loading="lazy" />
+    </article>
+    <article class="section__flex-item fifty-fifty">
+      <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/210412-nataf-rose-inc-marlee-detail-01-030_2x_3dec4a23-0856-48f6-8130-be9a54e46bb3.png?v=1621950686" class="editorials animate" fetchpriority="low" loading="lazy" />
+      <h3>An Expert Technique to Find Your Skin’s Undertone at Home</h3>
+      <button class="see-more"><a href="https://www.roseinc.com/blogs/content/skin-undertones" target="_blank">View editorials</a></button>
+    </article>
+  </div>
+  <div class="slider visible-xs-block" id="editorialImageSlider">
+    <article class="section__flex-item fifty-fifty">
+      <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/210412-nataf-rose-inc-julia-detail-01-016-copy-31_2x_e44499b3-091e-43b1-a450-bc10235bfff7.png?v=1621950654" class="editorials animate" fetchpriority="low" loading="lazy" />
+      <h3>The Best Natural Acids for Your Skin Type</h3>
+      <button class="see-more"><a href="https://www.roseinc.com/blogs/content/best-natural-acids-for-your-skin-type" target="_blank">View editorial</a></button>
+    </article>
+    <article class="section__flex-item fifty-fifty">
+      <img src="https://cdn.shopify.com/s/files/1/0549/9633/6789/files/210412-nataf-rose-inc-marlee-detail-01-030_2x_3dec4a23-0856-48f6-8130-be9a54e46bb3.png?v=1621950686" class="editorials animate" fetchpriority="low" loading="lazy" />
+      <h3>An Expert Technique to Find Your Skin’s Undertone at Home</h3>
+      <button class="see-more"><a href="https://www.roseinc.com/blogs/content/skin-undertones" target="_blank">View editorial</a></button>
+    </article>
+  </div>
+  <hr class="section__divider editorials">
+</section>
+
+<style>
+  .section__container.editorials h3 {
+		font-family: var(--font-heading);
+	 	font-size: 42px;
+		color: var(--secondary-color);
+    line-height: 1;
+    max-width: 600px;
+    padding-top: 2rem;
+    margin-bottom: 0.7rem;
+    text-transform: none;
+  }
+  .section__container.editorials .section__flex-row.fifty-fifty {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    align-items: flex-end;
+  }
+  .product__container .section__container.editorials .section__flex-item.fifty-fifty:last-child {
+    padding-bottom: 8rem;
+  }
+  .product__container .section__container.editorials button.see-more {
+    margin-bottom: 1.7rem;
+  }
+  #editorialImageSlider-ow [data-controls] {
+    display: none;
+  }
+  @media screen and (max-width: 767px) {
+    #editorialImageSlider-iw {
+      margin-right: 30px;
+    }
+    #editorialImageSlider-ow [data-controls] {
+      display: inline-block;
+      border: 0;
+      margin: 0;
+      padding: 0 0.6rem;
+      position: absolute;
+      z-index: 1;
+      background: transparent;
+      height: 63%;
+    }
+    #editorialImageSlider-ow [data-controls="prev"] {
+      left: 0;
+    }
+    #editorialImageSlider-ow [data-controls="next"] {
+      right: 0;
+    }
+    #editorialImageSlider .section__flex-item.tns-item p {
+      margin: 0 1.5rem;
+    }
+    .section__container.editorials .section__flex-item.tns-item img.editorials {
+      padding-right: 0.7rem;
+    }
+    .section__container.editorials .tns-item h3 {
+      size: 36px;
+    }
+    .product__container .editorials .tns-item h3, .product__container .editorials button.see-more {
+      margin: 0 1.2rem;
+    }
+    .product__container .section__container.editorials button.see-more {
+      margin-top: 1rem;
+    }
+    .product__container .section__container.editorials .section__flex-item.fifty-fifty:last-child {
+      margin: 0;
+      padding-bottom: 0;
+    }
+  }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
+<script>
+  const editorialImageSlider = tns({
+    container: '#editorialImageSlider',
+    items: 1,
+    controls: true,
+    controlsText: ['<div class="left slider--arrow" aria-label="Previous"></div>', '<div class="right slider--arrow" aria-label="Next"></div>'],
+    lazyload: true,
+    nav: false,
+    speed: 400
+  });
+</script>

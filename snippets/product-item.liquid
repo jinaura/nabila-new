@@ -1,0 +1,290 @@
+{%- assign _product = product-item -%}
+
+<!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+{% unless _product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+{% unless _product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+{%- if _product != empty -%}
+
+    {% assign coming_soon_uk = false %}
+    {% if _product.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+        {% assign coming_soon_uk = true %}
+    {% endif %}
+
+	<div class="product__item {{coll_type}}_coll {% unless holiday_enabled == true or section.settings.disable_animation %}animate{% endunless %} {% unless _product.available %}product__item--sold-out{% endunless %}">
+    <div class="product_img_wrapper">
+            {%- include 'feature-tag' prod: _product -%}
+            {% if collection.title == 'Samples' %}
+                <a href="#" class="product__item-link buy_btn_anchor">
+            {% else %}
+                <a href="{{ _product.url }}" class="product__item-link">
+            {% endif %}
+
+            <!-- show award badge for US -->
+            {% capture awardBadge %}
+                {% if _product.metafields.media.badge and localization.country.iso_code != 'GB' %}
+                    <span class="badge-img__wrapper">
+                        <img src="{{ _product.metafields.media.badge[0].src }}" alt="{{ _product.metafields.media.badge[0].alt | strip }}" class="badge-img"
+                            srcset="
+                                {{ _product.metafields.media.badge[0].src | append: '&transform=resize=150' }} 150w,
+                                {{ _product.metafields.media.badge[0].src | append: '&transform=resize=300' }} 300w
+                            "
+                            width="91"
+                            height="90"
+                            fetchpriority="low" loading="lazy"
+                        />
+                    </span>
+                {% endif %}
+            {% endcapture %}
+
+            <span class="product__item-image">
+                {% assign hunza_enabled = false %}
+                {% if coll_type == 'hunza-shopall' and _product.metafields.product.prod_image_holiday_coll[0] %}
+                    {% assign hunza_enabled = true %}
+                {% endif %}
+                {% assign holiday_enabled_img = false %}
+                {% if holiday_enabled == true and _product.metafields.product.prod_image_holiday_coll[0] %}
+                  {% assign holiday_enabled_img = true %}
+                {% endif %}
+                {% if holiday_enabled_img == true or hunza_enabled == true %}
+                    {% for prod_media in _product.metafields.product.prod_image_holiday_coll %}
+                        <img src="{{ prod_media.src }}" alt="{{ prod_media.alt }}"
+                            srcset="
+                              {{ prod_media.src | append: '&transform=resize=600' }} 600w,
+                              {{ prod_media.src | append: '&transform=resize=900' }} 900w
+                            "
+                            fetchpriority="high" loading="lazy"
+                        >
+                    {% endfor %}
+                {% else %}
+                    {{ awardBadge }}
+                    {{_product.featured_image | image_url: width: 900, height: 900 | image_tag: width: nil, height: nil, alt: _product.featured_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                {% endif %}
+            </span>
+          </a>
+        
+          {% unless holiday_enabled == true %}
+          {% unless coll_type == 'hunza-shopall' %}
+            <div class="inner_content">
+                <span class="rating_stars">
+                    {% if collection.title != 'Samples' %}
+                        <a href="{{- _product.url  -}}/#reviews" class="reviews">
+
+                            <!-- BV - Begin Inline Rating -->
+                            <div data-bv-show="inline_rating" data-bv-product-id="{{_product.id}}"></div>
+                            <!-- BV - End Inline Rating -->
+                        </a>
+                    {% endif %}
+                </span>
+
+                {% if _product.type == 'Gift Card' %}
+                    <a class="buy_btn_giftcard" href="{{- _product.url -}}">SHOP NOW</a>
+                {% elsif _product.metafields.product.coming_soon == 'true' or coming_soon_uk %}
+                    <a href="{{- _product.url -}}" class="buy_btn_ofs" data-id="{{ _product.id }}">Coming Soon</a>
+                {% elsif _product.variants.size == 1 and _product.variants[0].inventory_quantity >= 1 %}
+                    <button class="buy_btn_direct" {% for variant in _product.variants %}data-purchase-id="{{ variant.id }}"{% endfor %} data-id="{{ _product.id }}">Add to Bag</button>
+                {% elsif _product.variants.size == 1 and _product.variants[0].inventory_quantity < 1 %}
+                    <a href="{{- _product.url -}}" class="buy_btn_ofs" data-id="{{ _product.id }}">Out Of stock</a>
+                {% else %}
+                    <button class="buy_btn" data-id="{{ _product.id }}">
+                        {% if shop.metafields.globals.coming_soon != 'true' and _product.metafields.product.coming_soon != 'true' %}
+                            {% if section.settings.product_link_label != blank %}
+                                {{ section.settings.product_link_label }}
+                            {% else %}
+                                Quick Shop
+                            {% endif %}
+                        {% else %}
+                            Coming Soon
+                        {% endif %}
+                    </button>
+                {% endif %}
+
+                <script>
+                    var hash_localstorage = localStorage.getItem('email_hash');
+                    var hash_comingsoon = `{{ shop.metafields.globals.coming_soon }}`;
+                    var hash_metafield = `{{ shop.metafields.globals.hash }}`;
+                    if (hash_localstorage == hash_metafield && hash_comingsoon) {
+                        var getId = $('.buy_btn');
+                        var putdata = `{{ section.settings.product_link_label }}`;
+                        getId.html(putdata);
+                    }
+                </script>
+            </div>
+          {% endunless %}
+          {% endunless %}
+
+          <!-- SHUTTER POPUP -->
+          	{% include 'variant-selector' with _product %}
+          <!-- SHUTTER POPUP END // -->
+        </div>
+
+        {% unless holiday_enabled != true %}
+            <span class="rating_stars">
+                {% if collection.title != 'Samples' %}
+                    <a href="{{- _product.url  -}}/#reviews" class="reviews">
+
+                        <!-- BV - Begin Inline Rating -->
+                        <div data-bv-show="inline_rating" data-bv-product-id="{{_product.id}}"></div>
+                        <!-- BV - End Inline Rating -->
+                      </a>
+                {% endif %}
+            </span>
+        {% endunless %}
+
+
+		<a href="{{ _product.url }}" class="outer_content outer_content--show block-link-no-deco" >
+			<h4 class="product__item-title">
+				{{- _product.title -}}
+			</h4>
+			{% if _product.metafields.product.properties != blank %}
+			<p class="product__item-subtitle">
+				{{- _product.metafields.product.properties -}}
+			</p>
+			{% else %}
+        <div class="product__item-subtitle">{{- _product.description | truncatewords: 8, "..." -}}</div>
+      {% endif %}
+
+      {% if template.name == 'collection' and holiday_enabled != true %}
+        {% include 'variant-selector-coll-item' with _product %}
+      {% endif %}
+
+      {% unless holiday_enabled == true %}
+      {% unless coll_type == 'hunza-shopall' %}
+        <div class="p-price__tag" id="variant_price_{{ __product.id }}">
+            {%- assign product_compare_at_price = 0 | plus: 0 -%}
+            {% if localization.country.iso_code == 'GB' and __product.metafields.set.compare_at_price_uk %}
+                {%- assign product_compare_at_price = __product.metafields.set.compare_at_price_uk | times: 100 -%}
+            {% elsif localization.country.iso_code != 'GB' %}
+                {%- assign product_compare_at_price = __product.variants[checkSelectedOption].compare_at_price -%}
+            {% endif %}
+          {%- if product_compare_at_price > __product.variants[checkSelectedOption].price -%}
+            <span class="sr-only">Original price:</span>
+            <span class="old-price">{{- product_compare_at_price | money_without_trailing_zeros -}}</span>
+          {%- endif -%}
+          <span class="sr-only">Current price:</span>
+          <span class="new-price">
+            {{- __product.variants[checkSelectedOption].price | money_without_trailing_zeros -}}
+          </span>
+        </div>
+      {% endunless %}
+      {% endunless %}
+		</a>
+        {% if collection and holiday_enabled != true %}
+            <div class="product-border-bottom"></div>
+        {% endif %}
+
+
+        {% if holiday_enabled == true or coll_type == 'hunza-shopall' %}
+            {% if _product.type == 'Gift Card' %}
+                <a class="holiday-coll-btn buy_btn_giftcard" href="{{- _product.url -}}">
+                    <div class="p-price__tag" id="variant_price_{{ __product.id }}">
+                        {%- if __product.variants[checkSelectedOption].compare_at_price and localization.country.iso_code != 'GB' -%}
+                            <span class="sr-only">Original price: </span>
+                            <span class="old-price">{{- __product.variants[checkSelectedOption].compare_at_price | money_without_trailing_zeros -}}</span>
+                        {%- endif -%}
+                        <span class="sr-only">Current price: </span>
+                        <span class="new-price">
+                            {%- if __product.variants[checkSelectedOption].inventory_quantity != 0 -%}
+                              {{- __product.variants[checkSelectedOption].price | money_without_trailing_zeros -}}
+                            {%- endif -%}
+                        </span>
+                    </div>
+                    <span>SHOP NOW</span>
+                </a>
+            {% elsif _product.metafields.product.coming_soon == 'true' or coming_soon_uk %}
+                <a href="{{- _product.url -}}" class="holiday-coll-btn buy_btn_ofs" data-id="{{ _product.id }}">Coming Soon</a>
+            {% elsif _product.variants.size == 1 and _product.variants[0].inventory_quantity >= 1 %}
+                <button class="holiday-coll-btn buy_btn_direct" data-id="{{ _product.id }}">
+                    <div class="p-price__tag" id="variant_price_{{ __product.id }}">
+                        {%- if __product.variants[checkSelectedOption].compare_at_price and localization.country.iso_code != 'GB' -%}
+                          <span class="sr-only">Original price: </span>
+                          <span class="old-price">{{- __product.variants[checkSelectedOption].compare_at_price | money_without_trailing_zeros -}}</span>
+                        {%- endif -%}
+                        <span class="sr-only">Current price: </span>
+                        <span class="new-price">
+                            {%- if __product.variants[checkSelectedOption].inventory_quantity != 0 -%}
+                              {{- __product.variants[checkSelectedOption].price | money_without_trailing_zeros -}}
+                            {%- endif -%}
+                        </span>
+                    </div>
+                    <span>ADD TO BAG</span>
+                </button>
+            {% elsif _product.variants.size == 1 and _product.variants[0].inventory_quantity < 1 %}
+                <a href="#" class="holiday-coll-btn buy_btn_ofs" data-id="{{ _product.id }}"{% if holiday_enabled == true %}data-micromodal-trigger="modal-back-in-stock"{% endif %}>Out Of stock</a>
+                {% if holiday_enabled == true %}
+                  {% for variant in _product.variants %}{% assign variant_to_notify = variant.id %}{% endfor %}
+                  {%- include 'pdp-back-in-stock' prod_item_variant: variant_to_notify-%}
+                {% endif %}
+            {% else %}
+                <button class="holiday-coll-btn buy_btn" data-id="{{ _product.id }}">
+                    {% if shop.metafields.globals.coming_soon != 'true' and _product.metafields.product.coming_soon != 'true' %}
+                        <div class="p-price__tag" id="variant_price_{{ __product.id }}">
+                            {%- if __product.variants[checkSelectedOption].compare_at_price and localization.country.iso_code != 'GB' -%}
+                                <span class="sr-only">Original price: </span>
+                                <span class="old-price">{{- __product.variants[checkSelectedOption].compare_at_price | money_without_trailing_zeros -}}</span>
+                            {%- endif -%}
+                            <span class="sr-only">Current price: </span>
+                            <span class="new-price">
+                                {%- if __product.variants[checkSelectedOption].inventory_quantity != 0 -%}
+                                  {{- __product.variants[checkSelectedOption].price | money_without_trailing_zeros -}}
+                                {%- endif -%}
+                            </span>
+                        </div>
+                        {% if section.settings.product_link_label != blank %}
+                            {{ section.settings.product_link_label }}
+                        {% else %}
+                            <span>Quick Shop</span>
+                        {% endif %}
+                    {% else %}
+                        <span>Coming Soon</span>
+                    {% endif %}
+                </button>
+            {% endif %}
+
+            <script>
+                var hash_localstorage = localStorage.getItem('email_hash');
+                var hash_comingsoon = `{{ shop.metafields.globals.coming_soon }}`;
+                var hash_metafield = `{{ shop.metafields.globals.hash }}`;
+                if(hash_localstorage == hash_metafield && hash_comingsoon){
+                    var getId = $('.buy_btn');
+                    var putdata = `{{ section.settings.product_link_label }}`;
+                    getId.html(putdata);
+                }
+            </script>
+        {% endif %}
+
+        <script>
+            $(document).ready(function() {
+                $( ".product-form__variants" ).click(function(e) {
+                    var variant_price =  $(this).find(':selected').attr('data-price') ;
+                    var product_id =  $(this).find(':selected').attr('data-product-id') ;
+                    var variant_id =  $(this).val() ;
+                    $('#variant_id_'+product_id).val(variant_id);
+                    $('#variant_price_'+product_id).html(variant_price);
+                });
+
+                var activeVarId;
+                activeVarId = {{_product.variants[0].id | plus: 0}};
+                // discovery set id
+                const discoverySetVarId = 41853198172348;
+                if (activeVarId == discoverySetVarId) {
+                  $.getJSON("/cart.js", function(new_cart) {
+                    $.each( new_cart.items, function(key, value) {
+                      if (value.id == discoverySetVarId) {
+                        const discoveryAddToCart = document.querySelectorAll(`.buy_btn_direct[data-id="${value.product_id}"]`);
+                        discoveryAddToCart.forEach((item) => {
+                          setTimeout(() => {
+                            item.setAttribute("disabled", "");
+                          }, 500);
+                        });
+                      }
+                    });
+                  });
+                }
+
+            });
+        </script>
+	</div><!-- /.product__item -->
+{%- endif -%}
+{% endunless %}
+{% endunless %}
+{%- assign _product = '' -%}

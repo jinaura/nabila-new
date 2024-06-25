@@ -1,0 +1,154 @@
+{% assign _section = section.settings %}
+
+<section class="ma-help">
+  {% if _section.model_image %}
+    <div class="flex-item">
+      {{_section.model_image | image_url: width: 1200 | image_tag: preload: true, alt: _section.model_image.alt, fetchpriority: 'high' }}
+    </div>
+  {% endif %}
+    <div class="flex-item">
+      <div class="help-section">
+        <h2>{{_section.help_title}}</h2>
+        <hr class="section__divider">
+        <ul class="help-section__list">
+          {%- for block in section.blocks -%}
+            {%- assign _block = block.settings -%}
+            <li>
+              {% include 'svg-icons' with 'ba-bullet'%}
+              <span>{{_block.help_list_item}}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      <div class="connect-section">
+        <h2>{{_section.connect_title}}</h2>
+        <hr class="section__divider">
+        <p>{{_section.connect_description}}</p>
+        <button class="btn chat-now">{{_section.cta_text}}</button>
+      </div>
+  </div>
+
+</section>
+
+<style>
+  .ma-help {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    padding-top: 65px;
+  }
+  .ma-help .flex-item {
+    flex-basis: calc(50% - 30px);
+  }
+  .ma-help h2 {
+    line-height: 42px;
+  }
+  .ma-help hr.section__divider {
+    margin-top: 8px;
+    padding-bottom: 36px;
+  }
+  .ma-help .connect-section {
+    padding-top: 46px;
+  }
+  .ma-help .connect-section p {
+    line-height: 1.8;
+    margin-bottom: 8px;
+  }
+  ul.help-section__list > li {
+    font-size: 16px;
+    line-height: 50px;
+    display: flex;
+    align-items: center;
+  }
+  ul.help-section__list > li span {
+    flex: 1;
+  }
+  ul.help-section__list > li svg {
+    width: 20px;
+    height: 17px;
+    margin-right: 14px;
+  }
+  .ma-help button {
+    max-width: 250px;
+  }
+  @media (max-width: 767px) {
+    .ma-help {
+      flex-direction: column;
+      padding-top: 20px;
+    }
+    .help-section {
+      padding-top: 44px;
+    }
+    ul.help-section__list > li {
+      line-height: 22px;
+      padding-bottom: 20px;
+    }
+    ul.help-section__list > li svg {
+      height: 15px;
+      margin-right: 20px;
+    }
+    .ma-help .connect-section {
+      padding-top: 12px;
+    }
+    .ma-help .connect-section p {
+      line-height: 20px;
+      margin-bottom: 10px;
+    }
+    .ma-help .connect-section button {
+      max-width: unset;
+    }
+    .ma-help hr.section__divider {
+      padding-bottom: 22px;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Makeup Artists Help",
+    "settings": [
+      {
+        "type": "text",
+        "id": "help_title",
+        "label": "Help section - heading",
+        "default": "Ways we can help"
+      },
+      {
+        "type": "text",
+        "id": "connect_title",
+        "label": "Connect section - heading",
+        "default": "Connect online"
+      },
+      {
+        "type": "text",
+        "id": "connect_description",
+        "label": "Connect section - description",
+        "default": "Select the chat icon on the bottom right to begin <br>and select the Makeup Artist button."
+      },
+      {
+        "type": "text",
+        "id": "cta_text",
+        "label": "CTA Text",
+        "default": "Chat now"
+      },
+      {
+        "type": "image_picker",
+        "id": "model_image",
+        "label": "Model Image"
+      }
+    ],
+    "blocks": [
+    {
+      "type": "list",
+      "name": "Help section - list item",
+      "settings": [
+        {
+          "id": "help_list_item",
+          "type": "text",
+          "label": "Help section - list item"
+        }
+      ]
+    }
+    ]
+  }
+{% endschema %}

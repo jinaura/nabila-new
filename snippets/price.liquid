@@ -1,0 +1,44 @@
+{%- assign output = '' -%}
+{%- assign echo = echo | default: true -%}
+{%- assign __product = price | default: product -%}
+{%- assign product_compare_at_price = 0 | plus: 0 -%}
+{% if localization.country.iso_code == 'GB' and product.metafields.set.compare_at_price_uk %}
+	{%- assign product_compare_at_price = product.metafields.set.compare_at_price_uk | times: 100 -%}
+{% elsif localization.country.iso_code != 'GB' %}
+	{%- assign product_compare_at_price = __product.compare_at_price -%}
+{% endif %}
+
+{%- if __product != empty -%}
+	{%- if echo == true -%}
+		{% if product_compare_at_price > __product.price %}
+			<span class="price__amount">
+        <span class="sr-only">Original price: </span>
+				<span class="money compare__{{active_variant.id}}" data-compare-price="{{variant.id}}">
+					{{- product_compare_at_price | money_without_trailing_zeros -}}
+				</span><!-- /.money -->
+			</span>
+
+			<span class="price__amount">
+        <span class="sr-only">Current price: </span>
+				<span class="money">
+					{{ __product.price | money_without_trailing_zeros }}
+				</span><!-- /.money -->
+			</span>
+		{%- else -%}
+			<span class="price__amount">
+        <span class="sr-only">Current price: </span>
+				<span class="money">
+					{{ __product.price | money_without_trailing_zeros }}
+				</span><!-- /.money -->
+			</span>
+		{%- endif -%}
+	{%- else -%}
+		{%- capture output -%}
+			{%- include 'price' with __product, echo: true -%}
+		{%- endcapture -%}
+
+		{%- assign output = output | strip_newlines | remove: '	' | replace: '"', "'" -%}
+	{%- endif -%}
+{%- endif -%}
+
+{%- assign __product = '' -%}

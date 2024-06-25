@@ -1,0 +1,133 @@
+{% assign s = section.settings %}
+<section class="smallLargeImageModule {{ s.placement }}" id="section-{{section.id}}">
+      
+  <div class="smallSection animate"> 
+    {% if s.image2 != blank %}
+      {% if s.link_2 == blank %}
+    	  <div class="ratio_wrapper res-400x500">
+          {{s.image2 | image_url: width: 1200 | image_tag: width: 400, class: 'animate', alt: s.image2.alt, fetchpriority: 'low', loading: 'lazy' }}
+        </div>
+      {% else %}
+        <a href="{{ s.link_2 }}" target="_blank" class="ratio_wrapper res-400x500">
+          {{s.image2 | image_url: width: 1200 | image_tag: width: 400, class: 'animate', alt: s.image2.alt, fetchpriority: 'low', loading: 'lazy' }}
+        </a>
+      {% endif %}
+    {% elsif s.video_url.type == 'youtube' %}
+      <div class="ratio_wrapper res-400x500">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{s.video_url.id}}?playlist={{s.video_url.id}}&loop=1&autoplay=1&mute=1" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    {% elsif s.video_url.type == 'vimeo' %}
+      <div class="ratio_wrapper res-400x500">
+        <iframe width="560" height="315" src="https://player.vimeo.com/video/{{s.video_url.id}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    {% elsif s.custom_video_url != blank %}
+      <div class="ratio_wrapper res-660x800">
+        <video muted loop autoplay preload="auto" playsinline="true" webkit-playsinline="true" width="100%" height="100%">
+          <source src="{{ s.custom_video_url }}" type='video/mp4' />
+        </video>
+      </div>
+    {% else %}
+    	{{ 'image' | placeholder_svg_tag: 'placeholder' }}
+    {% endif %}
+    
+    {% if s.author2 != ''  %}
+    	<span>By {{ s.author2 }}</span>
+    {% endif %}
+  </div>
+  
+  {% if s.image1 != blank %}
+    <div>
+      {% if s.link_1 == blank %}
+        <div class="ratio_wrapper res-660x800">
+          {{s.image1 | image_url: width: 1800 | image_tag: width: 660, height: 800, class: 'animate', alt: s.image1.alt, fetchpriority: 'low', loading: 'lazy' }}
+        </div>
+      {% else %}
+        <a href="{{ s.link_1 }}" target="_blank" class="ratio_wrapper res-660x800">
+          {{s.image1 | image_url: width: 1800 | image_tag: width: 660, height: 800, class: 'animate', alt: s.image1.alt, fetchpriority: 'low', loading: 'lazy' }}
+        </a>
+      {% endif %}
+      {% if s.author1 != '' %}
+      	<span>By {{ s.author1 }}</span>
+      {% endif %}
+    </div>
+  {% else %}
+  	<div>{{ 'image' | placeholder_svg_tag: 'placeholder' }}</div>
+  {% endif %}
+
+</section>
+
+
+{% schema %}
+  {
+    "name": "Small & Large Image/Video",
+	"tag":"section",
+	"class": "container",
+    "settings": [
+	  {
+        "type": "select",
+        "id": "placement",
+        "label": "Placement",
+        "options": [
+          {
+            "value": "row",
+            "label": "Small - Large"
+          },
+          {
+            "value": "row-reverse",
+            "label": "Large - Small"
+          }
+        ],
+      	"default": "row"
+      },
+      {
+        "type": "image_picker",
+        "id": "image1",
+        "label": "Image 1"
+      },
+      {
+        "type": "url",
+        "id": "link_1",
+        "label": "Image Link 1"
+      },        
+      {
+        "type": "text",
+        "id": "author1",
+        "label": "Large Image Author"
+      },
+	    {
+        "type": "image_picker",
+        "id": "image2",
+        "label": "Image 2"
+      },
+      {
+        "type": "url",
+        "id": "link_2",
+        "label": "Image Link 2"
+      },       
+      {
+        "id": "video_url",
+        "type": "video_url",
+        "label": "Video URL",
+        "accept": [
+          "youtube",
+          "vimeo"
+        ]
+      },
+      {
+        "type": "text",
+        "id": "custom_video_url",
+        "label": "Custom Video Url"
+      },
+      {
+        "type": "text",
+        "id": "author2",
+        "label": "Image/Video Author"
+      }
+	],
+    "presets": [
+      {
+        "name": "Samll & Large Image/Video - Article"
+      }
+    ]
+  }
+{% endschema %}

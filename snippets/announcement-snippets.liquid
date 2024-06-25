@@ -1,0 +1,133 @@
+{% for block in section.blocks %}
+    <style>
+        .blink_me_{{ block.id }}{
+            animation: blinker {{ block.settings.pulsing_speed }}s linear infinite;
+            -webkit-animation: blinker {{ block.settings.pulsing_speed }}s linear infinite;
+            color:{{ block.settings.pulsing_text_color }}
+        }
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+    </style>
+{% endfor %}
+{% include 'ada-chatbot-answer-ids', entry_point: 'default' %}
+
+<div class="promo_ commonSliderBar" data-slick='{
+		   "slidesToShow": 1,
+           "slidesToScroll": 1,
+           "fade": true,
+           "dots": false,
+           "infinite": true,
+           "speed": 500,
+           "arrows": false,
+           "autoplay": true,
+           "autoplaySpeed": {{ section.settings.announcement_interval}},
+           "adaptiveHeight": true,
+           "centerMode": true
+}'>
+
+    {% assign currentDate = 'now' | date: '%Y%m%d' %}
+    {% for block in section.blocks %}
+        {% assign startDate = block.settings.s_year | append: block.settings.s_month  | append: block.settings.s_day %}
+        {% assign endDate = block.settings.e_year | append: block.settings.e_month  | append: block.settings.e_day %}
+
+        {% if block.settings.announcement_visibility %}
+
+            <!-- Custom content for Rose Inc UK -->
+            {% if localization.country.iso_code == 'GB' and block.settings.locale == 'us' and request.design_mode == false %}
+                {%- continue -%}
+            {% elsif localization.country.iso_code != 'GB' and block.settings.locale == 'uk' and request.design_mode == false %}
+                {%- continue -%}
+            {% else %}
+                {% if block.settings.start_date_check %}
+                    {% if currentDate > startDate  %}
+                        {% if block.settings.end_date_check %}
+                            {% if currentDate < endDate  %}
+
+                              {% if block.settings.enable_live_advisor and localization.country.iso_code != 'GB' %}
+                                {% if is_available_hours %}
+                                  <span class="lbl-n-t opt live-advisory-top" style="color: {{ block.settings.announcement_text_color }};" role="button">
+                                    {% if block.settings.pulsing_visibility %} <span class="blink_me_{{ block.id }}" ><b>{{ block.settings.pulsing_text }}</b></span> {% endif %}
+                                    {{ block.settings.announcement_text }}
+                                  </span>
+                                {% endif %}
+                              {% else %}
+                                  <span class="lbl-n-t opt" style="color: {{ block.settings.announcement_text_color }};">
+                                    {% if block.settings.pulsing_visibility %} <span class="blink_me_{{ block.id }}" ><b>{{ block.settings.pulsing_text }}</b></span> {% endif %}
+                                    {{ block.settings.announcement_text }}
+                                  </span>
+                              {% endif %}
+
+                            {% endif %}
+
+                        {% else %}
+
+                          {% if block.settings.enable_live_advisor and localization.country.iso_code != 'GB' %}
+                            {% if is_available_hours %}
+                              <span class="lbl-n-t opt live-advisory-top" style="color: {{ block.settings.announcement_text_color }};" role="button">
+                                {% if block.settings.pulsing_visibility %} <span class="blink_me_{{ block.id }}" ><b>{{ block.settings.pulsing_text }}</b></span> {% endif %}
+                                {{ block.settings.announcement_text }}
+                              </span>
+                            {% endif %}
+                          {% else %}
+                              <span class="lbl-n-t opt"  style="color: {{ block.settings.announcement_text_color }};">
+                                {% if block.settings.pulsing_visibility %} <span class="blink_me_{{ block.id }}"><b>{{ block.settings.pulsing_text }}</b></span> {% endif %}
+                                {{ block.settings.announcement_text }}
+                              </span>
+                          {% endif %}
+
+                        {% endif %}
+                    {% endif %}
+
+                {% else %}
+
+                    {% if block.settings.end_date_check %}
+                        {% if currentDate < endDate  %}
+
+                          {% if block.settings.enable_live_advisor and localization.country.iso_code != 'GB' %}
+                            {% if is_available_hours %}
+                              <span class="lbl-n-t opt live-advisory-top" style="color: {{ block.settings.announcement_text_color }};" role="button">
+                                {% if block.settings.pulsing_visibility %} <span class="blink_me_{{ block.id }}" ><b>{{ block.settings.pulsing_text }}</b></span> {% endif %}
+                                {{ block.settings.announcement_text }}
+                              </span>
+                            {% endif %}
+                          {% else %}
+                              <span class="lbl-n-t opt"  style="color: {{ block.settings.announcement_text_color }};">
+                                {% if block.settings.pulsing_visibility %} <span class="blink_me_{{ block.id }}" ><b>{{ block.settings.pulsing_text }}</b></span> {% endif %}
+                                {{ block.settings.announcement_text }}
+                              </span>
+                          {% endif %}
+
+                        {% endif %}
+                    {% else %}
+                      {% if block.settings.enable_live_advisor and localization.country.iso_code != 'GB' %}
+                        {% if is_available_hours %}
+                          <span class="lbl-n-t opt live-advisory-top" style="color: {{ block.settings.announcement_text_color }};" role="button">
+                            {% if block.settings.pulsing_visibility %} <span class="blink_me_{{ block.id }}" ><b>{{ block.settings.pulsing_text }}</b></span> {% endif %}
+                            {{ block.settings.announcement_text }}
+                          </span>
+                        {% endif %}
+                      {% else %}
+                          <span class="lbl-n-t opt" style="color: {{ block.settings.announcement_text_color }};">
+                            {% if block.settings.pulsing_visibility %} <span class="blink_me_{{ block.id }}" ><b>{{ block.settings.pulsing_text }}</b></span> {% endif %}
+                            {{ block.settings.announcement_text }}
+                          </span>
+                      {% endif %}
+
+                    {% endif %}
+                {% endif %}
+
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+</div>
+
+<script>
+$(document).ready(function() {
+  $('.header__announcement-bar .commonSliderBar').slick();
+
+  document.querySelector(".live-advisory-top") && document.querySelector(".live-advisory-top").addEventListener("click", function() {
+    document.querySelector(".BA-CC-chatbubble").click();
+  })
+});
+</script>

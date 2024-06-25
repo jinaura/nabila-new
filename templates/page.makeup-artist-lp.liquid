@@ -1,0 +1,51 @@
+{% if request.design_mode == false and page.handle == 'makeup-artist' and localization.country.iso_code == 'GB' %}
+    <script type="text/javascript">
+        window.location = "/404";
+    </script>
+{% endif %}
+
+<div class="container section__item ma-lp">
+  <div class="ma-lp__breadcrumbs">
+    <span class="hidden-xs">
+      <a href="/pages/support">Rose Inc Concierge Service</a>&nbsp;/
+      <a href="/pages/makeup-artist">Makeup Artist</a>
+    </span>
+    <span class="visible-xs-block">
+      Back to <a href="/pages/support">Rose Inc Concierge Service</a>
+    </span>
+  </div>
+  {% section 'makeup-artist-hero' %}
+  {% section 'makeup-artist-help' %}
+  {% section 'makeup-artist-contact' %}
+  {% section 'makeup-artist-tcs' %}
+</div>
+
+<style>
+  .ma-lp__breadcrumbs {
+    padding: 35px 6px 25px;
+  }
+  .ma-lp__breadcrumbs a {
+    padding: 10px 0;
+  }
+  .ma-lp button.chat-now:hover {
+    background-color: #2a2a2a;
+  }
+  @media (max-width: 767px) {
+    .container.ma-lp {
+      padding: 0 20px;
+    }
+    .ma-lp__breadcrumbs {
+      padding: 20px 0;
+    }
+  }
+</style>
+
+<script>
+  const chatNowTriggerButtons = document.querySelectorAll('.ma-lp button.chat-now');
+  chatNowTriggerButtons.forEach((chatNowBtn) => {
+    chatNowBtn.addEventListener('click', () => {
+      const BAchatTrigger = document.querySelector('.beauty-advisor-wrapper .live-advisor-wrap .BA-CC-chatbubble-extended');
+      BAchatTrigger.click();
+    });
+  });
+</script>

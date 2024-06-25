@@ -1,0 +1,103 @@
+{% assign _section = section.settings %}
+
+<section class="ma-contact">
+  <div class="flex-item">
+    {{_section.contact_image | image_url: width: 1200 | image_tag: width: nil, height: nil, alt: _section.contact_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+  </div>
+  <div class="flex-item">
+    <h2>{{_section.contact_title}}</h2>
+    <hr class="section__divider">
+    <div class="ma-contact__text-content">
+      <a href="mailto:{{_section.contact_email}}">{{_section.contact_email}}</a>
+      <a href="tel:{{_section.contact_phone}}">{{_section.contact_phone}}</a>
+      <div>{{_section.contact_text_content}}</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ma-contact {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 85px;
+  }
+  .ma-contact .flex-item {
+    flex-basis: calc(50% - 30px);
+  }
+  .ma-contact h2 {
+    line-height: 42px;
+  }
+  .ma-contact hr.section__divider {
+    margin-top: 8px;
+    padding-bottom: 36px;
+  }
+  .ma-contact .ma-contact__text-content {
+    line-height: 1.8;
+  }
+  .ma-contact .ma-contact__text-content a {
+    display: block;
+    text-decoration: unset;
+  }
+  .ma-contact .ma-contact__text-content > div {
+    margin-top: 40px;
+  }
+  .ma-contact .ma-contact__text-content > div p {
+    margin-bottom: 0;
+    min-height: 26px;
+  }
+  @media (max-width: 767px) {
+    .ma-contact {
+      flex-direction: column;
+      padding-top: 36px;
+    }
+    .ma-contact .flex-item:nth-child(2) {
+      padding-top: 40px;
+    }
+    .ma-contact hr.section__divider {
+      padding-bottom: 22px;
+    }
+    .ma-contact .ma-contact__text-content a {
+      text-decoration: underline;
+    }
+    .ma-contact .ma-contact__text-content >div {
+      margin-top: 30px;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Makeup Artists Contact",
+    "settings": [
+      {
+        "type": "text",
+        "id": "contact_title",
+        "label": "Heading",
+        "default": "Contact Us"
+      },
+      {
+        "type": "text",
+        "id": "contact_email",
+        "label": "Email",
+        "default": "makeupartist@roseinc.com "
+      },
+      {
+        "type": "text",
+        "id": "contact_phone",
+        "label": "Phone Number",
+        "default": "1 (866) 431-0255"
+      },
+      {
+        "type": "richtext",
+        "id": "contact_text_content",
+        "label": "Content"
+      },
+      {
+        "type": "image_picker",
+        "id": "contact_image",
+        "label": "Image"
+      }
+    ]
+  }
+{% endschema %}

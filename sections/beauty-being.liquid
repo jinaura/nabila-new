@@ -1,0 +1,240 @@
+{% assign css_class = section.settings.title | replace: ' ', '_' | downcase %}
+
+<section class="{{css_class}}">
+  <div class="container section__item section_spacing">
+      <h2 class="heading-with-link">{{ section.settings.title }} <a href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a></h2>
+      <hr class="section__divider" />
+      {{ section.settings.description }}
+      <hr class="divider--start">
+  <div class="beauty-sect-specs">
+     <div class="beauty-sect-specs-c">
+<div class="s-wrap">
+      {% for block in section.blocks %}
+  <div class="s-col">
+      {% assign mkId = block.settings.section_title | downcase %}
+      {% assign mkId = mkId | replace: ' ', '-'  %}
+          <a href="{{ section.settings.button_link }}#{{ mkId }}"><p>{{ block.settings.section_link_label }}</p></a>
+          <h3>{{ block.settings.section_title }}</h3>
+    </div>
+      {% endfor%}
+  </div>
+  </div>
+ </div>
+      <hr class="divider--start">
+
+      {% if section.settings.image %}<a href="{{ section.settings.section_link }}">{% endif %}
+        <div class="iframe-container animate hidden-xs">
+          {% if section.settings.image %}
+                <img class="responsive-iframe" src="{{ section.settings.image | img_url: '1350x600'}}" fetchpriority="low" loading="lazy">
+            {% elsif section.settings.video_url.type == 'youtube' %}
+                <iframe  class="responsive-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{section.settings.video_url.id}}?playlist={{section.settings.video_url.id}}&loop=1&autoplay=1&mute=1" title="{{section.settings.title}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            {% elsif section.settings.video_url.type == 'vimeo' %}
+                <iframe  class="responsive-iframe" width="560" height="315" src="https://player.vimeo.com/video/{{section.settings.video_url.id}}" title="{{section.settings.title}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            {% elsif section.settings.custom_video_url %}
+            <video
+                    muted
+                    loop
+                    autoplay
+                    preload="auto"
+                    width="100%"
+                    height="100%"
+                    playsinline="true" webkit-playsinline="true"
+                    data-setup='{"width": 300, "height": 250}' class="responsive-iframe">
+                <source src="{{ section.settings.custom_video_url }}" type='video/mp4' /></video>
+            {% endif %}
+        </div>
+      {% if section.settings.image %}</a>{% endif %}
+
+      {% if section.settings.m_image %}<a href="{{ section.settings.section_link }}">{% endif %}
+      <div class="iframe-container animate hidden-sm hidden-md hidden-lg">
+        {% if section.settings.m_image %}
+              <img class="responsive-iframe" src="{{ section.settings.m_image | img_url: '1350x600'}}" fetchpriority="low" loading="lazy">
+          {% elsif section.settings.m_video_url.type == 'youtube' %}
+              <iframe  class="responsive-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{section.settings.m_video_url.id}}?playlist={{section.settings.m_video_url.id}}&loop=1&autoplay=1&mute=1" title="{{section.settings.title}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          {% elsif section.settings.m_video_url.type == 'vimeo' %}
+              <iframe  class="responsive-iframe" width="560" height="315" src="https://player.vimeo.com/video/{{section.settings.m_video_url.id}}" title="{{section.settings.title}}" fetchpriority="low" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          {% elsif section.settings.m_custom_video_url %}
+          <video
+                  muted
+                  loop
+                  autoplay
+                  preload="auto"
+                  width="100%"
+                  height="100%"
+                  playsinline="true" webkit-playsinline="true"
+                  data-setup='{"width": 300, "height": 250}' class="responsive-iframe">
+              <source src="{{ section.settings.m_custom_video_url }}" type='video/mp4' /></video>
+          {% endif %}
+      </div>
+      {% if section.settings.m_image %}</a>{% endif %}
+
+      <hr class="section__divider" />
+  </div>
+</section>
+
+<style>
+  .{{css_class}} .iframe-container{
+    margin: 0px 0 60px 0;
+    padding-top:45.46%;
+  }
+  .{{css_class}} .responsive-iframe{
+    object-fit: cover;
+    object-position: center;
+  } 
+  
+  .{{css_class}} .beauty-sect-specs .s-wrap{
+    display: flex;
+    flex-wrap: wrap;
+        padding-bottom: 30px;
+    margin-left:-45px;
+    margin-right:-45px;
+      
+  }
+  
+     .{{css_class}}  .beauty-sect-specs .s-wrap .s-col{
+       /* padding:0 15px;
+    width:25%; */
+       padding:0 45px;
+    width:auto;
+      
+  }
+  
+  .{{css_class}}  .beauty-sect-specs .s-wrap .s-col p {
+  margin-bottom:5px;
+  }
+  
+   @media (max-width:1023px){
+
+    .{{css_class}} .beauty-sect-specs .s-wrap{
+
+margin-left:-25px;
+margin-right:-25px;
+  
+}
+.{{css_class}}  .beauty-sect-specs .s-wrap .s-col{
+padding:0 25px;
+  /* width:33.3%; */
+} 
+ 
+  }
+  
+  @media (max-width:767px){
+    .{{css_class}} .iframe-container{
+      margin: 0px 0 28px 0;
+      padding-top:125%;
+    } 
+    
+      .{{css_class}} .beauty-sect-specs {
+   
+   overflow-x: auto;
+   margin-right: -20px;  
+  }
+    
+        .{{css_class}} .beauty-sect-specs-c {
+   
+  width:767px;
+  width: max-content;
+  }
+  .{{css_class}} .beauty-sect-specs .s-wrap{
+
+    margin-left:-15px;
+    margin-right:-15px;
+      
+  }
+  .{{css_class}}  .beauty-sect-specs .s-wrap .s-col{
+    padding:0 15px;
+      
+  } 
+    
+  }
+</style>
+
+{% schema %}
+    {
+    "name": "Beauty In Being",
+    "class": "beauty-being",
+    "settings": [
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Title",
+    "default": "Beauty In Being"
+    },
+    {
+    "type": "richtext",
+    "id": "description",
+    "label": "Description",
+    "default": "<p>Beauty In Being</p>"
+    },
+    {
+    "type": "image_picker",
+    "id": "image",
+    "label": "Image"
+    },
+    {
+    "type": "image_picker",
+    "id": "m_image",
+    "label": "Image"
+    },
+    {
+    "id": "video_url",
+    "type": "video_url",
+    "label": "Video URL",
+    "accept": ["youtube", "vimeo"]
+    },
+    {
+    "type": "text",
+    "id": "custom_video_url",
+    "label": "Custom Video Url"
+    },
+    {
+    "id": "m_video_url",
+    "type": "video_url",
+    "label": "Mobile Video URL",
+    "accept": ["youtube", "vimeo"]
+    },
+    {
+    "type": "text",
+    "id": "m_custom_video_url",
+    "label": "Mobile Custom Video Url"
+    },    
+    {
+    "type": "text",
+    "id": "button_label",
+    "label": "Button Label",
+    "default": "Learn more"
+    },
+    {
+    "type": "url",
+    "id": "button_link",
+    "label": "Button link"
+    }
+    ],
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "Section",
+    "settings": [
+    {
+    "type": "url",
+    "id": "section_link",
+    "label": "Section Link"
+    },
+    {
+    "id": "section_link_label",
+    "type": "text",
+    "label": "Link Label"
+    },
+    {
+    "type": "text",
+    "id": "section_title",
+    "label": "Section Title"
+    }]}],
+    "presets": [
+    {
+    "name": "Beauty In Being",
+    "category": "Text"
+    }
+    ]
+    }
+{% endschema %}

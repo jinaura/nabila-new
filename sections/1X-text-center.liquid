@@ -1,0 +1,47 @@
+<section class="centerTextModule">
+    {% for block in section.blocks %}
+        {% if article.handle == articles[block.settings.text-center-article].handle %}
+            <div>
+                {{ block.settings.text_center  }}
+            </div>
+
+            {% break %}
+        {% endif %}
+    {% endfor %}
+</section>
+
+<style>
+.centerTextModule{
+  display: flex;
+  justify-content: center;
+  text-align: left;
+  padding-bottom:120px;
+}
+.centerTextModule > div{
+  max-width:660px;
+}
+</style>
+
+{% schema %}
+    {
+    "name": "1X Text Center1",
+    "blocks" : [
+    {
+    "type": "slide",
+    "name": "1X Text Center1",
+    "settings": [
+    {
+    "type": "article",
+    "id": "text-center-article",
+    "label": "Article"
+    },
+    {
+    "type": "textarea",
+    "id": "text_center",
+    "label": "Center Text"
+    }
+    ]
+    }
+    ]
+    }
+{% endschema %}

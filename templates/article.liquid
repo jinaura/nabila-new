@@ -1,0 +1,96 @@
+<script type="text/javascript" src="{{ 'template.article.js' | asset_url }}" defer="defer"></script>
+<script type="text/javascript" src="{{ 'articles-products-carousel.js' | asset_url }}" defer="defer"></script>
+<script type="text/javascript" src="{{ 'carousel-theme.js' | asset_url }}" defer="defer"></script>
+
+{{ 'blog-articles.scss.css' | asset_url | stylesheet_tag }}
+
+{% render 'editorial-subnavigation' %}
+
+{% render 'shogun-products', content: article %}
+<div class="blog-article-content">
+  <div class="grid-container blog-article">
+    <div class="grid-x grid-margin-x">
+      <article class="blog-article__main" role="article">
+        {% if article.image %}
+          <div class="blog-article__image-container">
+            {% assign image_size = article.image.width | append: 'x' %}
+            {{article.image | image_url: width: 2400 | image_tag: width: article.image.width, height: article.image.height, alt: article.title, fetchpriority: 'low', loading: 'lazy' }}
+          </div>
+        {% endif %}
+        <div class="new-blog-article-published-date">
+          {{ article.published_at |  date: "%m / %d" }}
+        </div>
+        <header role="banner">
+          <div class="new-blog-article-subject">
+            {% for tag in article.tags %}
+              {% if tag contains 'category-' %}
+                {{ tag | remove: 'category-' | upcase }}
+              {% endif %}
+            {% endfor %}
+          </div>
+          <h1 class="new-article-blog-title">{{ article.title }}</h1>
+        </header>
+        <div class="rte">
+          {{ article.content }}
+        </div>
+      </article>
+    </div>
+    <div class="grid-x grid-margin-x">
+      <div class="blog-article__main blog-article-related-wrap">
+        <div class="show-for-medium">
+          {% include 'relatedblogs' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "articleBody": "{{ article.content | strip_html | escape }}",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ shop.url }}{{ page.url }}"
+    },
+    "headline": "{{ article.title }}",
+    {% if article.excerpt != blank %}
+      "description": "{{ article.excerpt | strip_html }}",
+    {% endif %}
+    {% if article.image %}
+      {% assign image_size = article.image.width | append: 'x' %}
+      "image": [
+        "https:{{ article | img_url: image_size }}"
+      ],
+    {% endif %}
+    "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' }}",
+    "dateCreated": "{{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' }}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ article.author }}"
+    },
+    "publisher": {
+      "@type": "Organization",
+      {% if settings.share_image %}
+        {% assign image_size = settings.share_image.width | append: 'x' %}
+        "logo": {
+          "@type": "ImageObject",
+          "height": "{{ settings.share_image.height }}",
+          "url": "https:{{ settings.share_image | img_url: image_size }}",
+          "width": "{{ settings.share_image.width }}"
+        },
+      {% elsif article.image %}
+        {% assign image_size = article.image.width | append: 'x' %}
+        "logo": {
+          "@type": "ImageObject",
+          "height": "{{ article.image.height }}",
+          "url": "https:{{ article.image | img_url: image_size }}",
+          "width": "{{ article.image.width }}"
+        },
+      {% endif %}
+      "name": "{{ shop.name }}"
+    }
+  }
+  </script>
+

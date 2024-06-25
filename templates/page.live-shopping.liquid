@@ -1,0 +1,16 @@
+{%comment%}Make Shopify translations available to JavaScript{%endcomment%}
+{% render 'react-i18n' translation_key: 'livestream' %}
+{%- render 'react-i18n' translation_key: 'accessibility' -%}
+
+{{ 'liveshopping.css' | asset_url | stylesheet_tag }}
+
+{%- render 'liveshopping-config' -%}
+{%comment%}No page-width div allows for partial background color{%endcomment%}
+{%- assign featured_show = page.metafields.liveshopping.featured_show -%}
+<div id="react-liveshopping-featured-show" class="react-liveshopping-featured-show" {% if featured_show %}data-short-show-id={{featured_show | json}}{% endif %}></div>
+<div id="react-liveshopping-show-card-buttons" class="react-liveshopping-show-card-buttons"></div>
+<div id="react-liveshopping-featured-products" class="react-liveshopping-featured-products" {% if featured_show %}data-short-show-id={{featured_show | json}}{% endif %}></div>
+{% section 'liveshopping-talent' %}
+<div id="react-liveshopping-upcoming-shows" class="react-liveshopping-upcoming-shows"></div>
+<div id="react-liveshopping-previous-shows" class="react-liveshopping-previous-shows"></div>
+{% render 'react-root' %}

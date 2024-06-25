@@ -1,0 +1,199 @@
+{%- assign _section = section.settings -%}
+
+{% unless _section.hide_widget == true %}
+  <section id="giving-tuesday">
+    {% unless localization.country.iso_code == 'GB' %}
+      <hr class="divider--start visible-xs-block">
+    {% endunless %}
+      <div class="giving-tuesday-wrapper">
+        <p class="widget-text">{{ _section.widget_text }} <a {% unless _section.hide_popup != true %}class="no_popup" {% endunless %} {% unless _section.hide_popup == true %}data-micromodal-trigger="modal-givin-tuesday-popup"{% endunless%} href="javascript:void(0)">{{ _section.widget_link_text }}</a></p>
+        <span class="dailykarma-logo">Powered by <span class="logo"></span></span>
+        <div class="modal micromodal-slide" id="modal-givin-tuesday-popup" aria-hidden="true">
+          <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+            <div class="modal__wrapper" data-micromodal-close>
+              <div class="modal__container" role="dialog" aria-modal="true">
+                <header class="modal__header">
+                  <button class="modal__close close" aria-label="Close modal" data-micromodal-close>Close</button>
+                </header>
+                <div class="modal__content">
+                  <p>{{ _section.popup_title }}</p>
+                  <p>{{ _section.popup_text }}</p>
+                  <div class="legal">
+                    <p>Donations made through DailyKarma go to The DailyKarma Foundation, a 501(c)(3) charity that makes grants to the designated cause(s).</p>
+                    <p>See our <a href="https://dailykarma.com/business-terms-service/" target="_blank">Terms of Use</a> and <a href="https://dailykarma.com/privacy-policy/" target="_blank">Privacy Policy</a> for more information. Powered by DailyKarma.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <hr class="divider--start visible-xs-block">
+  </section>
+{% endunless %}
+
+<style>
+  #giving-tuesday .giving-tuesday-wrapper {
+    margin: 20px auto 0;
+    max-width: 290px;
+  }
+
+  #giving-tuesday .widget-text {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  #giving-tuesday .widget-text a.no_popup {
+    display: none;
+  }
+
+  #giving-tuesday .dailykarma-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #giving-tuesday .dailykarma-logo .logo {
+    background: url({{ 'dailykarma_logo.png' | asset_url }}) no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 94px;
+    height: 19px;
+    display: inline-block;
+    margin-left: 5px;
+  }
+
+  #modal-givin-tuesday-popup .modal__overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  #modal-givin-tuesday-popup .modal__container {
+    margin: 0 auto;
+    padding: 38px;
+    min-width: 534px;
+    min-height: 300px;
+    position: relative;
+  }
+
+  #modal-givin-tuesday-popup .modal__header {
+    position: relative;
+  }
+
+  #modal-givin-tuesday-popup .modal__close.close {
+    position: absolute;
+    right: 0;
+  }
+
+  #modal-givin-tuesday-popup .modal__content {
+    padding: 25px 0 0;
+  }
+
+  #modal-givin-tuesday-popup .modal__content >p:first-child {
+    font-family: var(--font-medium);
+    text-transform: uppercase;
+  }
+
+  #modal-givin-tuesday-popup .modal__content .legal {
+    padding-top: 20px;
+  }
+
+  #modal-givin-tuesday-popup .modal__content .legal p {
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  #modal-givin-tuesday-popup .modal__content .legal p:last-child {
+    margin-bottom: 0;
+  }
+
+  .dk-backend-wrapper {display: none!important;}
+
+  @media (max-width: 767px) {
+    #giving-tuesday {
+      margin-top: 20px
+    }
+
+    #giving-tuesday .giving-tuesday-wrapper {
+      margin-bottom: 20px;
+    }
+
+    #giving-tuesday .widget-text {
+      font-size: 12px;
+      line-height: 19px;
+      margin-bottom: 10px;
+    }
+
+    #giving-tuesday .dailykarma-logo {
+      font-size: 12px;
+      line-height: 19px;
+    }
+
+    #giving-tuesday .dailykarma-logo .logo {
+      width: 84px;
+      height: 17px;
+    }
+
+    #modal-givin-tuesday-popup .modal__wrapper {
+      margin: 0 20px;
+    }
+
+    #modal-givin-tuesday-popup .modal__container {
+      min-width: 335px;
+      min-height: 353px;
+    }
+
+    #modal-givin-tuesday-popup .modal__content .legal p {
+      line-height: 16px;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Giving Tuesday",
+    "class": "giving-tuesday",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "hide_widget",
+        "label": "Hide Widget",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "widget_text",
+        "label": "Widget Text",
+        "default": "Giving Tuesday: 20% of roseinc.com profits will be donated to Girl Rising."
+      },
+      {
+        "type": "text",
+        "id": "widget_link_text",
+        "label": "Widget Link Text",
+        "default": "Learn More"
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_popup",
+        "label": "Hide Popup",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "popup_title",
+        "label": "Popup Title",
+        "default": "About Girl Rising"
+      },
+      {
+        "type": "text",
+        "id": "popup_text",
+        "label": "Popup Text",
+        "default": "Girl Rising is a nonprofit advancing girls' education through powerful storytelling. Funds raised will support its Future Rising initiative which promotes girls’ education as a climate solution."
+      }
+    ],
+    "presets": [
+      {
+        "name": "Giving Tuesday"
+      }
+    ]
+  }
+{% endschema %}

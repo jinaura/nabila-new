@@ -1,0 +1,60 @@
+{% comment %}
+  mobile: whether to display only for mobile instead of only for non-mobile
+  see_more: whether to display the 'See more' button
+  show_reviews: whether to display the product reviews
+{% endcomment %}
+{%- assign top_product_price = product.price -%}
+{%- assign top_product_compare_at_price = 0 | plus: 0 -%}
+{% if localization.country.iso_code == 'GB' and product.metafields.set.compare_at_price_uk %}
+	{%- assign top_product_compare_at_price = product.metafields.set.compare_at_price_uk | times: 100 -%}
+{% elsif localization.country.iso_code != 'GB' %}
+	{%- assign top_product_compare_at_price = product.compare_at_price -%}
+{% endif %}
+
+<div class="product__head{% if mobile %} mobile{% endif %}">
+  {% if mobile %}
+    <h2 class="product__title mobile" itemprop="name">{{- product.title -}}</h2>
+  {% else %}
+    <h1 class="product__title" itemprop="name">{{- product.title -}}</h1>
+  {% endif %}
+
+  {% if show_reviews %}
+    <div class="review__wrapper">
+
+      <!-- BV - Begin Inline Rating -->
+        <div data-bv-show="inline_rating" data-bv-product-id="{{product.id}}" data-bv-redirect-url="{{ product.url }}" data-bv-seo="false"> </div>
+      <!-- BV - End Inline Rating -->
+        <a href="#reviews" class="see-more">Write a review</a>
+    </div>
+  {% endif %}
+
+  <div class='top-price {% if product.type == 'Sets Product' %}is_set_prod{% endif%}'>
+    {% if top_product_compare_at_price > product.price %}
+      <span class="price__amount">
+        <span class="sr-only">Original price: </span>
+        <span class="money compare__{{active_variant.id}}" data-compare-price="{{variant.id}}">
+          {{- top_product_compare_at_price | money_without_trailing_zeros -}}
+        </span><!-- /.money -->
+      </span>
+
+      <span class="price__amount">
+        <span class="sr-only">Current price: </span>
+        <span class="money">
+          {{ product.price | money_without_trailing_zeros }}
+        </span><!-- /.money -->
+      </span>
+    {%- else -%}
+      <span class="price__amount">
+        <span class="sr-only">Current price: </span>
+        <span class="money">
+          {{ product.price | money_without_trailing_zeros }}
+        </span><!-- /.money -->
+      </span>
+    {%- endif -%}
+  </div>
+
+  <div class="product__body{% if mobile %} mobile{% endif %}{% if product.type == 'Sets Product' %} is_set_prod{% endif%}">
+    {{- product.content -}}
+    {% if see_more %}<a href="#details-section" class="see-more">See&nbsp;more</a>{% endif %}
+  </div><!-- /.product__body -->
+</div><!-- /.product__head -->

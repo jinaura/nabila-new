@@ -1,0 +1,91 @@
+{% assign _section = section.settings %}
+
+<section class="hunza-about_top">
+    <div class="container">
+      <div class="text-block">
+        <h2>{{_section.about_title}}</h2>
+        {{_section.about_description}}
+      </div>
+    </div>
+</section>
+
+<style>
+  .hunza-about_top {
+    padding-top: 40px;
+    padding-bottom: 50px;
+  }
+  .hunza-about_top .container {
+    max-width: 1137px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .hunza-about_top h2 {
+    font-family: var(--font-regular);
+    color: #1D1D1D;
+    font-size: 60px;
+    line-height: 80px;
+    letter-spacing: 0.71px;
+    padding-top: 60px;
+    padding-bottom: 20px;
+    text-transform: none;
+  }
+  .hunza-about_top p {
+    max-width: 680px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 22.82px;
+    letter-spacing: 0.31px;
+    color: #1D1D1D;
+  }
+  .hunza-about_top .container .text-block {
+    text-align: center;
+  }
+  @media (max-width: 767px) {
+    .hunza-about_top {
+      padding-bottom: 10px;
+    }
+    .hunza-about_top h2 {
+      font-size: 32px;
+      line-height: 42px;
+      letter-spacing: 0.57px;
+      padding-top: 27px;
+      padding-bottom: 10px;
+    }
+    .hunza-about_top p {
+      font-size: 14px;
+      line-height: 18px;
+      letter-spacing: 0.24px;
+      text-align: left;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Hunza About - description",
+    "settings": [
+      {
+        "type": "text",
+        "id": "about_title",
+        "label": "Title",
+        "default": "About the Partnership"
+      },
+      {
+        "type": "richtext",
+        "id": "about_description",
+        "label": "Description",
+        "default": "<p>In 2019, Rosie Huntington-Whiteley posted what became viral photos of herself wearing Hunza G’s iconic swimsuit on holiday, which led to unforeseen demand on <a href=\"https:\/\/www.hunzag.com\/\" target=\"_blank\" title=\"Hunza G\">Hunza G<\/a>’s website. With a shared value for elevated style and sustainability, we’ve partnered with Hunza G to create three new styles of its bestselling swimsuits in colorways inspired by Rose Inc shades. Paired with our radiant makeup looks, they’re designed to inspire your own iconic moments.</p>"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Hunza About - description",
+        "category": "Text"
+      }
+    ]
+  }
+{% endschema %}

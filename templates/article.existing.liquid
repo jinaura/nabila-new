@@ -1,0 +1,66 @@
+<div class="container">
+    <div class="article--default">
+        <div class="article__listing">
+            <article class="article">
+                <header class="article__head">
+                    <h2 class="article__title">
+                        {{- article.title -}}
+                    </h2>
+
+                    {%- if article.image -%}
+                        <div class="article__image">
+                            {{ article.image | img_url: '1024x1024' | img_tag: article.image.alt }}
+                        </div><!-- /.article__image -->
+                    {%- endif -%}
+
+                    <div class="article__meta">
+                        {%- assign date_format = 'date_formats.short' | t -%}
+
+                        {%- assign published_at = article.published_at | date: date_format -%}
+
+                        {{- 'blogs.article.posted_on_date' | t: date: published_at -}}
+                    </div><!-- /.article__meta -->
+
+                    {% assign article_category = article.handle | split: '/' | first %}
+                    {% for tag in article.tags %}
+                        {% assign words = tag | split: '-'   %}
+                        {% assign first_word =  words[0] | downcase %}
+                        {% assign blog_title = blog.title | downcase %}
+                        {% if first_word == blog_title %}
+                            {% assign article_category= words[1] %}
+                        {% endif %}
+                    {% endfor %}
+
+                    <div> {{article_category }} </div>
+                </header><!-- /.article__head -->
+
+                <div class="article__body">
+                    {{- article.content -}}
+                </div><!-- /.article__body -->
+            </article><!-- /.article -->
+
+            {% comment %}{% if blog.comments_enabled? %}
+                {%- include 'article-comments' -%}
+            {% endif %} {% endcomment %}
+
+        </div><!-- /.article__listing -->
+    </div>
+    {% comment %}<br clear="all"><br clear="all">
+    {%- section 'article-additional-description' -%}{% endcomment %}
+    <br clear="all"><br clear="all">
+    {%- section '2X-text-image' -%}
+    <br clear="all"><br clear="all">
+    {%- section '1X-text-center3' -%}
+    <br clear="all"><br clear="all">
+    {%- section '2X-simage-limage' -%}
+    <br clear="all"><br clear="all">
+    {%- section '1X-quote-center' -%}
+    <br clear="all"><br clear="all">
+
+    <div class='relatedArticles'>
+        <h2>Related Stories</h2>
+        <hr>
+        {%- include 'article-related-stories' -%}
+    </div>
+
+</div><!-- /.container -->

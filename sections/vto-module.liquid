@@ -1,0 +1,688 @@
+{% unless localization.country.iso_code == 'GB' %}
+
+{% assign _section = section.settings %}
+
+<section class="vto-module container section_spacing {% if section.settings.hide_mobile %} hide-mobile{% endif %} ">
+  <div class="top-text">
+    <h2 class="heading-with-link">{{ _section.vto_module_title }}</h2>
+    <hr class="section__divider hidden-sm hidden-md hidden-lg" />
+  </div>
+
+  {% for block in section.blocks %}
+    {% capture loopLength %}{{forloop.length}}{% endcapture %}
+  {% endfor %}
+  {% if loopLength == '3' or loopLength == '1'%}
+    {% capture contentAlignment %}{{ _section.content_alignment_three }}{% endcapture%}
+  {% else %}
+    {% capture contentAlignment %}{{ _section.content_alignment_two }}{% endcapture%}
+  {% endif %}
+
+  <div class="vto-module__desktop-container hidden-xs {{ contentAlignment }}">
+    <div class="vto-module__text-content {{ _section.desktop_text_alignment }}">
+      <h3 class="{% if _section.vto_module_subtitle_font_heading_style %}{{  _section.vto_module_subtitle_font_heading_style }}{% endif %}">{{_section.vto_module_subtitle}}</h3>
+      <p>{{_section.vto_module_description}}</p>
+      <a href="{{_section.vto_module_link}}">{{_section.vto_module_btn_label}}</a>
+    </div>
+    <div class="vto-module__blocks-content">
+
+      {% for block in section.blocks %}
+        {% if forloop.length == 3 %}{% assign blockNumber = 'threecol' %}{% endif %}
+        {% if forloop.length == 1 %}{% assign blockNumber = 'onecol' %}{% endif %}
+        {% capture desktopImage %}
+          {{block.settings.vto_desktop_image | image_url: width: 1600 | image_tag: width: 700, height: 600, class: blockNumber, alt: block.settings.vto_desktop_image.alt, fetchpriority: 'low', loading: 'lazy' }} 
+        {% endcapture %}
+        {% if desktopImage != '' and block.settings.vto_desktop_video_url == '' %}{{ desktopImage }}{% endif %}
+        {% if block.settings.vto_desktop_video_url != '' %}
+          <div class="{{ blockNumber }} video-wrapper">
+            <video id="videoplayer-{{section.id}}" autoplay="autoplay" loop="" muted="muted" preload="auto" playsinline="true" webkit-playsinline="true" width="100%" height="100%" data-setup='{"width": 300, "height": 250}' title="{{ block.settings.ada_text }}">
+              <source src="{{ block.settings.vto_desktop_video_url }}" type='video/mp4' />
+            </video>
+            
+            <div class="player-controls {{section.settings.controle_alignment}}" id="pControl-{{section.id}}">
+              <button class="play">{% render 'svg-icons' with 'play' %}</button>
+              <button class="pause">{% render 'svg-icons' with 'pause' %}</button>
+              <button class="volume">{% render 'svg-icons' with 'volume' %}</button>
+            </div>
+            
+          </div>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="vto-module__mobile-container hidden-sm hidden-md hidden-lg">
+    <div class="mobile-wrapper">
+      {% capture textImage %}
+        {{_section.vto_module_mobile_image | image_url: width: 1200 | image_tag: width: 670, height: 540, alt: _section.vto_module_mobile_image.alt, fetchpriority: 'low', loading: 'lazy' }}  
+      {% endcapture %}
+      {% if textImage != '' and _section.vto_module_mobile_bg == 'rgba(0,0,0,0)' %}{{ textImage }}{% endif %}
+      <div class="vto-module__text-content {{ _section.mobile_text_alignment }} {% if textImage != '' and _section.vto_module_mobile_bg == 'rgba(0,0,0,0)' %}img-bg{% endif %} {% if _section.vto_module_mobile_bg != '#fafafa' %}other-color{% endif %}">
+        <h3>{{_section.vto_module_subtitle}}</h3>
+        <p>{{_section.vto_module_description}}</p>
+        <a href="{{_section.vto_module_link}}">{{_section.vto_module_btn_label}}</a>
+      </div>
+    </div>
+    {% capture lastBlockImage %}
+      {{_section.vto_module_mobile_image_last_block | image_url: width: 1200 | image_tag: width: 670, height: 540, alt: _section.vto_module_mobile_image_last_block.alt, fetchpriority: 'low', loading: 'lazy' }} 
+    {% endcapture %}
+    {% if lastBlockImage != '' and _section.vto_mobile_video_url == '' %}{{ lastBlockImage }}{% endif %}
+    {% if _section.vto_mobile_video_url != '' %}
+      <div class="video-wrapper">
+        <video id="mobilevideoplayer" autoplay="autoplay" loop="" muted="muted" preload="auto" playsinline="true" webkit-playsinline="true" width="100%" height="100%" data-setup='{"width": 300, "height": 250}' title="{{ _section.mobile_ada_text }}">
+          <source src="{{ _section.vto_mobile_video_url }}" type='video/mp4' />
+        </video>
+
+        <!-- volume on/off -->
+        <input type="checkbox" id="mobile-volume-switch" class="vid-btns">
+        <label id="mobile-switch-container" for="mobile-volume-switch"></label> 
+        <input type="checkbox" id="mobile-btns-switch" class="vid-btns">
+        <label id="mobile-btns-switch-container" for="mobile-btns-switch"></label> 
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+
+.page--eye-collection-landing-page  .vto-module__desktop-container.move .vto-module__text-content {
+  margin-left: 33px;
+  margin-right: 33px;
+}
+  
+  .vto-module__text-content h3.DidotHeadingStyle {
+    font-size:53px;
+    font-weight: 300;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.17;
+    letter-spacing: normal;
+    font-family:"Didot";
+  }
+  .vto-module__blocks-content .player-controls {
+    position:initial;
+    bottom:30px;
+  }
+  .vto-module__blocks-content .player-controls.left {
+    left: 20px;
+  }
+  .player-controls.left #switch-container, .player-controls.left #mobile-switch-container {
+    right:initial;
+    left: 20px;
+  }
+  .player-controls.left #btns-switch-container,  .player-controls.left #mobile-btns-switch-container {
+    right:initial;
+    left: 54px;
+  }
+  
+  .page--eye-collection-landing-page .vto-module.container {
+   padding-bottom: 120px;
+    margin-top: -127px;
+  }
+
+  .vto-module .heading-with-link {
+    padding-bottom: 22px;
+  }
+
+  .vto-module__desktop-container {
+    position: relative;
+    display: flex;
+  }
+
+  .vto-module__desktop-container .vto-module__text-content {
+    position: absolute;
+    z-index: 1;
+  }
+
+  .vto-module__desktop-container.go .vto-module__text-content {
+    padding: 15px;
+    width: calc(100%/3);
+    max-width: unset;
+  }
+
+  .vto-module__desktop-container.move .vto-module__text-content {
+    margin-left: 67px;
+  }
+
+  .goleft, .m-goleft {text-align: left;}
+  .gocenter, .m-gocenter {text-align: center;}
+  .goright, .m-goright {text-align: right;}
+
+  .go.v-top {align-items: flex-start;}
+  .go.v-middle {align-items: center;}
+  .go.v-bottom {align-items: flex-end;}
+  .go.h-left {justify-content: flex-start;}
+  .go.h-center {justify-content: center;}
+  .go.h-right {justify-content: flex-end;}
+
+  .move.v-top .vto-module__text-content {top: 70px;}
+  .move.v-center .vto-module__text-content {top: 50%; transform: translateY(-50%);}
+  .move.v-bottom .vto-module__text-content {bottom: 70px;}
+  .move.h-left .vto-module__text-content {left: 0;}
+  .move.h-right .vto-module__text-content {left: calc(100%/12*6);}
+
+  .vto-module__desktop-container.move.h-right .goright {
+    right: 70px;
+    left: unset;
+  }
+
+  .vto-module__desktop-container.move.h-left .goright {
+    right: calc(100%/12*6.8);
+    left: unset;
+  }
+
+  .vto-module__desktop-container.move.h-left .gocenter {
+    right: calc(100%/12*7.6);
+    left: calc(100%/12*1.7);
+    margin-left: 0;
+  }
+
+  .vto-module__desktop-container.move.h-right .gocenter {
+    left: calc(100%/12*7.4);
+    right: calc(100%/12*1.6);
+    margin-left: 0;
+  }
+
+  .vto-module__text-content h3 {
+    font-family: var(--font-regular);
+    font-size: 18px;
+    letter-spacing: 0.6px;
+  }
+  #shopify-section-{{ section.id }} .vto-module__text-content h3{
+    color: {{_section.vto_subtitle_color}};    
+  }
+
+  .vto-module__text-content p {
+    font-family: var(--font-regular);
+    font-size: 14px;
+    margin: 9px 0 30px 0;
+  }
+  #shopify-section-{{ section.id }} .vto-module__text-content p{
+    color: {{_section.vto_module_description_color}};
+  }
+
+  .vto-module__text-content a {
+    font-family: var(--font-medium);
+    font-size: 15px;
+    letter-spacing: 1.07px;
+    text-transform: uppercase;
+  }
+  #shopify-section-{{ section.id }} .vto-module__text-content a{
+    color: {{_section.vto_module_btn_color}};
+  }
+
+  .vto-module__blocks-content {
+    display: flex;
+    width:100%;
+  }
+
+  .vto-module__blocks-content .video-wrapper,
+  .vto-module__blocks-content img {
+    width: 50%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .vto-module__blocks-content .video-wrapper.threecol,
+  .vto-module__blocks-content img.threecol {
+    width: 33.333%;
+  }
+
+  .vto-module__blocks-content .video-wrapper.onecol,
+  .vto-module__blocks-content img.onecol {
+    width: 100%;
+  }
+
+  .vto-module__blocks-content .video-wrapper,
+  .vto-module__mobile-container .video-wrapper {
+    position: relative;
+  }
+
+  .video-wrapper video {
+    object-fit: cover;
+  }
+
+  .mobile-wrapper {
+    position: relative;
+    background-color: {{_section.vto_module_mobile_bg}};
+  }
+
+  .vto-module__text-content.img-bg {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  #switch-container,
+  #mobile-switch-container {
+    display:block;
+    position: absolute;
+    bottom: 42px;
+    right: 72px;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease-in;
+    -moz-transition: all 0.3s ease-in;
+    transition: all 0.3s ease-in 0s;
+  }
+
+  #btns-switch-container,
+  #mobile-btns-switch-container {
+    display:block;
+    position: absolute;
+    bottom: 42px;
+    right: 33px;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease-in;
+    -moz-transition: all 0.3s ease-in;
+    transition: all 0.3s ease-in 0s;
+  }
+
+  .vid-btns {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* volume on : button */ 
+  #switch-container:after,
+  #mobile-switch-container:after {
+    content: "";
+    border: 0px solid black;
+    background: url({{ 'sound-off-icon.png' | asset_url }}) center center;
+    background-size: 100%;
+    position: absolute;
+    width: 23px;
+    height: 20px;
+  }
+
+  #btns-switch-container:after,
+  #mobile-btns-switch-container:after  {
+    content: "";
+    border: 0px solid black;
+    background: url({{ 'pause.png' | asset_url }}) center center;
+    background-size: 100%;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    filter: invert(1)
+  }
+
+
+  /* volume off : button */
+  #volume-switch:checked + #switch-container:after,
+  #mobile-volume-switch:checked + #mobile-switch-container:after {
+    content: "";
+    background: url({{ 'sound-on-icon.png' | asset_url }}) center center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    width: 18px;
+  }
+
+  #btns-switch:checked + #btns-switch-container:after,
+  #mobile-btns-switch:checked + #mobile-btns-switch-container:after {
+    content: "";
+    background: url({{ 'play-button.png' | asset_url }}) center center;
+    background-size: 100%;
+    filter: invert(1);
+    width: 18px;
+  }
+
+  @media (max-width: 767px) {
+    .hide-mobile {display:none;}
+    
+    .vto-module.container {
+      padding-left: 0;
+      padding-right: 0;
+      padding-bottom: 56px!important;
+    }
+
+    .vto-module hr.section__divider {
+      padding-bottom: 0;
+    }
+
+    .top-text,
+    .vto-module__text-content {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    .vto-module .heading-with-link {
+      padding-bottom: 4px;
+    }
+
+    .vto-module__text-content {
+      padding-bottom: 40px;
+      padding-top: 1.3rem;
+    }
+
+    .vto-module__text-content.img-bg {
+      padding-bottom: 0;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .vto-module__text-content.other-color {
+      margin-top: 1.7rem;
+    }
+
+    .vto-module__text-content.other-color.img-bg {
+      margin-top: 0;
+    }
+
+    .vto-module__text-content h3 {
+      font-size: 14px;
+      letter-spacing: 0.47px;
+    }
+
+    .vto-module__text-content p {
+      margin: 0 0 10px 0;
+    }
+
+    .vto-module__text-content a {
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .vto-module__mobile-container .video-wrapper {
+      height: 380px;
+    }
+
+    .mobile-wrapper img {
+      width: 100%;
+      margin-top: 1.7rem;
+    }
+
+    #switcher-container {
+      top:auto;
+      bottom: 90px;
+      left: 62px;
+    }
+
+    #btns-switch-container{
+      top: auto;
+      bottom: 60px;
+      left: 32px
+    }
+  }
+</style>
+
+<script>
+  $(window).on('load', function(){
+    mediaControls('videoplayer-{{section.id}}', 'pControl-{{section.id}}')
+  });
+</script>
+
+{% endunless %}
+
+{% schema %}
+  {
+    "name": "VTO Module",
+    "class": "vto-module",
+    "max_blocks": 3,
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "hide_mobile",
+        "label": "Hide On Mobile",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "vto_module_title",
+        "label": "Title",
+        "default": "VITRUAL TRY-ON"
+      },
+      {
+        "type": "text",
+        "id": "vto_module_subtitle",
+        "label": "Subtitle",
+        "default": "FIND YOUR SHADE OF PARADISE "
+      },
+      {
+        "type": "select",
+        "id": "vto_module_subtitle_font_heading_style",
+        "label": "Subtitle Font Style Heading",
+        "default": "",
+        "options": [
+        {
+            "label": "",
+            "value": ""
+          },
+          {
+            "label": "Didot Heading",
+            "value": "DidotHeadingStyle"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "vto_subtitle_color",
+        "label": "Subtitle color",
+        "default": "#1d1d1d"
+      },
+      {
+        "type": "text",
+        "id": "vto_module_description",
+        "label": "Description",
+        "default": "Available in 4 bronzer and 5 highlighter shades."
+      },
+      {
+        "type": "color",
+        "id": "vto_module_description_color",
+        "label": "Description color",
+        "default": "#545353"
+      },
+      {
+        "type": "text",
+        "id": "vto_module_btn_label",
+        "label": "Button Label",
+        "default": "Use Virtual Try-On"
+      },
+      {
+        "type": "url",
+        "id": "vto_module_link",
+        "label": "Button link"
+      },
+      {
+        "type": "select",
+        "id": "controle_alignment",
+        "label": "Video Controls Alligment",
+        "default": "right",
+        "options": [
+          {
+            "label": "Left",
+            "value": "left"
+          },
+          {
+            "label": "Right",
+            "value": "right"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "vto_module_btn_color",
+        "label": "Button color",
+        "default": "#545353"
+      },
+      {
+        "type": "select",
+        "id": "content_alignment_two",
+        "label": "Desktop Content Alignment if 2 Blocks",
+        "default": "move v-top h-right",
+        "options": [
+          {
+            "label": "Top left",
+            "value": "move v-top h-left"
+          },
+          {
+            "label": "Top right",
+            "value": "move v-top h-right"
+          },
+          {
+            "label": "Center left",
+            "value": "move v-center h-left"
+          },
+          {
+            "label": "Center right",
+            "value": "move v-center h-right"
+          },
+          {
+            "label": "Bottom left",
+            "value": "move v-bottom h-left"
+          },
+          {
+            "label": "Bottom right",
+            "value": "move v-bottom h-right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "content_alignment_three",
+        "label": "Desktop Content Alignment if 1 or 3 Blocks",
+        "default": "go v-middle h-center",
+        "options": [
+          {
+            "label": "Top left",
+            "value": "go v-top h-left"
+          },
+          {
+            "label": "Top center",
+            "value": "go v-top h-center"
+          },
+          {
+            "label": "Top right",
+            "value": "go v-top h-right"
+          },
+          {
+            "label": "Middle left",
+            "value": "go v-middle h-left"
+          },
+          {
+            "label": "Middle center",
+            "value": "go v-middle h-center"
+          },
+          {
+            "label":"Middle right",
+            "value": "go v-middle h-right"
+          },
+          {
+            "label":"Bottom left",
+            "value": "go v-bottom h-left"
+          },
+          {
+            "label": "Bottom center",
+            "value": "go v-bottom h-center"
+          },
+          {
+            "label": "Bottom right",
+            "value": "go v-bottom h-right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "desktop_text_alignment",
+        "label": "Desktop Text Alignment",
+        "default": "goleft",
+        "options": [
+          {
+            "label": "Left",
+            "value": "goleft"
+          },
+          {
+            "label": "Center",
+            "value": "gocenter"
+          },
+          {
+            "label": "Right",
+            "value": "goright"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "mobile_text_alignment",
+        "label": "Mobile Text Alignment",
+        "default": "m-goleft",
+        "options": [
+          {
+            "label": "Left",
+            "value": "m-goleft"
+          },
+          {
+            "label": "Center",
+            "value": "m-gocenter"
+          },
+          {
+            "label": "Right",
+            "value": "m-goright"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "vto_module_mobile_bg",
+        "label": "Mobile Background Color for text"
+      },
+      {
+        "type": "image_picker",
+        "id": "vto_module_mobile_image",
+        "label": "Mobile Background Image for text"
+      },
+      {
+        "type": "image_picker",
+        "id": "vto_module_mobile_image_last_block",
+        "label": "Mobile Image for bottom block"
+      },
+      {
+        "type": "text",
+        "id": "vto_mobile_video_url",
+        "label": "Mobile Video Url for bottom block"
+      },
+      {
+        "type": "text",
+        "id": "mobile_ada_text",
+        "label": "Mobile ADA text"
+      }
+    ],
+    "blocks" : [
+      {
+        "type": "slide",
+        "name": "Desktop Block",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "vto_desktop_image",
+            "label": "Desktop Image"
+          },
+          {
+            "type": "text",
+            "id": "vto_desktop_video_url",
+            "label": "Desktop Video Url"
+          },
+          {
+            "type": "text",
+            "id": "ada_text",
+            "label": "ADA text"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "VTO Module",
+        "category": "Custom",
+          "blocks": [
+          {
+            "type": "slide"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

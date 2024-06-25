@@ -1,0 +1,241 @@
+<!-- PDP v3 start -->
+{% if product.metafields.product.details_description or product.metafields.product.size_value %}
+  <div class="accordion__container">
+    <hr class="divider--start">
+      <div class="details__container">
+        <button 
+          class="accordion__trigger"
+          aria-expanded="false"
+          aria-controls="acc-content-details"
+          aria-label="Expand content"
+          type="button"
+        >
+          <h2>Details</h2>
+          <span class="arrow-up hidden">{% include 'svg-icons' with 'arrow-up'%}</span>
+          <span class="arrow-down">{% include 'svg-icons' with 'arrow-down'%}</span>
+        </button>
+        <div class="accordion__content collapsed" id="acc-content-details">
+          <div class="accordion__content--inner hidden">
+            {% if product.metafields.product.details_description %}
+              <p>{{ product.metafields.product.details_description }}</p>
+            {% endif %}
+            {% if product.metafields.product.size_value %}
+              <div class="size__container">
+                <h2>Size</h2>
+                <p>{{ product.metafields.product.size_value }}</p>
+              </div>
+            {% endif %}
+            <div class="icons__container">
+              {% for multi_icons in product.metafields.product.icon_with_property %} 
+                {% for image in multi_icons %}
+                  <div>
+                    {{image.media_inline}}
+                    <p>{{ image.alt }}</p>
+                  </div>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+{% endif %}
+
+<!--- Shade Matches Module ---->
+{%- assign shadeGuideCollection = collections["pdp-shade-guide"] -%}
+{%- for each in shadeGuideCollection.products -%}
+  {% if each.handle == product.handle %}
+    {%- include 'shade-matches-module' -%}
+    {% break %}
+  {% endif %}
+{%- endfor -%}
+
+{% if product.metafields.product.ingredients_description or product.metafields.product.ingredients_full_list %}
+  <div class="accordion__container">
+    <hr class="divider--start">
+    <div class="ingredients__container">
+      <button 
+        class="accordion__trigger"
+        aria-expanded="false"
+        aria-controls="acc-content-ingredients"
+        aria-label="Expand content"
+        type="button"
+      >
+        <h2>Ingredients</h2>
+        <span class="arrow-up hidden">{% include 'svg-icons' with 'arrow-up'%}</span>
+        <span class="arrow-down">{% include 'svg-icons' with 'arrow-down'%}</span>
+      </button>
+      <div class="accordion__content collapsed" id="acc-content-ingredients">
+        <div class="accordion__content--inner hidden">
+          {{ product.metafields.product.ingredients_description }}
+          <div class="ingredients__highlight">
+            {% if product.metafields.product.ingredient_1_media %}
+              <div class="ingredient__1">
+                {% for image_1 in product.metafields.product.ingredient_1_media | where: "media_type", "image" %}
+                  <img src="{{ image_1.src }}" alt="{{ image_1.alt }}" class="ingredients" srcset="
+                    {{ image_1.src | append: '&transform=resize=100' }} 100w,
+                    {{ image_1.src | append: '&transform=resize=200' }} 200w
+                    " fetchpriority="low" loading="lazy" />
+                {% endfor %}
+                <div class="ingredient__info">
+                  <h3 class="ingredient__title">{{ product.metafields.product.ingredient_1_title }}</h3>
+                  <p class="ingredient__description">{{ product.metafields.product.ingredient_1_description }}</p>
+                </div>
+              </div>
+            {% endif %}
+            {% if product.metafields.product.ingredient_2_media %}
+              <div class="ingredient__2">
+                {% for image_2 in product.metafields.product.ingredient_2_media | where: "media_type", "image" %}
+                  <img src="{{ image_2.src }}" alt="{{ image_2.alt }}" class="ingredients" srcset="
+                    {{ image_2.src | append: '&transform=resize=100' }} 100w,
+                    {{ image_2.src | append: '&transform=resize=200' }} 200w
+                    " fetchpriority="low" loading="lazy" />
+                {% endfor %}
+                <div class="ingredient__info">
+                  <h3 class="ingredient__title">{{ product.metafields.product.ingredient_2_title }}</h3>
+                  <p class="ingredient__description">{{ product.metafields.product.ingredient_2_description }}</p>
+                </div>
+              </div>
+            {% endif %}
+            {% if product.metafields.product.ingredient_3_media %}
+              <div class="ingredient__3">
+                {% for image_3 in product.metafields.product.ingredient_3_media | where: "media_type", "image" %}
+                  <img src="{{ image_3.src }}" alt="{{ image_3.alt }}" class="ingredients" srcset="
+                    {{ image_3.src | append: '&transform=resize=100' }} 100w,
+                    {{ image_3.src | append: '&transform=resize=200' }} 200w
+                    " fetchpriority="low" loading="lazy" />
+                {% endfor %}
+                <div class="ingredient__info">
+                  <h3 class="ingredient__title">{{ product.metafields.product.ingredient_3_title }}</h3>
+                  <p class="ingredient__description">{{ product.metafields.product.ingredient_3_description }}</p>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          {% if product.metafields.product.ingredients_full_list %}
+            <p class="ingredients__full">{{ product.metafields.product.ingredients_full_list }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.product.how_to_use_description %}
+  <div class="accordion__container">
+    <hr class="divider--start">
+    <div class="usage__container">
+      <button 
+        class="accordion__trigger"
+        aria-expanded="false"
+        aria-controls="acc-content-usage"
+        aria-label="Expand content"
+        type="button"
+      >
+        <h2>How to use</h2>
+        <span class="arrow-up hidden">{% include 'svg-icons' with 'arrow-up'%}</span>
+        <span class="arrow-down">{% include 'svg-icons' with 'arrow-down'%}</span>
+      </button>
+      <div class="accordion__content collapsed" id="acc-content-usage">
+        <div class="accordion__content--inner hidden">
+          <p>{{product.metafields.product.how_to_use_description}}</p>
+          {% if product.metafields.product.how_to_use_image and product.metafields.product.rosies_quote %}
+            <div class="tip__container">
+              {% for image in product.metafields.product.how_to_use_image | where: "media_type", "image" %}
+                <img src="{{ image.src }}" alt="{{ image.alt }}" class="tip" srcset="
+                  {{ image.src | append: '&transform=resize=160' }} 160w,
+                  {{ image.src | append: '&transform=resize=320' }} 320w
+                  " fetchpriority="low" loading="lazy" />
+              {% endfor %}
+              <div class="tip__info">
+                <h3 class="tip__title">Rosie's tip</h3>
+                <p class="tip__description">{{ product.metafields.product.rosies_quote }}</p>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.product.benefits_overlay_text %}
+  <div class="accordion__container">
+    <hr class="divider--start">
+    <div class="claims__container">
+      <button 
+        class="accordion__trigger"
+        aria-expanded="false"
+        aria-controls="acc-content-claims"
+        aria-label="Expand content"
+        type="button"
+      >
+        <h2>Claims</h2>
+        <span class="arrow-up hidden">{% include 'svg-icons' with 'arrow-up'%}</span>
+        <span class="arrow-down">{% include 'svg-icons' with 'arrow-down'%}</span>
+      </button>
+      <div class="accordion__content collapsed" id="acc-content-claims">
+        <div class="accordion__content--inner hidden">
+          {{ product.metafields.product.benefits_overlay_text }}
+          {% if product.metafields.product.benefits_claims_text %}
+            <div class="disclaimer-text">
+              {{ product.metafields.product.benefits_claims_text }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function (e) {
+  const accordionObserver = new MutationObserver(function (mutations, me) {
+    const accordionTriggerBtns = document.querySelectorAll('div.inner-form button.accordion__trigger');
+    accordionTriggerBtns && accordionTriggerBtns.forEach((trigger) => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        const triggerContent = trigger.nextElementSibling;
+        if (triggerContent.classList.contains('expanded')) {
+          triggerContent.getElementsByClassName('accordion__content--inner')[0].classList.add('togglable-leave-to');
+          trigger.getElementsByClassName('arrow-down')[0].classList.remove('hidden');
+          trigger.getElementsByClassName('arrow-up')[0].classList.add('hidden');
+          trigger.setAttribute('aria-expanded', 'false');
+          triggerContent.style.height = "0";
+          setTimeout(() => {
+            triggerContent.getElementsByClassName('accordion__content--inner')[0].classList.remove('togglable-leave-to');
+            triggerContent.getElementsByClassName('accordion__content--inner')[0].classList.add('hidden');
+            triggerContent.classList.add('collapsed');
+            triggerContent.classList.remove('expanded');
+          }, 600);
+        } else if (triggerContent.classList.contains('collapsed')) {
+          triggerContent.getElementsByClassName('accordion__content--inner')[0].classList.remove('hidden');
+          triggerContent.getElementsByClassName('accordion__content--inner')[0].classList.add('togglable-enter-to');
+          trigger.getElementsByClassName('arrow-up')[0].classList.remove('hidden');
+          trigger.getElementsByClassName('arrow-down')[0].classList.add('hidden');
+          trigger.setAttribute('aria-expanded', 'true');
+          setTimeout(() => {
+            triggerContent.style.height = triggerContent.getElementsByClassName('accordion__content--inner')[0].offsetHeight + 'px';
+            triggerContent.classList.remove('collapsed');
+            triggerContent.classList.add('expanded');
+            triggerContent.getElementsByClassName('accordion__content--inner')[0].classList.remove('togglable-enter-to');
+          }, 200);
+        }
+      });
+    });
+    const detailsBtnTrigger = document.querySelector('.accordion__trigger[aria-controls="acc-content-details"]');
+    const shadeMatchBtnTrigger = document.querySelector('.accordion__trigger[aria-controls="acc-content-shade-match"]');
+    detailsBtnTrigger && detailsBtnTrigger.click();
+    shadeMatchBtnTrigger && shadeMatchBtnTrigger.click();
+    
+    me.disconnect();
+    return;
+  });
+
+  accordionObserver.observe(document, {
+    childList: true,
+    subtree: true
+  });
+
+});
+</script>

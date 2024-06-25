@@ -1,0 +1,194 @@
+{% comment %}
+  dont_find_shade: hide the 'Find your shade' text
+  hide_shade_chooser: hide the expandable shade chooser popup
+  additional_module: additional variant list in a separate PDP module
+{% endcomment %}
+{%- if product.options_by_name['Color'].values.size > 0 -%}
+<div class="form__body">
+  {% if product.metafields.product.show_shade_finder_link and dont_find_shade != true %}
+    <div class="mt-3">
+      <a href="/pages/shade-finder/">Find your shade</a>
+    </div>
+  {% endif %}
+  <div class="variant_selector_container " id="variant_selector_container{%- if additional_module == true -%}-module{%- endif -%}">
+    <div id="variant_selector_wrapper{%- if additional_module == true -%}-module{%- endif -%}">
+      <div class="variant_wrapper" id="variant_wrapper{%- if additional_module == true -%}-module{%- endif -%}">
+        <div class="variant_scroll_wrapper" id="variant_scroll_wrapper{%- if additional_module == true -%}-module{%- endif -%}">
+          {%- for color in product.options_by_name['Color'].values %}
+            {%- assign color_variants = product.variants | where: color_option, color -%}
+            {%- if color_variants.size > 0 -%}
+              {%- assign variant = color_variants | first -%}
+              {% unless variant.metafields.visibility.hide %}
+                {%- assign color_selected = false -%}
+                {%- for color_variant in color_variants -%}
+                  {%- if color_variant == active_variant %}
+                    {%- assign color_selected = true -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                <div class="variant_list_item_wrapper fff" id="variant_list_item_wrapper{%- if additional_module == true -%}-module{%- endif -%}" data-variant-id="{{variant.id}}">
+                  {%- if variant.metafields.color.texture %}
+                    {%- assign background_image = "url('"| append:variant.metafields.color.texture[0].src|append:"')"-%}
+                  {% else %}
+                    {%- assign background_image = "none"-%}
+                  {%- endif -%}
+                  {% if color_selected %}
+                    <div data-colorName="{{ variant.metafields.color.name }}" data-selected="true" data-bestMatch="false" onclick="window.shopData.handleColorOnClick(this, false)" class="variant_list_item_selected" style="background-color: {{ variant.metafields.color.hex }}; background-image: {{ background_image }}" data-variant-id="{{variant.id}}">
+                  {% else %}
+                    <div data-colorName="{{ variant.metafields.color.name }}" data-selected="false" data-bestMatch="false" onclick="window.shopData.handleColorOnClick(this, false)" class="variant_list_item" style="background-color: {{ variant.metafields.color.hex }}; background-image: {{ background_image }}" data-variant-id="{{variant.id}}">
+                  {% endif %}
+                  {% unless variant.metafields.visibility.coming_soon %}
+                    {% if variant.inventory_quantity < 1 and variant.inventory_management == 'shopify' %}
+                      <svg viewBox="0 0 100 100">
+                        <line x1="0" y1="100" x2="100" y2="0"></line>
+                      </svg>
+                    {% endif %}
+                  {% endunless %}
+                  </div>
+                  {% unless additional_module == true %}
+                    {% if variant.metafields.flag.title != blank %}
+                      <div class="variant_list_item_flag ri-x-small">
+                        {{ variant.metafields.flag.title }}
+                      </div>
+                    {% endif %}
+                    <div class="variant_list_item_flag variant_list_item_flag_best_match ri-x-small weight-medium">
+                      &nbsp;
+                    </div>
+                  {% endunless %}
+                </div>
+              {% endunless %}
+            {%- endif -%}
+          {%- endfor -%}
+        </div> <!-- /#variant_scroll_wrapper -->
+      </div> <!-- /#variant_wrapper -->
+
+      {% if additional_module == true %}
+        <style>
+          .rangeSlider {
+            margin-bottom: 0px;
+          }
+          #variant_selector_container-module .variant_detail.subtitle__wrapper {
+            justify-content: center;
+          }
+        </style>
+        <form class="rangeSlider hide">
+          <input class="scroll-range" min="1" max="12" value="0" id="scroll-range" type="range" style="background-image: linear-gradient({{ slider_color }}, {{ slider_color }});"/>
+        </form>
+
+        <script>
+          $(document).ready(function() {
+            var getLength = $('#variant_scroll_wrapper-module .variant_list_item_wrapper').length;
+
+            if (getLength >= 6) {
+              var scroll = document.getElementById('scroll-range');
+              scroll.oninput = function () {
+                var panel = document.getElementById('variant_wrapper-module');
+                var total = panel.scrollWidth - panel.offsetWidth;
+                  var percentage = this.value * (total / getLength);
+                  percentage < 60 ?  panel.scrollLeft = 0 : panel.scrollLeft = percentage ;
+              }
+              $('#scroll-range').parent().removeClass('hide');
+            }
+          });
+        </script>
+      {% endif %}
+  
+      {% unless additional_module == true %}
+        <script>
+          document.querySelectorAll('.variant_wrapper').forEach(function(wrapper) {
+            const selected = document.getElementsByClassName('variant_list_item_selected')
+            if (selected.length == 1) {
+              wrapper.scrollTo({
+                left: selected[0].offsetLeft - wrapper.offsetLeft,
+                behavior: 'auto',
+              })
+            }      
+          })
+        </script>
+        {% if product.metafields.product.color_variant_slider %}
+          {% assign slider_color = active_variant.metafields.color.hex %}
+        {% else %}
+          {% assign slider_color = "#919191" %}
+        {% endif %}
+        <input id="variant_slider" class="desktop" type="range" step="any" value="0"
+          style="background-image: linear-gradient({{ slider_color }}, {{ slider_color }});"/>
+      {% endunless %}
+    </div> <!-- /#variant_selector_wrapper -->
+    
+    <div class="variant_detail subtitle__wrapper" {% unless hide_shade_chooser == true %} id="variant_open_shade_chooser" onclick="window.shopData.handleOpenShadeChooser()"{% endunless %}>
+      <div class="section__subtitle d-inline-block" style="display: inline-grid">
+        {% comment %}todo: improve position of svg and tidy css{% endcomment %}
+        <h3 class="variant_title" id="variant_title{%- if additional_module == true -%}-module{%- endif -%}">
+          {{ active_variant.metafields.color.name }}
+        </h3>
+        <p class="variant_description" id="variant_description{%- if additional_module == true -%}-module{%- endif -%}">
+          {% if active_variant.metafields.description != empty %}
+            {{active_variant.metafields.description.value}}
+          {% else %}
+            &nbsp;
+          {% endif %}
+        </p>
+      </div>
+      {% unless hide_shade_chooser == true %}
+        <span >
+          <svg class="icon-plus alignright" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+            <g fill="none" fill-rule="evenodd">
+              <g fill-rule="nonzero" stroke="#919191">
+                <path d="M345 631c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm-.052 4.278c.136-.015.272.03.374.122.1.093.157.225.154.362v4.762h4.762c.172-.003.332.088.418.236.087.148.087.332 0 .48-.086.148-.246.239-.418.236h-4.762v4.762c.003.172-.088.332-.236.418-.148.087-.332.087-.48 0-.148-.086-.239-.246-.236-.418v-4.762h-4.762c-.17.008-.332-.075-.424-.219-.092-.143-.1-.324-.022-.476.078-.151.231-.25.401-.257H344.524v-4.762c-.005-.247.179-.457.424-.484z" transform="translate(-334 -630)"/>
+              </g>
+            </g>
+          </svg>
+        </span>
+      {% endunless %}
+    </div>
+  </div> <!-- /#variant_selector_container -->
+  {% unless hide_shade_chooser == true %}
+    <div id="variant_shade_chooser">
+      <div id="variant_shade_chooser_close" class="small">close</div>
+      <div id="variant_shade_chooser_items_wrapper">
+        {%- for color in product.options_by_name['Color'].values %}
+          {%- assign color_variants = product.variants | where: color_option, color -%}
+          {%- if color_variants.size > 0 -%}
+            {%- assign variant = color_variants |  first -%}
+            {% unless variant.metafields.visibility.hide %}
+              {%- assign color_selected = false -%}
+              {%- for color_variant in color_variants -%}
+                {%- if color_variant == active_variant %}
+                  {%- assign color_selected = true -%}
+                {%- endif -%}
+              {%- endfor -%}
+              {% if color_selected %}
+                <div class="variant_shade_chooser_item_wrapper" data-colorName="{{ variant.metafields.color.name }}" data-selected="true" onclick="window.shopData.handleColorInShadeChooserOnClick(this)">
+              {% else %}
+                <div class="variant_shade_chooser_item_wrapper" data-colorName="{{ variant.metafields.color.name }}" data-selected="false" onclick="window.shopData.handleColorInShadeChooserOnClick(this)">
+              {% endif %}
+                <div class="variant_shade_chooser_left_wrapper">
+                  <span class="variant_shade_chooser_title">{{variant.metafields.color.name}}</span>
+                  <span class="variant_shade_chooser_subtitle">{{variant.metafields.description.value}}</span>
+                </div>
+                  {%- if variant.metafields.color.texture %}
+                    {%- assign background_image = "url('"| append:variant.metafields.color.texture[0].src|append:"')"-%}
+                  {% else %}
+                    {%- assign background_image = "none"-%}
+                  {%- endif -%}
+                {% if color_selected %}
+                  <div class="variant_shade_chooser_item_selected" style="background-color: {{ variant.metafields.color.hex }}; background-image: {{ background_image }}">
+                  </div>
+                {% else %}
+                  <div class="variant_shade_chooser_item" style="background-color: {{ variant.metafields.color.hex }}; background-image: {{ background_image }}">
+                  </div>
+                {% endif %}
+              </div> <!-- /.variant_shade_chooser_item_wrapper -->
+            {% endunless %}
+          {%- endif -%}
+        {%- endfor -%}
+      </div> <!-- /.variant_shade_chooser_items_wrapper -->
+      <div id='variant_shade_chooser_slider_wrapper'>
+        <input id="variant_shade_chooser_slider" type="range" value="0" />
+      </div>
+    </div> <!-- /#variant_shade_chooser -->
+  {% endunless %}
+</div><!-- /.form__body -->
+{% endif %}
+{% unless additional_module == true %}
+  <input id="variant_id_input" type="hidden" name="id" value="{{active_variant.id}}" data-productid="{{product.id}}" />
+{% endunless %}

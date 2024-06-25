@@ -1,0 +1,277 @@
+<section class="discoverHeroBanner">
+
+    <div class="media v-middle h-right text-Center">
+	
+      	{% if product.metafields.discovery.hero_media[0].media_type != "image" or product.metafields.discovery.hero_media_mobile[0].media_type != "image" %}
+          <div class="player-controls left">
+              <button class="play">{% render 'svg-icons' with 'play' %}</button>
+              <button class="pause">{% render 'svg-icons' with 'pause' %}</button>
+              <button class="volume">{% render 'svg-icons' with 'volume' %}</button>
+          </div>
+		{% endif %}
+      
+      	<div class="ratio_wrapper res-single hidden-xs">
+          {% for hero_media in product.metafields.discovery.hero_media  %}
+
+              {% if hero_media.media_type == 'image' %}
+                  <img src="{{ hero_media.src }}" alt="{{ hero_media.alt }}" class="product__detail animate" />
+              {% elsif hero_media.media_type == 'video' %}
+                  <video id="discoverVideoPlayer" autoplay="autoplay" loop="" muted="muted" preload="auto"
+                         playsinline="true" webkit-playsinline="true" width="100%" height="100%"
+                         data-setup='{"width": 300, "height": 250}' alt="{{ hero_media.alt }}">
+                    <source src="{{ hero_media.src }}" type='video/mp4' />
+                  </video>
+              {% endif %}
+
+          {% endfor %}
+      	</div>
+
+        <div class="ratio_wrapper res-single hidden-sm hidden-md hidden-lg">
+            {% for hero_media_mobile in product.metafields.discovery.hero_media_mobile  %}
+
+                {% if hero_media_mobile.media_type == 'image' %}
+                    <img src="{{ hero_media_mobile.src }}" alt="{{ hero_media_mobile.alt }}" class="product__detail animate" />
+                    {% elsif hero_media_mobile.media_type == 'video' %}
+                    <video id="discoverVideoPlayer" autoplay="autoplay" loop="" muted="muted" preload="auto"
+                           playsinline="true" webkit-playsinline="true" width="100%" height="100%"
+                           data-setup='{"width": 300, "height": 250}' alt="{{ hero_media.alt }}">
+                        <source src="{{ hero_media_mobile.src }}" type='video/mp4' />
+                    </video>
+                {% endif %}
+
+            {% endfor %}
+        </div>
+
+        <div class="cta" id="discoverLabel">
+            <div class="content">
+              <h4>{{ product.title }}</h4>
+              <p>{{ product.description }}</p>
+            </div>
+
+            <div class="action_btn ">
+              <div class="cart_actions">{% include 'discover-buy-button' %}</div>
+              <p class="p_custom_message">{{ product.metafields.product.custom_message }}</p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <style>
+        #discoverLabel h4 {
+            color: {{ product.metafields.discovery.hero_text_color }};
+        }
+      	#discoverLabel p {
+          color: {{ product.metafields.discovery.hero_description_text_color }};
+          margin-bottom:40px;
+        }
+      	#discoverLabel p.p_custom_message{
+          margin:18px 0px 0 0px;
+        }
+        #discoverLabel a {
+            transition:all 0.3s;
+        }
+        #discoverLabel a.btn_1{
+            color:#f1a027;
+        }
+
+        #discoverLabel a.btn{
+            border:0;
+            width: auto;
+            min-width: 265px;
+        }
+        #discoverLabel a.btn_1.btn{
+            color:#f1a027;
+            background:#0c63e4;
+        }
+        #discoverLabel a.btn_1.btn:hover{
+            background:#0c63e4;
+        }
+
+        #discoverLabel .cart_actions .price_btn .var_price, #discoverLabel .cart_actions .price_btn .add_btn {
+            color: {{ product.metafields.discovery.button_text_color }};
+            background: {{ product.metafields.discovery.button_color }};
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .discoverHeroBanner {
+          display: flex;
+          background: #ffffff;
+          padding: 20px;
+          display: flex;
+          position: relative;
+          text-decoration: none;
+        }
+
+        .discoverHeroBanner .media .res-single{
+          padding-top: calc(37.01% + 55px);
+        }
+        a.discoverHeroBanner:hover {
+          text-decoration: none;
+        }
+        .discoverHeroBanner .media {
+          display: flex;
+          flex: 1 0 auto;
+          background: #ffffff;
+        }
+        .discoverHeroBanner .media video {
+          background: #ffffff;
+        }
+        .cta {
+          position: absolute;
+          padding: 50px 38px 38px 40px;
+          z-index: 2;
+          max-width: 480px;
+          margin-right: 40px;
+        }
+        .cta h4 {
+          color: #fafafa;
+          font-size: 20px;
+          text-transform: uppercase;
+          letter-spacing: 1.29px;
+          margin-bottom:10px;
+        }
+        .cta a {
+          font-family: var(--font-medium);
+            color: #fafafa;
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-decoration: none;
+            border-bottom: 2px solid;
+            text-transform: uppercase;
+            margin-right:20px;
+            }
+        .cta a:last-child {
+          margin-right:0px;
+        }
+        .cta.cat_mobile {
+          padding:15px 0;
+          position: relative;
+          display:none;
+          max-width:100%;
+        }
+        .cta.cat_mobile h4,
+        .cta.cat_mobile a {
+          color:#545353;
+        }
+
+        .cta.cat_mobile.overlayed {
+          position: absolute;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+        }
+        .cta.cat_mobile.overlayed .flx {
+          padding: 45px 0;
+        }
+        .cta.cat_mobile.overlayed-top {
+          align-items:flex-start;
+        }
+        .cta.cat_mobile.overlayed-middle {
+          align-items:center;
+        }
+        .cta.cat_mobile.overlayed-bottom {
+          align-items:flex-end;
+        }
+
+        .vidMobile, .hero-section-mobile {
+          display:none;
+        }
+
+        .player-controls{
+          position:absolute;
+          z-index:3;
+          right:30px;
+          bottom:35px;
+          display:flex;
+        }
+        .player-controls.left{
+          left:30px;
+          right:auto;
+        }
+        .player-controls button, 
+        .product__container .player-controls button{
+          padding:0;
+          border:0;
+          background:none;
+          width:20px;
+          height:20px;
+          margin:0 8px;
+        }
+        .player-controls button.play{
+          display:none;
+        }
+        .player-controls button.volume{
+          height: 25px;
+          width: 25px;
+          margin-top: -3px;
+        }
+        .player-controls button.volume.unmuted svg path#v{
+          display:none;
+        }
+        .player-controls button svg{
+          width:100%;
+          height:100%;
+          filter: invert(1);
+        }
+      
+        .discoverHeroBanner {
+          padding: 0 !important;
+        }
+      
+      
+        @media (min-width:768px) and (max-width:1023px) { 
+          .cta {padding: 50px 20px 34px 20px; max-width: 345px; margin-right: 0;}
+        }
+
+        @media (max-width:767px) { 
+          .hero-section-desktop{display: none;}
+          .discoverHeroBanner{padding: 10px; flex-direction: column;   /* height: 72vh;  */}
+          .discoverHeroBanner .media{ background-position: center top;}
+          .discoverHeroBanner .media .cta{padding: 0; margin: 0; text-align: center; width:100%;}
+          .discoverHeroBanner .media .cta .content{position: absolute;width: 100%;top: -175px; padding: 0 50px;}
+          .action_btn{display:none;}
+          .discoverHeroBanner .media .res-single{padding-top: calc(120% + 55px);}
+          
+          .cta.cat_mobile, .vidMobile, .hero-section-mobile{display:block;}
+          .res-100.vidMobile{padding-top: 62%;}
+          .cta.cat_mobile.overlayed{display:flex;}
+
+          .player-controls{left:0; right:0; margin:auto; justify-content:center; bottom:15px !important; display:none}
+          .player-controls button{width:16px; height:16px; }
+
+        }
+
+       .product_preview{
+             display:none !important;
+       }
+
+    </style>
+
+    <script>
+        var video = document.getElementById("discoverVideoPlayer");
+
+        $('.player-controls .play').on('click', function(){
+            video.play();
+            $(this).hide();
+            $('.player-controls .pause').show();
+        });
+        $('.player-controls .pause').on('click', function(){
+            video.pause();
+            $(this).hide();
+            $('.player-controls .play').show();
+        });
+
+        $('.player-controls .volume').on('click', function(){
+            if(video.muted){
+                video.muted = false;
+                $(this).addClass('unmuted');
+            } else {
+                video.muted = true;
+                $(this).removeClass('unmuted');
+            }
+        });
+    </script>
+
+</section>

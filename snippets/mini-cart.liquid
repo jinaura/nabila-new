@@ -1,0 +1,582 @@
+{{ 'slick.js'  | asset_url | script_tag }}
+
+{% for giftBoxProd in collections[settings.giftbox_product].products %}
+    {% assign giftbox_product_title = giftBoxProd.title %}
+    {% assign giftbox_product = giftBoxProd %}
+    {% break %}
+{% endfor %}
+
+<div id="miniCart" >
+    {% comment %}Header{% endcomment %}
+
+    <div class="mini-cart__header">
+        <h2>Your Bag <span class="cartCount">{% include 'svg-icons' with 'cart-new'%} <span>{{ cart.item_count }}</span></span></h2>
+        <a href="#" class="mini-close">{% include 'svg-icons' with 'close'%}</a>
+    </div>
+
+    {% comment %}Shipping Messaging{% endcomment %}
+    <div class="mini-cart__shipping-container">
+
+        {% assign threshold = 0 %}
+        {% if localization.country.iso_code == 'GB' and settings.free_ship_enable_uk %}
+            {% assign threshold = settings.free_ship_thresh_uk | times: 100 | default: 0 %}
+        {% elsif localization.country.iso_code != 'GB' and settings.free_ship_enable_us %}
+            {% assign threshold = settings.free_ship_thresh_us | times: 100 | default: 0 %}
+        {% endif %}
+
+        {% assign cart_total = cart.total_price %}
+        {% assign remaining = threshold | minus: cart_total | money_without_currency %}
+        {% assign cart_currency = cart.currency.symbol %}
+        {% assign amount_with_currency = cart_currency | append: remaining %}
+
+        {% comment %} THIS MINICART MESSAGES USE FOR APP.JS{% endcomment %}
+        {% if localization.country.iso_code == 'GB' %}
+            {% assign message = settings.empty_cart_shipping_msg_uk  %}
+            {% assign link_text = settings.empty_cart_shipping_link_text_uk  %}
+            {% assign link_text_url = settings.empty_cart_shipping_link_uk  %}
+        {% elsif localization.country.iso_code != 'GB' %}
+            {% assign message = settings.empty_cart_shipping_msg_us  %}
+            {% assign link_text = settings.empty_cart_shipping_link_text_us  %}
+            {% assign link_text_url = settings.empty_cart_shipping_link_us  %}
+        {% endif %}
+        <span class="free" id="minicart_free_msg" style="display: none;">{{message}} <a href="{{ link_text_url }}" class="minicart-shopall">{{ link_text }}</a></span>
+
+        {% if localization.country.iso_code == 'GB' %}
+            {% assign message = settings.away_cart_shipping_msg_uk   %}
+            {% assign link_text = settings.away_cart_shipping_link_text_uk  %}
+            {% assign link_text_url = settings.away_cart_shipping_link_uk  %}
+        {% elsif localization.country.iso_code != 'GB' %}
+            {% assign message = settings.away_cart_shipping_msg_us   %}
+            {% assign link_text = settings.away_cart_shipping_link_text_us  %}
+            {% assign link_text_url = settings.away_cart_shipping_link_us  %}
+        {% endif %}
+        <span class="free" id="minicart_away_msg" style="display: none;">{{message}} <a href="{{ link_text_url }}" class="minicart-shopall">{{ link_text }}</a></span>
+
+        {% if localization.country.iso_code == 'GB' %}
+            {% assign message = settings.reached_cart_shipping_msg_uk   %}
+            {% assign link_text = settings.reached_cart_shipping_link_text_uk  %}
+            {% assign link_text_url = settings.reached_cart_shipping_link_uk  %}
+        {% elsif localization.country.iso_code != 'GB' %}
+            {% assign message = settings.reached_cart_shipping_msg_us   %}
+            {% assign link_text = settings.reached_cart_shipping_link_text_us  %}
+            {% assign link_text_url = settings.reached_cart_shipping_link_us  %}
+        {% endif %}
+        <span class="free" id="minicart_reached_msg" style="display: none;">{{message}} <a href="{{ link_text_url }}" class="minicart-shopall">{{ link_text }}</a></span>
+        {% comment %} END THIS MINICART MESSAGES USE FOR APP.JS{% endcomment %}
+
+
+        {% comment %}
+        {% if cart.item_count == 0 %}
+            {% assign message = settings.empty_cart_shipping_msg_us  %}
+            {% assign link_text = settings.empty_cart_shipping_link_text_us  %}
+            {% assign link_text_url = settings.empty_cart_shipping_link_us  %}
+        {% elsif threshold > cart_total %}
+            {% assign message = settings.away_cart_shipping_link_text_us | replace: "[threshold_amount]", amount_with_currency  %}
+            {% assign link_text = settings.away_cart_shipping_link_text_us  %}
+            {% assign link_text_url = settings.away_cart_shipping_link_us  %}
+        {% else %}
+            {% assign message = settings.reached_cart_shipping_msg_us   %}
+            {% assign link_text = settings.reached_cart_shipping_link_text_us  %}
+            {% assign link_text_url = settings.reached_cart_shipping_link_us  %}
+        {% endif %}
+        {% endcomment %}
+
+        {% if threshold == 0  %}
+            {% assign percent = 100 %}
+        {% else %}
+            {% assign percent = cart.total_price | times: 100 | divided_by: threshold %}
+        {% endif %}
+        <div class="mini-cart__shipping " data-shipping="{{threshold}}"></div>
+
+        <!-- <div class="mini-cart__shipping" data-shipping="{{threshold}}">
+            <span class="free hhh" >{{message}} <a href="{{ link_text_url }}" class="minicart-shopall">{{ link_text }}</a></span>
+            {% if cart.item_count > 0 %}
+                <div class="mini-cart__shipping-progress" data-percentage="{{ percent }}"><div style="width: {{ percent }}%;"></div></div>
+            {% endif %}
+            {% if percent < 1%}<style>#miniCart .mini-cart__shipping-container .mini-cart__shipping-progress div::after{margin-right: -8px;}</style>{% endif %}
+        </div> -->
+    </div>
+
+    {% comment %}Cart Items{% endcomment %}
+    {% assign giftBox = false %}
+    {% assign productIdsCommaSep = '' %}
+    {% assign gwpProductIdsCommaSep = '' %}
+    <div class="mini-cart__wrapper" id="scrollMinicart">
+        <form action="/checkout" method="post" id="mini_cart_form" >
+
+            {% for item in cart.items %}
+
+                {% if item.product.type == 'Sample Product' %}
+                    {% assign productIdsCommaSep = item.variant_id | append: ", " | append :productIdsCommaSep %}
+                {% endif %}
+
+                {% if item.product.type == 'Holiday GWP' %}
+                    {% assign gwpProductIdsCommaSep = item.variant_id | append: ", " | append :gwpProductIdsCommaSep %}
+                {% endif %}
+
+
+                {% include 'mini-cart-item-loop' %}
+
+            {% endfor %}
+
+        </form>
+
+
+    <!-- hide gift box and samples for Rose UK -->
+    {% unless localization.country.iso_code == 'GB' %}
+        <!-- Gift Box ------------------------->
+        <div>
+
+            {% assign th = settings.giftbox_thresh %}
+            {% assign totalPrice = cart.total_price | money_without_currency %}
+
+            {% if settings.enable_giftbox %}
+
+                <div class="mini-cart__item gift_card_product {% if totalPrice < th or giftBox == true %} hide{% endif %}"
+                     data-gbth="{{ settings.giftbox_thresh }}" data-title="{{ giftbox_product_title }}">
+                    <div class="mincart-product-thumb">
+                        {{giftbox_product.featured_image | image_url: width: 350 | image_tag: width: 100, height: 100, alt: giftbox_product.featured_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                    </div>
+                    <div class="mini-cart__info">
+                        <div class="mini-cart_content">
+                            <h4>Add a {{giftbox_product.title}} for {{giftbox_product.price | money_without_trailing_zeros}}</h4>
+
+                            <form method="post" action="/cart/add" onsubmit="return false;" class="product_form impulse_item">
+                                <input type="hidden" name="id" id="mini_variant_id_{{ giftbox_product.id }}" value="{{ giftbox_product.variants[0].id }}" tabindex="0">
+                                <input type="hidden" value="2" id="mini_p_t_v_{{ giftbox_product.id }}" tabindex="0">
+                                <input id="final-sale" type="hidden" value="Final Sale" name="properties[Non Refundable]" tabindex="0">
+                                <input type="submit" id="mini_sub_{{ giftbox_product.id }}" value="Add gift box" data-message="Final Sale" class="add_btn impulse-mini add-gift-box" data-purchase-id="{{ giftbox_product.variants[0].id }}" tabindex="0">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            {% endif %}
+        </div>
+        <!-- End Gift Box ------------------------->
+    {% endunless %}
+
+        {% comment %}HOLIDAY GWP{% endcomment %}
+        {% assign checkEnableRegion = false %}
+        {% if localization.country.iso_code != 'GB' and settings.enable_minicart_holiday_gwp_us == true %}
+            {% assign gwpThreshold = settings.holiday_GWP_threshold_us  | times: 1 %}
+            {% assign gwpPerOrder = settings.GWP_per_order_us %}
+            {% assign gwpProducts = settings.minicart_holiday_gwp_us %}
+            {% assign checkEnableRegion = true %}
+            {% elsif localization.country.iso_code == 'GB' and settings.enable_minicart_holiday_gwp_uk == true %}
+            {% assign gwpThreshold = settings.holiday_GWP_threshold_uk  | times: 1 %}
+            {% assign gwpPerOrder = settings.GWP_per_order_uk %}
+            {% assign gwpProducts = settings.minicart_holiday_gwp_uk %}
+            {% assign checkEnableRegion = true %}
+        {% endif %}
+        {% if threshold == 0  %}
+            {% assign percent = 100 %}
+        {% else %}
+            {% assign percent = cart.total_price | times: 100 | divided_by: threshold %}
+        {% endif %}
+
+        {% if checkEnableRegion == true %}
+            <h2 id="holiday_GWP">Choose Your Free Gift </h2>
+            <hr class="section__divider gwpdivider">
+
+            <div class="mini-cart__free-gwp" data-gbth="{{ gwpThreshold }}" data-gpo="{{ gwpPerOrder }}">
+                <div class="mini-cart__gwp" data-shipping="0">
+                    <span class="free">Select {{ gwpPerOrder }} free gift</span>
+                  {% assign newTotal = cart_total | divided_by:100 %}
+                  <div class="away_text_container">
+                    
+                   You're $<span class='away_text'>
+                     {{gwpThreshold | minus:newTotal}}
+                   </span>  away from choosing your free gift.
+                  </div>
+                  
+                  <div class="mini_cart_free" message="{{ settings.away_cart_shipping_msg_uk }}" total="{{ newTotal }}" mytotal='{{ gwpThreshold }}' thresh="{{ gwpThreshold | minus:newTotal  }}"><span class="free"><br>Order total must be {{ gwpThreshold}} to select gift.</span></div>
+                </div>
+            </div>
+            <div id="minicart-gwp-ajax">
+                {% assign is_product = false %}
+                {% include 'minicart-gwp' with is_product %}
+            </div>
+        {% endif %}
+
+        <!----- Samples ----->
+        {% if settings.enable_minicart_samples_us == true and localization.country.iso_code != 'GB' %}
+
+            <!-- <h2>Choose Free Samples</h2>
+            <hr class="section__divider">
+
+            <div class="mini-cart__free-samples">
+                <div class="mini-cart__samples" data-shipping="0">
+                    <span class="free">Select {{ settings.samples_per_order_us }} free {% if settings.samples_per_order_us == "1" %}sample{% else %}samples{% endif %}</span>
+                </div>
+            </div> -->
+            <div id="minicart-sample-ajax">
+                {% include 'minicart-samples-v2' %}
+            </div>
+        {% elsif settings.enable_minicart_samples_uk == true and localization.country.iso_code == 'GB' %}
+
+            <!-- <h2>Choose Free Samples</h2>
+            <hr class="section__divider">
+
+            <div class="mini-cart__free-samples">
+                <div class="mini-cart__samples" data-shipping="0">
+                    <span class="free">Select {{ settings.samples_per_order_uk }} free {% if settings.samples_per_order_uk == "1" %}sample{% else %}samples{% endif %}</span>
+                </div>
+            </div> -->
+            <div id="minicart-sample-ajax">
+                {% include 'minicart-samples-v2' %}
+            </div>
+        {% endif %}
+        <!----- End Samples ------->
+
+        {% if localization.country.iso_code == 'GB' %}
+            <style>
+                @media only screen and (max-width: 767px) {
+                    #minicard-recom .shutter { 
+                        max-width: 100vw;
+                    }
+                }
+            </style>
+        {% else %}
+            <style>
+                @media only screen and (max-width: 767px) {
+                    #minicard-recom .shutter {
+                        max-width: 100vw;
+                    }
+                }
+            </style>
+        {% endif %}
+
+
+        {% comment %}Recomended{% endcomment %}
+        <h2 class='noMarginTop'>Recommended</h2>
+        <hr class="section__divider">
+        <div class="swap-x" id="mobileScrollRemover" role="region" aria-label="carousel">
+            <div id="minicard-recom" class="multiple-items"
+                 data-slick='{
+            "slidesToShow": 2,
+            "slidesToScroll": 1,
+            "dots": {{ settings.dots }},
+            "infinite": false,
+            "arrows": {{ settings.arrows }},
+            "autoplay": false,
+            "adaptiveHeight": false,
+            "centerMode": false,
+            "centerPadding": "1px",
+            "speed": 500,
+            "responsive": [
+                {
+                    "breakpoint": 768,
+                    "settings": "unslick"
+                }
+            ]
+
+        }'>
+
+    {% for product in collections[settings.minicart_recommendation].products %}
+
+        <!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+        {% unless product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+        {% unless product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+
+            {%- assign clickableClass = "" -%}
+            {%- assign min = 1 -%}
+            {%- assign max = 100 -%}
+            {%- assign diff = max | minus: min -%}
+            {%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+
+            <div class="product_card">
+                <div class="image_wrapper">
+                    <span class="hidden-sm hidden-md hidden-lg">{%- include 'feature-tag' prod: product -%}</span>
+                    {%- assign img_url = product.featured_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+                    <!-- show award badge for US -->
+                    {% if localization.country.iso_code != 'GB' and product.metafields.media.badge %}
+                        <span class="badge-img__wrapper">
+                            <img src="{{ product.metafields.media.badge[0].src }}" alt="{{ product.metafields.media.badge[0].alt | strip }}" class="badge-img"
+                                srcset="
+                                {{ product.metafields.media.badge[0].src | append: '&transform=resize=100' }} 100w,
+                                {{ product.metafields.media.badge[0].src | append: '&transform=resize=200' }} 200w
+                                "
+                                width="47"
+                                height="40"
+                                fetchpriority="low" loading="lazy"
+                            />
+                        </span>
+                    {% endif %}
+                
+                    <a href="#_" class="block-link-no-deco-mini
+                    {% if product.variants.size == 1 and product.variants[0].inventory_quantity >= 1 %}
+                        buy_btn_direct minicart-recom
+                    {% elsif product.variants.size > 2 and product.variants[0].inventory_quantity >= 1 %}
+                        buy_btn minicart-recom
+                    {% endif %}
+                    ">
+                        {{product.featured_image | image_url: width: 500 | image_tag: width: 400, height: 500, alt: product.featured_image.alt, fetchpriority: 'low', loading: 'lazy' }}
+                    </a>
+                    <div class="inner_content">
+
+                        {% assign coming_soon_uk = false %}
+                        {% if product.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+                            {% assign coming_soon_uk = true %}
+                        {% endif %}
+
+
+                        {% if product.type == 'Gift Card' %}
+                            <a class="buy_btn_giftcard minicart-recom" href="{{- product.url -}}">SHOP NOW</a>
+                        {% elsif product.metafields.product.coming_soon == 'true' or coming_soon_uk %}
+                            <button class="buy_btn_ofs minicart-recom" data-id="{{ product.id }}">Coming Soon</button>
+                        {% elsif product.variants.size == 1 and product.variants[0].inventory_quantity >= 1 %}
+                            <button class="buy_btn_direct minicart-recom" {% for variant in product.variants %}data-purchase-id="{{ variant.id }}"{% endfor %} data-id="{{ product.id }}">Add To Cart</button>
+                            {% assign clickableClass = "buy_btn_direct minicart-recom" %}
+                        {% elsif product.variants.size == 1 and product.variants[0].inventory_quantity < 1 %}
+                            <button class="buy_btn_ofs minicart-recom" data-id="{{ product.id }}">Out Of stock</button>
+                        {% else %}
+                            {% assign clickableClass = "buy_btn minicart-recom" %}
+                            <button class="buy_btn minicart-recom" data-id="{{ product.id }}">
+                                {% if shop.metafields.globals.coming_soon != 'true' and product.metafields.product.coming_soon != 'true' %}
+                                    {% if settings.product_link_label != blank %}
+                                        Quickshop {% comment %}{{ settings.product_link_label }}{% endcomment %}
+                                    {% else %}
+                                        Quickshop
+                                    {% endif %}
+                                {% else %}
+                                    Coming Soon
+                                {% endif %}
+                            </button>
+                        {% endif %}
+
+                        <script>
+                            var hash_localstorage = localStorage.getItem('email_hash');
+                            var hash_comingsoon = `{{ shop.metafields.globals.coming_soon }}`;
+                            var hash_metafield = `{{ shop.metafields.globals.hash }}`;
+                            if (hash_localstorage == hash_metafield && hash_comingsoon) {
+                                var getId = $('.buy_btn');
+                                var putdata = `{{ settings.product_link_label }}`;
+                                getId.html(putdata);
+                            }
+                        </script>
+
+                    </div>
+
+                    <!-- SHUTTER POPUP -->
+                    {% include 'minicart-variant-selector' %}
+                    <!-- SHUTTER POPUP END // -->
+
+                </div>
+
+                <span class="rating_stars">
+                    <a href="{{- product.url  -}}/#reviews" class="reviews">
+
+                    <!-- BV - Begin Inline Rating -->
+                    <div data-bv-show="inline_rating" data-bv-product-id="{{product.id}}" class="inline-bv-rating"></div>
+                    <!-- BV - End Inline Rating -->
+
+                  </a>
+                </span>
+
+                <a href="#_" class="outer_content block-link-no-deco-mini {{ clickableClass }}">
+                    <h3>{{- product.title  -}}</h3>
+
+                   <p class="hidden-sm hidden-md hidden-lg">{{- product.description | truncatewords: 10, "..." -}}</p>
+                    <div class="p-price__tag" id="variant_price_{{ __product.id }}">
+                        {%- assign product_compare_at_price = 0 | plus: 0 -%}
+                        {% if localization.country.iso_code == 'GB' and __product.metafields.set.compare_at_price_uk %}
+                            {%- assign product_compare_at_price = __product.metafields.set.compare_at_price_uk | times: 100 -%}
+                        {% elsif localization.country.iso_code != 'GB' %}
+                            {%- assign product_compare_at_price = __product.variants[checkSelectedOption].compare_at_price -%}
+                        {% endif %}
+                        {% if product_compare_at_price > __product.variants[checkSelectedOption].price %}
+                            <span class="sr-only">Original price: </span>
+                            <span class="old-price">{{  product_compare_at_price | money_without_trailing_zeros }}</span>
+                            <script>
+                            Shopify[{{ __product.variants[checkSelectedOption].id }}] = {{ product_compare_at_price }};
+                            </script>
+                        {% endif %}
+                        <span class="sr-only">Current price: </span>
+                        <span class="new-price">
+                            {% if __product.variants[checkSelectedOption].inventory_quantity != 0 %}
+                                {{ __product.variants[checkSelectedOption].price | money_without_trailing_zeros }}
+                            {% endif %}
+                        </span>
+                    </div>
+                </a>
+
+                </div>
+            {% endunless %}
+            {% endunless %}
+
+        {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    {% comment %}Total and Shipping{% endcomment %}
+    <div class="mini-cart__subtotal">
+        <div class="afterpay-price submitBtn">
+            {% assign checkCartLevelDiscount = cart.cart_level_discount_applications | size %}
+            {% if checkCartLevelDiscount > 0 %}
+                <span class="mini-cart__sub-total"><span class="sale">{{ cart.currency.symbol }}{{ cart.original_total_price | money_without_currency }}</span> <span class="actp">{{ cart.total_price | money }}</span></span>
+            {% else %}
+                <span class="mini-cart__sub-total"><span class="actp">{{ cart.currency.symbol }}{{ cart.total_price | money_without_currency }}</span></span>
+            {% endif %}
+            <button type="submit" form="mini_cart_form" class="mini-cart__button action_button">Checkout</button>
+        </div>
+
+        <span class="minicart-afterpay-span{% if localization.country.iso_code == 'GB' %} hidden{% endif %}">or 4 interest-free installments of 
+            <span id="minicart-afterpay-price">{{ cart.currency.symbol }}{{ cart.total_price | divided_by: 4 | money_without_currency }}</span>
+             by 
+             {% if localization.country.iso_code == 'GB' %}
+                {%- include 'svg-icons' with 'clearpay' -%}
+             {% else %}
+                {%- include 'svg-icons' with 'afterpay' -%}
+             {% endif %}
+        </span>
+        <a href="javascript:;" class="mini-close continueShopping">Continue shopping</a>
+
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function() {
+       $(document).on("click", '.vto-label .tag_label', function(e){
+            $(this).parent().parent().parent().find(".product_options_modal_plp").show();
+        });
+
+        $(document).on("click", '.block-redirect', function(e){
+            e.preventDefault();
+            $(this).parent().closest('.flexObject').find('.inner_content').find("[data-active='is_active']").trigger('click')
+        });
+    });
+
+    var slider_mini = $('#minicard-recom').slick();
+
+    $("#minicard-recom .minicart-recom").on("click",function(){
+        $("#miniCart .product_options_modal_plp").hide();
+        $('body, html').removeClass('overflow-hidden');
+        $( '.plp_fullscreen_vto_menu_close' ).remove();
+    });
+
+    $(document).on('click', '.plp_fullscreen_vto_menu_close',  function(e){
+        $("#minicard-recom .slick-arrow").show();
+        slider_mini.slick("slickSetOption", "accessibility", true);
+        slider_mini.slick("slickSetOption", "draggable", true);
+        slider_mini.slick("slickSetOption", "swipe", true);
+        slider_mini.slick("slickSetOption", "touchMove", true);
+
+        $("#mobileScrollRemover").removeClass("stopScrolling");
+        $("body").removeClass("oveflowHiddenClass");
+        $("#miniCart .mini-cart__wrapper").removeClass("oveflowHiddenClass");
+    });
+
+    $('#miniCart .tag_label').on("click",function(){
+        if ($(this).parent().parent().parent().find(".product_options_modal_plp").find('.ctas').length == 0) {
+            $(this).parent().parent().parent().find(".product_options_modal_plp").prepend('<div class="ctas"> <span class="close">Close</span></div>')
+        }
+
+        $(".mini-cart__wrapper").animate({ scrollTop: $("#miniCart").height() + 1000 }, "slow");
+
+      
+        if ($(window).width() > 768) {
+            $("#minicard-recom .slick-arrow").hide();
+            slider_mini.slick("slickSetOption", "accessibility", true);
+            slider_mini.slick("slickSetOption", "draggable", false);
+            slider_mini.slick("slickSetOption", "swipe", false);
+            slider_mini.slick("slickSetOption", "touchMove", false);
+
+            var stylesMx = $('#minicard-recom .slick-track').css('-webkit-transform');
+            strWithOutChar = stylesMx.replace(/[^0-9\.]+/g, "");
+            resultLeft = strWithOutChar.slice(4, -1);
+            $(this).parent().parent().parent().find(".product_options_modal_plp").css("left", resultLeft + "px");
+        }
+ 
+        if ($(window).width() < 768) {
+          $("#mobileScrollRemover").addClass("stopScrolling");
+          $("body").addClass("oveflowHiddenClass");
+          $("#miniCart .mini-cart__wrapper").addClass("oveflowHiddenClass");
+        }
+    });
+
+    $(document).on('click', '#miniCart .product_options_modal_plp .ctas',  function(e){
+        $("#mobileScrollRemover").removeClass("stopScrolling");
+        $("body").removeClass("oveflowHiddenClass");
+        $("#miniCart .mini-cart__wrapper").removeClass("oveflowHiddenClass");     
+    });
+
+    $(".buy_btn.minicart-recom").on("click",function(){
+      var objDiv = document.getElementById("scrollMinicart");
+      objDiv.scrollTop = objDiv.scrollHeight;
+
+        if ($(window).width() > 768) {
+            setTimeout(() => {
+                var stylesMx = $('#minicard-recom .slick-track').css('-webkit-transform');
+                strWithOutChar = stylesMx.replace(/[^0-9\.]+/g, "");
+                resultLeft = strWithOutChar.slice(4, -1);
+                $(this).parent().parent().find(".shutter").css({"left":resultLeft+"px"});
+            }, 500)
+        }
+
+        if ($(window).width() < 768) {
+            var recomdHeight = $("#minicard-recom").innerHeight();
+            $("#mobileScrollRemover").removeClass("swap-x");
+            var offsetsMini = $('#minicard-recom').position();
+            var MiniCartTop = offsetsMini.top;
+            $("#minicard-recom .shutter").css("top", parseInt(MiniCartTop - 2)+"px");
+            $("#minicard-recom .shutter").css("height", parseInt(recomdHeight - 20)+"px");  
+        }
+    });
+
+    $(document).ready(function() {
+        // discovery set id
+        const discoverySetProdId = 7552095977660;
+        const discoveryAddToCart = document.querySelectorAll(`#minicard-recom .buy_btn_direct[data-id="${discoverySetProdId}"]`)[0];
+        if (discoveryAddToCart) {
+            $.getJSON("/cart.js", function(new_cart) {
+                $.each( new_cart.items, function(key, value) {
+                    if (value.product_id == discoverySetProdId) {
+                        setTimeout(() => {
+                            discoveryAddToCart.setAttribute("disabled", "");
+                    }, 500);
+                    }
+                });
+            });
+        }
+    });
+</script>
+
+
+<style>
+  .vto-label{
+    display: none;
+  }
+  .tag_label{
+    display: none;
+  }
+  #miniCart .mini-cart__wrapper .mini-cart__item {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+  }
+  #miniCart .mini-cart__wrapper {
+    margin-top: 16px!important;
+  }
+  .emptyPadding {margin:0 0 4px 0;}
+
+  #miniCart .mini-cart__qty {
+    margin-right: 1px;
+  }
+
+  #miniCart .mini-cart__qty button {
+    border: transparent solid 2px !important;
+  }
+
+  #miniCart #minicart-samples .product_card .image_wrapper a:focus,
+  #miniCart #minicart-samples .product_card .productNameAndLink a:focus {
+    outline: none!important;
+  }
+
+  #minicard-recom .product_card .image_wrapper {
+    margin-top: 2px;
+  }
+</style>

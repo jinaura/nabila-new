@@ -1,0 +1,265 @@
+{% if localization.country.iso_code == 'GB' or request.design_mode == true %}
+  <div class="page-signup-main">
+    {%- section 'signup-video-uk' -%}
+    {%- section 'signup-modal-uk' -%}
+  </div>
+{% endif %}
+{% if localization.country.iso_code != 'GB' or request.design_mode == true %}
+  <div class="page-signup-main">
+    {%- section 'signup-video' -%}
+    {%- section 'signup-modal' -%}
+  </div>
+{% endif %}
+
+<style>
+  body.template-page.template-page--signup #launcher {
+    display: none !important;
+  }
+  .signupVideo{
+    position: relative;
+  }
+  #signup-action, .signup-close{
+    font-family: var(--font-medium);
+    position: absolute;
+    color: #fff;
+    font-size: 12px;
+    text-transform: uppercase;
+    z-index: 4;
+    top: 30px;
+    right: 30px;
+  }
+  .signup-close {
+    color: #545353;
+    top: 80px;
+  }
+  .wrapper .footer{
+    margin-top: 0;
+  }
+
+  .signupSubscribe .signup-form{
+    position: fixed;
+    right: 0;
+    top: 120px;
+    z-index: 999998;
+    background: #fafafa;
+    max-width: 43%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(.32, .24, .15, 1);
+  }
+  .signupSubscribe .signup-form.open{
+    transform: translateX(0%);
+  }
+  .signupSubscribe .signup-form.closed{
+    transform: translateX(100%);
+  }
+  .tv-overlay{
+    background-color: transparent;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3;
+    display: none;
+  }
+  .subscribe-contained{
+    max-width: 400px;
+  }
+  .subscribe-contained .signup.klaviyo-input{
+    background-color: transparent;
+    margin-top: 10px;
+  }
+  .subscribe-contained .newsletter-disclaimer{
+    font-size: 12px;
+  }
+  .subscribe-contained .desc{
+    padding: 15px 0;
+  }
+  .signupSubscribe .subscribe-contained h1 {
+    font-size: var(--body-copy);
+    font-family: var(--font-medium);
+    font-weight: 400;
+    color: var(--primary-color);
+    text-transform: uppercase;
+  }
+  .subscribe-contained h1 a{
+    display: none;
+    font-size: 12px;
+  }
+  #signup_signup{
+    margin-bottom: 0;
+  }
+
+  .tutorial_video-dimensions.vjs-fluid{
+    padding-top: calc(100vh - 80px);
+  }
+  .tutorial_video-dimensions.vjs-fluid video, 
+  .tutorial_video_mobile-dimensions.vjs-fluid video{
+    object-fit: cover;
+    object-position: center;
+  }
+  #block-desktop{
+    width: 100%;
+    transition: all 0.5s cubic-bezier(.32, .24, .15, 1);
+  }
+  #block-desktop.minus-width{
+    width: 57%;
+  }
+
+  .img-media{
+    position: relative;
+    padding-top: calc(100vh - 80px);
+  }
+  .img-media img{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    left: 0;
+    top: 0;
+  }
+
+  #block-mobile{
+    display: none;
+    width: 100%;
+  }
+
+  .success_message, .error_message{
+    padding: 15px 0 0;
+  }
+  .success_message{color: green;}
+
+  @media (min-width:768px) and (max-width:1024px){
+    #block-desktop.minus-width{width: 50%;}
+    .signupSubscribe .signup-form{max-width: 50%; padding: 0 60px; top: 60px; overflow-y: auto; padding-top: 18vh; padding-bottom: 75px; align-items: self-start;}
+    .tutorial_video-dimensions.vjs-fluid{padding-top: calc(100vh - 60px);}
+  }
+
+  @media (max-width:767px){
+    #block-desktop{display: none;}
+    #block-mobile{display: block;}
+    .signupSubscribe .signup-form{max-width: 100%; padding: 0px 20px 25px 20px; height: auto; bottom: 0; top: auto;}
+    .subscribe-contained .desc{display: none;}
+    .signupSubscribe .signup-form.open{
+      transform: translateY(calc(0% + 50px));
+      max-height: 100%;
+      overflow-y: auto;
+      padding-bottom: 80px;
+      align-items: flex-start;
+    }
+    .signupSubscribe .signup-form.closed{transform: translateY(83%);}
+
+    #signup-action, .signup-close{display: none;}
+    .subscribe-contained{max-width: 100%;}
+    .subscribe-contained h1{display: flex; align-items: center; justify-content: space-between; padding-top: 25px; padding-bottom: 15px;}
+    .subscribe-contained h1 a{display: block; margin-left: 55px; color: #545353;}
+
+    .tutorial_video-dimensions.vjs-fluid, .img-media, .tutorial_video_mobile-dimensions.vjs-fluid{padding-top: calc(100vh - 142px);}
+    .video-js .vjs-control-bar{width: 90%;}
+  }
+
+</style>
+
+<script>
+$(document).ready(function() {
+
+  const submitFormButton = $('#signup_modal .btn.subscribe');
+  submitFormButton.prop('disabled', true);
+
+  $('#signup_modal input.signup').keyup(function() {
+    const inputId = $(this).attr('id');
+    const emailInput = $('#signup_modal input.signup#email');
+    const phoneInput = $('#signup_modal input.signup#phone_number');
+    const emailPattern = /^.+@.+\..+$/;
+    const phonePattern = /^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/gm;
+    if (emailPattern.test(emailInput.val())) {
+      emailInput.addClass('valid').removeClass('invalid');
+    } else {
+      emailInput.addClass('invalid').removeClass('valid');
+    }
+    if ((phoneInput.val() == '') || (phonePattern.test(phoneInput.val().replace(/\s/g, '')))) {
+      phoneInput.addClass('valid').removeClass('invalid');
+    } else {
+      phoneInput.addClass('invalid').removeClass('valid');
+    }
+    const messageId = 'klaviyo_error_' + inputId;
+    const messageEl = document.getElementById(messageId);
+    if ($(this).hasClass('invalid') && (messageEl == null)) {
+      const inputName = $(this).attr('aria-label');
+      const message = inputName + ' is invalid';
+      p = document.createElement('p');
+      p.innerHTML = message;
+      p.setAttribute('id', messageId);
+      $('#signup_modal div.error_message').append(p);
+    } else if ($(this).hasClass('valid') && messageEl) {
+      messageEl.parentNode.removeChild(messageEl);
+    }
+
+    if ($('#signup_modal input.signup').hasClass('valid') == true && $('#signup_modal input.signup').hasClass('invalid') == false) {
+      submitFormButton.prop('disabled') && submitFormButton.prop('disabled', false);
+    } else {
+      submitFormButton.prop('disabled') == false && submitFormButton.prop('disabled', true);
+    }
+  });
+
+  if (window.location.hash === '#signup') {
+    if ($('#signup-form').hasClass('closed')) {
+        $('#signup-form').addClass('open').removeClass('closed');
+        $('html, body').addClass('overflow-hidden');
+        $('.tv-overlay').show();
+        $('#block-desktop').addClass('minus-width');
+      }
+  }
+
+  $(document).on('click', '.signup-modal',  function(e){
+    $('#signup-form').addClass('open').removeClass('closed');
+    $('html, body').addClass('overflow-hidden');
+    $('.tv-overlay').show();
+    $('#block-desktop').addClass('minus-width');
+  });
+
+  $(document).on('click', '.signup-close, .tv-overlay',  function(e){
+    $('#signup-form').addClass('closed').removeClass('open');
+    $('html, body').removeClass('overflow-hidden');
+    $('.tv-overlay').hide();
+    $('#block-desktop').removeClass('minus-width');
+  });
+
+  // ----------------- Mobile Events
+
+  $(document).on('click', '.subscribe-contained h1',  function(e){
+    $('#signup-form').addClass('open').removeClass('closed');
+    $('html, body').addClass('overflow-hidden');
+    $(this).addClass('close-mobile-form');
+    $('.tv-overlay').show();
+    $(this).find('a').html('Close');
+  });
+
+  $(document).on('click', '.close-mobile-form, .tv-overlay',  function(e){
+    $('#signup-form').addClass('closed').removeClass('open');
+    $('html, body').removeClass('overflow-hidden');
+    $('.subscribe-contained h1').removeClass('close-mobile-form');
+    $('.tv-overlay').hide();
+    $('.subscribe-contained h1').find('a').html('Subscribe');
+  });
+
+  if (isMobile) {
+    if ($('#tutorial_video_mobile video').length > 0) {
+      $('#block-desktop > div').remove();
+      setTimeout(() => { $('#tutorial_video_mobile video').get(0).play() }, 200);
+    }
+  } else {
+    if ($('video').length > 0) {
+      $('#block-mobile > div').remove();
+      setTimeout(()=>{ $('video').get(0).play() }, 100);
+    }
+  } 
+
+  $(window).on('orientationchange', function(event) {
+    window.location.reload();
+  });
+});
+</script>

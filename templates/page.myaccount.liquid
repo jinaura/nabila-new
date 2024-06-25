@@ -1,0 +1,12 @@
+{{ 'liveshopping.css' | asset_url | stylesheet_tag }}
+
+{%comment%}Make Shopify translations available to JavaScript{%endcomment%}
+{%- render 'react-i18n' translation_key: 'livestream' -%}
+{%- render 'react-i18n' translation_key: 'account' -%}
+{%- render 'react-i18n' translation_key: 'onboard' -%}
+
+<div class="container">
+    <div class="page__content">
+        {% render 'react-root' %}
+    </div><!-- /.page__content -->
+</div><!-- /.container -->

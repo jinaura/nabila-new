@@ -1,0 +1,339 @@
+{{- "bootstrap.min.css" | asset_url | stylesheet_tag -}}
+{{- "react-index.css" | asset_url | stylesheet_tag -}}
+{{- "react-shade-finder-only.css" | asset_url | stylesheet_tag -}}
+{%- render 'react-i18n', translation_key: 'shade_finder' -%}
+
+{%- liquid
+    assign params = request.path | split: "/" | last
+    comment
+        If the final param is empty then we need to add a space so that split
+        does not remove it. Adding an extra ~ does not help. We strip later.
+    endcomment
+    assign last = params | last
+    if last == "~"
+        assign params = params | append: " "
+    endif
+    assign params = params | split: "~"
+    comment
+        URL format: concealer variant id ~  serum variant id ~ foundation variant id
+        ... ~ skin concern ~ skin coverage ~ already collected email
+    endcomment
+    assign valid = false
+    if params.size == 6
+        assign valid = true
+        assign productDrop = shop.metaobjects.shade_finder_products['singleton']
+
+        assign concealer = all_products[productDrop.concealer.value.handle]
+        assign concealer_variant_id = params[0] | plus: 0
+        assign concealer_variant = concealer.variants | where: "id", concealer_variant_id | first
+
+        assign serum = all_products[productDrop.serum.value.handle]
+        assign serum_variant_id = params[1] | plus: 0
+        assign serum_variant = serum.variants | where: "id", serum_variant_id | first
+
+        assign foundation = all_products[productDrop.foundation.value.handle]
+        assign foundation_variant_id = params[2] | plus: 0
+        assign foundation_variant = foundation.variants | where: "id", foundation_variant_id | first
+
+        assign concealer_brush = all_products[productDrop.concealer_brush]
+        assign concealer_brush_variant = concealer_brush.variants | first
+        assign serum_brush = all_products[productDrop.serum_brush]
+        assign serum_brush_variant = serum_brush.variants | first
+        assign foundation_brush = all_products[productDrop.foundation_brush]
+        assign foundation_brush_variant = foundation_brush.variants | first
+
+        if concealer == blank or serum == blank or foundation == blank
+            assign valid = false
+        endif
+    elsif request.design_mode
+        comment
+            Is being viewed in the theme editor
+        endcomment
+        assign valid = true
+    endif
+
+    if valid
+        assign skin_concern_suffix = params[3] | url_decode
+        assign skin_coverage_suffix = params[4] | url_decode
+        assign skin_concern_key = "shade_finder.questions.skin_concern.answers." | append: skin_concern_suffix
+        assign skin_coverage_key = "shade_finder.questions.skin_coverage.answers." | append: skin_coverage_suffix
+        assign skin_concern = skin_concern_key | t
+        assign skin_coverage = skin_coverage_key | t
+
+        if skin_coverage_suffix == 'sheer'
+            assign primary_variant = serum_variant
+            assign primary_brush_variant = serum_brush_variant
+        else
+            assign primary_variant = foundation_variant
+            assign primary_brush_variant = foundation_brush_variant
+        endif
+
+        assign secondary_variant = concealer_variant
+        assign secondary_brush_variant = concealer_brush_variant
+
+        assign all_products_available = primary_variant.available and secondary_variant.available
+
+        assign before_after_image = primary_variant.metafields.color.beforeafter[0]
+
+        assign best_results_data = false
+        assign coverage_downcase = skin_coverage | downcase
+        assign concern_downcase = skin_concern | downcase
+        for br_item in shop.metaobjects.shade_finder_best_results.values
+            if br_item.coverage == coverage_downcase and br_item.concern == concern_downcase
+                assign best_results_data = br_item
+            endif
+        endfor
+    endif
+
+    comment
+        set up banner contents
+    endcomment
+    assign banner_text_list = shop.metaobjects.shade_finder_banner['singleton'].banner_item.value
+-%}
+
+<script type="text/javascript">
+    {% comment %} Redirect the user if the URL is bad {% endcomment %}
+    {% unless valid %}
+        document.location.href = document.location.href.replace(
+            /\/shade-finder-results.*/i,
+            "/shade-finder",
+        )
+    {% endunless %}
+
+    let items = []
+
+    {%- for i in (0..1) -%}
+        {% liquid
+            if i == 0
+                assign var = primary_variant
+            else
+                assign var = secondary_variant
+            endif
+
+            assign prod = var.product
+
+            assign img = var.metafields.shade_finder.featured_image | image_url: width:750
+
+            assign color_name = var.metafields.color.name | default: var.title
+            assign color_info = var.metafields.description.value
+
+            assign color_img = "none"
+            if var.metafields.color.texture
+                assign color_img = var.metafields.color.texture[0].src
+            endif
+            assign color_hex = var.metafields.color.hex
+        %}
+
+        {% comment%}
+            'img' is a Protocol-independent url (which works fine within Shopify)
+            but we need a protocol for external uses (like email clients)
+
+            todo: This block seems to duplicate the logic in Results/index.tsx
+            Is there some way we could de-duplicate it?
+            It looks as if we could maybe pass a list of variants as the 'KlaviyoSFData' and convert to JSON within EmailCollection
+        {%endcomment%}
+        items.push({
+            product_id: '{{ prod.id }}',
+            variant_id: '{{ var.id }}',
+            img: '{{ img | prepend: 'https:' }}',
+            color_name: '{{ color_name }}',
+            color_hex: '{{  color_hex }}',
+            color_img: '{{  color_img }}',
+            color_info: '{{ color_info }}',
+        })
+    {% endfor%}
+    window.klaviyoSFData = items
+
+    let videoSources = []
+    {% for source in best_results_data.video.value.sources %}
+        videoSources.push({
+            url: '{{ source.url }}',
+            mime_type: '{{ source.mime_type }}',
+        })
+    {% endfor %}
+    window.shadeFinderResultsVideos = videoSources
+</script>
+
+<div class="container">
+    <div class="page--default">
+        <div class="page__content">
+            <div class="bl-sf-results">
+                <div class="bl-sf-results-block bl-sf-results-block--shade-match bl-sf-desktop-only{% if all_products_available %} bl-sf-results-block--shade-match-all-available{% endif %}">
+                    <div class="bl-sf-results__intro-wrapper">
+                        <div class="bl-sf-results__intro">
+                            <h3 class="bl-sf-results__intro-title">{{- "shade_finder_results.shade_match_title" | t -}}</h3>
+                            <button type="button" class="bl-sf-results__button bl-sf-results__button--email">{{- "shade_finder_results.email" | t -}}</button>
+                            <a href="/pages/shade-finder" class="bl-sf-results__button bl-sf-results__button--retake">{{- "shade_finder_results.retake_quiz" | t -}}</a>
+                        </div>
+                    </div>
+                    {%- render "shade-finder-matches", var: primary_variant -%}
+                    {%- render "shade-finder-matches", var: secondary_variant -%}
+                </div>
+
+                <div class="bl-sf-results-block bl-sf-results-block--shade-match bl-sf-mobile-only{% if all_products_available %} bl-sf-results-block--shade-match-all-available{% endif %}">
+                    <div class="bl-sf-results__intro">
+                        <h1 class="section-title__title">{{- "shade_finder_results.shade_match_title" | t -}}</h1>
+                    </div>
+                    <div class="bl-sf-results__products--mobile">
+                        {%- render "shade-finder-matches", var: primary_variant -%}
+                        {%- render "shade-finder-matches", var: secondary_variant -%}
+                    </div>
+                    <div class="bl-sf-results__outro">
+                        <button type="button" class="bl-sf-results__button bl-sf-results__button--email">{{- "shade_finder_results.email" | t -}}</button>
+                        <a href="/pages/shade-finder" class="bl-sf-results__button bl-sf-results__button--retake">{{- "shade_finder_results.retake_quiz" | t -}}</a>
+                    </div>
+                </div>
+
+                <div class="bl-sf-results-block bl-sf-results-block--banner">
+                    <div class="bl-sf-results__banner-inner bl-sf-desktop-only">
+                        {%- for banner_text in banner_text_list -%}
+                            <div class="bl-sf-results__banner-item"><p>{{ banner_text }}</p></div>
+                        {% endfor %}
+                    </div>
+
+                    <div class='pdp-text-carousel bl-sf-mobile-only'>
+                        {%- for banner_text in banner_text_list -%}
+                            <div class="bl-sf-results__banner-item"><p>{{ banner_text }}</p></div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="bl-sf-results-block bl-sf-results-block--before-after">
+                    <div class="bl-sf-results-block__col bl-sf-results-block__col--before-after">
+                        <div class="section-title section-title--before-after">
+                            <h2 class="section-title__title">{{- "shade_finder_results.before_after.title" | t -}}</h2>
+                        </div>
+                        <p>{{- "shade_finder_results.before_after.coverage_html" | t: coverage: skin_coverage, product: primary_variant.product.title -}}</p>
+                        {% comment %}todo: when logic is signed off, make these bullet points not hard coded{% endcomment %}
+                        <ul class="bl-sf-before-after__features">
+                            {%- if skin_coverage_suffix == 'sheer' -%}
+                                <li>Hydrating formula smooths skin texture</li>
+                                <li>Sheer coverage blurs the complexion with a luminous finish</li>
+                                <li>Refreshes skin with an instant burst of moisture</li>
+                            {%- else -%}
+                                <li>Balances the skin microbiome for a healthier-looking complexion</li>
+                                <li>Delivers hydration while minimizing excess oil </li>
+                                <li>Calms the skin and reduces redness </li>
+                                <li>Minimizes the look of pores </li>
+                                <li>Non-comedogenic: Free of pore-clogging ingredients</li>
+                            {%- endif -%}
+                        </ul>
+                    </div>
+
+                    <div class="bl-sf-results-block__col bl-sf-results-block__col--before-after bl-sf-results-block__col--decor">
+                        <div class="bl-sf-results-block__col--before-after-images">
+                            <div class="bl-sf-image-wrapper">
+                                <div class="bl-sf-image-container bl-sf-image-container__before-after"
+                                    style="background-image: url('{{ before_after_image.original_src }}');"
+                                    title="{{- "shade_finder_results.before_after.before_after_alt" | t -}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if best_results_data %}
+                    <div class="bl-sf-results-block bl-sf-results-block--best-results">
+                        <div class="section-title section-title--best-results bl-sf-mobile-only">
+                            <h2 class="section-title__title">{{- "shade_finder_results.best_results.title" | t -}}</h2>
+                        </div>
+                        <div class="bl-sf-results-block-best-results__intro bl-sf-mobile-only">
+                            <p>{{- "shade_finder_results.best_results.concern_html" | t: concern: skin_concern -}}</p>
+                        </div>
+                        <div class="bl-sf-results-block__col bl-sf-results-block__col--best-results bl-sf-results-block__col--decor" data-step-break={{ best_results_data.step_2_start_time }}>
+                            <div class="bl-sf-results-video">
+                                {% comment %}react injected here{% endcomment %}
+                            </div>
+                        </div>
+                        <div class="bl-sf-results-block__col bl-sf-results-block__col--best-results">
+                            <div class="section-title section-title--best-results bl-sf-desktop-only">
+                                <h2 class="section-title__title">{{- "shade_finder_results.best_results.title" | t -}}</h2>
+                            </div>
+                            <div class="bl-sf-results-block-best-results__intro bl-sf-desktop-only">
+                                <p>{{- "shade_finder_results.best_results.concern_html" | t: concern: skin_concern -}}</p>
+                            </div>
+                            <div class="bl-sf-results-block-best-results__step">
+                                <div class="bl-sf-results-block-best-results__step-title">
+                                    <h3>Step 1</h3>
+                                </div>
+                                <div class="bl-sf-results-block-best-results__step-text">
+                                    {{ best_results_data.step_1_rich_text | metafield_tag }}
+                                </div>
+                                <div class="bl-sf-results-block-best-results__step-product-list">
+                                    {%- render "shade-finder-best-results-product", main_variant: primary_variant, brush_variant: primary_brush_variant -%}
+                                </div>
+                            </div>
+
+                            <div class="bl-sf-results-block-best-results__step bl-sf-results-block-best-results__step--inactive">
+                                <div class="bl-sf-results-block-best-results__step-title">
+                                    <h3>Step 2</h3>
+                                </div>
+                                <div class="bl-sf-results-block-best-results__step-text">
+                                    {{ best_results_data.step_2_rich_text | metafield_tag }}
+                                </div>
+                                <div class="bl-sf-results-block-best-results__step-product-list">
+                                    {%- render "shade-finder-best-results-product", main_variant: secondary_variant, brush_variant: secondary_brush_variant -%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="bl-sf-results-block bl-sf-results-block--ingredients">
+                    <div class="section-title section-title--ingredients">
+                        <h2 class="section-title__title">{{- "shade_finder_results.ingredients.title" | t -}}</h2>
+                    </div>
+                    <p class="bl-sf-ingredients__subtitle">{{- "shade_finder_results.ingredients.subtitle" | t -}}</p>
+                    <div class="bl-sf-ingredient-list">
+                        {%- if skin_coverage_suffix == 'sheer' -%}
+                            {%- render "shade-finder-ingredient", handle: 'squalane', found_in_variant: primary_variant, also_found_in_variant: secondary_variant -%}
+                            {%- render "shade-finder-ingredient", handle: 'peptides', found_in_variant: primary_variant -%}
+                            {%- render "shade-finder-ingredient", handle: 'hyaluronic-acid', found_in_variant: primary_variant, also_found_in_variant: secondary_variant -%}
+                            {%- render "shade-finder-ingredient", handle: 'vitamin-e', found_in_variant: secondary_variant -%}
+                        {%- else -%}
+                            {%- render "shade-finder-ingredient", handle: 'squalane', found_in_variant: primary_variant, also_found_in_variant: secondary_variant -%}
+                            {%- render "shade-finder-ingredient", handle: 'reishi-mushroom', found_in_variant: primary_variant -%}
+                            {%- render "shade-finder-ingredient", handle: 'hyaluronic-acid', found_in_variant: secondary_variant, also_found_in_variant: primary_variant -%}
+                            {%- render "shade-finder-ingredient", handle: 'vitamin-e', found_in_variant: secondary_variant -%}
+                        {%- endif -%}
+                    </div>
+                </div>
+
+                {% section 'shade-finder-results-chat' %}
+
+            </div>
+            <div class="addToCart_error"></div>
+        </div>
+        <!-- /.page__content -->
+    </div>
+</div>
+<!-- /.container -->
+
+{% comment %}
+Render the popup to be shown from shade-finder-add-to-cart when user asks to be notified
+This is used by shade-finder-matches, but do it here to avoid repeating it multiple times
+{%endcomment%}
+{%- render 'pdp-back-in-stock', active_variant: var -%}
+
+<script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+<script>
+    MicroModal.init();
+    if ($('.notify_when_available').length) {
+        $('.notify_when_available a').click(function(e) {
+            e.preventDefault();
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        //animate mobile text carousel
+        if ($('.pdp-text-carousel div').length > 1) {
+            $('.pdp-text-carousel').slick({
+                infinite: false,
+                dots: true,
+                arrows: false,
+                autoplay: true,
+                autoplaySpeed: 5000,
+            });
+        }
+    });
+</script>

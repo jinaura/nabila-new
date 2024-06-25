@@ -1,0 +1,213 @@
+<!-- Custom content for Rose Inc UK -->
+{% unless localization.country.iso_code == 'GB' and section.settings.locale == 'us' and request.design_mode == false %}
+  {% unless localization.country.iso_code != 'GB' and section.settings.locale == 'uk' and request.design_mode == false %}
+
+    {% assign css_class = section.settings.title | replace: ' ', '_' | downcase %}
+
+    {{ 'slick.js'  | asset_url | script_tag }}
+
+    <section class="{{css_class}} shop-collection-section">
+      <div class="container section__item section_spacing">
+        <h2 class="heading-with-link">
+          {{ section.settings.title }}
+          <a href="{{ collections[section.settings.home_featured_products].url }}" class="hidden-xs">
+            {{ section.settings.link_text }}
+          </a>
+        </h2>
+        <hr class="section__divider" />
+      
+        {% if section.settings.description != blank %}
+          <div class="sub-heading_description">{{ section.settings.description }}</div>
+          <hr class="divider--start">
+        {% endif %}
+      
+        <div class="swap-x" role="region" aria-label="carousel">
+          <div 
+            class="multiple-items collection__items"
+            data-slick='{
+              "slidesToShow": 3,
+              "slidesToScroll": 3,
+              "dots": {{ section.settings.dots }},
+              "infinite": false,
+              "speed": 500,
+              "arrows": {{ section.settings.arrows }},
+              "autoplay": false,
+              "adaptiveHeight": false,
+              "centerMode": false,
+              "nextSlidesToPreload": 5,
+              "lazyLoad": "ondemand",
+              "centerPadding": "1px",
+              "responsive": [
+                {
+                  "breakpoint": 768,
+                  "settings": "unslick"
+                },
+                {
+                  "breakpoint": 1024,
+                  "settings": {
+                    "slidesToShow": 2,
+                    "slidesToScroll": 2
+                  }
+                }
+              ]
+            }'
+          >
+            {% for _product in collections[section.settings.home_featured_products].products %}
+              {% if _product.type == 'Sets Product' %}
+                {%- include 'product-item-sets' with _product -%}
+              {% else %}
+                {%- include 'product-item' with _product -%}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <style>
+      .collection__items {
+        display: block;
+        width: auto;
+      }
+      .multiple-items.collection__items .product__item {
+        flex-basis: unset;
+        max-width: unset;
+        margin: 0;
+      }
+      .multiple-items.collection__items .product__item-image img:not(.badge-img) {
+        height: 500px;
+      }
+      .multiple-items.collection__items .product__item hr.divider--start {
+        display: none;
+      }
+      .sub-heading_description{
+        margin-bottom: 1.7rem;
+      }
+      @media (max-width: 767px) {
+        .{{css_class}} {
+          padding-top: 30px;
+        }
+        .multiple-items.collection__items .product__item-image img {
+          height: 100%
+        }
+        .multiple-items.collection__items .shutter {
+          bottom: 0;
+          margin: 0;
+          width: 102vw;
+        }
+        .collection__items .product__item.set .shutter {
+          margin-left: 0px!important;
+        }
+      }
+    </style>
+
+    <script>
+      var slider = $('.shop-collection-section .multiple-items').slick();
+
+      var hold = false;
+      $(".rangeSlider").hover(function() {
+        //slider.slick("slickSetOption", "accessibility", hold);
+        slider.slick("slickSetOption", "draggable", hold);
+        slider.slick("slickSetOption", "swipe", hold);
+        slider.slick("slickSetOption", "touchMove", hold);
+
+        hold = !hold;
+      });
+
+      $('.template-index .shop_the_collection .product__item-image img').each(function(){
+        let getSrc = $(this).data('src');
+        $(this).attr('src', getSrc);
+      });
+    </script>
+
+  {% endunless %}
+{% endunless %}
+
+{% schema %}
+  {
+    "name": "Shop collection",
+    "class": "shop-products-section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Shop the collection"
+      },
+      {
+        "type": "radio",
+        "id": "locale",
+        "label": "Localization Visibility",
+        "options": [
+          {
+            "value": "us",
+            "label": "Only US"
+          },
+          {
+            "value": "uk",
+            "label": "Only UK"
+          },
+          {
+            "value": "us_uk",
+            "label": "US & UK"
+          }
+        ],
+        "default": "us"
+      },
+      {
+        "type": "richtext",
+        "id": "description",
+        "label": "Description"
+      },
+      {
+        "type": "text",
+        "id": "link_text",
+        "label": "Link Text",
+        "default": "Shop all"
+      },
+      {
+        "type": "collection",
+        "id": "home_featured_products",
+        "label": "Collection"
+      },
+      {
+        "type": "text",
+        "id": "product_link_label",
+        "label": "Product Link Label",
+        "default": "Buy Now"
+      },
+      {
+        "type": "header",
+        "content": "Grid"
+      },
+      {
+        "type": "header",
+        "content": "Slider options"
+      },
+      {
+        "type": "checkbox",
+        "id": "hide-variant",
+        "label": "Hide Variant Selector",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "dots",
+        "label": "Show dots",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "arrows",
+        "label": "Show arrows",
+        "default": true
+      }
+    ],
+    "presets": [
+      {
+        "name": "Shop collection",
+        "category": "Collection"
+      }
+    ]
+  }
+{% endschema %}

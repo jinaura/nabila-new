@@ -1,0 +1,31 @@
+{% comment %}
+  mobile: whether to display exclusively for mobile devices rather than exclusively for desktop
+  collection: the collection of products to display images of
+{% endcomment %}
+<div class="collection-images{% if mobile %} mobile{% endif %}">
+  {%- unless mobile -%}
+    <div class="up arrow{% if collection.products_count <= 5 %} gone{% endif %}"><img /></div>
+  {%- endunless -%}
+  <div class="scroll-area">
+    {% for collection_product in collection.products %}
+      <!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+      {% unless collection_product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+      {% unless collection_product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+        {%- if collection_product.metafields.product.default_variant -%}
+          {%- assign variant_id = collection_product.metafields.product.default_variant | split: ':' | last | plus: 0 -%}
+          {%- assign collection_product = collection_product.variants | where: "id", variant_id | first -%}
+        {%- else -%}
+          {%- assign collection_product = collection_product.selected_or_first_available_variant -%}
+        {%- endif -%}
+        {% assign product_image = collection_product.image | default: collection_product.featured_image %}
+        <img src="{{ product_image | img_url: '100x' }}" alt="{{ product_image.alt | escape }}" fetchpriority="low" loading="lazy"
+             {%- if product.handle == collection_product.handle -%}class="active"{%- endif -%}
+             draggable="false" data-handle="{{collection_product.handle}}" data-variant-id="{{collection_product.variants[0].id}}">
+      {% endunless %}
+      {% endunless %}
+    {% endfor %}
+  </div> <!-- /.scroll-area -->
+  {%- unless mobile -%}
+    <div class="down arrow {% if collection.products_count <= 5 %}gone{% else %}clickable{% endif %}"><img /></div>
+  {%- endunless -%}
+</div> <!-- /.collection-images -->

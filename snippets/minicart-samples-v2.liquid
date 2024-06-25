@@ -1,0 +1,120 @@
+<div id="minicart-samples" class="multiple-items miniSample"
+     data-slick='{
+           "slidesToShow": 1,
+           "slidesToScroll": 1,
+           "dots": {{ settings.dots }},
+           "infinite": false,
+           "arrows": {{ settings.arrows }},
+           "autoplay": false,
+           "adaptiveHeight": false,
+           "centerMode": false,
+  		   "centerPadding": "1px",
+            "speed": 500,
+            "responsive": [
+            {
+                "breakpoint": 768,
+                "settings": "unslick"
+            }
+        ]
+
+      }'>
+    {% assign minicart_samples_coll = settings.minicart_samples_us %}
+    {% assign minicart_samples_limit = settings.samples_per_order_us %}
+    {% if localization.country.iso_code == 'GB' %}
+        {% assign minicart_samples_coll = settings.minicart_samples_uk %}
+        {% assign minicart_samples_limit = settings.samples_per_order_uk %}
+    {% endif %}
+    {% for product in collections[minicart_samples_coll].products %}
+
+        <!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+        {% unless product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+        {% unless product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+
+
+        {%- assign min = 1 -%}
+        {%- assign max = 100 -%}
+        {%- assign diff = max | minus: min -%}
+        {%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+        {%- assign show_sample = false -%}
+
+        {% for variant in product.variants %}
+          {% if variant.inventory_quantity > 0 %}
+            {%- assign show_sample = true -%}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        {% unless show_sample == false %}
+          <div class="product_card">
+              <div class="flexObject">
+                  <div class="image_wrapper">
+                      {%- include 'feature-tag' prod: product -%}
+                      <a href="#_" class="block-redirect">
+                      
+                        <div class="gwpProductImgSample">
+                            {{product.featured_image | image_url: width: 368, height: 456 | image_tag: class: 'feat_image', alt: product.featured_image.alt, fetchpriority: 'low', loading: 'lazy', style: 'object-fit: cover; height: 100%;' }}
+                        </div>
+                      
+                      </a>
+                  </div>
+                  <div class="productNameAndLink"> 
+                      <a href="#_" class="block-redirect outer_content block-link-no-deco">
+                          <h3>{{- product.title  -}}</h3>
+                          <p>{{- product.description | truncatewords: 10, "..." -}}</p>
+                      </a>
+
+                      <div class="inner_content">
+
+                        <span class="rating_stars"></span>
+                          {% assign sample-variant-oos = false %}
+                          {% for variant in product.variants %}
+                              {% if variant.inventory_quantity == 0 %}
+                                  {% if forloop.index == 1  %} {% assign sample-variant-oos = true %}{% endif %}
+                                  <button  style="display:none;"  class="oos miniSample-{{ product.id }}-{{ random_number }} miniSample-{{ variant.id }}-{{ product.id }}-{{ random_number }}">Out Of Stock</button>
+                              {% elsif cart.total_price <= 0 %} <!-- no paid product is added in cart -->
+                                  <button {% if sample-variant-oos == true  %} {% assign sample-variant-oos = false %} {% elsif forloop.index > 1 %} style="display:none;" {% endif %} {% if sample-variant-oos == true  %} {% assign sample-variant-oos = false %} {% elsif forloop.index > 1 %} style="display:none;" {% endif %} id=""
+                                    class="buy_btn_direct_sample impulse-mini mini-cart-sample-id miniSample-{{ product.id }}-{{ random_number }} miniSample-{{ variant.id }}-{{ product.id }}-{{ random_number }}" 
+                                    data-id="{{ variant.id }}" 
+                                    data-purchase-id="{{ variant.id }}" 
+                                    data-remove-id="{{ variant.id }}"
+                                  >
+                                    Add Sample
+                                  </button>
+                              {% else %}
+
+                                  {% assign sizeOfSamplesArray =  productIdsCommaSep | split: ',' %}
+                                  {% assign sizeOfSamplesArray = sizeOfSamplesArray | size | minus: 1 %}
+                                  {% assign samplesPerOrder = minicart_samples_limit | minus: 0 %}
+
+                                  {% if samplesPerOrder  == sizeOfSamplesArray %}
+                                      <button {% if sample-variant-oos == true  %} {% assign sample-variant-oos = false %} {% elsif forloop.index > 1 %} style="display:none;" {% endif %} {% if sample-variant-oos == true  %} {% assign sample-variant-oos = false %} {% elsif forloop.index > 1 %} style="display:none;" {% endif %} id=""
+                                        class="buy_btn_direct_sample impulse-mini mini-cart-sample-id miniSample-{{ product.id }}-{{ random_number }} miniSample-{{ variant.id }}-{{ product.id }}-{{ random_number }}" 
+                                        data-id="{{ variant.id }}" 
+                                        data-purchase-id="{{ variant.id }}" 
+                                        data-remove-id="{{ variant.id }}"
+                                      >
+                                        Add Sample
+                                      </button>
+                                  {% else %}
+                                      <button {% if sample-variant-oos == true  %} {% assign sample-variant-oos = false %} {% elsif forloop.index > 1 %} style="display:none;" {% endif %} id=""
+                                        class="buy_btn_direct_sample impulse-mini add-to-cart-sample-button mini-cart-sample-id miniSample-{{ product.id }}-{{ random_number }} miniSample-{{ variant.id }}-{{ product.id }}-{{ random_number }}" 
+                                        data-id="{{ variant.id }}" 
+                                        data-purchase-id="{{ variant.id }}" 
+                                        data-remove-id="{{ variant.id }}"
+                                      >
+                                        Add Sample
+                                      </button>
+                                  {% endif %}
+
+                              {% endif %}
+                          {% endfor %}
+                      </div>
+                  </div>
+              </div>
+              {% include 'sample-minicart-variant-selector' %}
+
+          </div>
+        {% endunless %}
+        {% endunless %}        
+        {% endunless %}
+    {% endfor %}
+</div>

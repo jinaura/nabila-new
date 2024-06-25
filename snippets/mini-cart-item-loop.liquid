@@ -1,0 +1,183 @@
+{% assign optionsTitleWithIndex = item.id | append : forloop.index %}
+{% assign optionsTitleWithIndex = optionsTitleWithIndex | prepend : 'minicart-product-id-' %}
+{% assign optionsTitle = item.title %}
+
+{% if item.title contains giftbox_product_title %}
+    {% assign giftBox = true %}
+{% endif %}
+
+{%- assign product_compare_at_price = 0 | plus: 0 -%}
+{% if localization.country.iso_code == 'GB' and item.product.metafields.set.compare_at_price_uk %}
+    {%- assign product_compare_at_price = item.product.metafields.set.compare_at_price_uk | times: 100 -%}
+{% elsif localization.country.iso_code != 'GB' %}
+    {%- assign product_compare_at_price = item.product.compare_at_price -%}
+{% endif %}
+
+<div class="mini-cart__item product_{{ item.variant_id }} {% if item.final_line_price <= 0 %} miniCart-Free-GWP {% endif %}" 
+    data-title="{{ optionsTitle }}" {% if item.final_price == 0 %}
+    id="giftCard"{% endif %} 
+    data-product-type="{{ item.product.type }}" 
+    data-id="{{ item.variant_id }}"
+>
+
+    {% if localization.country.iso_code == 'GB' %}
+        {% assign gwp_id = settings.codeless_product_uk %}
+    {% else %}
+        {% assign gwp_id = settings.codeless_product_us %}
+    {% endif %}
+
+    <a href="#" title="{{ 'cart.general.remove' | t }}" class="mini-cart__remove mini-cart__remove__{{ item.variant_id }}" data-remove-id="{{ item.variant_id }}" data-remove-key="{{item.key}}" aria-label="remove from cart">{% include 'svg-icons' with 'close' %}</a>
+
+    {%- assign checkDisocuntSize = item.discounts | size  -%}
+    <div  class="mincart-product-thumb {% if item.product.title == 'Gift Product' %} giftthumb {% endif %} ">
+        {% if item.title == giftbox_product_title or item.final_price == 0 %}
+            <img src="{{ item | img_url: '85x', scale: 2 }}" alt="{{ item.title | escape }}" fetchpriority="low" loading="lazy" />
+        {% else %}
+            <a href="{{ item.product.url }}" class="block-link-no-deco urls-of-products-in-cart ids-of-products-in-cart" data-product-id="{{item.product_id}}" >
+                <img src="{{ item | img_url: '85x', scale: 2 }}" alt="{{ item.title | escape }}" fetchpriority="low" loading="lazy" />
+            </a>
+        {% endif %}
+    </div>
+    {% assign cart_product_item = item.title | split: " - "  %}
+    <div class="mini-cart__info">
+        <div class="mini-cart_content">
+            {% if item.title == giftbox_product_title or item.final_price == 0 %}
+                <span class="block-link-no-deco" >   <h4>{{-item.product.title-}}</h4> </span>
+            {% else %}
+                <a href="{{ item.product.url }}" class="block-link-no-deco urls-of-products-in-cart ids-of-products-in-cart" data-product-id="{{item.product_id}}" >
+                    <h4>{{- item.product.title -}}</h4>
+                </a>
+            {% endif %}
+
+            {% if item.variant.title != 'Default Title' %}
+                <p>{{ item.variant.title }}</p>
+            {% endif %}
+
+            {% if item.selling_plan_allocation != blank and localization.country.iso_code != 'GB' %}
+                <span class="rc-selling-plan">{{ item.selling_plan_allocation.selling_plan.name }}</span>
+            {% endif %}
+
+            {% if item.title == giftbox_product_title %}
+                <span class="fs">Final Sale</span>
+            {% endif %}
+
+            <span class="price price_{{ item.variant_id }}">
+                {% if item.product.type == 'Sample Product' %}
+                    <span class="free-gifts__free">Free</span>
+                {% elsif item.final_line_price == 0 %}
+                    {% if localization.country.iso_code == 'GB' and settings.custom_gwp_message_enable_uk %}
+                        <h4 class="gwp_custom_message">{{ settings.custom_gwp_message_uk }}</h4>
+                    {% elsif localization.country.iso_code != 'GB' and settings.custom_gwp_message_enable_us %}
+                        <h4 class="gwp_custom_message">{{ settings.custom_gwp_message_us }}</h4>
+                    {% endif %}
+                    <span class="free-gifts__free">Free</span>
+                {% else %}
+                    {% assign checkDisocunt = item.discounts | size %}
+                    {% if product_compare_at_price > item.product.price and checkDisocunt == 0 %}
+                        <script>
+                            Shopify[{{item.variant_id}}] = {{ product_compare_at_price | times: item.quantity  | money_without_currency | times: 100 }};
+                        </script>
+                        <span class="sr-only">Original price: </span>
+                        <span class="sale sale_{{item.variant_id}}">{{ cart.currency.symbol }}{{ product_compare_at_price | times: item.quantity  | money_without_currency }}</span>
+                    {% elsif checkDisocunt > 0 %}    
+                        <span class="sr-only">Current price: </span>
+                        <span class="sale sale_{{item.variant_id}}">{{ cart.currency.symbol }}{{ item.product.price | times: item.quantity  | money_without_currency }}</span>
+                    {% endif %}
+                    <span class="sr-only">Current price: </span>
+                    {{ cart.currency.symbol }}{{- item.final_line_price | money_without_currency -}}
+                    {% if item.selling_plan_allocation != blank and localization.country.iso_code != 'GB' %}
+                        &nbsp;({{ item.selling_plan_allocation.selling_plan.price_adjustments[0].value }}% OFF)
+                    {% endif %}
+                {% endif %}
+              </span>
+
+        </div>
+
+        <!--  check if product is bundled product -->
+        {% assign isBundle = false  %}
+        {% for prop in item.properties.bundle_product %}
+            {% assign prop =  prop | array  %}
+            {% if prop | size > 1 %}
+                {% assign isBundle = true  %}
+                {% break %}
+            {% endif %}
+        {% endfor %}
+
+        <!-- <span>{{-cart_product_item[1]-}}</span> -->
+        <div class="mini-cart__qty-wrapper" {% if item.selling_plan_allocation != blank %} style="visibility: hidden;"{% endif %}>
+            {% assign giftbox_qty = false %}
+            {% if item.quantity > 4 and item.title == giftbox_product_title %}
+                <span class="error_msg">max qty limit is 5</span>
+                {% assign giftbox_qty = true %}
+            {% endif %}
+
+            <!-- gift card, bundle, gwp, sample, or discovery set -->
+            <!-- discovery set id -->
+            {%  assign discoverySetVarId = 41853198172348 | plus: 0 %}
+            {%- unless gwp_id == item.id or isBundle or item.product.price == 0 or item.id == discoverySetVarId or item.product.type == 'Gift Box' -%}
+
+                <div class="mini-cart__qty"  data-qty="{{item.variant.inventory_quantity}}">
+                    <button type="button" class="less" aria-label="Quantity minus">-</button>      
+                    <input readonly id="quantity" name="updates[{{ item.key }}]"  class="quantity quantity_{{ item.variant_id }} productQuantity"
+                           value="{{ item.quantity }}" data-loop={{ forloop.index }}
+                           {% if product_compare_at_price > item.original_price and checkDisocunt == 0 %}
+                            data-sale-price="{{ product_compare_at_price | money_without_currency }}"
+                           {% elsif checkDisocunt > 0 %} data-checkdiscount='{{item.original_price}} - {{item.final_price}}'
+                           data-sale-price="{{item.original_price | money_without_currency }}"
+                            {%endif%} data-price="{{ item.final_price | times: item.quantity | money_without_currency }}"
+                           aria-label="quantity" data-id="{{ item.variant_id }}" data-key="{{item.key}}" />
+                    <button type="button" class="more {% if item.quantity > 5 %}disabled{% endif %}" {% if item.product.tags contains 'cart_max_1' or giftbox_qty %}disabled{% endif %} aria-label="Quantity plus">+</button>
+                </div>
+            {%- else -%}
+                <!-- sample or discovery set -->
+                {% if item.product.type == 'Sample Product' or item.id == discoverySetVarId %}
+                    <div  class="mini-cart__qty">
+                        <input readonly id="quantity" name="updates[{{ item.key }}]" class="quantity quantity_{{ item.variant_id }} productQuantity" id="updates_{{ item.id }}" value="1" data-loop={{ forloop.index }} {% if product_compare_at_price > item.original_price and checkDisocunt == 0 %}data-sale-price="{{ product_compare_at_price | money_without_currency }}"{% elsif checkDisocunt > 0 %}data-checkdiscount='' data-sale-price="{{item.original_price | money_without_currency }}"{%endif%} data-price="{{ item.final_price | money_without_currency }}" aria-label="quantity" data-id="{{ item.variant_id }}" data-key="{{item.key}}" />
+                    </div>
+                {% else %}
+                    <input readonly type="hidden" id="quantity" name="updates[{{ item.key }}]" class="quantity quantity_{{ item.variant_id }} productQuantity" id="updates_{{ item.id }}" value="1" data-loop={{ forloop.index }} {% if product_compare_at_price > item.original_price and checkDisocunt == 0 %}data-sale-price="{{ product_compare_at_price | money_without_currency }}"{% elsif checkDisocunt > 0 %}data-checkdiscount='' data-sale-price="{{item.original_price | money_without_currency }}"{%endif%} data-price="{{ item.final_price | money_without_currency }}" aria-label="quantity" data-id="{{ item.variant_id }}" data-key="{{item.key}}" />
+                {% endif %}
+            {%- endunless -%}
+        </div>
+    </div>
+
+
+    {% if isBundle %}
+    <div id='bundle-{{ item.id }}' class="bundle-{{ item.id }}" style='width:100%;'></div>
+    
+        {% assign optionsTitleWithIndex = item.title | append : forloop.index %}
+        <div class="bundleItemList" id="{{ optionsTitleWithIndex | replace:' ':'-' }}">
+            {% assign productBundleCart = item.properties.bundle_product %}
+            <input type="hidden" id="productBundleCart_{{item.id}}" value="{{productBundleCart}}">
+
+            <script>
+                var bundle_list = [];
+                var itemId = {{item.id}};
+                var productBundleCart = document.querySelector(`#productBundleCart_${itemId}`).value;
+                var productBundleCartReplace = productBundleCart.replace(/\s+/g, ' ').trim();
+                var productBundleCartJSON = JSON.parse(productBundleCartReplace);
+
+                bundle_list.push(
+                `<div class="bundleItemList" id='bundleItemList-{{ item.id }}' class='bundleItemList-{{ item.id }}'>
+                ${productBundleCartJSON.map(({calculated_bundle_price, name, product_image, product_option, product_title, quantity, variant}) => 
+                `<div class="bundle-cart__item" data-title="${product_title}">
+                        <div class="bundleItemImage">
+                            <img src="${product_image}" alt="${product_title}" fetchpriority="low" loading="lazy">
+                        </div>
+                            <h4>${product_title}</h4>
+                            ${product_option.includes("Default Title")? `` : `<p class="bundle-variant-info">${product_option}</p>`}
+                    </div>
+                `.trim()).join('')}
+                    <p class='miniCart-custom-message'>{{ item.properties.custom_message }}</p>
+                </div>`);
+                var bundleNode = document.getElementsByClassName("bundle-{{ item.id }}");
+                for (i=0; i < bundleNode.length; i++) {
+                    if (bundleNode[i].innerHTML == '') {
+                        bundleNode[i].insertAdjacentHTML('afterbegin', bundle_list.join(''));
+                    }
+                }
+            </script>
+        </div>
+    {% endif %}
+
+</div>

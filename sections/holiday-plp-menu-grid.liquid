@@ -1,0 +1,266 @@
+<div class="holiday-plp-menu-grid animate">
+  <h3>{{collection.metafields.collection.bottom_block_title}}</h3>
+  <div class="menu-grid">
+    {% assign t = 0 %}
+    {%- for category in collection.metafields.collection.category_tag -%}
+      {% assign i = forloop.index0 %}
+
+      {% if localization.country.iso_code == 'GB' %}
+        {% for link in linklists.holiday-plp-uk.links %}
+          {% assign menuLink = link.url | remove: '/' %}
+  
+          {% if menuLink == collection.metafields.collection.category_tag[i] %}
+            <div class="menu-option cat_block">
+              <a href="/collections/{{collection.handle}}/{{ collection.metafields.collection.category_tag[i] | handle }}" class="holiday-menu_link" data-tag="{{ collection.metafields.collection.category_tag[i] | handle }}">
+                <span class="menu__item-media cat_media">
+                  {% for cat_media in collection.metafields.collection.category_image[i] %}
+                    {% if cat_media.media_type == 'image' %}
+                      <img src="{{ cat_media.src }}" alt="{{ cat_media.alt }}" class="cat-media" fetchpriority="low" loading="lazy" />
+                    {% elsif cat_media.media_type == 'video' %}
+                      <video
+                        id="menu-cat-media-video"
+                        class="cat-video animate"
+                        autoplay
+                        loop
+                        muted
+                        playsinline="true" webkit-playsinline="true"
+                        preload="auto"
+                        width="100%"
+                        height="100%"
+                        title="{{ cat_media.alt }}">
+                        <source src="{{ cat_media.src }}" type='video/mp4'/>
+                      </video>
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <span class="menu__item-text-block cat_text">
+                  {% if collection.metafields.collection.category_title[i] %}
+                    <h4>{% if collection.metafields.collection.category_title[i] contains '$' %}{{ collection.metafields.collection.category_title[i] | replace: '$', '£' }}{% else %}{{ collection.metafields.collection.category_title[i] }}{% endif %}</h4>
+                  {% endif %}
+                  {% if collection.metafields.collection.category_description[i] %}
+                    <p>{{ collection.metafields.collection.category_description[i] }}</p>
+                  {% endif %}
+                  <span class="holiday-menu_link cat_text_link" data-tag="{{ collection.metafields.collection.category_tag[i] | handle }}"><span>Shop Now</span></span>
+                </span>
+              </a>
+            </div>
+            {% assign t = t | plus: 1 %}
+            {% break %}
+          {% endif %}
+  
+        {% endfor %}
+      {% elsif localization.country.iso_code != 'GB' %}
+        {% for link in linklists.holiday-plp.links %}
+          {% assign menuLink = link.url | remove: '/' %}
+
+          {% if menuLink == collection.metafields.collection.category_tag[i] %}
+            <div class="menu-option cat_block">
+              <a href="/collections/{{collection.handle}}/{{ collection.metafields.collection.category_tag[i] | handle }}" class="holiday-menu_link" data-tag="{{ collection.metafields.collection.category_tag[i] | handle }}">
+                <span class="menu__item-media cat_media">
+                  {% for cat_media in collection.metafields.collection.category_image[i] %}
+                    {% if cat_media.media_type == 'image' %}
+                      <img src="{{ cat_media.src }}" alt="{{ cat_media.alt }}" class="cat-media" fetchpriority="low" loading="lazy" />
+                    {% elsif cat_media.media_type == 'video' %}
+                      <video
+                        id="menu-cat-media-video"
+                        class="cat-video animate"
+                        autoplay
+                        loop
+                        muted
+                        playsinline="true" webkit-playsinline="true"
+                        preload="auto"
+                        width="100%"
+                        height="100%"
+                        title="{{ cat_media.alt }}">
+                        <source src="{{ cat_media.src }}" type='video/mp4'/>
+                      </video>
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <span class="menu__item-text-block cat_text">
+                  {% if collection.metafields.collection.category_title[i] %}
+                    <h4>{{ collection.metafields.collection.category_title[i] }}</h4>
+                  {% endif %}
+                  {% if collection.metafields.collection.category_description[i] %}
+                    <p>{{ collection.metafields.collection.category_description[i] }}</p>
+                  {% endif %}
+                  <span class="holiday-menu_link cat_text_link" data-tag="{{ collection.metafields.collection.category_tag[i] | handle }}"><span>Shop Now</span></span>
+                </span>
+              </a>
+            </div>
+            {% assign t = t | plus: 1 %}
+            {% break %}
+          {% endif %}
+
+        {% endfor %}
+      
+      {% endif %}
+
+    {%- endfor -%}
+
+    {% if t == 1 or t == 2 or t == 5 or t == 6 %}
+      {% if t == 5 and collection.metafields.collection.bottom_block_mood_image[0] %}
+        <div class="menu-option cat_block hidde_on_desktop">
+          <img src="{{ collection.metafields.collection.bottom_block_mood_image[0].src }}" alt="{{ collection.metafields.collection.bottom_block_mood_image[0].alt }}" class="cat-media" fetchpriority="low" loading="lazy" />
+        </div>
+      {% else %}
+        {% for n in (1..3) -%}
+          <div class="menu-option cat_block hidde_on_mobile"></div>
+          {% assign t = t | plus: 1  %}
+          {% assign mod = t | modulo: 4 %}
+          {% if mod == 0 %}{% break %}{% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endif %}
+
+  </div>
+</div>
+
+<style>
+  .holiday-plp-menu-grid h3 {
+    font-size: 18px;
+    line-height: 20px;
+    letter-spacing: 1.29px;
+    color: #545353;
+    padding: 40px;
+    width: 100%;
+    background-color: #fafafa;
+    text-align: center;
+    margin: auto;
+  }
+
+  .holiday-plp-menu-grid .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin: auto;
+    border: 1px solid #979797;
+    border-right: unset;
+    border-left: unset;
+  }
+
+  .holiday-plp .cat_block {
+    position: relative;
+  }
+
+  .holiday-plp-menu-grid .menu__item-media.cat_media img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .holiday-plp .cat_text {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    max-width: 200px;
+  }
+
+  .holiday-plp .cat_text h4,
+  .holiday-plp .cat_text p,
+  .holiday-plp .cat_text .cat_text_link {
+    color: #fff;
+  }
+
+  .holiday-plp .cat_text h4 {
+    font-size: 18px;
+    letter-spacing: 1.29px;
+  }
+
+  .holiday-plp .cat_text_link {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 1px;
+    font-family: var(--font-medium);
+    text-decoration: none;
+  }
+
+  @media (max-width: 950px) {
+    .holiday-plp-menu-grid h3 {
+      font-size: 14px;
+      letter-spacing: 1px;
+      padding: 16px;
+    }
+
+    .holiday-plp-menu-grid .menu-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .holiday-plp-menu-grid .menu-grid >div:nth-child(odd) {
+      border-right: 1px solid #979797;
+    }
+
+    .holiday-plp-menu-grid .menu-grid >div:not(:nth-last-child(-n+2)) {
+      border-bottom: 1px solid #979797;
+    }
+
+    .holiday-plp-menu-grid .menu-grid .menu-option.cat_block.hidde_on_mobile {
+      display: none;
+    }
+
+    .holiday-plp-menu-grid .menu-grid .cat_text {
+      bottom: 20px;
+      left: 20px;
+      padding-right: 20px;
+    }
+
+    .holiday-plp .cat_text h4 {
+      font-size: 14px;
+      letter-spacing: 0.86px;
+    }
+
+    .holiday-plp .cat_text p,
+    .holiday-plp .cat_text .cat_text_link {
+      font-size: 12px;
+      letter-spacing: 0.86px;
+    }
+  }
+
+  @media (min-width: 951px) {
+
+    {% if t == 5 %}
+      .holiday-plp-menu-grid .menu-grid {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      }
+      .holiday-plp-menu-grid .menu-grid >div {
+        border-bottom: unset !important;
+      }
+      .holiday-plp-menu-grid .menu-grid >div:nth-child(4) {
+        border-right: 1px solid #979797 !important;
+      }
+    {% endif %}
+    .holiday-plp-menu-grid .menu-grid >div {
+      border-right: 1px solid #979797;
+    }
+
+    .holiday-plp-menu-grid .menu-grid >div:nth-child(4),
+    .holiday-plp-menu-grid .menu-grid >div:nth-child(8) {
+      border-right: unset;
+    }
+
+    .holiday-plp-menu-grid .menu-grid >div:nth-child(-n+4) {
+      border-bottom: 1px solid #979797;
+    }
+
+    .holiday-plp-menu-grid .menu-grid .menu-option.cat_block.hidde_on_mobile {
+      border-right: 1px solid #979797;
+    }
+
+    .holiday-plp-menu-grid .menu-grid .menu-option.cat_block.hidde_on_mobile:last-child {
+      border-right: none;
+    }
+
+    .holiday-plp-menu-grid .menu-grid .menu-option.cat_block.hidde_on_desktop {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1919px) {
+    .holiday-plp-menu-grid .menu-option.cat_block {
+      box-sizing: content-box;
+    }
+
+    .holiday-plp-menu-grid .menu__item-media.cat_media img {
+      width: 100%;
+    }
+  }
+</style>

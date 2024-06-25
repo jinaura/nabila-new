@@ -1,0 +1,121 @@
+{% assign s = section.settings %}
+<section class="textImageModule {{ s.placement }}" id="section-{{section.id}}">
+  <div class="image">
+    {% if s.image != blank %}
+      {% if s.link == blank %}
+        {{s.image | image_url: width: 1800 | image_tag: width: 660, height: 800, class: 'animate', alt: s.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+      {% else %}
+        <a href="{{ s.link }}" target="_blank">
+          {{s.image | image_url: width: 1800 | image_tag: width: 660, height: 800, class: 'animate', alt: s.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+        </a>
+      {% endif %}
+    {% else %}
+    	<div>{{ 'image' | placeholder_svg_tag: 'placeholder' }}</div>
+    {% endif %}
+    
+    {% if s.author != ''  %}
+    	<span>By {{ s.author }}</span>
+    {% endif %}
+  </div>
+  <div class="content-info">
+    <ul>
+      {% for block in section.blocks %}
+      	{% if block.type == 'text' %}
+          {% if block.settings.title != blank %}<h2 class="heading">{{ block.settings.title }}</h2>{% endif %}
+          {{ block.settings.desc }}
+      	{% endif%}
+      
+      	{% if block.type == 'dropcap' %}
+          {% if block.settings.dropcap != '' or  block.settings.description != ''%}
+         	 <li {{ block.shopify_attributes }}><b>{{ block.settings.dropcap  }}</b>{{ block.settings.description  }}</li>
+          {% endif %}      
+      	{% endif%}
+        
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "2 Col Text Image",
+	"tag":"section",
+	"class": "container",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "url",
+        "id": "link",
+        "label": "Image Link"
+      },
+      {
+        "type": "text",
+        "id": "author",
+        "label": "Author"
+      },
+      {
+        "type": "select",
+        "id": "placement",
+        "label": "Placement",
+        "options": [
+          {
+            "value": "row",
+            "label": "Text on Right"
+          },
+          {
+            "value": "row-reverse",
+            "label": "Text on Left"
+          }
+        ],
+      "default": "row"
+      }
+	],
+	"blocks": [
+      {
+        "type": "text",
+        "name": "Text With Heading",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Heading"
+          },
+          {
+            "type": "richtext",
+            "id": "desc",
+            "label": "Description",
+            "default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>"
+          }
+        ]
+      },
+      {
+        "type": "dropcap",
+        "name": "Dropcap Text",
+        "settings": [
+          {
+            "type": "text",
+            "id": "dropcap",
+            "label": "Dropcap",
+			"default": "TXT"
+          },
+          {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description",
+			"default": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>"
+          }
+        ]
+      }
+	],
+    "presets": [
+      {
+        "name": "2 Col Text & Image - Article"
+      }
+    ]
+  }
+{% endschema %}

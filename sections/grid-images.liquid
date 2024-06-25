@@ -1,0 +1,219 @@
+{% assign grid = section.settings %}
+{% assign sectionId = section.id %}
+{% capture sliderSettings_sectionId %}
+    data-slick='{
+    "slidesToShow": 1,
+    "slidesToScroll": 1,
+    "dots": {{ grid.dots }},
+    "infinite": true,
+    "arrows": {{ grid.arrows }},
+    "autoplay": false,
+    "adaptiveHeight": false,
+    "speed": 500,
+    "centerMode": false,
+    "centerPadding": "1px"
+    }'
+{% endcapture %}
+
+<section class="gridImage grid-{{ grid.desktop_grid }} grid-m-{{ grid.mobile_grid }}" id="section-{{section.id}}">
+  {% for block in section.blocks %}
+    <div class="grid-item">
+      {% if block.settings.link == blank %}
+      <div class="ratio_wrapper res-400x500"><img src="{{ block.settings.image | img_url: '400x'}}" alt="{{ block.settings.image.alt }}" fetchpriority="low" loading="lazy"></div>
+      {% else %}
+      <a href="{{ block.settings.link }}" target="_blank" class="ratio_wrapper res-400x500"><img src="{{ block.settings.image | img_url: '400x'}}" alt="{{ block.settings.image.alt }}" fetchpriority="low" loading="lazy"></a>
+      {% endif %}
+
+      {% if block.settings.author != '' %}
+      <span class="caption">By {{ block.settings.author }}</span>
+      {% endif %}
+    </div>
+  {% endfor %}
+</section>
+
+{% if grid.mobile_grid == "carousel" %}
+  <section class="gridImage commonSlider" {{ sliderSettings_sectionId }}>
+    {% for block in section.blocks %}
+      <div class="grid-item">
+        {% if block.settings.link == blank %}
+        <div class="ratio_wrapper res-400x500"><img src="{{ block.settings.image | img_url: '400x'}}" alt="{{ block.settings.image.alt }}" fetchpriority="low" loading="lazy"></div>
+        {% else %}
+        <a href="{{ block.settings.link }}" target="_blank" class="ratio_wrapper res-400x500"><img src="{{ block.settings.image | img_url: '400x'}}" alt="{{ block.settings.image.alt }}" fetchpriority="low" loading="lazy"></a>
+        {% endif %}
+
+        {% if block.settings.author != '' %}
+        <span class="caption">By {{ block.settings.author }}</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </section>
+{% endif %}
+
+<style>
+.gridImage{
+  display:flex;
+  margin-left: -30px;
+  margin-right: -30px;
+  padding-top: 80px;
+  flex-flow:wrap;
+  justify-content:center;
+}
+.gridImage.commonSlider{
+  display:none;
+}
+.gridImage.grid-2x{
+  max-width: 920px;
+  margin: auto;
+}
+.gridImage.grid-2x .grid-item{
+  width:50%;
+}
+  
+.gridImage .grid-item{
+  width:33.33%;
+  padding: 15px 30px;
+}
+  
+.gridImage .grid-item .caption {
+    text-align: right;
+    font-size: 12px;
+    line-height: 22px;
+    padding: 5px 0;
+    display: inline-block;
+    width: 100%;
+    min-height: 32px;
+}
+  
+@media (max-width:767px){
+  #shopify-section-{{section.id}}{
+    padding-left:0;
+    padding-right:0;
+  }
+  .gridImage{
+    margin-left:0px;
+    margin-right:0px;
+  }
+  .gridImage .grid-item{
+    padding:0;
+  }
+  .gridImage.grid-3x .grid-item, 
+  .gridImage.grid-m-2x .grid-item{
+    width:50%;
+  }
+  .gridImage.grid-m-1x .grid-item{
+    width:100%
+  }
+  .gridImage.grid-m-3x .grid-item{
+    width:33.33%;
+  }
+  .gridImage.grid-m-carousel{
+   display:none;
+  }
+  .gridImage.commonSlider{
+    display:flex;
+  }
+  .gridImage.commonSlider .slick-next{
+    top:54%;
+  }
+  .gridImage.commonSlider .slick-dots{
+    bottom: 72px;
+    text-align: left;
+    margin: 0 15px;
+  }
+}
+
+</style>
+
+{% schema %}
+{
+   "name":"Grid Images",
+   "tag":"section",
+   "class":"container",
+   "settings":[
+      {
+         "type":"select",
+         "id":"desktop_grid",
+         "label":"Desktop Grid",
+         "options":[
+            {
+               "value":"2x",
+               "label":"2X"
+            },
+            {
+               "value":"3x",
+               "label":"3X"
+            }
+         ],
+         "default":"2x"
+      },
+      {
+         "type":"select",
+         "id":"mobile_grid",
+         "label":"Mobile Grid",
+         "options":[
+            {
+               "value":"1x",
+               "label":"1X"
+            },
+            {
+               "value":"2x",
+               "label":"2X"
+            },
+			{
+               "value":"3x",
+               "label":"3X"
+            },
+            {
+               "value":"carousel",
+               "label":"Carousel"
+            }
+         ],
+         "default":"1x"
+      },
+      {
+         "type":"header",
+         "content":"Slider options"
+      },
+      {
+         "type":"checkbox",
+         "id":"dots",
+         "label":"Show dots",
+         "default":false
+      },
+      {
+         "type":"checkbox",
+         "id":"arrows",
+         "label":"Show arrows",
+         "default":true
+      }
+   ],
+   "blocks":[
+      {
+         "type":"image",
+         "name":"Grid Image",
+         "settings":[
+            {
+               "type":"image_picker",
+               "id":"image",
+               "label":"Image"
+            },
+            {
+               "type":"url",
+               "id":"link",
+               "label":"Image Link"
+            },
+            {
+               "type":"text",
+               "id":"author",
+               "label":"Author"
+            }
+         ]
+      }
+   ],
+   "presets":[
+      {
+         "name":"Grid Images - Article"
+      }
+   ]
+}
+{% endschema %}

@@ -1,0 +1,113 @@
+<section class="textImageModule">
+    {% for block in section.blocks %}
+        {% if article.handle == articles[block.settings.image-text-article].handle %}
+    
+      <div class="image">
+        {{block.settings.image | image_url: width: 1200 | image_tag: width: 660, height: 800, alt: block.settings.image.alt, fetchpriority: 'low', loading: 'lazy' }}
+      </div>
+    
+      <div class="content-info">
+        <ul>
+          <li><b>{{ block.settings.dropcap_1  }}</b>{{ block.settings.dropcap_description_1  }}</li>
+          <li><b>{{ block.settings.dropcap_2  }}</b>{{ block.settings.dropcap_description_2  }}</li>
+          <li><b>{{ block.settings.dropcap_3  }}</b>{{ block.settings.dropcap_description_3  }}</li>
+          <li><b>{{ block.settings.dropcap_4  }}</b>{{ block.settings.dropcap_description_4  }}</li>
+        </ul>
+      </div>
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  </section>
+  
+  
+  <style>
+  .textImageModule{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom:120px;
+  }
+  .textImageModule .content-info{
+    max-width:550px;
+    width:100%;
+  }
+  .textImageModule .content-info ul li{
+    padding-bottom:20px;
+    display: flex;
+  }
+  .textImageModule .content-info ul li b{
+    min-width:60px;
+    display:inline-block;
+  }
+  .textImageModule .image{
+    width:50%;
+  }
+  .textImageModule .image img{
+    width:100%;
+  }
+  </style>
+  
+  {% schema %}
+      {
+      "name": "2X Image|Text",
+      "class": "image-text",
+      "blocks" : [
+      {
+      "type": "slide",
+      "name": "2X Image|Text",
+      "settings": [
+      {
+      "type": "article",
+      "id": "image-text-article",
+      "label": "Article"
+      },
+      {
+      "type": "text",
+      "id": "dropcap_1",
+      "label": "Dropcap 1"
+      },
+      {
+      "type": "text",
+      "id": "dropcap_description_1",
+      "label": "Dropcap Description 1"
+      },
+      {
+      "type": "text",
+      "id": "dropcap_2",
+      "label": "Dropcap 2"
+      },
+      {
+      "type": "text",
+      "id": "dropcap_description_2",
+      "label": "Dropcap Description 2"
+      },
+      {
+      "type": "text",
+      "id": "dropcap_3",
+      "label": "Dropcap 3"
+      },
+      {
+      "type": "text",
+      "id": "dropcap_description_3",
+      "label": "Dropcap Description 3"
+      },
+      {
+      "type": "text",
+      "id": "dropcap_4",
+      "label": "Dropcap 4"
+      },
+      {
+      "type": "text",
+      "id": "dropcap_description_4",
+      "label": "Dropcap Description 4"
+      },
+      {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+      }
+      ]
+      }
+      ]
+      }
+  {% endschema %}

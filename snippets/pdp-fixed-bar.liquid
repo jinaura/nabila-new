@@ -1,0 +1,60 @@
+{% unless product.type == 'hidden' %}
+
+{% assign coming_soon_uk = false %}
+{% if product.tags contains 'coming_soon_UK' and localization.country.iso_code == 'GB' %}
+{% assign coming_soon_uk = true %}
+{% endif %}
+
+{% if product.type != 'Sets Product' %}
+<div class="fixed-form product-fixed-bar mobile-cta-bar">
+  <div class="flex-row addbtn">
+    <div
+      class="flex-item atc-wrapper ajax-add {% if shop.metafields.globals.coming_soon == 'true' or product.metafields.product.coming_soon or active_variant.metafields.visibility.coming_soon or coming_soon_uk %} have_coming__btn {%- endif -%}"
+      {% if shop.metafields.globals.coming_soon=='true' or product.metafields.product.coming_soon or
+      active_variant.metafields.visibility.coming_soon or coming_soon_uk %}
+      data-micromodal-trigger="modal-back-in-stock" {% endif %}>
+      {% if product.type != 'Sets Product' %}
+      {%- include 'size-select' -%}
+      {%- include 'buy-button', main: false, classes:' ajax-add' -%}
+      {%- endif -%}
+    </div>
+    <div
+      class="notify_when_available {% unless active_variant.available %} unavailable{% endunless %}{% if product.metafields.product.coming_soon or active_variant.metafields.visibility.coming_soon or coming_soon_uk %} unavailable{% endif %}">
+      <a class="see-more" data-micromodal-trigger="modal-back-in-stock" href='#'>Sign up to be notified when this
+        product is available</a>
+    </div>
+    {% render 'pdp-delay-shipping-outer' active_variant: active_variant %}
+    {%- if product.metafields.product.custom_message -%}
+      <p class="p_custom_message">{{ product.metafields.product.custom_message }}</p>
+    {%- endif -%}
+  </div><!-- /.visible-xs-block -->
+</div>
+{%- endif -%}
+
+<div class="fixed-form hidden hidden-xs product-fixed-bar">
+  <div class="flex-row">
+    <div class="flex-item">
+      <h5 id="sticky_product_title">{{ product.title }}</h5>
+      {%- if active_variant.metafields.color.texture %}
+      {%- assign background_image = "url('"| append:active_variant.metafields.color.texture[0].src|append:"')"-%}
+      {% else %}
+      {%- assign background_image = "none"-%}
+      {%- endif -%}
+      <div id="sticky_variant_color"
+        style="background-color: {{ active_variant.metafields.color.hex }};  background-image: {{ background_image }}">
+      </div>
+      <small id="sticky_variant_title">{{ active_variant.metafields.color.name }}</small>
+    </div><!-- /.flex-item -->
+    {% if product.type != 'Sets Product' %}
+    <div class="flex-item justify-content-end">
+      {%- include 'size-select' -%}
+    </div><!-- /.flex-item -->
+
+    <div
+      class="flex-item {% if shop.metafields.globals.coming_soon == 'true' or product.metafields.product.coming_soon or active_variant.metafields.visibility.coming_soon or coming_soon_uk %} have_coming__btn  {% endif %}">
+      {%- include 'buy-button', main: false, classes:'' -%}
+    </div><!-- /.flex-item -->
+    {%- endif -%}
+  </div><!-- /.flex-row -->
+</div><!-- /.fixed-form -->
+{% endunless %}

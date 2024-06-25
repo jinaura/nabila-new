@@ -1,0 +1,104 @@
+{%- assign max = 100 -%}
+{%- assign diff = max | minus: min -%}
+{%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+
+{% if _product.variants.size > 1 %}
+  <div class="color_info_coll-item hidden-sm hidden-md hidden-lg" id="color_info_{{ _product.id }}_{{ random_number }}">
+    {% assign colorName = '' %}
+    {% assign colorHex = '' %}
+    {%- assign background_image = '' -%}
+    {%- assign totalColor = 0 -%}
+    {%- assign hideTotal = 0 -%}
+    {% for variant in _product.variants %}
+      {% if variant.metafields.visibility.hide %}
+        {% assign hideTotal = hideTotal | plus:1 %}
+      {% endif %}
+    {% endfor %}
+    {%- assign totalVariants = _product.variants.size | minus: hideTotal -%}
+
+    {% for product_option in _product.options_with_values %}
+
+      {% for value in product_option.values %}
+
+        {% if product_option.name == 'Color'%}
+            <div class="opt">
+
+              {% for variant in _product.variants %}
+                {% unless variant.metafields.visibility.hide %}
+                  {% if variant.metafields.color.name == value %}
+                    {% assign colorHex = variant.metafields.color.hex %}
+                    {% assign colorName = variant.metafields.color.name %}
+                    {%- if variant.metafields.color.texture %}
+                      {%- assign background_image = "url('"| append:variant.metafields.color.texture[0].src|append:"')"-%}
+                    {% else %}
+                      {%- assign background_image = "none"-%}
+                    {%- endif -%}
+                  {% endif %}
+                {% endunless %}
+              {% endfor %}
+
+              {% unless colorName == '' %}
+                <div class="color_content">
+                  <span class="{{ product_option.name }}-{{ _product.id }}-{{ random_number }}" style="background-color:{{colorHex}}; background-image:{{background_image}}"></span>
+                  {% unless _product.variants[getVariantIndex].metafields.visibility.coming_soon %}
+                    {% if _product.variants[getVariantIndex].inventory_quantity < 1 %}
+                      <svg class="variant-notavailable-strike" viewBox="0 0 100 100">
+                        <line x1="0" y1="100" x2="100" y2="0"></line>
+                      </svg>
+                    {% endif %}
+                  {% endunless %}
+                </div>
+                {% assign totalColor = totalColor | plus:1 %}
+              {% endunless %}
+            </div>
+
+          {% if totalColor == 4 %}
+            {% break %}
+          {% endif %}
+
+        {% endif %}
+
+      {% endfor %}
+    {% endfor %}
+  
+    {% if totalVariants > 4 %}
+      <span class="more_indicator">+ {{ totalVariants | minus: 4}}</span>
+    {% endif %}
+
+  </div>
+{% endif %}
+
+<style>
+  .collections--default .color_info_coll-item {
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+  }
+
+  .collections--default .color_info_coll-item .color_content {
+    width: 22px;
+    height: 22px;
+    margin-right: 6px;
+    position: relative;
+  }
+
+  .collections--default .color_info_coll-item .color_content span {
+    display: block;
+    border-radius: 100px;
+    cursor: pointer;
+    position: relative;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: inherit;
+  }
+
+  .collections--default .color_info_coll-item .color_content svg.variant-notavailable-strike {
+    position: absolute;
+    top: 0;
+  }
+
+  .collections--default .color_info_coll-item .more_indicator {
+    font-size: 12px;
+  }
+</style>

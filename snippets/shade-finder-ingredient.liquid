@@ -1,0 +1,25 @@
+{%- liquid
+    assign ingredient = shop.metaobjects.shade_finder_ingredient[handle]
+-%}
+{% if ingredient %}
+    <div class="bl-sf-ingredient">
+        <div class="bl-sf-ingredient__image">
+            <img src="{{ ingredient.image | image_url: width:300, height: 360 }}" alt="{{ ingredient.name }}"/>
+        </div>
+        <div class="bl-sf-ingredient__title-wrapper">
+            <h3 class="bl-sf-ingredient__title">
+                {{ ingredient.name }}
+            </h3>
+        </div>
+        <div class="bl-sf-ingredient__description">
+            <p>
+                {{ ingredient.description }}
+            </p>
+        </div>
+        <div class="bl-sf-ingredient__found-in">
+            <p>
+                Found in {{ found_in_variant.product.title }}{%- if  also_found_in_variant -%}, {{ also_found_in_variant.product.title }}{%- endif -%}
+            </p>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,162 @@
+{% if product.metafields.product.pdp_recommendation %}
+{{ 'slick.js'  | asset_url | script_tag     }}
+
+<section class="section__container rosies-top-5">
+  <div class="container section__item section_spacing">
+      <h2 class="heading-with-link">{{ section.settings.title }} <a href="/collections/shop-all" class="hidden-xs">{{ section.settings.link_text }}</a></h2>
+      <hr class="section__divider" />
+    
+    <div class="swap-x" role="region" aria-label="carousel">
+      <div class="multiple-items collection__items" 
+           data-slick='{
+             "slidesToShow": 3, 
+             "slidesToScroll": 3,
+             "dots": {{ section.settings.dots }},
+             "infinite": false,
+             "arrows": {{ section.settings.arrows }},
+             "autoplay": false,
+             "adaptiveHeight": false,
+             "speed": 500,
+             "centerMode": false,
+             "centerPadding": "1px",
+             "responsive": [
+                 {
+                  "breakpoint": 768,
+                  "settings": "unslick"
+                  },
+                  {
+                  "breakpoint": 1024,
+                    "settings":{
+                        "slidesToShow": 2,
+                        "slidesToScroll": 2
+                    }
+                  }
+             ]
+        }'>
+
+
+        {% for pdp_rec_product in product.metafields.product.pdp_recommendation %}
+        {% assign  _product = all_products[pdp_rec_product] %}
+          {% if _product.type == 'Sets Product' %}
+            {%- include 'product-item-sets' with _product -%}
+          {% else %}
+            {%- include 'product-item' with _product -%}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<style>
+  .collection__items{
+    display: block;
+    width: auto;
+  }
+  .multiple-items.collection__items .product__item {
+    flex-basis: unset;
+    max-width: unset;
+    margin: 0;
+  }
+  .multiple-items.collection__items .product__item-image img:not(.badge-img) {
+    height: 500px;
+  }
+  .multiple-items.collection__items .product__item hr.divider--start {
+    display: none;
+  }
+  .multiple-items.collection__items .section__flex-item {
+    bottom: 0;
+  }
+  .multiple-items.collection__items .price_btn--wrapper{
+    bottom:0;
+  }
+  .rosies-top-5 .multiple-items .product__item {
+    margin-top: 2px;
+  }
+  @media (max-width: 767px) {
+    .multiple-items.collection__items .product__item-image img {
+      height: 100%
+    }
+    .multiple-items.collection__items .shutter {
+      bottom: 0;
+      margin: 0;
+      width: 102vw;
+    }
+    body .swap-x{
+      margin: 0;
+    }
+  }
+</style>
+
+<script>
+
+    var slider = $('.multiple-items').slick();
+
+    var hold = false;
+    $(".rangeSlider").hover(function() {
+        //slider.slick("slickSetOption", "accessibility", hold);
+        slider.slick("slickSetOption", "draggable", hold);
+        slider.slick("slickSetOption", "swipe", hold);
+        slider.slick("slickSetOption", "touchMove", hold);
+
+        hold = !hold;
+        console.log('hover');
+    });
+
+</script>
+{% endif %}
+{% schema %}
+    {
+    "name": "Rosie's Top",
+    "settings": [
+    {
+    "type": "text",
+    "id": "title",
+    "label": "Heading",
+    "default": "Rosie's Top"
+    },
+    {
+    "type": "text",
+    "id": "link_text",
+    "label": "Link Text",
+    "default": "Shop all"
+    },
+    {
+    "type": "collection",
+    "id": "featured_products",
+    "label": "Collection"
+    },
+    {
+    "type": "text",
+    "id": "product_link_label",
+    "label": "Product Link Label",
+    "default": "Buy Now"
+    },
+    {
+    "type": "header",
+    "content": "Grid"
+    },
+    {
+    "type": "header",
+    "content": "Slider options"
+    },
+    {
+    "type": "checkbox",
+    "id": "dots",
+    "label": "Show dots",
+    "default": false
+    },
+    {
+    "type": "checkbox",
+    "id": "arrows",
+    "label": "Show arrows",
+    "default": true
+    }
+    ],
+    "presets": [{
+    "name": "Rosie's Top",
+    "category": "Collection"
+    }]
+  }
+{% endschema %}

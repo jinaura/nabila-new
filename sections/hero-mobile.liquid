@@ -1,0 +1,730 @@
+{% liquid
+  if section.settings.enable_top_shadow
+  assign topShadow = 'topShade'
+  endif %}
+{% liquid
+  if section.settings.enable_bottom_shadow
+  assign bottomShade = 'bottomShade'
+  endif %}
+
+<!-- Custom content for Rose Inc UK -->
+{% if localization.country.iso_code == 'GB' and section.settings.locale == 'us' and request.design_mode == false %}
+  {%- continue -%}
+{% elsif localization.country.iso_code != 'GB' and section.settings.locale == 'uk' and request.design_mode == false %}
+  {%- continue -%}
+{% else %}
+
+  <section id="mobileBanner" class="heroBanner {{ topShadow }} {{ bottomShade }}">
+    {% for block in section.blocks %}
+      {% assign heroHeight = block.settings.box_height %}
+      {% assign mobileImage = block.settings.mobile_image %}
+      {% assign mobileVideo = block.settings.mobile_video_url %}
+      {% assign customMobileVideoUrl = block.settings.custom_mobile_video_url %}
+      {% assign contentVariation = block.settings.content_variation %}
+      {% assign desc_above = block.settings.desc_above %}
+      {% assign overlaytop_text_alignment = block.settings.overlaytop_text_alignment %}
+      {% assign fontSize = block.settings.font_size %}
+      {% assign fontLineHeight = block.settings.font_lineHeight %}
+      {% assign font = block.settings.customizable_font %}
+      {% assign font_didot = block.settings.font_heading_style_didot %}
+      {% assign link_size = block.settings.link_size %}
+
+      {% assign mobileBgColor = block.settings.hero_mobile_bg_color %}
+      {% assign contentColor = block.settings.content_color %}
+      {% assign btnLabelColor = block.settings.button_label_color %}
+      {% assign btnBgColor = block.settings.button_bg_color %}
+      {% assign btnLabelColor_2 = block.settings.button_label_color_2 %}
+      {% assign btnBgColor_2 = block.settings.button_bg_color_2 %}
+      {% assign btnTransparent = block.settings.button_transparent_border %}
+
+      {% assign buttonType = '' %}
+      {% if block.settings.button_type %}
+        {% assign buttonType = 'btn' %}
+      {% endif %}
+
+      <!--    Mobile Info    -->
+      {% capture m_Image %}
+        {{mobileImage | image_url: width: 1200 | image_tag: width: nil, height: nil, preload: true, alt: mobileImage.alt, fetchpriority: 'high' }}
+      {% endcapture %}
+      {% capture m_Youtube %}<iframe width="560" height="315" src="https://www.youtube.com/embed/{{mobileVideo.id}}?playlist={{mobileVideo.id}}&loop=1&autoplay=1&mute=1" title="{{title}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+      {% capture m_Vimeo %}<iframe width="560" height="315" src="https://player.vimeo.com/video/{{mobileVideo.id}}" title="{{title}}" frameborder="0" allow="loop;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{% endcapture %}
+      {% capture m_CustomVideo %}
+      <video id="video-{{ block.id }}" muted loop autoplay preload="auto" playsinline="true" webkit-playsinline="true" width="100%" height="100%" data-setup='{"width": 300, "height": 250}'>
+        <source src="{{ customMobileVideoUrl }}" type='video/mp4' />
+      </video>
+      {% endcapture %}
+
+      {% capture length %}{{forloop.length}}{% endcapture %}
+
+      <div class="media" id="block-{{block.id}}">
+
+        {% if customMobileVideoUrl != '' and section.settings.enable_video_control %}
+          <div class="player-controls" id="controle-block-{{ block.id }}">
+            <button class="play">{% render 'svg-icons' with 'play' %}</button>
+            <button class="pause">{% render 'svg-icons' with 'pause' %}</button>
+            <button class="volume">{% render 'svg-icons' with 'volume' %}</button>
+          </div>
+        {% endif %}
+        
+  	    <!--    Mobile Video Links    -->
+
+        <div class="ratio_wrapper res-100 vidMobile box_height {% if mobileVideo.type == 'youtube' or mobileVideo.type == 'vimeo' %}embeded-video{% endif %}">
+          {% if mobileImage != '' and customMobileVideoUrl != '' %}
+            {{ m_CustomVideo }}
+            <div class="hide">{{ block.settings.custom_mobile_video_description }}</div>
+          {% else %}
+            {% if m_Image != '' %} {{ m_Image }} {% endif %}
+          {% endif %}
+
+          {% if mobileImage == blank and customMobileVideoUrl == blank %}
+            {% if mobileVideo.type == 'youtube' %} {{m_Youtube}} {% endif %}
+            {% if mobileVideo.type == 'vimeo' %} {{m_Vimeo}} {% endif %}
+          {% endif %}
+
+          {% unless contentVariation == 'disable' %}
+
+            {% if contentVariation == 'overlayed-top' or contentVariation == 'overlayed-middle' or contentVariation == 'overlayed-bottom' %}
+              <div class="cta cat_mobile overlayed EyeColPadTop {{contentVariation}} text-{{overlaytop_text_alignment}}" style="justify-content:{{overlaytop_text_alignment}}" id="label-{{block.id}}">
+                <div class="flx">
+                  <h5 class="topHeading">{{ block.settings.mobile_heading_top }}</h5>
+                  {% if desc_above %}
+                    {% unless block.settings.desc == blank %}<p style="{% if overlaytop_text_alignment == "center" %} padding: 0 45px;{% elsif overlaytop_text_alignment == "left" %} padding: 0 100px 0 15px; {% elsif overlaytop_text_alignment == "right" %} padding: 0 15px 0 90px;{% endif %}">{{- block.settings.desc -}}</p>{% endunless %}
+                  {% endif %}
+                  <h4 class="{{ font }}"  style="font-size:{{ fontSize }}; {% if overlaytop_text_alignment == "right" %} padding-right:15px!important;{% endif %} letter-spacing:{{ block.settings.mobile_heading_letter_spacing }}; ">{{ block.settings.mobile_heading }}</h4>
+                  {% unless block.settings.desc == blank %}
+                    <p {% if desc_above %}class="hide"{% endif %} style="{% if overlaytop_text_alignment == "center" %} padding: 0 45px;{% elsif overlaytop_text_alignment == "left" %} padding: 0 15px 0 15px; {% elsif overlaytop_text_alignment == "right" %} padding: 0 15px 0 15px;{% endif %}">{{- block.settings.desc -}}</p>
+                  {% endunless %}
+
+                  <a href="{{ block.settings.button_link }}" class="btn_1 btnOverlay {{ buttonType }}
+                    {% if link_size %} link-size {% endif %}
+                      {% if block.settings.button_type %}
+                        {% if btnTransparent %} transparentBtn {% endif %}
+                      {% endif %}"
+                     style="{% if overlaytop_text_alignment == "center" and block.settings.button_label_2 == blank %}margin-right:0px; {% endif %}
+                     {% if overlaytop_text_alignment == "center" and block.settings.button_label_2 != blank %} margin-left: 15px; {% endif %}
+                   {% if overlaytop_text_alignment == "left" %} margin-left:15px!important;margin-right:0px!important;{% endif %}">{{ block.settings.button_label }}</a>
+                  {% unless block.settings.button_label_2 == blank %}
+                    <a href="{{- block.settings.button_link_2 -}}" class="btn_2 {{ buttonType }}
+                    {% if link_size %} link-size {% endif %}
+                    {% if block.settings.button_type %}
+                      {% if btnTransparent %} transparentBtn2 {% endif %}
+                    {% endif %}"
+                       style="{% if overlaytop_text_alignment == "right" %} margin-left:0px!important;{% endif %} {% if overlaytop_text_alignment == "center" %} margin-left:0px!important;{% endif %}">{{- block.settings.button_label_2 -}}</a>
+                  {% endunless %}
+                </div>
+              </div>
+            {% endif %}
+
+            <style>
+              #label-{{block.id}} .btnOverlay.transparentBtn {
+                margin: 20px 15px 0px 15px!important;
+              }
+              #label-{{block.id}}  a.btn {
+                padding: 12px 10px;
+              }
+              a.link-size {
+                font-size: 14px;
+                font-weight: normal;
+                letter-spacing: 0.5px;
+                color: #fff;
+                font-family: "Euclid Circular Regular";
+                margin: 0 15px 0 15px!important;
+                display: inline-block!important;
+              }
+              h4.DidotHeadingStyle {
+                font-weight: 400;
+                font-stretch: normal;
+                font-style: normal;
+                line-height:{{fontLineHeight}};
+                letter-spacing: normal;
+                font-family:"Didot";
+              }
+              h4.didot-small {
+                line-height:{{fontLineHeight}}!important;
+                font-family:"var(--font-heading)";
+              }
+
+              #label-{{block.id}} h4, #label-{{block.id}} p {
+                color: {{ contentColor }};
+                max-width:100%;
+                padding:0 15px;
+                /*margin: 0px auto 10px auto;*/
+                text-transform:initial;
+              }
+              #label-{{block.id}} h4 {
+                font-size: 16px;
+                /*margin: 0px auto 5px auto;*/
+              }
+              #label-{{block.id}} p {
+                font-size:16px;
+                line-height:18px;
+                letter-spacing:0.3px;
+                margin: 5px auto 0px auto;
+              }
+              #label-{{block.id}} a {
+                transition: all 0.3s;
+                clear: both;
+                display: inline-block;
+                margin: 10px auto;
+              }
+              #label-{{block.id}} a.btn_1 {
+                color: {{ btnLabelColor }};
+                margin-right:15px;
+              }
+              #label-{{block.id}} a.btn_2 {
+                color: {{ btnLabelColor_2 }};
+              }
+              #label-{{block.id}} a.btn {
+                border: 0;
+                width: auto;
+                min-width: 165px;
+                margin: 20px 20px 0px 15px;
+              }
+              #label-{{block.id}} a.btn_1.btn {
+                color: {{ btnLabelColor }};
+                background: {{ btnBgColor }};
+              }
+              #label-{{block.id}} a.btn_1.btn:hover {
+                background: {{ block.settings.button_hover_bg_color }};
+                color: {{ block.settings.button_hover_label_color }};
+              }
+
+              #label-{{block.id}} a.btn_2.btn {
+                color: {{ btnLabelColor_2 }};
+                background: {{ btnBgColor_2 }};
+              }
+              #label-{{block.id}} a.btn_2.btn:hover {
+                background: {{ block.settings.button_hover_bg_color_2 }};
+                color: {{ block.settings.button_hover_label_color_2 }};
+
+              .player-controls {
+                position: absolute !important;
+              }
+            </style>
+
+            {% if contentVariation == 'normal' %}
+              <style>
+              #label-{{block.id}} a.btn:last-child {
+                margin: 20px 15px 0 0;
+              }
+              </style>
+            {% else %}
+              <style> #label-{{block.id}} a.btn:last-child {
+                margin: 20px 15px 0 15px !important;
+              }
+              </style>
+            {% endif %}
+
+          {% endunless %}
+
+        </div>
+
+      </div>
+    
+      {% if customMobileVideoUrl != '' and section.settings.enable_video_control %}
+      {% assign inx = forloop.index %}
+      <script>
+        let video_m_{{inx}} = document.getElementById("video-{{ block.id }}");
+        let play_{{inx}} = $('#controle-block-{{ block.id }} .play');
+        let pause_{{inx}} = $('#controle-block-{{ block.id }} .pause');
+        let volume_{{inx}} = $('#controle-block-{{ block.id }} .volume');
+
+        play_{{inx}}.on('click', function(){
+          video_m_{{inx}}.play();
+          $(this).hide();
+          pause_{{inx}}.show();
+        });
+        pause_{{inx}}.on('click', function(){
+          video_m_{{inx}}.pause();
+          $(this).hide();
+          play_{{inx}}.show();
+        });
+
+        volume_{{inx}}.on('click', function(){
+          if(video_m_{{inx}}.muted){
+            video_m_{{inx}}.muted = false;
+            $(this).addClass('unmuted');
+          } else {
+            video_m_{{inx}}.muted = true;
+            $(this).removeClass('unmuted');
+          }
+        });
+      </script>
+      {% endif %}
+
+      <style>
+        #block-{{block.id}} .box_height{
+        {% if length < "2" and heroHeight > 79 %}
+          padding-top:calc({{heroHeight}}vh - 240px) !important;
+        {% else %}
+          padding-top:calc({{heroHeight}}vh - 120px) !important;
+        {% endif %}
+        }
+        .holiday-plp #block-{{block.id}} .box_height {
+          padding-top: 400px !important;
+        }
+        #block-{{block.id}} .embeded-video iframe{
+          object-fit: inherit;
+        }
+
+
+        #label-{{block.id}} .topHeading {font-size:16px; line-height:22px;  font-family: "Euclid Circular Regular"; padding:0px 15px 3px 15px; color:{{contentColor}}; letter-spacing:0; text-transform: initial}
+
+
+
+        #label-{{block.id}} h4.euclid-reg {
+          font-family: var(--font-regular);
+        }
+        #label-{{block.id}} h4.euclid-med {
+          font-family: var(--font-medium);
+        }
+        #label-{{block.id}} h4.euclid-semibold {
+          font-family: var(--font-semibold);
+        }
+        #label-{{block.id}} h4.euclid-bold {
+          font-family: var(--font-bold);
+        }
+        #label-{{block.id}} .btn.transparentBtn {background:transparent!important; border:1px solid {{btnBgColor}}; padding: 11px 10px;}
+        #label-{{block.id}} .btn.transparentBtn2 {background:transparent!important; border:1px solid {{btnBgColor_2}}; padding: 11px 10px;}
+        #label-{{block.id}} h4.euclid-reg {
+          font-family: var(--font-regular);
+          line-height:{{fontLineHeight}};
+          letter-spacing: 1.1px;
+        }
+        #label-{{block.id}} h4.euclid-med {
+          font-family: var(--font-medium);
+          line-height:{{fontLineHeight}};
+        }
+        #label-{{block.id}} h4.euclid-semibold {
+          font-family: var(--font-semibold);
+          line-height:{{fontLineHeight}};
+        }
+        #label-{{block.id}} h4.euclid-bold {
+          font-family: var(--font-bold);
+          line-height:{{fontLineHeight}};
+        }
+
+        @media only screen and (max-width:767px) {
+          #label-{{block.id}}  a.btn { min-width: 130px; font-size:14px;   }
+        }
+        @media only screen and (max-width:320px) {
+          #label-{{block.id}}  a.btn { min-width: 124px;   }
+        }
+
+        #label-{{block.id}}.overlayed a.btn_2 { margin: 20px 15px 0 20px!important;}
+
+
+            #label-{{block.id}} .flx {
+                  padding: 45px 0 35px 0;
+                }
+
+       #label-{{block.id}}.overlayed-middle .flx {
+                  padding: 0px 0 0px 0;
+                }
+
+      .template-page--eye-collection  #label-{{block.id}} .flx {
+                  padding: 95px 0 35px 0;
+                }
+      </style>
+
+      {% unless contentVariation == 'disable' %}
+
+      {% if contentVariation == 'normal' %}
+      {% if block.settings.mobile_heading != blank or block.settings.desc != blank %}
+      <div class="cta cat_mobile" id="label-{{block.id}}" style="background-color: {{ mobileBgColor }}; text-align:{{overlaytop_text_alignment}}; max-width:100%;">
+        <h5 class="topHeading">{{ block.settings.mobile_heading_top }}</h5>
+        <h4 class="{{ font }}" style="font-size:{{ fontSize }}; max-width:100%; letter-spacing:{{ block.settings.mobile_heading_letter_spacing }};">{{ block.settings.mobile_heading }}</h4>
+        {% unless block.settings.desc == blank %}
+          <p style="{% if overlaytop_text_alignment == "center" %} padding: 0 45px;{% elsif overlaytop_text_alignment == "left" %} padding: 0 15px 0 15px; {% elsif overlaytop_text_alignment == "right" %} padding: 0 15px 0 15px;{% endif %}">{{- block.settings.desc -}}</p>
+        {% endunless %}
+        {% if block.settings.button_label != blank %}
+          <a href="{{ block.settings.button_link }}" class="btn_1 {{ buttonType }}
+          {% if block.settings.button_type %}{% if btnTransparent %} transparentBtn {% endif %}{% endif %} "
+                  style="margin:20px 15px 5px 15px;" >
+            {{ block.settings.button_label }}
+          </a>
+        {% endif %}
+
+        {% if block.settings.button_label_2 != blank %}
+          <a href="{{- block.settings.button_link_2 -}}" class="btn_2 {{ buttonType }} {% if block.settings.button_type %}{% if btnTransparent %} transparentBtn2 {% endif %}{% endif %}"
+                 style="margin:20px 15px 5px 0px;" >
+            {{- block.settings.button_label_2 -}}
+          </a>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% endif %}
+      {% endunless %}
+
+
+      {% if block.settings.link_whole_box and block.settings.whole_banner_link %}
+      <script>
+        var query = window.matchMedia("(max-width: 812px)");
+        if(query.matches){
+          $(".hero-section-mobile #block-{{block.id}} .ratio_wrapper").wrapInner("<a href='{{ block.settings.whole_banner_link }}' class='ratio_wrapper res-100 vidMobile box_height {% if mobileVideo.type == 'youtube' or mobileVideo.type == 'vimeo' %}embeded-video{% endif %}'><a/>").children(0).unwrap();
+        } else{
+          $(".hero-section-mobile #block-{{block.id}}").wrapInner("<div class='media' id='block-{{block.id}}'>").children(0).unwrap();
+        }
+      </script>
+      {% endif %}
+
+    {% endfor %}
+
+  </section>
+
+  <style>
+    .hero-section-mobile .topShade::before, .hero-section-mobile .bottomShade::after {
+      opacity: {{ section.settings.opacity }}%;
+    }
+    .heroBanner .media {
+      position: relative;
+    }
+    @media (max-width:767px) {
+      .heroBanner {
+        padding: 0px;
+      }
+    }
+  </style>
+  
+{% endif %}
+
+{% schema %}
+  {
+  "name": "HP Hero - Mobile",
+  "class": "hero-section-mobile",
+  "max_blocks": 2,
+  "settings": [
+  {
+  "type": "radio",
+  "id": "locale",
+  "label": "Localization Visibility",
+  "options": [
+  {
+  "value": "us",
+  "label": "Only US"
+  },
+  {
+  "value": "uk",
+  "label": "Only UK"
+  },
+  {
+  "value": "us_uk",
+  "label": "US & UK"
+  }
+  ],
+  "default": "us"
+  },
+  {
+  "id": "enable_top_shadow",
+  "type": "checkbox",
+  "label": "Enable top shadow",
+  "default": false
+  },
+  {
+  "id": "enable_bottom_shadow",
+  "type": "checkbox",
+  "label": "Enable bottom shadow",
+  "default": false
+  },
+  {
+  "type": "range",
+  "id": "opacity",
+  "min": 1,
+  "max": 100,
+  "step": 1,
+  "unit": "%",
+  "label": "Shadow Opacity (top + bottom)",
+  "default": 27
+  },
+  {
+  "id": "enable_video_control",
+  "type": "checkbox",
+  "label": "Enable Video Controls",
+  "default": false
+  }
+  ],
+  "blocks" : [
+  {
+  "type": "slide",
+  "name": "Slide",
+  "settings": [
+  {
+  "type": "number",
+  "id": "box_height",
+  "label": "Image/Video Height (VH)",
+  "default": 50,
+  "info": "Height will work in Veiw Height (VH) unit. Min value should be 20 and Max value 100"
+  },
+  {
+  "type": "image_picker",
+  "id": "mobile_image",
+  "label": "Mobile Image"
+  },
+  {
+  "id": "mobile_video_url",
+  "type": "video_url",
+  "label": "Mobile Video URL",
+  "accept": ["youtube", "vimeo"]
+  },
+  {
+  "type": "textarea",
+  "id": "custom_mobile_video_description",
+  "label": "ADA - Mobile Custom Video Summary"
+  },
+  {
+  "type": "text",
+  "id": "custom_mobile_video_url",
+  "label": "Mobile Custom  Video Url"
+  },
+  {
+  "type": "select",
+  "id": "content_variation",
+  "label": "Mobile Content Variations",
+  "default": "normal",
+  "options": [
+  {
+  "label": "Disable",
+  "value": "disable"
+  },
+  {
+  "label": "Normal",
+  "value": "normal"
+  },
+  {
+  "label": "Overlay Top",
+  "value": "overlayed-top"
+  },
+  {
+  "label": "Overlay Middle",
+  "value": "overlayed-middle"
+  },
+  {
+  "label": "Overlay Bottom",
+  "value": "overlayed-bottom"
+  }
+  ]
+  },
+  {
+  "type": "select",
+  "id": "overlaytop_text_alignment",
+  "label": "Content Alignment Controls",
+  "default": "center",
+  "options": [
+  {
+  "label": "Center",
+  "value": "center"
+  },
+  {
+  "label": "Left",
+  "value": "left"
+  },
+  {
+  "label": "Right",
+  "value": "right"
+  }
+  ]
+  },
+  {
+  "type": "text",
+  "id": "font_size",
+  "label": "Font Size Heading",
+  "default":"20px",
+  "info" : "For customize font size enter the value in this format e:g 10px,15px..."
+  },
+  {
+  "type": "text",
+  "id": "mobile_heading_letter_spacing",
+  "label": "Mobile Heading Letter Spacing",
+  "default": "0px",
+  "info" : "For customize letter spacing enter the value in this format e:g 10px,15px..."
+  },
+  {
+  "type": "text",
+  "id": "font_lineHeight",
+  "label": "Font Line Height",
+  "info": "Use for heading line spacing,For customize font size enter the value in this format e:g 10px,15px..."
+  },
+  {
+  "type": "select",
+  "id": "customizable_font",
+  "label": "Font customization",
+  "default": "euclid-reg",
+  "options": [
+  {
+  "label": "Euclid Regular",
+  "value": "euclid-reg"
+  },
+  {
+  "label": "Euclid Medium",
+  "value": "euclid-med"
+  },
+  {
+  "label": "Euclid SemiBold",
+  "value": "euclid-semibold"
+  },
+  {
+  "label": "Euclid Bold",
+  "value": "euclid-bold"
+  },
+  {
+  "label": "Didot",
+  "value": "didot-small"
+  }
+  ]
+  },
+  {
+  "type": "text",
+  "id": "mobile_heading_top",
+  "label": "Mobile Heading Top",
+  "default": "EXCLUSIVE"
+  },
+  {
+  "type": "text",
+  "id": "mobile_heading",
+  "label": "Mobile Heading",
+  "default": "Beauty in being."
+  },
+  {
+  "type": "textarea",
+  "id": "desc",
+  "label": "Mobile Description"
+  },
+  {
+  "type": "checkbox",
+  "id": "desc_above",
+  "label": "Description above heading?",
+  "default": false
+  },
+  {
+  "type": "text",
+  "id": "button_label",
+  "label": "Mobile Button label",
+  "default": "Shop the collection"
+  },
+  {
+  "type": "url",
+  "id": "button_link",
+  "label": "Mobile Button link",
+  "default": "/collections/all"
+  },
+  {
+  "type": "text",
+  "id": "button_label_2",
+  "label": "Mobile Button label 2"
+  },
+  {
+  "type": "url",
+  "id": "button_link_2",
+  "label": "Mobile Button link 2"
+  },
+  {
+  "type": "header",
+  "content": "Block Settings"
+  },
+  {
+  "id": "hero_mobile_bg_color",
+  "type": "color",
+  "label": "Hero Background Color",
+  "default": "#e6e3e0"
+  },
+  {
+  "id": "content_color",
+  "type": "color",
+  "label": "Text Content Color",
+  "default": "#FAFAFA"
+  },
+  {
+  "id": "button_label_color",
+  "type": "color",
+  "label": "Button 1 Text Color",
+  "default": "#545353"
+  },
+  {
+  "id": "button_bg_color",
+  "type": "color",
+  "label": "Button 1 Background Color",
+  "default": "#FAFAFA",
+  "info": "Background Color works with button type."
+  },
+  {
+    "id": "button_hover_label_color",
+    "type": "color",
+    "label": "Button 1 Text Color (Hover)",
+    "default": "#545353"
+    },
+  {
+  "id": "button_hover_bg_color",
+  "type": "color",
+  "label": "Button 1 Background (Hover)",
+  "default": "#FAFAFA"
+  },
+  {
+  "id": "button_label_color_2",
+  "type": "color",
+  "label": "Button 2 Text Color",
+  "default": "#FAFAFA"
+  },
+  {
+  "id": "button_bg_color_2",
+  "type": "color",
+  "label": "Button 2 Background Color",
+  "default": "#000000",
+  "info": "Background Color works with button type."
+  },
+  {
+    "id": "button_hover_label_color_2",
+    "type": "color",
+    "label": "Button 2 Text Color (Hover)",
+    "default": "#FAFAFA"
+    },
+  {
+  "id": "button_hover_bg_color_2",
+  "type": "color",
+  "label": "Button 2 Background (Hover)",
+  "default": "#000000"
+  },
+  {
+  "id": "button_type",
+  "type": "checkbox",
+  "label": "Button Type (Link/Button)",
+  "default": false
+  },
+  {
+  "id": "button_transparent_border",
+  "type": "checkbox",
+  "label": "Button Transparent With Border",
+  "default": false
+  },
+  {
+  "id": "link_size",
+  "type": "checkbox",
+  "label": "Link Style Small",
+  "default": false
+  },
+  {
+  "type": "checkbox",
+  "id": "link_whole_box",
+  "label": "Link Whole Banner",
+  "default": true
+  },
+  {
+  "type": "url",
+  "id": "whole_banner_link",
+  "label": "Whole Banner Link (Image/Video)"
+  }
+  ]
+  }
+  ],
+  "presets": [
+  {
+  "name": "HP Hero - Mobile",
+  "category": "Image",
+  "blocks": [
+  {
+  "type": "slide"
+  }
+  ]
+  }
+  ]
+  }
+{% endschema %}

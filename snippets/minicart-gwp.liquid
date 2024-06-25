@@ -1,0 +1,101 @@
+<div id="minicart-holiday-gwp" class="{%unless is_product == true%}multiple-items{%endunless%} miniHoliGWP" data-slick='{
+                                                                   "slidesToShow": 1,
+                                                                   "slidesToScroll": 1,
+                                                                   "dots": {{ settings.dots }},
+                                                                   "infinite": false,
+                                                                   "arrows": {{ settings.arrows }},
+                                                                   "autoplay": false,
+                                                                   "adaptiveHeight": false,
+                                                                   "centerMode": false,
+                                                          		   "centerPadding": "1px",
+                                                                    "speed": 500,
+                                                                    "responsive": [
+                                                                    {
+                                                                        "breakpoint": 768,
+                                                                        "settings": "unslick"
+                                                                    }
+                                                                    ]
+
+                                                                }'>{% for product in collections[gwpProducts].products %}
+
+    <!-- hide product on Rose Inc UK/US if not sellable in the UK/US -->
+    {% unless product.tags contains "do_not_sell_to_UK" and localization.country.iso_code == 'GB' %}
+      {% unless product.tags contains "do_not_sell_to_global" and localization.country.iso_code != 'GB' %}
+
+
+        {%- assign min = 1 -%}
+        {%- assign max = 100 -%}
+        {%- assign diff = max | minus: min -%}
+        {%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+
+        <div class="product_card">
+          <div class="flexObject">
+            <div class="image_wrapper">
+              {%- include 'feature-tag' prod: product -%}
+              {%- assign img_url = product.featured_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <a href="#_" class="block-redirect">
+
+                <div class="gwp-img add-to-cart-gwp-button gwpProductImg" style="background-image:url({{ product.featured_image.src | img_url: '400x500', scale: 2 }});" data-remove-id="{{ product.variants[0].id }}" data-purchase-id="{{ product.variants[0].id }}"></div>
+
+              </a>
+            </div>
+            <div class="productNameAndLink activeOverlay">
+
+              <div class="disableOverlay">
+                <div class="error_state_module">
+                  {% if localization.country.iso_code == 'GB' %}
+                    <p>{{settings.error_state_uk}}</p>
+                  {% else %}
+                    <p>{{settings.error_state_us}}</p>
+                  {% endif%}
+                </div>
+              </div>
+
+                            <a href="#_" class="block-redirect outer_content block-link-no-deco">
+                                <h3 class="freeGiftHeading add-to-cart-gwp-button "
+                                    data-remove-id="{{ product.variants[0].id }}"
+                                    data-purchase-id="{{ product.variants[0].id }}">{{- product.title  -}}</h3>
+                                <p class="freeGiftTxt add-to-cart-gwp-button "
+                                   data-remove-id="{{ product.variants[0].id }}"
+                                   data-purchase-id="{{ product.variants[0].id }}">{{- product.description -}} </p>
+                                 <span data-purchase-id="{{ product.variants[0].id }}">{{- product.price | money_with_currency -}}</span>
+                            </a>
+
+              <div class="inner_content">
+                <span class="rating_stars"></span>
+
+                <div class="flexSplit">
+                  <div class="LeftSide">
+                    <!-- <p>
+                      Value:
+                      {% if localization.country.iso_code == 'GB' %}
+                        £{{ product.metafields.holiday.product_value_uk }}
+                      {% else %}
+                        ${{ product.metafields.holiday.product_value_us }}
+                      {% endif %}
+                    </p> -->
+                  </div>
+
+                  <!--LeftSide -->
+
+                  <div class="RightSide">
+
+                    <button id="" class="buy_btn_direct_gwp impulse-mini add-to-cart-gwp-button mini-cart-gwp-id miniHoliGWP-{{ product.id }}-{{ random_number }} miniHoliGWP-{{ variant.id }}-{{ product.id }}-{{ random_number }}" data-id="{{ product.variants[0].id }}" data-purchase-id="{{ product.variants[0].id }}" data-remove-id="{{ product.variants[0].id }}">Add Gift</button>
+
+                  </div>
+                  <!-- flexSide -->
+                </div>
+                <!--RightSide -->
+
+              </div>
+
+            </div>
+          </div>
+          {% include 'gwp-minicart-variant-selector' %}
+
+        </div>
+      {% endunless %}
+    {% endunless %}
+
+  {% endfor %}
+</div>

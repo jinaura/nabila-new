@@ -1,0 +1,50 @@
+
+
+{% section 'video-hero' %}
+<div class="anchor"></div>
+<section id="vto-product-lipstick" style="scroll-margin-top: 100px;">
+  {% section 'vto-product-lipstick' %}
+</section>
+
+{% section 'media-text-block' %}
+
+<div class="anchor"></div>
+<section id="quiz" style="scroll-margin-top: 100px;">
+  {% section 'quiz-section' %}
+</section>
+
+
+<div>
+
+  {% section 'article-video-section' %}
+  {% section 'shop-collection'  %}
+
+</div><!-- /.container -->
+
+
+
+
+<style>
+  .container {
+    max-width: 1350px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0 auto;
+  }
+  .anchor{
+    scroll-padding-top: 110px;
+  }
+</style>
+
+<script
+  src="https://code.jquery.com/jquery-3.6.0.js"
+  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+  crossorigin="anonymous">
+</script>
+<script>
+    $(document).ready(function () { 
+    const url = new URL(window.location.href);
+    const scrollTo = url.searchParams.get("section");
+    document.getElementById(scrollTo)?.scrollIntoView({behavior: 'smooth'});
+  })
+</script>

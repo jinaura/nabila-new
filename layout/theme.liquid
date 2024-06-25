@@ -1,0 +1,443 @@
+{% include 'global-vars' %}
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+<link rel='preconnect dns-prefetch' href='https://api.config-security.com/' crossorigin />
+<link rel='preconnect dns-prefetch' href='https://conf.config-security.com/' crossorigin />
+<link rel='preconnect dns-prefetch' href='https://whale.camera/' crossorigin />
+<script>
+/* >> TriplePixel :: start*/
+window.TriplePixelData={TripleName:"rose-inc-shop.myshopify.com",ver:"2.12",plat:"SHOPIFY",isHeadless:false},function(W,H,A,L,E,_,B,N){function O(U,T,P,H,R){void 0===R&&(R=!1),H=new XMLHttpRequest,P?(H.open("POST",U,!0),H.setRequestHeader("Content-Type","text/plain")):H.open("GET",U,!0),H.send(JSON.stringify(P||{})),H.onreadystatechange=function(){4===H.readyState&&200===H.status?(R=H.responseText,U.includes(".txt")?eval(R):P||(N[B]=R)):(299<H.status||H.status<200)&&T&&!R&&(R=!0,O(U,T-1,P))}}if(N=window,!N[H+"sn"]){N[H+"sn"]=1,L=function(){return Date.now().toString(36)+"_"+Math.random().toString(36)};try{A.setItem(H,1+(0|A.getItem(H)||0)),(E=JSON.parse(A.getItem(H+"U")||"[]")).push({u:location.href,r:document.referrer,t:Date.now(),id:L()}),A.setItem(H+"U",JSON.stringify(E))}catch(e){}var i,m,p;A.getItem('"!nC`')||(_=A,A=N,A[H]||(E=A[H]=function(t,e,a){return void 0===a&&(a=[]),"State"==t?E.s:(W=L(),(E._q=E._q||[]).push([W,t,e].concat(a)),W)},E.s="Installed",E._q=[],E.ch=W,B="configSecurityConfModel",N[B]=1,O("https://conf.config-security.com/model",5),i=L(),m=A[atob("c2NyZWVu")],_.setItem("di_pmt_wt",i),p={id:i,action:"profile",avatar:_.getItem("auth-security_rand_salt_"),time:m[atob("d2lkdGg=")]+":"+m[atob("aGVpZ2h0")],host:A.TriplePixelData.TripleName,plat:A.TriplePixelData.plat,url:window.location.href,ref:document.referrer,ver:A.TriplePixelData.ver},O("https://api.config-security.com/event",5,p),O("https://whale.camera/live/dot.txt",5)))}}("","TriplePixel",localStorage);
+/* << TriplePixel :: end*/
+</script>
+	<!-- Google Tag Manager -->
+	<script type="text/plain" class="optanon-category-C0001">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-TB5BQ9X');</script>
+	<!-- End Google Tag Manager -->
+  
+	<script>
+		var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		if(vars[0] == 'hash')
+		{
+			localStorage.setItem("email_hash", vars['hash']);
+		}
+	</script>
+
+	<script>
+		if(document.querySelector(".template-page--shade-finder")) {
+			window.addEventListener( "pageshow", function ( event ) {
+				var historyTraversal = event.persisted ||
+						( typeof window.performance != "undefined" &&
+								window.performance.navigation.type === 2 );
+				if ( historyTraversal ) {
+					// Handle page restore.
+					window.location.reload();
+				}
+			});
+		}
+	</script>
+
+	{%- include 'head__settings' -%}
+
+	{%- include 'head' -%}
+	{% include 'cookies' %}  
+	{{ content_for_header }}
+	{% include 'hotjar' %}
+
+	<!-- Start UK Facebook domain verification -->
+	<meta name="facebook-domain-verification" content="21dl82vp2t32yui27j2yxedmxio18s" />
+	<!-- End UK Facebook domain verification -->
+
+	<!-- Zendesk Script -->
+  <script type="text/plain" class="optanon-category-C0003">
+    window.zESettings = {
+      webWidget: {
+        chat: {
+          departments: {
+            enabled: ['Rose Inc'],
+            select: 'Rose Inc'
+          }
+        }
+      }
+    };
+  </script>
+	<!-- End Zendesk Script -->
+
+	<!-- Pinterest Tag -->
+	<script type="text/plain" class="optanon-category-C0004">
+		!function(e){if(!window.pintrk){window.pintrk=function()
+		{window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
+		n=window.pintrk;n.queue=[],n.version="3.0";var
+		t=document.createElement("script");t.async=!0,t.src=e;var
+		r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r)}}
+		("https://s.pinimg.com/ct/core.js"); 
+		
+		pintrk('load','2612748392169', { em: '{{ customer.email }}', });
+		{%- unless template.name == 'product' -%}
+			pintrk('page');
+		{%- endunless -%}
+	</script> 
+	<noscript> 
+		<img height="1" width="1" style="display:none;" alt=""
+			src="https://ct.pinterest.com/v3/?tid=2612748392169&noscript=1" /> 
+	</noscript>
+	<!-- End Pinterest Tag -->
+
+	<!-- DataDog script start -->
+<script type="text/plain" class="optanon-category-C0003" defer="defer">
+        (function(h,o,u,n,d) {
+            h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
+            d=o.createElement(u);d.async=1;d.src=n
+            n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
+        })(window,document,'script','https://www.datadoghq-browser-agent.com/us1/v4/datadog-rum.js','DD_RUM')
+        window.DD_RUM.onReady(function() {
+            window.DD_RUM.init({
+            clientToken: 'pub56796d44016fb4ae783fe72ad28a65d9',
+            applicationId: '911ef0f3-621a-4bc4-aa15-8ec13ea2b287',
+            site: 'datadoghq.com',
+            service: 'rose-inc',
+            env: '<ENV_NAME>',
+            // Specify a version number to identify the deployed version of your application in Datadog 
+            // version: '1.0.0',
+            sessionSampleRate: 100,
+            sessionReplaySampleRate: 0,
+            trackUserInteractions: true,
+            trackResources: true,
+            trackLongTasks: true,
+            defaultPrivacyLevel: 'mask-user-input',
+            });
+
+            var x = document.querySelector("link[rel='canonical']").href;
+            DD_RUM.startView(String(x));
+            DD_RUM.startSessionReplayRecording();
+        })
+    </script>	<!-- DataDog script end -->
+
+	<!-- UGC Gallery script start-->
+  <script>
+    var CRL8_SITENAME = 'roseinc-ftteex'; !function(){var e=window.crl8=window.crl8||{},n=!1,i=[];e.ready=function(e){n?e():i.push(e)},e.pixel=e.pixel||function(){e.pixel.q.push(arguments)},e.pixel.q=e.pixel.q||[];var t=window.document,o=t.createElement("script"),c=e.debug||-1!==t.location.search.indexOf("crl8-debug=true")?"js":"min.js";o.async=!0,o.src=t.location.protocol+"//edge.curalate.com/sites/"+CRL8_SITENAME+"/site/latest/site."+c,o.onload=function(){n=!0,i.forEach(function(e){e()})};var r=t.getElementsByTagName("script")[0];r.parentNode.insertBefore(o,r.nextSibling)}();
+  </script>
+  <!-- UGC Gallery script end -->
+
+
+	<!-- Start VWO Async SmartCode -->
+	 <script>
+    //DO NOT make any changes to smart code except for entering your account id
+    window._vwo_code = window._vwo_code || (function() {
+        var account_id = 640142,
+            settings_tolerance = 2000,
+            library_tolerance = 2500,
+            use_existing_jquery = false,
+            is_spa = 1,
+            hide_element = '',
+            /* DO NOT EDIT BELOW THIS LINE */
+            f = false,
+            d = document,
+            filterToleranceTimer,
+            code = {
+                use_existing_jquery: function() {
+                    return use_existing_jquery;
+                },
+                library_tolerance: function() {
+                    return library_tolerance;
+                },
+                finish: function() {
+                    if (!f) {
+                        f = true;
+                        var a = d.getElementById('_vis_opt_path_hides');
+                        if (a) a.parentNode.removeChild(a);
+                    }
+                },
+                finished: function() {
+                    return f;
+                },
+                load: function(a) {
+                    var b = d.createElement('script');
+                    b.src = a;
+                    b.type = 'text/javascript';
+                    b.innerText;
+                    b.onerror = function() {
+                        _vwo_code.finish();
+                    };
+                    d.getElementsByTagName('head')[0].appendChild(b);
+                },
+                init: function() {
+                    window.settings_timer = setTimeout(function() {
+                        _vwo_code.finish();
+                        _vwo_code.removeLoaderAndOverlay();
+                    }, settings_tolerance);
+                    var filterConfig = this.filterConfig;
+                    if (!filterConfig || filterConfig.filterTime === "balanced") {
+                        var a = d.createElement('style'),
+                            b = hide_element ? hide_element + '{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}' : '',
+                            h = d.getElementsByTagName('head')[0];
+                        a.setAttribute('id', '_vis_opt_path_hides');
+                        a.setAttribute('type', 'text/css');
+                        if (a.styleSheet) a.styleSheet.cssText = b;
+                        else a.appendChild(d.createTextNode(b));
+                        h.appendChild(a);
+                    }
+                    if (filterConfig && filterConfig.filterTime === "early") {
+                        this.removeLoaderAndOverlay();
+                    }
+                    this.load('https://dev.visualwebsiteoptimizer.com/j.php?a=' + account_id + '&u=' + encodeURIComponent(d.URL) + '&f=' + (+is_spa) + '&r=' + Math.random());
+                    return settings_timer;
+                },
+                setFilterConfigAndApplyFilter: function(config) {
+                    if (!config) {
+                        // No config will lead to early return and no addition of smart code
+                        return;
+                    }
+                    var state = this.isNonLiveMode(account_id) || config.isConsentGiven();
+                    if (state === "1") {
+                        // if cookie consent was already given and the cookies were already accepted, execute out normal flow
+                        hide_element = 'body';
+                        window._vwo_settings_timer = _vwo_code.init();
+                        return;
+                    } else if (state === "2") {
+                        return;
+                    }
+
+                    function clearIntervals(timerIds) {
+                        for (var i = 0; i < timerIds.length; i++) {
+                            clearInterval(timerIds[i]);
+                        }
+                    }
+                    this.filterConfig = config;
+                    var popupTimer = setInterval(function() {
+                        if (_vwo_code.applyFilters(config)) {
+                            clearInterval(popupTimer);
+                        }
+                    }, 100)
+                    var timer = setInterval(function() {
+                        var state = config.isConsentGiven();
+                        var shouldClearAllIntervals;
+                        if (state === "1") {
+                            _vwo_code.showLoader();
+                            window._vwo_settings_timer = _vwo_code.init();
+                            shouldClearAllIntervals = true;
+                        } else if (state === "2") {
+                            _vwo_code.filterConfig = undefined;
+                            _vwo_code.removeLoaderAndOverlay();
+                            shouldClearAllIntervals = true;
+                        }
+                        if (shouldClearAllIntervals) {
+                            clearIntervals([timer, popupTimer]);
+                            clearInterval(filterToleranceTimer);
+                        }
+                    }, 100)
+                    if (config.filterTolerance) {
+                        // RECOMMENDED: When using Best Approach
+                        filterToleranceTimer = setTimeout(function() {
+                            _vwo_code.removeLoaderAndOverlay();
+                            clearIntervals([timer, popupTimer]);
+                        }, config.filterTolerance);
+                    }
+                },
+                showLoader: function() {
+                    var vwoOverlay = d.getElementsByClassName('vwo-overlay')[0];
+                    if (!vwoOverlay) return;
+                    var vwoContentLoader = d.createElement("div");
+                    vwoContentLoader.classList.add("vwo-content-loader");
+                    vwoOverlay.parentNode.insertBefore(vwoContentLoader, vwoOverlay.nextSibling);
+                },
+                applyFilters: function(config) {
+                    var popup = d.querySelector(config.popupSelector);
+
+                    var popupZIndex;
+                    if (!popup && d.getElementById('_vis_opt_overlay')) {
+                        return;
+                    }
+                    var maxZIndex = 2147483647;
+                    if (popup) {
+                        var popupStyle = window.getComputedStyle(popup);
+                        popupZIndex = popupStyle.getPropertyValue('z-index');
+                        if (!popupZIndex || popupZIndex === "auto") {
+                            popupZIndex = maxZIndex;
+                        }
+                        popup.style.zIndex = popupZIndex;
+                    }
+                    popupZIndex = popupZIndex || maxZIndex;
+                    // You can change the styling to suit your requirements
+                    // This is the default CSS filters VWO provides
+                    // NOTE: do not change any class names IMPORTANT ...
+                    var vwoFilter = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; height: 100%; width: 100%; -webkit-filter: blur(5px); filter: blur(5px);  backdrop-filter: saturate(180%) blur(3px); -webkit-backdrop-filter: saturate(180%) blur(3px); z-index:' + (popupZIndex - 1) + ';',
+                        vwoLoaderCss = ' .vwo-content-loader{ border: 16px solid #f3f3f3; border-top: 16px solid #3498db; border-radius: 50%; width: 90px; height: 90px; position: fixed; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); animation: vwo-spin 2s linear infinite; z-index:' + (popupZIndex - 1) + '; }' + '@keyframes vwo-spin { 0% { -webkit-transform: translate(-50%, -50%) rotate(0deg); transform: translate(-50%, -50%) rotate(0deg); } 100% { -webkit-transform: translate(-50%, -50%) rotate(360deg); transform: translate(-50%, -50%) rotate(360deg); } }';
+
+                    /**
+                     * This below written code should not be tweaked
+                     * */
+                    var overlayStyleTag = d.getElementById('_vis_opt_overlay'),
+                        overlayCSS = ".vwo-overlay{" + vwoFilter + "}" + vwoLoaderCss;
+                    if (overlayStyleTag) {
+                        if (overlayStyleTag.styleSheet) {
+                            overlayStyleTag.styleSheet.cssText = overlayCSS;
+                        } else {
+                            var _vwo_textNode = d.createTextNode(overlayCSS);
+                            overlayStyleTag.appendChild(_vwo_textNode);
+                            overlayStyleTag.removeChild(overlayStyleTag.childNodes[0]);
+                        }
+                    } else {
+                        var a = d.createElement('style'),
+                            h = d.getElementsByTagName('head')[0],
+                            body = d.getElementsByTagName('body')[0];
+
+                        var vwoOverlay = d.createElement("div");
+                        vwoOverlay.classList.add("vwo-overlay");
+                        body.prepend(vwoOverlay)
+                        // CAUTION Do not remove this id from your style tag. It is required by VWO      
+                        a.setAttribute('id', '_vis_opt_overlay');
+                        a.setAttribute('type', 'text/css');
+                        if (a.styleSheet) a.styleSheet.cssText = overlayCSS;
+                        else a.appendChild(d.createTextNode(overlayCSS));
+                        h.appendChild(a);
+                    }
+                    return !!popup;
+                },
+                removeLoaderAndOverlay: function() {
+                    var overlay = d.getElementsByClassName("vwo-overlay");
+                    var loader = d.getElementsByClassName("vwo-content-loader");
+                    var overlayStyleTag = d.getElementById("_vis_opt_overlay");
+                    overlay && (overlay = overlay[0]) && overlay.parentElement.removeChild(overlay);
+                    loader && (loader = loader[0]) && loader.parentElement.removeChild(loader);
+                    overlayStyleTag && overlayStyleTag.parentElement.removeChild(overlayStyleTag)
+                },
+                isNonLiveMode: function(accountId) {
+                    var wName = window.name;
+                    if (!wName) {
+                        return;
+                    }
+                    return (
+                        (wName.indexOf('_vis_editor') > -1 ||
+                            wName.indexOf('_vis_preview_' + accountId) > -1 ||
+                            wName.indexOf('_vis_heatmap_' + accountId) > -1) &&
+                        '1'
+                    );
+                }
+            };
+        return code;
+    }());
+
+	_vwo_code.setFilterConfigAndApplyFilter({
+		popupSelector: '#onetrust-banner-sdk',
+		filterTime: 'best',
+		isConsentGiven: () => "1",
+		filterTolerance: '20000'
+	});
+	
+</script>
+<!-- End VWO Async SmartCode -->
+
+	<link rel="preload" href="https://fonts.gstatic.com/s/nunitosans/v12/pe0qMImSLYBIv1o4X1M8cce9I9tAcVwo.woff2" as="font" type="font/woff2" crossorigin>
+	{{ 'slick.css' | asset_url | stylesheet_tag: preload: true }}
+
+</head>
+
+
+<body class="{{ template_class }} page--{{ page.handle }} "
+		{% if localization.country.iso_code == 'GB' %}
+			data-country-iso="GB"
+		{% else %}
+			data-country-iso="US"
+		{% endif %}
+
+		{% if settings.enable_codeless_us %}
+			data-code-product-us="{{ settings.codeless_product_us }}"
+		{% endif %}
+		{% if settings.enable_codeless_uk %}
+			data-code-product-uk="{{ settings.codeless_product_uk }}"
+		{% endif %}
+        {% if settings.enable_minicart_samples_us %}
+            data-samples-limit-us="{{ settings.samples_per_order_us }}"
+        {% endif %}
+        {% if settings.enable_minicart_samples_uk %}
+            data-samples-limit-uk="{{ settings.samples_per_order_uk }}"
+        {% endif %}
+	>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TB5BQ9X"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="wrapper" id="pageWrapper">
+  {% section "announcement-bar" %}
+  {%- section 'header-custom' -%}
+	<div class="main">
+		{{ content_for_layout }}
+		{%- section "footer" -%}
+	</div><!-- /.main container clear -->
+
+	<div class="overlay"></div>
+  {% if localization.country.iso_code != 'GB' %}
+    {% section 'beauty-advisor-widget' %}
+  {%- endif -%}
+</div><!-- /.wrapper -->
+
+{% include "mini-cart" %}
+{%- include 'ie-modal' -%}
+{% if template.name contains 'product' %}
+<script>window.reactAppConfig = { localeRootUrl: {{ request.locale.root_url | json }} }</script>
+<script crossorigin='anonymous' src='{{ 'main.e6b42258.bundle.js' | asset_url }}' defer type='text/JavaScript'></script>
+<script crossorigin='anonymous' src='{{ 'runtime-main.afddc1dd.bundle.js' | asset_url }}' defer type='text/JavaScript'></script>
+<script crossorigin='anonymous' src='{{ '50.2ea4812a.bundle.js' | asset_url }}' defer type='text/JavaScript'></script>
+<script crossorigin='anonymous' src='{{ '457.54e1b4df.bundle.js' | asset_url }}' defer type='text/JavaScript'></script>
+<script crossorigin='anonymous' src='{{ '550.f1272c39.bundle.js' | asset_url }}' defer type='text/JavaScript'></script>
+<script crossorigin='anonymous' src='{{ '761.d70a7760.bundle.js' | asset_url }}' defer type='text/JavaScript'></script>
+<script crossorigin='anonymous' src='{{ '284.3938e82a.bundle.js' | asset_url }}' defer type='text/JavaScript'></script>
+  {% endif %}
+<!-- Chat bot script start -->
+{% if localization.country.iso_code != 'GB' %}
+	<script defer src="{{ 'adachatbot.js' | asset_url }}"></script> 
+
+	{%- if template.name != 'password' -%}
+		<script
+			type="text/plain" class="optanon-category-C0003"
+			id="__ada"
+			data-handle="amyris"
+			src="https://static.ada.support/embed2.js"
+			data-greeting=""
+		></script>
+	{%- endif -%}
+{% endif %}
+<!-- End Chat bot script -->
+
+{{ theme_scripts }}
+{% comment %}
+<!-- Begin ReCharge code -->
+{% include 'subscription-theme-footer' %}
+<!-- End ReCharge code -->
+{% endcomment %}
+
+{% render 'gwp' %}
+{% render 'special-sku' %}
+<script src="{{ 'slick.js' | asset_url  | append: '&enable_js_minification=1' }}"  defer=defer type="text/javascript"></script>
+<script src="{{ 'theme.js' | asset_url  | append: '&enable_js_minification=1' }}"  defer=defer type="text/javascript"></script>
+<script src="{{ 'custom.js' | asset_url  | append: '&enable_js_minification=1' }}"  defer=defer type="text/javascript"></script>
+<script src="{{ 'app.js' | asset_url  | append: '&enable_js_minification=1' }}"  defer=defer type="text/javascript"></script>
+<script src="{{ 'cookies-GWP.js' | asset_url  | append: '&enable_js_minification=1' }}"  defer=defer type="text/javascript"></script>
+
+{% if global_store == 'production' %}
+	{%- render 'klaviyo-tracking' -%}
+	{%- render 'klaviyo-subscribe' -%}
+{% endif %}
+{%- capture ocu_extend -%}{% render 'oneclickupsellapp-extend' %}{%- endcapture -%}{%- unless ocu_extend contains "Liquid error" -%}{{ ocu_extend }}{%- endunless -%}
+</body>
+</html>
+<!-- Begin Shopify-Afterpay JavaScript Snippet (v1.0.1) -->
+<script type="text/javascript">
+  // Liquid variables:
+  var afterpay_product = {{ product | json }};
+  var afterpay_product_variant = {{ product.selected_or_first_available_variant | json }};
+  var afterpay_cart_total_price = {{ cart.total_price | json }};
+</script>
+<!-- End Shopify-Afterpay JavaScript Snippet (v1.0.1) -->
